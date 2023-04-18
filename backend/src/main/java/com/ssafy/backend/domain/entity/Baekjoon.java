@@ -22,7 +22,7 @@ public class Baekjoon extends BaseTimeEntity {
     private long id;
 
     @Column(name = "tier", nullable = false)
-    private int tier;
+    private String tier;
 
     @Column(name = "pass_count", nullable = false)
     private int passCount;
