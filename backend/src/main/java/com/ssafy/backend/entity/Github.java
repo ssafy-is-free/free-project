@@ -39,4 +39,5 @@ public class Github extends BaseTimeEntity {
     @Column(name = "profile_link", nullable = false)
     private String profileLink;
 
+
 }

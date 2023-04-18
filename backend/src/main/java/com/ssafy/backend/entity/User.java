@@ -36,11 +36,11 @@ public class User extends BaseTimeEntity {
     private boolean isBoolean;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rank_id", nullable = false)
+    @JoinColumn(name = "rank_id", nullable = false, unique = true)
     private Rank rank;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "github_id", nullable = false)
+    @JoinColumn(name = "github_id", nullable = false, unique = true)
     private Github github;
 
 
