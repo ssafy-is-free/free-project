@@ -23,7 +23,8 @@ public class GithubRepository extends BaseTimeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "readme", nullable = false, columnDefinition = "LONGTEXT")
+    @Lob
+    @Column(name = "readme", nullable = false)
     private String readme;
 
 
