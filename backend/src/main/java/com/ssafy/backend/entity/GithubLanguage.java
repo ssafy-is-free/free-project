@@ -28,7 +28,7 @@ public class GithubLanguage extends BaseTimeEntity {
     private String percentage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "github_id")
+    @JoinColumn(name = "github_id", nullable = false)
     private Github github;
 
 

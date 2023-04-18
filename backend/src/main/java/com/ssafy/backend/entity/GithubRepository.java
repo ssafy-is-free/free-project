@@ -13,8 +13,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
-@Table(name = "repository")
-public class Repository extends BaseTimeEntity {
+@Table(name = "github_repository")
+public class GithubRepository extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
@@ -23,11 +23,11 @@ public class Repository extends BaseTimeEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "readme", nullable = false)
+    @Column(name = "readme", nullable = false, columnDefinition = "LONGTEXT")
     private String readme;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "github_id")
+    @JoinColumn(name = "github_id", nullable = false)
     private Github github;
 }

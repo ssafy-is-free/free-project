@@ -37,7 +37,7 @@ public class Baekjoon extends BaseTimeEntity {
     private int failCount;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
 }

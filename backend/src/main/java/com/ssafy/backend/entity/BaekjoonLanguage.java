@@ -31,6 +31,6 @@ public class BaekjoonLanguage extends BaseTimeEntity {
     private int passCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "baekjoon_id")
+    @JoinColumn(name = "baekjoon_id", nullable = false)
     private Baekjoon baekjoon;
 }

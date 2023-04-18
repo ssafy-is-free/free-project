@@ -39,6 +39,10 @@ out/
 **/src/main/resources/
 **/gradle/
 
+### QClass
+***/src/main/generated
+
+### 맥용
 .DS_Store
 .AppleDouble
 .LSOverride
