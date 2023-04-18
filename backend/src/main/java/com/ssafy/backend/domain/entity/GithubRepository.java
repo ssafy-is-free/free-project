@@ -27,6 +27,9 @@ public class GithubRepository extends BaseTimeEntity {
     @Column(name = "readme", nullable = false)
     private String readme;
 
+    @Column(name = "repository_link", nullable = false)
+    private String repositoryLink;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "github_id", nullable = false)

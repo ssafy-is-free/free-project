@@ -24,20 +24,23 @@ public class Github extends BaseTimeEntity {
     @Column(name = "commit_total_count", nullable = false)
     private int commitTotalCount;
 
-    @Column(name = "pr_total_count", nullable = false)
-    private int prTotalCount;
+    @Column(name = "follower_total_count", nullable = false)
+    private int followerTotalCount;
 
     @Column(name = "star_total_count", nullable = false)
     private int starTotalCount;
-
-    @Column(name = "continuous_commit_count", nullable = false)
-    private int continuousCommitCount;
 
     @Column(name = "score", nullable = false)
     private int score;
 
     @Column(name = "profile_link", nullable = false)
     private String profileLink;
+
+    @Column(name = "do_not_user1")
+    private int doNotUse1;
+
+    @Column(name = "do_not_user2")
+    private int doNotUse2;
 
 
 }
