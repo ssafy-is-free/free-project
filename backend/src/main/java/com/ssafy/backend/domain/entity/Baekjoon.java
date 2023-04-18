@@ -1,0 +1,43 @@
+package com.ssafy.backend.domain.entity;
+
+import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
+
+import javax.persistence.*;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Getter
+@Entity
+@DynamicUpdate
+@NoArgsConstructor
+@Table(name = "baekjoon")
+public class Baekjoon extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "id")
+    private long id;
+
+    @Column(name = "tier", nullable = false)
+    private int tier;
+
+    @Column(name = "pass_count", nullable = false)
+    private int passCount;
+
+    @Column(name = "try_fail_count", nullable = false)
+    private int tryFailCount;
+
+    @Column(name = "submit_count", nullable = false)
+    private int submitCount;
+
+    @Column(name = "fail_count", nullable = false)
+    private int failCount;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
+
+}
