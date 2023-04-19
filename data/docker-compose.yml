@@ -2,8 +2,7 @@ version: "3.9"
 
 services:
   fastapi_app:
-    build:      
-      context: ./data
+    build:            
       dockerfile: Dockerfile
     image: my_fastapi_app
     ports:
