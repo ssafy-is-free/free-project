@@ -3,6 +3,7 @@ import httpx
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
+import requests
 
 app = FastAPI()
 
@@ -12,7 +13,7 @@ headers = {
 }
 
 async def get_response(url):
-    async with httpx.AsyncClient() as client:        
+    async with httpx.AsyncClient() as client:
         response = await client.get(url, headers=headers)
         return response
 
@@ -22,7 +23,7 @@ def read(response: Response):
     response = RedirectResponse(url="/docs")
     return response
 
-# 비동기 테스트 코드 
+# 비동기 테스트 코드
 # @app.get("/test/{name}")
 # async def test_async(name: str):
 #     start_time = time.time()
@@ -41,7 +42,7 @@ def read(response: Response):
 # 백준 아이디를 통해 정보와 언어를 크롤링하는 API
 @app.get("/api/data/{name}")
 async def read_backjun(name):
-    
+
     # 백준 사용자의 정보, 언어 url
     information_url = 'https://www.acmicpc.net/user/' + name
     language_url = 'https://www.acmicpc.net/user/language/' + name
@@ -57,7 +58,7 @@ async def read_backjun(name):
         "fail_count" : None,
         "languages_result" : []
     }
-    
+
     ## 정보 응답이 OK 일때만 정보 가져오기
     if information_response.status_code == 200:
         # response 객체로부터 웹 페이지의 HTML 소스를 가져옵니다.
@@ -66,7 +67,7 @@ async def read_backjun(name):
         # 파싱에는 'html.parser' 파서를 사용합니다.
         soup = BeautifulSoup(html, 'html.parser')
         # 티어 가져오기
-        img_tag = soup.find("img", class_="solvedac-tier")   
+        img_tag = soup.find("img", class_="solvedac-tier")
         # 맞은 문제
         solved = soup.find("span", id = "u-solved")
         # 시도했지만 맞지 못한 문제
@@ -80,7 +81,7 @@ async def read_backjun(name):
         if img_tag == None:
             result["tier"] = "https://d2gd6pc034wcta.cloudfront.net/tier/0.svg"
         else:
-            result["tier"] = img_tag['src']            
+            result["tier"] = img_tag['src']
         result["pass_count"] = solved.text
         result["try_fail_count"] = try_failed.text
         result["submit_count"] = submit.text
@@ -97,7 +98,7 @@ async def read_backjun(name):
         html = language_response.text
         soup = BeautifulSoup(html, 'html.parser')
         table = soup.find("table", class_ = "table table-bordered table-striped").find("tbody").findAll("tr")
-        
+
         for row in table:
             # 각 tr 아래에 있는 th 태그와 td 태그들을 찾습니다.
             header = row.find("th")
@@ -114,6 +115,108 @@ async def read_backjun(name):
             # 결과 배열에 language_result을 추가합니다.
             result["languages_result"].append(language_result)
 
-    
-    
+    return result
+
+
+def getUser(username: str, result: dict):
+    print(f'============= {username} 크롤링 =============')
+    print('유저 정보 크롤링')
+    url = f'https://github.com/{username}'
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, 'html.parser')
+
+    # 닉네임
+    nickname_tag = soup.select_one('span[class="p-nickname vcard-username d-block"]')
+    if nickname_tag is not None:
+        nickname = nickname_tag.text.strip()
+
+    # 프로필 이미지
+    img_tag = soup.select_one('img[alt="Avatar"]')
+    if img_tag is not None:
+        img = img_tag.attrs['src']
+
+    # 팔로워
+    followers_tag = soup.select_one(f'a[href="https://github.com/{username}?tab=followers"]')
+    if followers_tag is not None:
+        followers = int(followers_tag.text.strip().split()[0])
+
+    # 깃허브 링크
+    link = url
+
+    result['nickname'] = nickname
+    result['profileLink'] = link
+    result['avatarUrl'] = img
+    result['followers'] = followers
+
+    return result
+
+
+def getRepo(username: str, result: dict):
+    print('레포지토리 정보 크롤링')
+    url = f'https://github.com/{username}?tab=repositories'
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, 'html.parser')
+
+    repo_list = soup.select('a[itemprop="name codeRepository"]')
+
+    commit_total = 0
+    star_total = 0
+    repos = []
+    for repo_tag in repo_list:
+        repo = dict()
+
+        # 레포 이름
+        repo_name = repo_tag.text.strip()
+
+        # 레포 링크
+        repo_url = f'https://github.com/{username}/{repo_name}'
+
+        response = requests.get(repo_url)
+        html = response.text
+        soup = BeautifulSoup(html, 'html.parser')
+
+        # 포크된 레포는 버림
+        fork = soup.select_one('span[class="text-small lh-condensed-ultra no-wrap mt-1"]')
+        if fork is not None:
+            continue
+
+        # 커밋 수
+        commit_tag = soup.select_one('ul[class="list-style-none d-flex"]')
+        if commit_tag is not None:
+            commit = int(commit_tag.text.strip().split()[0])
+            commit_total += commit
+
+        # 스타 수
+        star_tag = soup.select_one(f'a[href="/{username}/{repo_name}/stargazers"]')
+        if star_tag is not None:
+            star = int(star_tag.text.strip().split()[0])
+            star_total += star
+
+        # 리드미
+        readme_html = soup.select_one('article[class="markdown-body entry-content container-lg"]')
+        if readme_html is not None:
+            repo['readme'] = str(readme_html)
+        else:
+            repo['readme'] = None
+
+        repo['name'] = repo_name
+        repo['link'] = repo_url
+
+        repos.append(repo)
+
+    result['commit'] = commit_total
+    result['star'] = star_total
+    result['repositories'] = repos
+
+    return result
+
+
+@app.get("/api/data/github/{name}")
+def read_github(name):
+    result = dict()
+    result = getUser(name, result)
+    result = getRepo(name, result)
+
     return result
