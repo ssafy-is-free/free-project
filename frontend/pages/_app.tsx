@@ -1,4 +1,3 @@
-import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { lightTheme } from '@/styles/theme';
 import { ThemeProvider } from 'styled-components';
