@@ -216,10 +216,31 @@ def getRepo(username: str, result: dict):
     return result
 
 
+def getLanguage(username: str, result: dict):
+    url = f'https://github-readme-stats.vercel.app/api/top-langs/?username={username}'
+    response = requests.get(url)
+    html = response.text
+    soup = BeautifulSoup(html, 'html.parser')
+
+    language_list = soup.select('g[class="stagger"]')
+
+    tmp = []
+    for language in language_list:
+        data = dict()
+        lang, percentage, = language.text.strip().split('\n')
+        data['name'] = lang
+        data['percentage'] = percentage
+        tmp.append(data)
+
+    result['languages'] = tmp
+    return result
+
+
 @app.get("/api/data/github/{name}")
 def read_github(name):
     result = dict()
     result = getUser(name, result)
     result = getRepo(name, result)
+    result = getLanguage(name, result)
 
     return result
