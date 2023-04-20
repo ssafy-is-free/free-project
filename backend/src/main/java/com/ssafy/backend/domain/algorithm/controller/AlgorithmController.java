@@ -22,9 +22,10 @@ public class AlgorithmController {
 
         return null;
     }
-    @PostMapping("/{userId}")
-    public CommonResponse bojSaveUser(@PathVariable("userId") Long userId) throws Exception{
+    @PostMapping("")
+    public CommonResponse bojSaveUser(@RequestParam Long userId) throws Exception{
         algorithmService.postBojByUserId(userId);
         return null;
     }
+
 }
