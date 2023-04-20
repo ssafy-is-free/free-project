@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -40,4 +41,14 @@ public class Baekjoon extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    @Builder
+    public Baekjoon(long id, String tier, int passCount, int tryFailCount, int submitCount, int failCount, User user) {
+        this.id = id;
+        this.tier = tier;
+        this.passCount = passCount;
+        this.tryFailCount = tryFailCount;
+        this.submitCount = submitCount;
+        this.failCount = failCount;
+        this.user = user;
+    }
 }
