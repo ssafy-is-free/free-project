@@ -32,6 +32,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "boj_id",unique = true)
     private String bojId;
 
+    @Column(name = "refresh_token")
+    private String refreshToken;
+
     @Column(name = "is_boolean", nullable = false)
     private boolean isBoolean;
 
