@@ -20,9 +20,6 @@ public class User extends BaseTimeEntity {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "email", nullable = false)
-    private String email;
-
     @Column(name = "nickname", nullable = false)
     private String nickname;
 
@@ -47,7 +44,8 @@ public class User extends BaseTimeEntity {
     private Github github;
 
 
-
+    @Column(name = "do_not_use1")
+    private String doNotUse1;
 
 
 }
