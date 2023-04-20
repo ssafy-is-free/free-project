@@ -1,6 +1,7 @@
 package com.ssafy.backend.global.config;
 
 
+import com.ssafy.backend.global.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -42,20 +45,20 @@ public class SecurityConfig {
         /*oauth 인증 후 처리*/
         http
                 .oauth2Login()
-                .userInfoEndpoint().userService() //소셜 인증후에 받아온 회원정보를 처리할 서비스 지    .
-            .and()
-                .successHandler() //인증 성공했을때 동작할 핸들러
-                .failureHandler() //인증 실패했을때 동작할 핸들러.
-                .permitAll();
-        /*필터*/
-        http
-                .addFilterBefore(, UsernamePasswordAuthenticationFilter.class); //필터 앞에 필터 등록 - 두번째 인자로 준 필터보다 첫번째 인자로 준 필터가 먼저 실행되도록 함.
-
-        /*예외 등록*/
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint(tokenAuthenticationEntryPoint) //인증실패시
-                .accessDeniedHandler(tokenAccessDeniedHandler); //인가 실패시.
+                .userInfoEndpoint().userService(customOAuth2UserService); //소셜 인증후에 받아온 회원정보를 처리할 서비스 지    .
+//            .and()
+//                .successHandler() //인증 성공했을때 동작할 핸들러
+//                .failureHandler() //인증 실패했을때 동작할 핸들러.
+//                .permitAll();
+//        /*필터*/
+//        http
+//                .addFilterBefore(, UsernamePasswordAuthenticationFilter.class); //필터 앞에 필터 등록 - 두번째 인자로 준 필터보다 첫번째 인자로 준 필터가 먼저 실행되도록 함.
+//
+//        /*예외 등록*/
+//        http
+//                .exceptionHandling()
+//                .authenticationEntryPoint(tokenAuthenticationEntryPoint) //인증실패시
+//                .accessDeniedHandler(tokenAccessDeniedHandler); //인가 실패시.
 
 
 
