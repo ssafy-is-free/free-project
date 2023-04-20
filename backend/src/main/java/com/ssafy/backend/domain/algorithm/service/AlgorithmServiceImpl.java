@@ -18,7 +18,10 @@ public class AlgorithmServiceImpl implements AlgorithmService{
     private final BojRepository bojRepository;
     @Override
     @Transactional
-    public void postBojByUserId(long userId, BojInformationRequestDTO bojInformationRequestDTO) throws Exception {
+    public void postBojByUserId(long userId) throws Exception {
+
+
+        BojInformationRequestDTO bojInformationRequestDTO =  null;
         List<BojLanguageResultDTO> bojLanguageResultDTOList = bojInformationRequestDTO.getLanguagesResult();
 
 
