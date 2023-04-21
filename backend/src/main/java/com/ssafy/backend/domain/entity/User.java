@@ -39,11 +39,6 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "rank_id", nullable = false, unique = true)
     private Rank rank;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "github_id", nullable = false, unique = true)
-    private Github github;
-
-
     @Column(name = "do_not_use1")
     private String doNotUse1;
 

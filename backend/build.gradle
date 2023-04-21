@@ -29,6 +29,9 @@ dependencies {
 
 	// 외부 api 호출
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	// Spring Boot Configuration Annotation Processor
+	annotationProcessor  'org.springframework.boot:spring-boot-configuration-processor'
+
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
