@@ -7,6 +7,7 @@ import GlobalStyle from '@/styles/GlobalStyle';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
+
   return (
     <Provider store={store}>
       <GlobalStyle />
