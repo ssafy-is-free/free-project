@@ -1,5 +1,15 @@
 # 서비스명
 
+[요구사항 명세서 바로가기](https://delicate-utensil-152.notion.site/782e5fa0ff3d42079a7da6567f9f4be0)
+
+[기능 명세서 바로가기](https://delicate-utensil-152.notion.site/49355099e2cd4bf8b728ba2fb5bbfd5b?v=054e6849403842b999d3ee3d4d488804)
+
+[API 명세서 바로가기](https://delicate-utensil-152.notion.site/BE-API-4035ed956b704378b7e037b122230d96)
+
+[ERD 바로가기](https://www.erdcloud.com/d/GoqPjtBce7YNAsvdQ)
+
+
+
 ## 시스템 아키텍쳐
 ![시스템 아키텍처](https://user-images.githubusercontent.com/56991244/233254679-0a1d4e1d-3bb5-4332-bac7-c629cfc8818b.png)
 
