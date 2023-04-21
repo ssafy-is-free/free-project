@@ -40,6 +40,10 @@ public class Github extends BaseTimeEntity {
     @Column(name = "profile_link", nullable = false)
     private String profileLink;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
+
     @Column(name = "do_not_user1")
     private int doNotUse1;
 
