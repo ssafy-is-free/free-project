@@ -1,5 +1,7 @@
 package com.ssafy.backend.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +17,8 @@ import com.ssafy.backend.domain.entity.common.LanguageType;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "language")
 public class Language {
 
@@ -29,4 +33,10 @@ public class Language {
 	@Enumerated(EnumType.STRING)
 	private LanguageType type;
 
+	public static Language create(String name, LanguageType type) {
+		return Language.builder()
+				.name(name)
+				.type(type)
+				.build();
+	}
 }
