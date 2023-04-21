@@ -1,5 +1,6 @@
 import CancelOk from '@/components/common/CancelOk';
 import Footer from '@/components/common/Footer';
+import CircleChart from '@/components/profile/CircleChart';
 
 export default function Home() {
   const cancel = () => {
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <div>
       <CancelOk cancel={cancel} ok={ok}></CancelOk>
+      <CircleChart></CircleChart>
       <Footer></Footer>
     </div>
   );
