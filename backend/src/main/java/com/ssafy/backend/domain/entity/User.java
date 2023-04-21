@@ -32,8 +32,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "refresh_token")
     private String refreshToken;
 
-    @Column(name = "is_boolean", nullable = false)
-    private boolean isBoolean;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rank_id", nullable = false, unique = true)
