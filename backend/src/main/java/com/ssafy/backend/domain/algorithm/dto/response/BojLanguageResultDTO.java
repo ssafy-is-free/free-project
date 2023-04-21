@@ -1,4 +1,4 @@
-package com.ssafy.backend.domain.algorithm.dto.request;
+package com.ssafy.backend.domain.algorithm.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.ssafy.backend.domain.entity;
 
-import com.ssafy.backend.domain.algorithm.dto.request.BojLanguageResultDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;

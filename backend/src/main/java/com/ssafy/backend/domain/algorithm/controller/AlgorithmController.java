@@ -25,7 +25,7 @@ public class AlgorithmController {
         return null;
     }
     @PatchMapping("")
-    public CommonResponse bojSaveUser(@RequestParam Long userId) throws Exception{
+    public CommonResponse bojSaveUser(@RequestParam Long userId){
         algorithmService.patchBojByUserId(userId);
 
         return responseService.getSuccessResponse();

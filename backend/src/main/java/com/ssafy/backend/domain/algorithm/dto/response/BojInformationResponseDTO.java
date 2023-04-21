@@ -1,4 +1,4 @@
-package com.ssafy.backend.domain.algorithm.dto.request;
+package com.ssafy.backend.domain.algorithm.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BojInformationRequestDTO {
+public class BojInformationResponseDTO {
     @JsonProperty("tier")
     private String tier;
 

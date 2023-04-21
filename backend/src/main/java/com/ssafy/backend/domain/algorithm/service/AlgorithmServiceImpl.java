@@ -1,7 +1,7 @@
 package com.ssafy.backend.domain.algorithm.service;
 
-import com.ssafy.backend.domain.algorithm.dto.request.BojInformationRequestDTO;
-import com.ssafy.backend.domain.algorithm.dto.request.BojLanguageResultDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
@@ -12,7 +12,6 @@ import com.ssafy.backend.domain.entity.common.LanguageType;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
-import com.ssafy.backend.global.response.exception.CustomExceptionStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,16 +36,16 @@ public class AlgorithmServiceImpl implements AlgorithmService{
     private final WebClient webClient;
     @Override
     @Transactional
-    public void patchBojByUserId(long userId) throws Exception {
+    public void patchBojByUserId(long userId){
         //유저 아이디로 백준 아이디 조회
         Optional<User> oUser = userRepository.findById(userId);
         User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
         //백준 아이디로 크롤링
-        BojInformationRequestDTO bojInformationRequestDTO = webClient.get()
+        BojInformationResponseDTO bojInformationResponseDTO = webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(user.getBojId()))
                 .retrieve()
-                .bodyToMono(BojInformationRequestDTO.class)
+                .bodyToMono(BojInformationResponseDTO.class)
                 .block();
 
         //백준 아이디로 비동기 크롤링
@@ -65,22 +64,22 @@ public class AlgorithmServiceImpl implements AlgorithmService{
                     return getFallbackDto();
                 });*/
         //저장
-        if(bojInformationRequestDTO.getTier() != null){
+        if(bojInformationResponseDTO.getTier() != null){
             //유저가 이미 백준 아이디를 저장했는지 확인하기
             Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
             Baekjoon baekjoon = oBaekjoon.orElse(null);
             // 비어있다면 추가하고 이미 있다면 업데이트
             if(baekjoon == null){
-                baekjoon = Baekjoon.createBaekjoon(bojInformationRequestDTO, user);
+                baekjoon = Baekjoon.createBaekjoon(bojInformationResponseDTO, user);
             }else {
-                baekjoon.updateBaekjoon(bojInformationRequestDTO);
+                baekjoon.updateBaekjoon(bojInformationResponseDTO);
             }
             bojRepository.save(baekjoon);
             // 리스트 저장
             // 리스트가 비어있지 않을 때
-            if(bojInformationRequestDTO.getLanguagesResult() != null){
+            if(bojInformationResponseDTO.getLanguagesResult() != null){
                 List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
-                for(BojLanguageResultDTO bojLanguageResultDTO : bojInformationRequestDTO.getLanguagesResult()){
+                for(BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()){
 
                     // 언어 정보 받아오기
                     Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(), LanguageType.BAEKJOON);
