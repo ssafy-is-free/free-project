@@ -1,7 +1,6 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
-import com.ssafy.backend.domain.github.dto.CGithub;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @Builder
 @Table(name = "github_repository")
-public class GithubRepository extends BaseTimeEntity {
+public class GithubRepo extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -41,11 +40,12 @@ public class GithubRepository extends BaseTimeEntity {
     @JoinColumn(name = "github_id", nullable = false)
     private Github github;
 
-    public static GithubRepository create(String name, String readme, String repositoryLink) {
-        return GithubRepository.builder()
+    public static GithubRepo create(String name, String readme, String repositoryLink, Github github) {
+        return GithubRepo.builder()
                 .name(name)
                 .readme(readme)
                 .repositoryLink(repositoryLink)
+                .github(github)
                 .build();
     }
 }
