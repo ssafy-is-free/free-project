@@ -37,12 +37,10 @@ public class AlgorithmServiceImpl implements AlgorithmService{
     private final WebClient webClient;
     @Override
     @Transactional
-    public void postBojByUserId(long userId) throws Exception {
+    public void patchBojByUserId(long userId) throws Exception {
         //유저 아이디로 백준 아이디 조회
         Optional<User> oUser = userRepository.findById(userId);
         User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-
 
         //백준 아이디로 크롤링
         BojInformationRequestDTO bojInformationRequestDTO = webClient.get()
@@ -68,14 +66,15 @@ public class AlgorithmServiceImpl implements AlgorithmService{
                 });*/
         //저장
         if(bojInformationRequestDTO.getTier() != null){
-            Baekjoon baekjoon = Baekjoon.builder()
-                    .tier(bojInformationRequestDTO.getTier())
-                    .passCount(bojInformationRequestDTO.getPassCount())
-                    .tryFailCount(bojInformationRequestDTO.getTryFailCount())
-                    .submitCount(bojInformationRequestDTO.getSubmitCount())
-                    .failCount(bojInformationRequestDTO.getFailCount())
-                    .user(user)
-                    .build();
+            //유저가 이미 백준 아이디를 저장했는지 확인하기
+            Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
+            Baekjoon baekjoon = oBaekjoon.orElse(null);
+            // 비어있다면 추가하고 이미 있다면 업데이트
+            if(baekjoon == null){
+                baekjoon = Baekjoon.createBaekjoon(bojInformationRequestDTO, user);
+            }else {
+                baekjoon.updateBaekjoon(bojInformationRequestDTO);
+            }
             bojRepository.save(baekjoon);
             // 리스트 저장
             // 리스트가 비어있지 않을 때
@@ -85,23 +84,19 @@ public class AlgorithmServiceImpl implements AlgorithmService{
 
                     // 언어 정보 받아오기
                     Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(), LanguageType.BAEKJOON);
-                    BaekjoonLanguage baekjoonLanguage = BaekjoonLanguage.builder()
-                            .languageId(language.getId())
-                            .passPercentage(bojLanguageResultDTO.getPassPercentage())
-                            .passCount(bojInformationRequestDTO.getPassCount())
-                            .baekjoon(baekjoon)
-                            .build();
+                    // 유저에 해당하는 언어 정보가 있는지 파악하기
+                    Optional<BaekjoonLanguage> oBaekjoonLanguage = bojLanguageRepository.findByLanguageIdAndBaekjoonId(language.getId(), baekjoon.getId());                    //
+                    BaekjoonLanguage baekjoonLanguage = oBaekjoonLanguage.orElse(null);
+                    // 비어있다면 추가하고 이미 있다면 업데이트
+                    if(baekjoonLanguage == null){
+                        baekjoonLanguage = BaekjoonLanguage.createBaekjoonLanguage(language.getId(), bojLanguageResultDTO, baekjoon);
+                    }else{
+                        baekjoonLanguage.updateBaekjoonLanguage(bojLanguageResultDTO);
+                    }
                     baekjoonLanguageList.add(baekjoonLanguage);
                 }
                 bojLanguageRepository.saveAll(baekjoonLanguageList);
             }
-
-
-
-
         }
-
-
-
     }
 }

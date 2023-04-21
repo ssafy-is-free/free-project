@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.entity;
 
+import com.ssafy.backend.domain.algorithm.dto.request.BojInformationRequestDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,5 +51,22 @@ public class Baekjoon extends BaseTimeEntity {
         this.submitCount = submitCount;
         this.failCount = failCount;
         this.user = user;
+    }
+    public static Baekjoon createBaekjoon(BojInformationRequestDTO bojInformationRequestDTO, User user){
+        return Baekjoon.builder()
+                .tier(bojInformationRequestDTO.getTier())
+                .passCount(bojInformationRequestDTO.getPassCount())
+                .tryFailCount(bojInformationRequestDTO.getTryFailCount())
+                .submitCount(bojInformationRequestDTO.getSubmitCount())
+                .failCount(bojInformationRequestDTO.getFailCount())
+                .user(user)
+                .build();
+    }
+    public void updateBaekjoon(BojInformationRequestDTO bojInformationRequestDTO){
+        this.tier = bojInformationRequestDTO.getTier();
+        this.passCount = bojInformationRequestDTO.getPassCount();
+        this.tryFailCount = bojInformationRequestDTO.getTryFailCount();
+        this.submitCount = bojInformationRequestDTO.getSubmitCount();
+        this.failCount = bojInformationRequestDTO.getFailCount();
     }
 }

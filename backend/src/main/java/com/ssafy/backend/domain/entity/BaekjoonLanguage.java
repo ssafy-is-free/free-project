@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.entity;
 
+import com.ssafy.backend.domain.algorithm.dto.request.BojLanguageResultDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,5 +43,20 @@ public class BaekjoonLanguage extends BaseTimeEntity {
         this.passPercentage = passPercentage;
         this.passCount = passCount;
         this.baekjoon = baekjoon;
+    }
+
+    public static BaekjoonLanguage createBaekjoonLanguage(Long languageId, BojLanguageResultDTO bojLanguageResultDTO, Baekjoon baekjoon){
+        return BaekjoonLanguage.builder()
+                .languageId(languageId)
+                .passPercentage(bojLanguageResultDTO.getPassPercentage())
+                .passCount(bojLanguageResultDTO.getPassCount())
+                .baekjoon(baekjoon)
+                .build();
+
+    }
+
+    public void updateBaekjoonLanguage(BojLanguageResultDTO bojLanguageResultDTO) {
+        this.passPercentage = bojLanguageResultDTO.getPassPercentage();
+        this.passCount = bojLanguageResultDTO.getPassCount();
     }
 }
