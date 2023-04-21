@@ -35,10 +35,11 @@ public class GithubLanguage extends BaseTimeEntity {
     @JoinColumn(name = "github_id", nullable = false)
     private Github github;
 
-    public static GithubLanguage create(long id, String percentage) {
+    public static GithubLanguage create(long id, String percentage, Github github) {
         return GithubLanguage.builder()
                 .languageId(id)
                 .percentage(percentage)
+                .github(github)
                 .build();
     }
 
