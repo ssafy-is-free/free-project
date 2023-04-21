@@ -1,4 +1,5 @@
 import CancelOk from '@/components/common/CancelOk';
+import Footer from '@/components/common/Footer';
 
 export default function Home() {
   const cancel = () => {
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <div>
       <CancelOk cancel={cancel} ok={ok}></CancelOk>
+      <Footer></Footer>
     </div>
   );
 }
