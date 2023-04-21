@@ -1,13 +1,17 @@
 import type { AppProps } from 'next/app';
-import { lightTheme } from '@/styles/theme';
-import { ThemeProvider } from 'styled-components';
 import wrapper from '@/redux';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from '@/styles/theme';
 
-function App({ Component, pageProps }: AppProps) {
+function App({ Component, ...rest }: AppProps) {
+  const { store, props } = wrapper.useWrappedStore(rest);
   return (
-    <ThemeProvider theme={lightTheme}>
-      <Component {...pageProps} />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={lightTheme}>
+        <Component {...props.pageProps} />
+      </ThemeProvider>
+    </Provider>
   );
 }
-export default wrapper.withRedux(App);
+export default App;
