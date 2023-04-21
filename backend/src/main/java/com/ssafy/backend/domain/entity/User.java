@@ -20,7 +20,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "nickname", nullable = false)
+    @Column(name = "nickname", nullable = false, unique = true)
     private String nickname;
 
     @Column(name = "image", nullable = false)
