@@ -51,7 +51,7 @@ public class Github extends BaseTimeEntity {
     private int doNotUse2;
 
 
-    public static Github create(int commits, int followers, int stars, String profileLink) {
+    public static Github create(int commits, int followers, int stars, String profileLink, User user) {
         // calc score
         int s = 0;
 
@@ -61,6 +61,7 @@ public class Github extends BaseTimeEntity {
                 .starTotalCount(stars)
                 .profileLink(profileLink)
                 .score(s)
+                .user(user)
                 .build();
     }
 }
