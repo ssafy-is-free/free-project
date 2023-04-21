@@ -202,7 +202,7 @@ def getRepo(username: str, result: dict):
         if readme_html is not None:
             repo['readme'] = str(readme_html)
         else:
-            repo['readme'] = None
+            repo['readme'] = ""
 
         repo['name'] = repo_name
         repo['link'] = repo_url
