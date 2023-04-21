@@ -82,7 +82,9 @@ public class AlgorithmServiceImpl implements AlgorithmService{
                 for(BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()){
 
                     // 언어 정보 받아오기
-                    Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(), LanguageType.BAEKJOON);
+                    Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(), LanguageType.BAEKJOON).orElseGet(
+                            () -> null  // 언어정보가 없다면 언어 생성, 저장, 반환 2023-04-21 이성복
+                    );
                     // 유저에 해당하는 언어 정보가 있는지 파악하기
                     Optional<BaekjoonLanguage> oBaekjoonLanguage = bojLanguageRepository.findByLanguageIdAndBaekjoonId(language.getId(), baekjoon.getId());                    //
                     BaekjoonLanguage baekjoonLanguage = oBaekjoonLanguage.orElse(null);
