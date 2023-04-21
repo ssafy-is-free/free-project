@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -13,6 +15,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "github_languages")
 public class GithubLanguage extends BaseTimeEntity {
 
@@ -31,6 +35,11 @@ public class GithubLanguage extends BaseTimeEntity {
     @JoinColumn(name = "github_id", nullable = false)
     private Github github;
 
-
+    public static GithubLanguage create(long id, String percentage) {
+        return GithubLanguage.builder()
+                .languageId(id)
+                .percentage(percentage)
+                .build();
+    }
 
 }
