@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -13,6 +15,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "github")
 public class Github extends BaseTimeEntity {
 
@@ -43,4 +47,16 @@ public class Github extends BaseTimeEntity {
     private int doNotUse2;
 
 
+    public static Github create(int commits, int followers, int stars, String profileLink) {
+        // calc score
+        int s = 0;
+
+        return Github.builder()
+                .commitTotalCount(commits)
+                .followerTotalCount(followers)
+                .starTotalCount(stars)
+                .profileLink(profileLink)
+                .score(s)
+                .build();
+    }
 }
