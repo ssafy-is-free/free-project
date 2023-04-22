@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -13,6 +15,8 @@ import static javax.persistence.GenerationType.*;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 @Table(name = "users")
 public class User extends BaseTimeEntity {
 
@@ -42,5 +46,24 @@ public class User extends BaseTimeEntity {
     @Column(name = "do_not_use1")
     private String doNotUse1;
 
+
+    //엔티티 생성 메서드
+    public static User create(String nickname, String image, Rank rank){
+
+        return User.builder()
+                .nickname(nickname)
+                .image(image)
+                .rank(rank)
+                .isDeleted(false)
+                .build();
+    }
+
+    //로그인시 업데이트 - 닉네임, 프로필
+    public void profileUpdate(String nickname, String image){
+
+        this.nickname = nickname;
+        this.image = image;
+
+    }
 
 }

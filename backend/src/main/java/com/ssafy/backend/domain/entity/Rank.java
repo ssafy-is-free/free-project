@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -10,9 +12,11 @@ import javax.persistence.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
+@Builder
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "rank")
 public class Rank extends BaseTimeEntity {
 
@@ -32,4 +36,15 @@ public class Rank extends BaseTimeEntity {
 
     @Column(name = "boj_previous_rank", nullable = false)
     private long bojPreviousRank;
+
+    //엔티티 생성
+    public static Rank create(){
+        return Rank.builder()
+                .githubCurrentRank(0)
+                .githubPreviousRank(0)
+                .bojCurrentRank(0)
+                .bojPreviousRank(0)
+                .build();
+    }
+
 }
