@@ -14,28 +14,15 @@ public class GithubOAuth2UserInfo extends OAuth2UserInfo{
         return attributes.toString();
     }
 
-    @Override
-    public String getEmail() {
-        return null;
-    }
-
+    //닉네임.
     @Override
     public String getName() {
-        return null;
+        return attributes.get("login").toString();
     }
 
     @Override
     public String getProfileImage() {
-        return null;
+        return attributes.get("avatar_url").toString();
     }
 
-    @Override
-    public String getGender() {
-        return null;
-    }
-
-    @Override
-    public String getAge() {
-        return null;
-    }
 }

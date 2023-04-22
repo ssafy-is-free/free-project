@@ -14,9 +14,6 @@ public abstract class OAuth2UserInfo {
     protected Map<String, Object> attributes;
 
     public abstract String getUser();
-    public abstract String getEmail(); //이메일
     public abstract String getName(); //이름 또는 닉네임
     public abstract String getProfileImage(); //프로필 이미지
-    public abstract String getGender(); // 성별
-    public abstract String getAge(); //나이
 }

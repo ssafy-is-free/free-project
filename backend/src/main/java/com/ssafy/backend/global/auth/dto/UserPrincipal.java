@@ -15,19 +15,20 @@ import java.util.Map;
 public class UserPrincipal implements OAuth2User, UserDetails {
 
     private long id;
-    private String email;
+
+    private String nickname;
 
     @Builder
-    public UserPrincipal(long id, String email) {
+    public UserPrincipal(long id, String nickname) {
         this.id = id;
-        this.email = email;
+        this.nickname = nickname;
     }
 
-    public static UserDetails createUserDetails(User user){
+    public static UserPrincipal createUserDetails(User user){
 
         return UserPrincipal.builder()
                 .id(user.getId())
-                .email(user.getEmail())
+                .nickname(user.getNickname())
                 .build();
     }
 
@@ -39,7 +40,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     //이메일로 대체
     @Override
     public String getUsername() {
-        return this.email;
+        return this.nickname;
     }
 
     @Override

@@ -45,7 +45,7 @@ public class SecurityConfig {
         /*oauth 인증 후 처리*/
         http
                 .oauth2Login()
-                .userInfoEndpoint().userService(customOAuth2UserService); //소셜 인증후에 받아온 회원정보를 처리할 서비스 지    .
+                .userInfoEndpoint().userService(customOAuth2UserService); //소셜 인증후에 받아온 회원정보를 처리할 서비스
 //            .and()
 //                .successHandler() //인증 성공했을때 동작할 핸들러
 //                .failureHandler() //인증 실패했을때 동작할 핸들러.
