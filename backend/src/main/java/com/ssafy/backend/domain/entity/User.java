@@ -66,4 +66,10 @@ public class User extends BaseTimeEntity {
 
     }
 
+    //리프레시 토큰 저장 - 업데이트
+    public void updateRefreshToken(String refreshToken){
+
+        this.refreshToken = refreshToken;
+    }
+
 }
