@@ -30,7 +30,7 @@ public class ControllerAdvisor {
 
         CustomExceptionStatus status = e.getCustomExceptionStatus();
 
-//        e.printStackTrace();
+        e.printStackTrace();
         log.warn("[" +" CustomException - " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + "]" +" : " + status.getMessage());
 
         return responseService.getExceptionResponse(status);
