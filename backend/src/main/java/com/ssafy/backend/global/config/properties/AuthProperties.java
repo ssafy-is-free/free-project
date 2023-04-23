@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "auth")
 public class AuthProperties {
 
-    private String accessTokenSecret;
-    private String refreshTokenSecret;
+    private String tokenSecret;
     private String redirectPage;
 }
