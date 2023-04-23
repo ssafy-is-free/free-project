@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -32,8 +34,14 @@ public class TokenProvider {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + ACCESS_TOKEN_VALIDATE_TIME);
 
+        //페이로드에 들어갈 id와 유저 이름
+        Map<String,Object> payloads = new HashMap<>();
+        payloads.put("id", Long.toString(userPrincipal.getId()));
+        payloads.put("nickname", userPrincipal.getNickname());
+
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .setClaims(payloads)
+                .setSubject("auth")
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, authProperties.getAccessTokenSecret())
@@ -47,6 +55,7 @@ public class TokenProvider {
         Date expireDate = new Date(now.getTime() + REFRESH_TOKEN_VALIDATE_TIME);
 
         return Jwts.builder()
+                .setSubject("refresh")
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
                 .signWith(SignatureAlgorithm.HS512, authProperties.getRefreshTokenSecret())
