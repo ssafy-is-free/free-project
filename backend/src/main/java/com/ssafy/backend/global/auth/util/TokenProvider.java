@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
@@ -44,7 +41,7 @@ public class TokenProvider {
                 .setSubject("auth")
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, authProperties.getAccessTokenSecret())
+                .signWith(SignatureAlgorithm.HS512, authProperties.getTokenSecret().getBytes())
                 .compact();
     }
 
@@ -58,14 +55,14 @@ public class TokenProvider {
                 .setSubject("refresh")
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS512, authProperties.getRefreshTokenSecret())
+                .signWith(SignatureAlgorithm.HS512, authProperties.getTokenSecret().getBytes())
                 .compact();
     }
 
     //엑세스 토큰 검증
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(authProperties.getAccessTokenSecret()).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(authProperties.getTokenSecret().getBytes()).parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException e) { // 유효하지 않은 JWT
 //            throw new CustomException(TOKEN_INVALID);
@@ -84,25 +81,22 @@ public class TokenProvider {
     }
 
     //리프레시 토큰 검증
-    public boolean validateRefreshToken(String refreshToken) {
+    public boolean validateRefreshToken(String refreshToken,String dbRefreshToken) {
 
         //검증
         validateToken(refreshToken);
 
-        //DB를 조회해서 비교.
-        Optional<User> refreshTokenOptional = userRepository.findByIdAndIsDeletedFalse(getUserIdFromToken(refreshToken));
-
-        return refreshTokenOptional.isPresent() && refreshToken.equals(refreshTokenOptional.get().getRefreshToken());
+        return refreshToken.equals(dbRefreshToken);
 
     }
 
     //토큰에서 id값 가져오기.
     public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(authProperties.getAccessTokenSecret())
+                .setSigningKey(authProperties.getTokenSecret().getBytes())
                 .parseClaimsJws(token)
                 .getBody();
-        return Long.parseLong(claims.getSubject());
+        return Long.parseLong((String)claims.get("id"));
     }
 
 

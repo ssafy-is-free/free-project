@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -32,6 +33,7 @@ import static com.ssafy.backend.global.auth.util.HttpCookieOAuth2AuthorizationRe
 // TODO: 2023-04-23 현재는 쿠키에 값을 그대로 담지만, httpcookieOuath2~~ 클래슬를 이용해서 인코딩하여 담는 식으로 수정 필요.
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 @Component
 public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
