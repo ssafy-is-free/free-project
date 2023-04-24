@@ -1,11 +1,12 @@
 package com.ssafy.backend.domain.github.controller;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.service.GithubService;
 import com.ssafy.backend.global.response.CustomSuccessStatus;
@@ -18,17 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/github")
+@RequestMapping("/api/github")
 public class GithubController {
 
 	private final ResponseService responseService;
 	private final GithubService githubService;
 
 	@GetMapping("/ranks")
-	public DataResponse<GithubRankingResponse> getGithubRanks(GitHubRankingFilter rankingFilter, String lastId,
-		Pageable pageable) {
-		GithubRankingResponse githubRank = githubService.getGithubRank(rankingFilter, pageable);
+	public DataResponse<GithubRankingResponse> getGithubRanks(Integer rank, String lastId,
+		@PageableDefault(size = 1, sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
+		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, lastId, pageable);
 
-		return responseService.getDataResponse(githubRank, CustomSuccessStatus.RESPONSE_SUCCESS);
+		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
 }
