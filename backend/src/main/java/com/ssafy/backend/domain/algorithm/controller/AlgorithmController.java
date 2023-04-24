@@ -19,13 +19,15 @@ import org.springframework.web.bind.annotation.*;
 public class AlgorithmController {
     private final ResponseService responseService;
     private final AlgorithmService algorithmService;
+
     @GetMapping("/my-rank")
-    public DataResponse<BojMyRankResponseDTO> bojMyRank(){
+    public DataResponse<BojMyRankResponseDTO> bojMyRank() {
 
         return null;
     }
+
     @PatchMapping("")
-    public CommonResponse bojSaveUser(@RequestParam Long userId){
+    public CommonResponse bojSaveUser(@RequestParam Long userId) {
         algorithmService.patchBojByUserId(userId);
 
         return responseService.getSuccessResponse();

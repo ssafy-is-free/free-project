@@ -28,15 +28,16 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class AlgorithmServiceImpl implements AlgorithmService{
+public class AlgorithmServiceImpl implements AlgorithmService {
     private final BojRepository bojRepository;
     private final BojLanguageRepository bojLanguageRepository;
     private final LanguageRepository languageRepository;
     private final UserRepository userRepository;
     private final WebClient webClient;
+
     @Override
     @Transactional
-    public void patchBojByUserId(long userId){
+    public void patchBojByUserId(long userId) {
         //유저 아이디로 백준 아이디 조회
         Optional<User> oUser = userRepository.findById(userId);
         User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
@@ -64,22 +65,22 @@ public class AlgorithmServiceImpl implements AlgorithmService{
                     return getFallbackDto();
                 });*/
         //저장
-        if(bojInformationResponseDTO.getTier() != null){
+        if (bojInformationResponseDTO.getTier() != null) {
             //유저가 이미 백준 아이디를 저장했는지 확인하기
             Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
             Baekjoon baekjoon = oBaekjoon.orElse(null);
             // 비어있다면 추가하고 이미 있다면 업데이트
-            if(baekjoon == null){
+            if (baekjoon == null) {
                 baekjoon = Baekjoon.createBaekjoon(bojInformationResponseDTO, user);
-            }else {
+            } else {
                 baekjoon.updateBaekjoon(bojInformationResponseDTO);
             }
             bojRepository.save(baekjoon);
             // 리스트 저장
             // 리스트가 비어있지 않을 때
-            if(bojInformationResponseDTO.getLanguagesResult() != null){
+            if (bojInformationResponseDTO.getLanguagesResult() != null) {
                 List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
-                for(BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()){
+                for (BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()) {
 
                     // 언어 정보 받아오기
                     Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(), LanguageType.BAEKJOON).orElseGet(
@@ -89,9 +90,9 @@ public class AlgorithmServiceImpl implements AlgorithmService{
                     Optional<BaekjoonLanguage> oBaekjoonLanguage = bojLanguageRepository.findByLanguageIdAndBaekjoonId(language.getId(), baekjoon.getId());                    //
                     BaekjoonLanguage baekjoonLanguage = oBaekjoonLanguage.orElse(null);
                     // 비어있다면 추가하고 이미 있다면 업데이트
-                    if(baekjoonLanguage == null){
+                    if (baekjoonLanguage == null) {
                         baekjoonLanguage = BaekjoonLanguage.createBaekjoonLanguage(language.getId(), bojLanguageResultDTO, baekjoon);
-                    }else{
+                    } else {
                         baekjoonLanguage.updateBaekjoonLanguage(bojLanguageResultDTO);
                     }
                     baekjoonLanguageList.add(baekjoonLanguage);
