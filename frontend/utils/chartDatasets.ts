@@ -1,22 +1,22 @@
-interface Language {
+export interface ChartInput {
   name: string;
   percentage: number;
 }
 
 /**
- * languages를 chartjs에 쓸 data로 변환
- * @param languages
+ * data를 chartjs에 쓸 dataset로 변환
+ * @param data
  * @returns
  */
-export const myChartData = (languages: Language[]) => {
-  const labels = languages.map((language: Language) => {
-    return language.name;
+export const myChartData = (data: ChartInput[]) => {
+  const labels = data.map((data: ChartInput) => {
+    return data.name;
   });
-  const percentages = languages.map((language: Language) => {
-    return language.percentage;
+  const percentages = data.map((data: ChartInput) => {
+    return data.percentage;
   });
 
-  const data = {
+  const dataset = {
     labels,
     datasets: [
       {
@@ -26,5 +26,5 @@ export const myChartData = (languages: Language[]) => {
       },
     ],
   };
-  return data;
+  return dataset;
 };
