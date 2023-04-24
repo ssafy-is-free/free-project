@@ -72,4 +72,8 @@ public class User extends BaseTimeEntity {
         this.refreshToken = refreshToken;
     }
 
+    public void saveBojId(String bojId){
+        this.bojId = bojId;
+    }
+
 }
