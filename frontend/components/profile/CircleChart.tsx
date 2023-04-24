@@ -1,58 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
-import { myChartData } from '@/utils/chartDatasets';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import { myChartData } from '@/utils/chartDatasets';
+import { CircleChartProps } from './IProfile';
 
-/**
- * dummydata
- */
-const data = {
-  githubId: 1,
-  nickname: 'hyejoo',
-  profileLink: 'https://~~',
-  avatarUrl: 'https://~~~',
-  commit: 100,
-  star: 20,
-  followers: 5,
-  repositories: [
-    {
-      id: 1,
-      name: 'ssafy-name',
-      link: 'https://~~~',
-    },
-  ],
-  languages: [
-    {
-      name: 'java',
-      percentage: 98,
-    },
-    {
-      name: 'python',
-      percentage: 2,
-    },
-  ],
-};
-
-const ChartDiv = styled.div`
-  height: auto;
-`;
-
-export default function CircleChart() {
+export default function CircleChart({ data, fontsize, label }: CircleChartProps) {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const options = {
-    // 옵션 (1)
     responsive: true,
-    // 옵션 (2)
-    interaction: {},
-    // 옵션 (4)
     plugins: {
       legend: {
-        display: true,
+        display: label ? true : false,
         position: 'right' as const,
         labels: {
           font: {
-            size: 30,
+            size: fontsize ? fontsize : 10,
           },
         },
       },
@@ -60,8 +22,8 @@ export default function CircleChart() {
   };
 
   return (
-    <ChartDiv>
-      <Doughnut options={options} data={myChartData(data.languages)}></Doughnut>
-    </ChartDiv>
+    <div>
+      <Doughnut options={options} data={myChartData(data)}></Doughnut>
+    </div>
   );
 }
