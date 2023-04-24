@@ -10,6 +10,8 @@ import MainOtherItem from '@/components/rank/MainOtherItem';
 import NoAccount from '@/components/rank/NoAccount';
 import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
 import LoginModal from '@/components/login/LoginModal';
+import BojModal from '@/components/login/BojModal';
+import FilterModal from '@/components/rank/FilterModal';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -83,6 +85,11 @@ const Main = () => {
 
   // 로그인 모달 열기
   const [openLogin, setOpenLogin] = useState<boolean>(false);
+  // 백준 모달 열기
+  const [opeBoj, setOpenBoj] = useState<boolean>(false);
+
+  // filter 모달 열기
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
 
   if (!splash) {
     return <Splash />;
@@ -94,7 +101,7 @@ const Main = () => {
           <SearchBar curRank={curRank} />
           <div className="content-wrapper">
             <div className="filter-box">
-              <FilterIcon />
+              <FilterIcon onClick={() => setOpenFilter(true)} />
             </div>
             <div className="my-rank">
               <p>나의 랭킹</p>
@@ -110,7 +117,9 @@ const Main = () => {
           </div>
         </Wrapper>
         {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
-        {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
+        {openLogin && <LoginModal onClick={() => setOpenLogin(false)} setOpenBoj={setOpenBoj} />}
+        {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
+        {openFilter && <FilterModal onClick={() => setOpenFilter(false)} />}
       </>
     );
   }

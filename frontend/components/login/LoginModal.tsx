@@ -5,6 +5,7 @@ import BigBtn from '../common/BigBtn';
 
 interface IProps {
   onClick: () => void;
+  setOpenBoj: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const moveUp = keyframes`
@@ -53,6 +54,15 @@ const StyledCloseIcon = styled(CloseIcon)`
 `;
 
 const LoginModal = (props: IProps) => {
+  const onBtnClick = () => {
+    // 기존 로그인 모달 창 닫기
+    props.onClick();
+
+    // 깃허브 로그인
+    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+    // props.setOpenBoj(true);
+  };
+
   return (
     <>
       <DarkBg onClick={props.onClick} />
@@ -60,7 +70,7 @@ const LoginModal = (props: IProps) => {
         <StyledCloseIcon onClick={props.onClick} />
         <LogoPrimary />
         <div className="label">로그인 후 이용 가능합니다. </div>
-        <BigBtn text={'깃허브 로그인'} />
+        <BigBtn text={'깃허브 로그인'} onClick={onBtnClick} />
       </Wrapper>
     </>
   );
