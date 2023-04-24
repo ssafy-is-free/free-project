@@ -3,6 +3,7 @@ import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
 
 interface IProps {
   text: string;
+  onClick: () => void;
 }
 
 const Wrapper = styled.button`
@@ -12,10 +13,11 @@ const Wrapper = styled.button`
   padding: 16px 20%;
   border-radius: 8px;
   cursor: pointer;
+  width: 80%;
 `;
 
 const BigBtn = (props: IProps) => {
-  return <Wrapper>{props.text}</Wrapper>;
+  return <Wrapper onClick={props.onClick}>{props.text}</Wrapper>;
 };
 
 export default BigBtn;

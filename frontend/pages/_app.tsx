@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
+import Footer from '@/components/common/Footer';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
@@ -13,6 +14,7 @@ function App({ Component, ...rest }: AppProps) {
       <GlobalStyle />
       <ThemeProvider theme={lightTheme}>
         <Component {...props.pageProps} />
+        {/* <Footer /> */}
       </ThemeProvider>
     </Provider>
   );
