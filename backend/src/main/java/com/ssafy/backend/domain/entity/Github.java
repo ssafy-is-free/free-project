@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -44,6 +46,12 @@ public class Github extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
+    @OneToMany(mappedBy = "github")
+    private Set<GithubRepo> githubRepos = new HashSet<>();
+
+    @OneToMany(mappedBy = "github")
+    private Set<GithubLanguage> githubLanguages = new HashSet<>();
+
     @Column(name = "do_not_user1")
     private int doNotUse1;
 
@@ -63,5 +71,12 @@ public class Github extends BaseTimeEntity {
                 .score(s)
                 .user(user)
                 .build();
+    }
+
+    public void update(int commit, int followers, int star, String profileLink) {
+        this.commitTotalCount = commit;
+        this.followerTotalCount = followers;
+        this.starTotalCount = star;
+        this.profileLink = profileLink;
     }
 }

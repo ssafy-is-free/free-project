@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -41,6 +42,23 @@ public class GithubLanguage extends BaseTimeEntity {
                 .percentage(percentage)
                 .github(github)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (this.getClass() != object.getClass()) {
+            return false;
+        }
+        GithubLanguage language = (GithubLanguage) object;
+        return this.getLanguageId() == language.getLanguageId() && this.getPercentage().equals(language.getPercentage());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.languageId + this.percentage);
     }
 
 }
