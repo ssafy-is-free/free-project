@@ -44,7 +44,7 @@ def read(response: Response):
 #     return {"response_1": response_1, "response_2": response_2}
 
 # 백준 아이디를 통해 정보와 언어를 크롤링하는 API
-@app.get("/api/data/baekjoon/{name}")
+@app.get("/data/baekjoon/{name}")
 async def read_baekjoon(name):
     # 백준 사용자의 정보, 언어 url
     information_url = 'https://www.acmicpc.net/user/' + name
@@ -236,7 +236,7 @@ def getLanguage(username: str, result: dict):
     return result
 
 
-@app.get("/api/data/github/{name}")
+@app.get("/data/github/{name}")
 def read_github(name):
     result = dict()
     result = getUser(name, result)
