@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "baekjoon_languages")
 public class BaekjoonLanguage extends BaseTimeEntity {
 
@@ -35,15 +38,6 @@ public class BaekjoonLanguage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "baekjoon_id", nullable = false)
     private Baekjoon baekjoon;
-
-    @Builder
-    public BaekjoonLanguage(long id, long languageId, String passPercentage, int passCount, Baekjoon baekjoon) {
-        this.id = id;
-        this.languageId = languageId;
-        this.passPercentage = passPercentage;
-        this.passCount = passCount;
-        this.baekjoon = baekjoon;
-    }
 
     public static BaekjoonLanguage createBaekjoonLanguage(Long languageId, BojLanguageResultDTO bojLanguageResultDTO, Baekjoon baekjoon){
         return BaekjoonLanguage.builder()

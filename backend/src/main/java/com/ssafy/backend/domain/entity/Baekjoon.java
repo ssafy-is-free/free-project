@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.entity;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,8 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "baekjoon")
 public class Baekjoon extends BaseTimeEntity {
 
@@ -42,16 +45,6 @@ public class Baekjoon extends BaseTimeEntity {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Builder
-    public Baekjoon(long id, String tier, int passCount, int tryFailCount, int submitCount, int failCount, User user) {
-        this.id = id;
-        this.tier = tier;
-        this.passCount = passCount;
-        this.tryFailCount = tryFailCount;
-        this.submitCount = submitCount;
-        this.failCount = failCount;
-        this.user = user;
-    }
     public static Baekjoon createBaekjoon(BojInformationResponseDTO bojInformationResponseDTO, User user){
         return Baekjoon.builder()
                 .tier(bojInformationResponseDTO.getTier())
