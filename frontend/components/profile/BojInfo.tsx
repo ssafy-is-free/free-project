@@ -5,10 +5,10 @@ import CircleChart from './CircleChart';
 const BojInfoDiv = styled.div``;
 const BasicInfoDiv = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 47% 47%;
   grid-template-rows: auto auto;
-  grid-column-gap: 1rem;
-  grid-row-gap: 1rem;
+  grid-column-gap: 6%;
+  grid-row-gap: 6%;
 `;
 
 const BoxDiv = styled.div`

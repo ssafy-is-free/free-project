@@ -54,7 +54,7 @@ export default function GithubInfo({ github }: IGithubInfo) {
       <CommitDiv>
         {basicInfo.map((info, idx) => (
           <div key={idx}>
-            <h4>{info.data}</h4>
+            <h3>{info.data}</h3>
             <p>{info.name}</p>
           </div>
         ))}

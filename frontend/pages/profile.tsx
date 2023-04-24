@@ -6,6 +6,7 @@ import { IGithubProfile, IBojProfile } from '@/components/profile/IProfile';
 import { useEffect, useState } from 'react';
 import BojInfo from '@/components/profile/BojInfo';
 import ProfileHeader from '@/components/profile/ProfileHeader';
+import { useRouter } from 'next/router';
 
 /**dummydata
  *
@@ -54,7 +55,7 @@ const bojdata: IBojProfile = {
 const ProfileDiv = styled.div`
   margin-left: 2rem;
   margin-right: 2rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
   margin-bottom: max(10vh, 4rem);
 `;
 
@@ -85,6 +86,7 @@ interface IAvatarData {
 }
 
 export default function Profile() {
+  const router = useRouter();
   const [navIdx, setNavIdx] = useState(0);
   const [profileData, setProfileData] = useState<IAvatarData>({
     avatarUrl: 'Icon/ProfileIcon.svg',
@@ -112,8 +114,12 @@ export default function Profile() {
     </AvatarDiv>
   );
 
-  const back = () => {};
-  const compare = () => {};
+  const back = () => {
+    router.back();
+  };
+  const compare = () => {
+    alert('아직 미구현이에요!');
+  };
 
   return (
     <div>
