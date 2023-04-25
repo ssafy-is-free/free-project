@@ -10,6 +10,8 @@ services:
     networks:
       - mysql_application_network
     restart: always
+    depends_on:
+      - test-mysql
 networks:
   mysql_application_network:
     driver: bridge
