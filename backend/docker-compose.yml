@@ -10,9 +10,6 @@ services:
     networks:
       - mysql_application_network
     restart: always
-  test-mysql: 
-    networks:
-      - mysql_application_network
 
 networks:
   mysql_application_network: 
