@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { HYDRATE } from 'next-redux-wrapper';
 import countSlice from './countSlice';
+import splashSlice from './splashSlice';
 
 const combinedReducer = combineReducers({
   counter: countSlice,
+  splashChecker: splashSlice,
 });
 
 const rootReducer: typeof combinedReducer = (state, action) => {

@@ -3,6 +3,7 @@ import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
 import { useRef, useState } from 'react';
 import { NestedMiddlewareError } from 'next/dist/build/utils';
+import CancelOk from '../common/CancelOk';
 
 interface IProps {
   onClick: () => void;
@@ -37,7 +38,8 @@ const Wrapper = styled.div<IOption>`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 32px 24px;
+  /* padding: 32px 24px; */
+  padding: 32px 0px 0px;
   position: fixed;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
@@ -47,6 +49,7 @@ const Wrapper = styled.div<IOption>`
     font-weight: bold;
     font-size: 20px;
     margin-bottom: 44px;
+    padding: 0 24px;
   }
 
   .filter-box {
@@ -54,6 +57,7 @@ const Wrapper = styled.div<IOption>`
     flex-direction: column;
     width: 100%;
     margin-bottom: 32px;
+    padding: 0 24px;
 
     .box-top {
       display: flex;
@@ -115,6 +119,10 @@ const StyledCloseIcon = styled(CloseIcon)`
 
 const StyledFilterArrowIcon = styled(FilterArrowIcon)`
   cursor: pointer;
+`;
+
+const StyledCancelOk = styled(CancelOk)`
+  font-size: 14px;
 `;
 
 const FilterModal = (props: IProps) => {
@@ -235,6 +243,23 @@ const FilterModal = (props: IProps) => {
     setSelected(newArr);
   };
 
+  // 초기화 버튼 클릭 시
+  const onInit = () => {
+    let newArr = new Array();
+    selected.map((el, parentIdx) => {
+      // style 초기화
+      itemRefs.current[parentIdx].childNodes.forEach((el: any) => {
+        el.style.backgroundColor = '#ffffff';
+        el.style.color = '#4A58A9';
+      });
+
+      el?.itemArr?.splice(0);
+      newArr.push(el);
+    });
+
+    setSelected(newArr);
+  };
+
   return (
     <>
       <DarkBg onClick={props.onClick} />
@@ -265,6 +290,7 @@ const FilterModal = (props: IProps) => {
             </div>
           );
         })}
+        <StyledCancelOk cancelWord="초기화" okWord="필터적용" cancel={onInit} ok={props.onClick} />
       </Wrapper>
     </>
   );
