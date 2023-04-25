@@ -6,17 +6,17 @@ ENV APP_HOME=/usr/app
 
 WORKDIR $APP_HOME
 
-# COPY . .
+COPY . .
 
-COPY ./manamana/build/libs/*.jar ./application.jar
+# COPY ./manamana/build/libs/*.jar ./application.jar
 
-# RUN chmod +x gradlew
+RUN chmod +x gradlew
 
-# RUN ./gradlew clean build -x test
+RUN ./gradlew clean build -x test
 
 COPY ./resources ./resources
 
-# COPY ./backend/build/libs/*.jar ./application.jar
+COPY ./backend/build/libs/*.jar ./application.jar
 
 EXPOSE 8080
 

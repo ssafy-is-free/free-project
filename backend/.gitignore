@@ -37,7 +37,7 @@ out/
 .vscode/
 
 **/src/main/resources/
-**/gradle/
+#**/gradle/
 
 ### QClass
 ***/src/main/generated
