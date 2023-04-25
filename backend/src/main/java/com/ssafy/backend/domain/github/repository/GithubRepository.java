@@ -1,11 +1,15 @@
 package com.ssafy.backend.domain.github.repository;
 
-import com.ssafy.backend.domain.entity.Github;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.Optional;
 
-public interface GithubRepository extends JpaRepository<Github, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-    Optional<Github> findByUserId(long userId);
+import com.ssafy.backend.domain.entity.Github;
+import com.ssafy.backend.domain.github.repository.querydsl.GithubRepositoryCustom;
+
+@Repository
+public interface GithubRepository extends JpaRepository<Github, Long>, GithubRepositoryCustom {
+	Optional<Github> findByUserId(long userId);
+
 }
