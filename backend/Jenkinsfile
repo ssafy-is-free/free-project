@@ -88,8 +88,6 @@ pipeline {
         stage("Server Run") {
             steps {
                 dir("${DOCKER_FILE_PATH}"){
-                    sh "ls"
-                    sh "pw" 
                     sh "docker-compose up -d"
                 }
             }
