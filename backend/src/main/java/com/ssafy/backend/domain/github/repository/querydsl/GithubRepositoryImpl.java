@@ -1,7 +1,6 @@
 package com.ssafy.backend.domain.github.repository.querydsl;
 
 import static com.ssafy.backend.domain.entity.QGithub.*;
-import static com.ssafy.backend.domain.entity.QRank.*;
 import static com.ssafy.backend.domain.entity.QUser.*;
 
 import java.util.List;
@@ -24,8 +23,6 @@ public class GithubRepositoryImpl implements GithubRepositoryCustom {
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
-			.fetchJoin()
-			.innerJoin(user.rank, rank)
 			.fetchJoin()
 			.where(checkCursor(score, githubId))
 			.orderBy(github.score.desc())

@@ -23,7 +23,7 @@ public class GithubRankingCover {
 	public GithubRankingCover(Github github) {
 		this.userId = github.getUser().getId();
 		this.nickname = github.getUser().getNickname();
-		this.prevRank = github.getUser().getRank().getGithubPreviousRank();
+		this.prevRank = github.getPreviousRank();
 		this.score = github.getScore();
 		this.avatarUrl = github.getUser().getImage();
 
