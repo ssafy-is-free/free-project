@@ -49,6 +49,7 @@ pipeline {
             steps {
                 dir("${DOCKER_FILE_PATH}"){
                     script {
+                        sh "ls"
                         image = docker.build("${IMAGE_NAME}")
                     }
 
