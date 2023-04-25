@@ -52,7 +52,7 @@ pipeline {
             steps{
                 dir("${DOCKER_FILE_PATH}"){
                     sh "docker compose down"
-                    sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
+                    // sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
 
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
                     sh "docker ps -a"
