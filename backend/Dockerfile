@@ -19,7 +19,7 @@ COPY ./resources ./resources
 #RUN ls build
 #RUN pwd
 
-RUN mv ./build/libs/*.jar ./application.jar
+RUN mv ./build/libs/*.jar application.jar
 
 EXPOSE 8080
 
