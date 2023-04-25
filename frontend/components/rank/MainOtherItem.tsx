@@ -1,7 +1,17 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 interface IProps {
   curRank: number;
+  item: {
+    userId: number;
+    nickname: string;
+    rank: number;
+    tierUrl?: string;
+    score: string;
+    avatarUrl: string;
+    rankUpDown: number;
+  };
 }
 
 const Wrapper = styled.div`
@@ -25,7 +35,7 @@ const Wrapper = styled.div`
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: black;
+    /* background-color: black; */
   }
   .user-nickname {
     width: 50%;
@@ -49,10 +59,12 @@ const Wrapper = styled.div`
 const MainOtherItem = (props: IProps) => {
   return (
     <Wrapper>
-      <div className="rank-num">300</div>
-      <div className="user-photo"></div>
-      <div className="user-nickname">아이디 {props.curRank == 1 && <div className="user-tier"></div>}</div>
-      <div className="user-score">점수</div>
+      <div className="rank-num">{props.item?.rank}</div>
+      <img src={props.item?.avatarUrl} className="user-photo" />
+      <div className="user-nickname">
+        {props.item?.nickname} {props.curRank == 1 && <img src={props.item?.tierUrl} className="user-tier" />}
+      </div>
+      <div className="user-score">{props.item?.score}</div>
     </Wrapper>
   );
 };

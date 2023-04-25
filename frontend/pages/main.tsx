@@ -12,6 +12,10 @@ import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
 import LoginModal from '@/components/login/LoginModal';
 import BojModal from '@/components/login/BojModal';
 import FilterModal from '@/components/rank/FilterModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { SplashState, splashCheck } from '@/redux/splashSlice';
+import Footer from '@/components/common/Footer';
+import { RootState } from '@/redux';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -66,9 +70,15 @@ const Main = () => {
   // splash screen 적용하기
   const [splash, setSplash] = useState<boolean>(false);
 
+  // splash 상태관리
+  const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplash(true);
+      // splash 상태값 변경
+      dispatch(splashCheck());
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -91,7 +101,116 @@ const Main = () => {
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
 
-  if (!splash) {
+  // rank list
+  const gitRankList = [
+    {
+      userId: 1,
+      nickname: 'ssafy1',
+      rank: 1,
+      score: '600',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+    {
+      userId: 2,
+      nickname: 'ssafy2',
+      rank: 2,
+      score: '500',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+    {
+      userId: 3,
+      nickname: 'ssafy3',
+      rank: 3,
+      score: '400',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+    {
+      userId: 4,
+      nickname: 'ssafy4',
+      rank: 4,
+      score: '300',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+    {
+      userId: 5,
+      nickname: 'ssafy5',
+      rank: 5,
+      score: '200',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+    {
+      userId: 6,
+      nickname: 'ssafy6',
+      rank: 6,
+      score: '100',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      rankUpDown: 3,
+    },
+  ];
+
+  const bojRankList = [
+    {
+      userId: 1,
+      nickname: 'ssafy1',
+      rank: 1,
+      score: '600',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+    {
+      userId: 2,
+      nickname: 'ssafy2',
+      rank: 2,
+      score: '500',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+    {
+      userId: 3,
+      nickname: 'ssafy3',
+      rank: 3,
+      score: '400',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+    {
+      userId: 4,
+      nickname: 'ssafy4',
+      rank: 4,
+      score: '300',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+    {
+      userId: 5,
+      nickname: 'ssafy5',
+      rank: 5,
+      score: '200',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+    {
+      userId: 6,
+      nickname: 'ssafy6',
+      rank: 6,
+      score: '100',
+      avatarUrl: 'https://www.thechooeok.com/common/img/default_profile.png',
+      tierUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgGc1LYJ69Hyiy7uUJCgq3PzRMBWgyT5DX_Q&usqp=CAU',
+      rankUpDown: 3,
+    },
+  ];
+
+  if (!splash && !splashState) {
     return <Splash />;
   } else {
     return (
@@ -110,9 +229,17 @@ const Main = () => {
             </div>
             <ul className="rank-list">
               <p>전체 랭킹</p>
-              <li>
-                <MainOtherItem curRank={curRank} />
-              </li>
+              {curRank == 0
+                ? gitRankList.map((el) => (
+                    <li>
+                      <MainOtherItem curRank={curRank} item={el} />
+                    </li>
+                  ))
+                : bojRankList.map((el) => (
+                    <li>
+                      <MainOtherItem curRank={curRank} item={el} />
+                    </li>
+                  ))}
             </ul>
           </div>
         </Wrapper>

@@ -1,6 +1,8 @@
 import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../public/Icon/LogoWhite.svg';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { splashCheck } from '@/redux/splashSlice';
 
 const moveUp = keyframes`
  from{
