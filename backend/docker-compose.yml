@@ -15,5 +15,5 @@ services:
       - mysql_application_network
 
 networks:
-  mysql_application_network:
-  name: mysql_application_network
+  mysql_application_network: 
+    external: true
