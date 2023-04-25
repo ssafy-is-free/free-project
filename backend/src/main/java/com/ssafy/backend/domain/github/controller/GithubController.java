@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
@@ -31,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/github")
+@RequestMapping("/github")
 public class GithubController {
 
 	private final ResponseService responseService;
@@ -47,11 +48,18 @@ public class GithubController {
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
-	
+
 	@GetMapping("/{githubId}/repositories/{repositoryId}")
 	public DataResponse<ReadmeResponse> getReadme(@PathVariable long githubId, @PathVariable long repositoryId) {
-		ReadmeResponse readmeResponse = githubService.findReadme(githubId, repositoryId);
+		ReadmeResponse readmeResponse = githubService.getReadme(githubId, repositoryId);
 		return responseService.getDataResponse(readmeResponse, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/users/{userId}")
+	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable long userId) {
+		GithubDetailResponse details = githubService.getDetails(userId);
+		return responseService.getDataResponse(details, RESPONSE_SUCCESS);
+
 	}
 
 	@PatchMapping("/crawling/{nickname}/{userId}")

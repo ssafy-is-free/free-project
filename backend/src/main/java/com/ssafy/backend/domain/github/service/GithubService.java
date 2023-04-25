@@ -9,9 +9,11 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.GithubRepo;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
+import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingCover;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.dto.LanguageCond;
@@ -21,6 +23,7 @@ import com.ssafy.backend.domain.github.repository.GithubRepoRepository;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
+import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +37,7 @@ public class GithubService {
 	private final GithubLanguageRepository githubLanguageRepository;
 	private final GithubRepository githubRepository;
 	private final UserQueryRepository userQueryRepository;
+	private final UserRepository userRepository;
 
 	public GithubRankingResponse getGithubRank(long rank, Long userId, Integer score, Pageable pageable) {
 		List<GithubRankingCover> githubCovers = githubRepository.findAll(userId, score, pageable)
@@ -81,7 +85,7 @@ public class GithubService {
 			.collect(Collectors.toList());
 	}
 
-	public ReadmeResponse findReadme(long githubId, long repositoryId) {
+	public ReadmeResponse getReadme(long githubId, long repositoryId) {
 		GithubRepo githubRepo = githubRepoRepository.findById(repositoryId).orElseThrow(() -> {
 			throw new CustomException(NOT_FOUND_REPOSITORY);
 		});
@@ -98,4 +102,11 @@ public class GithubService {
 		}
 	}
 
+	public GithubDetailResponse getDetails(long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		Github github = githubRepository.findByUser(user).orElseThrow(() -> new CustomException(NOT_FOUND_GITHUB));
+
+		log.info(github.toString());
+		return new GithubDetailResponse(github);
+	}
 }
