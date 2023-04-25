@@ -1,0 +1,14 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - mysql_application_network
+    restart: always
+networks:
+  mysql_application_network:
+    external: true
