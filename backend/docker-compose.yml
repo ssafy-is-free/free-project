@@ -12,4 +12,4 @@ services:
     restart: always
 networks:
   mysql_application_network:
-    external: true
+    driver: bridge
