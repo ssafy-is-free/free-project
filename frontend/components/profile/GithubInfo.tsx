@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { IGithubInfo } from './IProfile';
 import CircleChart from './CircleChart';
+import Readme from './Readme';
 
 const GithubDiv = styled.div`
   display: flex;
@@ -29,8 +30,10 @@ const RepoDiv = styled.div`
   }
 `;
 
-const RepoItemDiv = styled.div`
-  border: 1px solid;
+const ReadmeDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
 export default function GithubInfo({ github }: IGithubInfo) {
@@ -65,11 +68,11 @@ export default function GithubInfo({ github }: IGithubInfo) {
       </LanguageDiv>
       <RepoDiv>
         <p>Repositiories</p>
-        <div>
+        <ReadmeDiv>
           {github.repositories.map((repo, idx) => (
-            <RepoItemDiv key={idx}>{repo.name}</RepoItemDiv>
+            <Readme key={idx} repository={repo}></Readme>
           ))}
-        </div>
+        </ReadmeDiv>
       </RepoDiv>
     </GithubDiv>
   );

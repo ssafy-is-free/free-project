@@ -1,5 +1,11 @@
 import { ChartInput } from '@/utils/chartDatasets';
 
+export interface IRepository {
+  id: number;
+  name: string;
+  link: string;
+}
+
 /**
  * github profile data
  */
@@ -14,11 +20,7 @@ export interface IGithubProfile {
   commit: number;
   star: number;
   followers: number;
-  repositories: {
-    id: number;
-    name: string;
-    link: string;
-  }[];
+  repositories: IRepository[];
   languages: {
     name: string;
     percentage: number;

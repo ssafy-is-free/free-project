@@ -18,7 +18,7 @@ const NavItemDiv = styled.div<{ active: boolean }>`
   }
 `;
 
-export default function CustomNav({ lists, selectIdx }: ICustomNav) {
+function CustomNav({ lists, selectIdx }: ICustomNav) {
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
   const clicked = (idx: number) => {
     setSelectedIdx(idx);
@@ -41,3 +41,5 @@ export default function CustomNav({ lists, selectIdx }: ICustomNav) {
     </CustomNavDiv>
   );
 }
+
+export default CustomNav;
