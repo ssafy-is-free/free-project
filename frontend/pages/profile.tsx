@@ -22,8 +22,23 @@ const gitdata: IGithubProfile = {
   repositories: [
     {
       id: 1,
-      name: 'ssafy-name',
-      link: 'https://~~~',
+      name: 'repo-example1',
+      link: 'https://raw.githubusercontent.com/hotsix-turtles/TUPLI/dev/README.md',
+    },
+    {
+      id: 2,
+      name: 'repo-example1',
+      link: 'https://raw.githubusercontent.com/hotsix-turtles/TUPLI/dev/README.md',
+    },
+    {
+      id: 3,
+      name: 'repo-example1',
+      link: 'https://raw.githubusercontent.com/hotsix-turtles/TUPLI/dev/README.md',
+    },
+    {
+      id: 4,
+      name: 'repo-example1',
+      link: 'https://raw.githubusercontent.com/hotsix-turtles/TUPLI/dev/README.md',
     },
   ],
   languages: [
