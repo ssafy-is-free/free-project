@@ -16,10 +16,10 @@ RUN ./gradlew clean build -x test
 
 COPY ./resources ./resources
 
-RUN ls build
-RUN pwd
+#RUN ls build
+#RUN pwd
 
-COPY ./build/libs/*.jar ./application.jar
+RUN mv ./build/libs/*.jar ./application.jar
 
 EXPOSE 8080
 
