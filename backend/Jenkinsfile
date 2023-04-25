@@ -51,7 +51,7 @@ pipeline {
             // 컴포즈 down 후 컨테이너 삭제.
             steps{
                 dir("${DOCKER_FILE_PATH}"){
-                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker-compose down"
+                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker compose down"
                     sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
 
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
