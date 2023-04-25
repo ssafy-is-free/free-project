@@ -17,6 +17,7 @@ import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -56,6 +57,9 @@ public class Baekjoon extends BaseTimeEntity {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private User user;
+
+	@Column(name = "boj_previous_rank", nullable = false)
+	private long previousRank;
 
 	public static Baekjoon createBaekjoon(BojInformationResponseDTO bojInformationResponseDTO, User user) {
 		return Baekjoon.builder()
