@@ -78,6 +78,7 @@ const Wrapper = styled.div<IOption>`
     .box-content {
       max-height: 0;
       opacity: 0;
+      visibility: hidden;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       row-gap: 8px;
@@ -149,7 +150,7 @@ const FilterModal = (props: IProps) => {
   ]);
 
   // option 카운트 변수
-  const [selected, setSelected] = useState<{ id: number; itemArr: number[] | undefined }[]>([
+  const [selected, setSelected] = useState<({ id: number; itemArr: number[] | undefined } | undefined)[]>([
     { id: 1, itemArr: [] },
     { id: 2, itemArr: [] },
   ]);
@@ -176,12 +177,14 @@ const FilterModal = (props: IProps) => {
     const itemRefStyle = itemRefs.current[el - 1].style;
     if (newArr[el - 1]?.state) {
       itemRefStyle.opacity = '1';
+      itemRefStyle.visibility = 'visible';
       itemRefStyle.maxHeight = '240px';
 
       // 아이콘
       arrowRefs.current[el - 1].childNodes[1].style.transform = 'rotate(180deg)';
     } else {
       itemRefStyle.opacity = '0';
+      itemRefStyle.visibility = 'hidden';
       itemRefStyle.maxHeight = '0';
 
       // 아이콘
@@ -198,16 +201,27 @@ const FilterModal = (props: IProps) => {
       if (parentIdx == idx) {
         if (!selected.at(idx)?.itemArr?.includes(itemIdx)) {
           // 존재하지 않는 경우 => 배열에 추가,  style 교체
+          style.backgroundColor = '#4A58A9';
+          style.color = '#ffffff';
+
+          let newItemArr = selected.at(idx)?.itemArr;
+
+          if (newItemArr != undefined) {
+            return {
+              id: idx + 1,
+              itemArr: [...newItemArr, itemIdx],
+            };
+          }
+        } else {
+          // 존재하는 경우 => 배열에서 제거, style 교체
+          style.backgroundColor = '#ffffff';
+          style.color = '#4A58A9';
+
+          let newItemArr = selected.at(idx)?.itemArr?.filter((el) => el != itemIdx);
 
           return {
             id: idx + 1,
-            // itemArr: [...selected.at(idx).itemArr, itemIdx],
-          };
-        } else {
-          // 존재하는 경우 => 배열에서 제거, style 교체
-          return {
-            id: idx + 1,
-            itemArr: selected.at(idx)?.itemArr,
+            itemArr: newItemArr,
           };
         }
       } else {
@@ -218,7 +232,7 @@ const FilterModal = (props: IProps) => {
       }
     });
 
-    // setSelected(newArr);
+    setSelected(newArr);
   };
 
   return (
@@ -233,9 +247,9 @@ const FilterModal = (props: IProps) => {
               <div className="box-top" ref={(el) => (arrowRefs.current[idx] = el)}>
                 <div className="label">
                   {optionNames[idx]}
-                  {/* {selected[idx].itemArr.length > 0 && (
-                    <div className="selected-label">{selected[idx].itemArr.length}개 선택</div>
-                  )} */}
+                  {selected[idx]?.itemArr?.length ? (
+                    <div className="selected-label">{selected[idx]?.itemArr?.length}개 선택</div>
+                  ) : null}
                 </div>
                 <StyledFilterArrowIcon className="arrow" onClick={() => onHandleOptionBox(idx + 1)} />
               </div>
