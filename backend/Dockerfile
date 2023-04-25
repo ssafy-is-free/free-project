@@ -6,6 +6,7 @@ ENV APP_HOME=/usr/app
 
 WORKDIR $APP_HOME
 
+
 COPY . .
 
 # COPY ./manamana/build/libs/*.jar ./application.jar
