@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    tools{
+        gradle "spring boot gradle"
+    }
+
     stages {
         stage("Set Variable") {
             steps {
