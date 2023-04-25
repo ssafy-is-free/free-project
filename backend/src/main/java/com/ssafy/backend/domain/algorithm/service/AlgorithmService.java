@@ -2,13 +2,14 @@ package com.ssafy.backend.domain.algorithm.service;
 
 import java.util.List;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojMyRankResponseDTO;
-import com.ssafy.backend.domain.user.dto.BojIdListResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
 
 public interface AlgorithmService {
 	void patchBojByUserId(long userId);
 
-	BojMyRankResponseDTO getBojByUserId(long userId);
+	BojRankResponseDTO getBojByUserId(long userId);
 
-	List<BojIdListResponseDTO> getBojList(String nickname);
+	List<NicknameListResponseDTO> getBojListByBojId(String nickname);
+
 }

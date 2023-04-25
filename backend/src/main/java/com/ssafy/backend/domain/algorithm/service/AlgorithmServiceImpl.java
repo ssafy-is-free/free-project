@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojMyRankResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepositorySupport;
@@ -22,7 +22,7 @@ import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
-import com.ssafy.backend.domain.user.dto.BojIdListResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
@@ -119,7 +119,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojMyRankResponseDTO getBojByUserId(long userId) {
+	public BojRankResponseDTO getBojByUserId(long userId) {
 		int rank = 1;
 		//유저 아이디로 백준 아이디 조회
 		Optional<User> oUser = userRepository.findById(userId);
@@ -127,25 +127,38 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 
+		//백준 아이디 없다면 돌아가기
+		if (user.getBojId() == null) {
+			return null;
+		}
+
 		// 랭크 세기
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
-				BojMyRankResponseDTO bojMyRankResponseDTO = BojMyRankResponseDTO.createBojMyRankResponseDTO(baekjoon,
+				BojRankResponseDTO bojRankResponseDTO = BojRankResponseDTO.createBojMyRankResponseDTO(baekjoon,
 					user, rank);
-				return bojMyRankResponseDTO;
+				return bojRankResponseDTO;
 			} else {
 				rank++;
 			}
 		}
-		//백준 아이디가 없다면
+		//유저 아아디에는 백준이 있는데 조회가 안된다면 에러
+		throw new CustomException(NOT_FOUND_BOJ_USER);
 
-		return null;
 	}
 
-	public List<BojIdListResponseDTO> getBojList(String bojId) {
-		List<User> userList = userQueryRepository.findByBojId(bojId);
+	/**
+	 * 주어진 백준 ID(bojId)를 가진 사용자 목록을 조회하고,
+	 * 각 사용자에 대한 BojIdListResponseDTO 객체를 생성하여 이들을 리스트로 반환하는 메소드입니다.
+	 *
+	 * @param nickname 조회할 사용자의 백준 ID
+	 * @author noobsoda
+	 * @return NicknameListResponseDTO 객체 목록
+	 */
+	public List<NicknameListResponseDTO> getBojListByBojId(String nickname) {
+		List<User> userList = userQueryRepository.findByBojId(nickname);
 		return userList.stream()
-			.map(u -> BojIdListResponseDTO.create(u.getId(), u.getBojId()))
+			.map(u -> NicknameListResponseDTO.create(u.getId(), u.getBojId()))
 			.collect(Collectors.toList());
 	}
 
