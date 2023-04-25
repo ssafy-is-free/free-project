@@ -2,9 +2,9 @@ version: "3"
 services:
   app:
     image: sh80165/free-springboot
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
     ports:
       - 8080:8080
     networks:
