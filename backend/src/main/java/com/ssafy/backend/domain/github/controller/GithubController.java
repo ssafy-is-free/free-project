@@ -26,9 +26,10 @@ public class GithubController {
 	private final GithubService githubService;
 
 	@GetMapping("/ranks")
-	public DataResponse<GithubRankingResponse> getGithubRanks(Integer rank, String lastId,
-		@PageableDefault(size = 1, sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
-		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, lastId, pageable);
+	public DataResponse<GithubRankingResponse> getGithubRanks(long rank, Long githubId, Integer score,
+		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
+
+		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, githubId, score, pageable);
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}

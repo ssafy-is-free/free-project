@@ -8,5 +8,5 @@ import com.ssafy.backend.domain.entity.Github;
 
 public interface GithubRepositoryCustom {
 
-	List<Github> findAll(String lastId, Pageable pageable);
+	List<Github> findAll(Long githubId, Integer score, Pageable pageable);
 }

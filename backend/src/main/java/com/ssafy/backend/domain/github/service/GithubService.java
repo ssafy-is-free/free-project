@@ -23,11 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class GithubService {
 	private final GithubLanguageRepository githubLanguageRepository;
 	private final GithubRepository githubRepository;
-
-	public GithubRankingResponse getGithubRank(Integer rank, String lastId, Pageable pageable) {
-		List<GithubRankingCover> githubCovers = githubRepository.findAll(lastId, pageable)
+	
+	public GithubRankingResponse getGithubRank(long rank, Long githubId, Integer score, Pageable pageable) {
+		List<GithubRankingCover> githubCovers = githubRepository.findAll(githubId, score, pageable)
 			.stream()
-			.map(g -> new GithubRankingCover(g))
+			.map(GithubRankingCover::new)
 			.collect(Collectors.toList());
 
 		setRankToResult(rank, githubCovers);
@@ -37,7 +37,7 @@ public class GithubService {
 	}
 
 	//랭킹 반영
-	private static void setRankToResult(Integer rank, List<GithubRankingCover> rankingCovers) {
+	private static void setRankToResult(long rank, List<GithubRankingCover> rankingCovers) {
 		for (GithubRankingCover rankingCover : rankingCovers) {
 			rankingCover.setRank(rank);
 			rankingCover.setRankUpDown(rankingCover.getPrevRank() - rank);
