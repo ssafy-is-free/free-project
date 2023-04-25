@@ -18,13 +18,13 @@ public class GithubRepositoryImpl implements GithubRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Github> findAll(Long githubId, Integer score, Pageable pageable) {
+	public List<Github> findAll(Long userId, Integer score, Pageable pageable) {
 
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(checkCursor(score, githubId))
+			.where(checkCursor(score, userId))
 			.orderBy(github.score.desc())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -44,12 +44,12 @@ public class GithubRepositoryImpl implements GithubRepositoryCustom {
 		return score != null ? github.score.eq(score) : null;
 	}
 
-	private BooleanExpression githubIdGt(Long githubId) {
-		return githubId != null ? github.id.gt(githubId) : null;
+	private BooleanExpression userIdGt(Long userId) {
+		return userId != null ? github.user.id.gt(userId) : null;
 	}
 
 	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long githubId) {
-		return scoreEq(score).and(githubIdGt(githubId));
+		return scoreEq(score).and(userIdGt(githubId));
 	}
 
 }
