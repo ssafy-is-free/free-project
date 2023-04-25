@@ -15,7 +15,7 @@ pipeline {
                     // APPLICATION_YML_PATH = "/home/ubuntu/jenkins/workspace/backend-pipeline"
                     CONTAINER_NAME = "free-api"
                     PROJECT_DIR = "backend"
-                    DOCKER_FILE_PATH = "backend/"
+                    DOCKER_FILE_PATH = "./backend"
                 }
             }
         }
@@ -88,6 +88,8 @@ pipeline {
         stage("Server Run") {
             steps {
                 dir("${DOCKER_FILE_PATH}"){
+                    sh "ls"
+                    sh "pw" 
                     sh "docker-compose up -d"
                 }
             }
