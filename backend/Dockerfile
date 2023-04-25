@@ -16,6 +16,9 @@ RUN ./gradlew clean build -x test
 
 COPY ./resources ./resources
 
+RUN ls
+RUN pwd
+
 COPY ./backend/build/libs/*.jar ./application.jar
 
 EXPOSE 8080
