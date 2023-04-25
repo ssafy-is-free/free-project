@@ -16,7 +16,7 @@ RUN ./gradlew clean build -x test
 
 COPY ./resources ./resources
 
-RUN ls
+RUN ls build
 RUN pwd
 
 COPY ./build/libs/*.jar ./application.jar
