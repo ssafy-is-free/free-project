@@ -12,6 +12,6 @@ services:
     restart: always
 
 networks:
-  default: 
+  mysql_application_network: 
     external: true
     # name: mysql_application_network
