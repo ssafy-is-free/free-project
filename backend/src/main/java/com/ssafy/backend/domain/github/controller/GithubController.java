@@ -38,10 +38,10 @@ public class GithubController {
 	private final GithubCrawlingService crawlingService;
 
 	@GetMapping("/ranks")
-	public DataResponse<GithubRankingResponse> getGithubRanks(long rank, Long githubId, Integer score,
+	public DataResponse<GithubRankingResponse> getGithubRanks(long rank, Long userId, Integer score,
 		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
 
-		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, githubId, score, pageable);
+		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, userId, score, pageable);
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
