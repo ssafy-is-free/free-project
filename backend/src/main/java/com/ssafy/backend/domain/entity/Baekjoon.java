@@ -16,6 +16,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 
+import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +26,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "baekjoon")
 public class Baekjoon extends BaseTimeEntity {
 
@@ -47,23 +51,15 @@ public class Baekjoon extends BaseTimeEntity {
 	@Column(name = "fail_count", nullable = false)
 	private int failCount;
 
+	@Column(name = "score", nullable = false)
+	private int score;
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private User user;
 
 	@Column(name = "boj_previous_rank", nullable = false)
 	private long previousRank;
-
-	@Builder
-	public Baekjoon(long id, String tier, int passCount, int tryFailCount, int submitCount, int failCount, User user) {
-		this.id = id;
-		this.tier = tier;
-		this.passCount = passCount;
-		this.tryFailCount = tryFailCount;
-		this.submitCount = submitCount;
-		this.failCount = failCount;
-		this.user = user;
-	}
 
 	public static Baekjoon createBaekjoon(BojInformationResponseDTO bojInformationResponseDTO, User user) {
 		return Baekjoon.builder()
