@@ -31,6 +31,7 @@ public class RankFilterController {
 
         List<LanguageDTO> languageDTOS = rankFilterService.getLanguageList(type);
 
+        // TODO: 2023-04-24 삼항연산자로 개선 
         if(languageDTOS.isEmpty()) return responseService.getDataResponse(languageDTOS, RESPONSE_NO_CONTENT);
 
         return responseService.getDataResponse(languageDTOS, RESPONSE_SUCCESS);
