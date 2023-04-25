@@ -132,11 +132,14 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		// 랭크 세기
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
-				break;
+				BojMyRankResponseDTO bojMyRankResponseDTO = BojMyRankResponseDTO.createBojMyRankResponseDTO(baekjoon,
+					user, rank);
+				return bojMyRankResponseDTO;
 			} else {
 				rank++;
 			}
 		}
+		//백준 아이디가 없다면
 
 		return null;
 	}

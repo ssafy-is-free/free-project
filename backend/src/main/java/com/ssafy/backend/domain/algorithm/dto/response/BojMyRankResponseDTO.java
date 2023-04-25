@@ -1,7 +1,6 @@
 package com.ssafy.backend.domain.algorithm.dto.response;
 
 import com.ssafy.backend.domain.entity.Baekjoon;
-import com.ssafy.backend.domain.entity.Rank;
 import com.ssafy.backend.domain.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -24,15 +23,15 @@ public class BojMyRankResponseDTO {
 	private Long rankUpDown;
 	private String tierUrl;
 
-	public static BojMyRankResponseDTO createBojMyRankResponseDTO(Baekjoon baekjoon, User user, Rank rank, int count) {
+	public static BojMyRankResponseDTO createBojMyRankResponseDTO(Baekjoon baekjoon, User user, int rank) {
 		return BojMyRankResponseDTO.builder()
 			.userId(user.getId())
 			.nickname(user.getBojId())
-			.rank(count)
+			.rank(rank)
 			.score(baekjoon.getScore())
 			.avatarUrl(user.getImage())
-			.rankUpDown(rank.getBojCurrentRank() - rank.getBojPreviousRank())
-
+			.rankUpDown(baekjoon.getPreviousRank() - rank)
+			.tierUrl(baekjoon.getTier())
 			.build();
 	}
 }

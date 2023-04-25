@@ -28,20 +28,21 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/boj")
 public class AlgorithmController {
 	private final ResponseService responseService;
-	private final AlgorithmService algorithmService;s
+	private final AlgorithmService algorithmService;
 
 	@GetMapping("/my-rank")
+
 	public DataResponse<BojMyRankResponseDTO> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal) {
 		BojMyRankResponseDTO bojMyRankResponseDTO = algorithmService.getBojByUserId(userPrincipal.getId());
-
-		return responseService.getDataResponse(bojMyRankResponseDTO, RESPONSE_SUCCESS);
+		//백준 아이디가 없다면 비어있는 컨텐츠
+		return bojMyRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojMyRankResponseDTO, RESPONSE_SUCCESS);
 	}
 
 	@PatchMapping("")
 	public CommonResponse bojSaveUser(@RequestParam Long userId) {
 
 		algorithmService.patchBojByUserId(userId);
-
 		return responseService.getSuccessResponse();
 	}
 
