@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -47,5 +48,22 @@ public class GithubRepo extends BaseTimeEntity {
                 .repositoryLink(repositoryLink)
                 .github(github)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (this.getClass() != object.getClass()) {
+            return false;
+        }
+        GithubRepo repo = (GithubRepo) object;
+        return this.getName().equals(repo.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getName());
     }
 }

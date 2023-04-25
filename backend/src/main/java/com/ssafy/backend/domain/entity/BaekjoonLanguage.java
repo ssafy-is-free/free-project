@@ -1,6 +1,8 @@
 package com.ssafy.backend.domain.entity;
 
+import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -33,4 +35,28 @@ public class BaekjoonLanguage extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "baekjoon_id", nullable = false)
     private Baekjoon baekjoon;
+
+    @Builder
+    public BaekjoonLanguage(long id, long languageId, String passPercentage, int passCount, Baekjoon baekjoon) {
+        this.id = id;
+        this.languageId = languageId;
+        this.passPercentage = passPercentage;
+        this.passCount = passCount;
+        this.baekjoon = baekjoon;
+    }
+
+    public static BaekjoonLanguage createBaekjoonLanguage(Long languageId, BojLanguageResultDTO bojLanguageResultDTO, Baekjoon baekjoon){
+        return BaekjoonLanguage.builder()
+                .languageId(languageId)
+                .passPercentage(bojLanguageResultDTO.getPassPercentage())
+                .passCount(bojLanguageResultDTO.getPassCount())
+                .baekjoon(baekjoon)
+                .build();
+
+    }
+
+    public void updateBaekjoonLanguage(BojLanguageResultDTO bojLanguageResultDTO) {
+        this.passPercentage = bojLanguageResultDTO.getPassPercentage();
+        this.passCount = bojLanguageResultDTO.getPassCount();
+    }
 }
