@@ -7,7 +7,7 @@ pipeline {
                     IMAGE_NAME = "sh80165/free-springboot"
                     IMAGE_STORAGE = "https://registry.hub.docker.com"
                     IMAGE_STORAGE_CREDENTIAL = "docker-hub"
-                    APPLICATION_YML_PATH = "/home/ubuntu/jenkins/workspace/backend-pipeline"
+                    // APPLICATION_YML_PATH = "/home/ubuntu/jenkins/workspace/backend-pipeline"
                     CONTAINER_NAME = "free-api"
                     PROJECT_DIR = "backend"
                     DOCKER_FILE_PATH = "backend/"
@@ -17,11 +17,15 @@ pipeline {
 
         stage("Copy Application.yml"){
             steps{
-                dir("${APPLICATION_YML_PATH}"){
+                script{
                     sh "pwd"
-                    sh "ls"
-                    sh "cp -r -f resources ${PROJECT_DIR}/resources"
+                    sh "ls" 
                 }
+                // dir("${APPLICATION_YML_PATH}"){
+                //     sh "pwd"
+                //     sh "ls"
+                //     sh "cp -r -f resources ${PROJECT_DIR}/resources"
+                // }
             }
         }
         //기존 컨테이너 내리고 이미지 삭제
