@@ -88,7 +88,7 @@ pipeline {
         stage("Server Run") {
             steps {
                 dir("${DOCKER_FILE_PATH}"){
-                    sh "docker compose up -d"
+                    sh "docker compose up -d --build"
                 }
             }
         }
