@@ -8,10 +8,11 @@ export default function Home() {
   const ok = () => {
     console.log('확인버튼클릭');
   };
-
+  const ff = 1;
   return (
     <div>
       <CancelOk cancel={cancel} ok={ok}></CancelOk>
+      <div>{ff}</div>
       <Footer></Footer>
     </div>
   );
