@@ -25,7 +25,7 @@ pipeline {
                 script{
                     sh "pwd"
                     sh "ls" 
-                    sh "cp -r -f resources ${PROJECT_DIR}/resources"
+                    sh "cp -r -f resources ${PROJECT_DIR}"
                 }
                 // dir("${APPLICATION_YML_PATH}"){
                 //     sh "pwd"
