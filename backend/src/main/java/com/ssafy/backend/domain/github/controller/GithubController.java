@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
+import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.github.service.GithubService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
@@ -37,6 +38,7 @@ public class GithubController {
 	private final GithubService githubService;
 	private final GithubCrawlingService crawlingService;
 
+	//깃허브 랭킹
 	@GetMapping("/ranks")
 	public DataResponse<GithubRankingResponse> getGithubRanks(long rank, Long userId, Integer score,
 		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
@@ -44,6 +46,12 @@ public class GithubController {
 		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, userId, score, pageable);
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
+	}
+	
+	@GetMapping("/{githubId}/repositories/{repositoryId}")
+	public DataResponse<ReadmeResponse> getReadme(@PathVariable long githubId, @PathVariable long repositoryId) {
+		ReadmeResponse readmeResponse = githubService.findReadme(githubId, repositoryId);
+		return responseService.getDataResponse(readmeResponse, RESPONSE_SUCCESS);
 	}
 
 	@PatchMapping("/crawling/{nickname}/{userId}")
