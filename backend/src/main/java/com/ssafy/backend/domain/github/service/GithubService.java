@@ -28,8 +28,8 @@ public class GithubService {
 	private final GithubRepository githubRepository;
 	private final UserQueryRepository userQueryRepository;
 
-	public GithubRankingResponse getGithubRank(long rank, Long githubId, Integer score, Pageable pageable) {
-		List<GithubRankingCover> githubCovers = githubRepository.findAll(githubId, score, pageable)
+	public GithubRankingResponse getGithubRank(long rank, Long userId, Integer score, Pageable pageable) {
+		List<GithubRankingCover> githubCovers = githubRepository.findAll(userId, score, pageable)
 			.stream()
 			.map(GithubRankingCover::new)
 			.collect(Collectors.toList());
