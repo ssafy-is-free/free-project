@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const HeaderDiv = styled.div`
   margin: 1rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
 
   display: flex;
   justify-content: space-between;
@@ -13,30 +13,14 @@ const HeaderDiv = styled.div`
   }
 `;
 
-const ButtonDiv = styled.div`
-  background-color: ${(props) => props.theme.primary};
-  padding-inline: 1.5rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-radius: 0.8rem;
-  span {
-    font-size: 1rem;
-    color: ${(props) => props.theme.fontWhite};
-  }
-`;
-
 interface IProfileHeader {
   back: () => void;
-  compare: () => void;
 }
 
-export default function ProfileHeader({ back, compare }: IProfileHeader) {
+export default function ProfileHeader({ back }: IProfileHeader) {
   return (
     <HeaderDiv>
       <img src="Icon/VectorIcon.svg" alt="화살표" onClick={back} />
-      <ButtonDiv onClick={compare}>
-        <span>비교하기</span>
-      </ButtonDiv>
     </HeaderDiv>
   );
 }

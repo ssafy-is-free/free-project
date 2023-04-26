@@ -4,6 +4,7 @@ import { ICustomNav } from './ICommon';
 
 const CustomNavDiv = styled.div`
   display: flex;
+  height: 100%;
 `;
 
 const NavItemDiv = styled.div<{ active: boolean }>`
@@ -14,6 +15,7 @@ const NavItemDiv = styled.div<{ active: boolean }>`
   justify-content: center;
 
   p {
+    font-size: 1.2rem;
     color: ${(props) => (props.active ? props.theme.primary : props.theme.fontGray)};
   }
 `;
