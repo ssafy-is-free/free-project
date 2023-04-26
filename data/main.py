@@ -142,7 +142,7 @@ def getUser(username: str, result: dict):
     # 팔로워
     followers_tag = soup.select_one(f'a[href="https://github.com/{username}?tab=followers"]')
     if followers_tag is not None:
-        followers = int(followers_tag.text.strip().split()[0])
+        followers = int(followers_tag.text.strip().split()[0].replace(',', ''))
 
     # 깃허브 링크
     link = url
@@ -188,13 +188,13 @@ def getRepo(username: str, result: dict):
         # 커밋 수
         commit_tag = soup.select_one('ul[class="list-style-none d-flex"]')
         if commit_tag is not None:
-            commit = int(commit_tag.text.strip().split()[0])
+            commit = int(commit_tag.text.strip().split()[0].replace(',', ''))
             commit_total += commit
 
         # 스타 수
         star_tag = soup.select_one(f'a[href="/{username}/{repo_name}/stargazers"]')
         if star_tag is not None:
-            star = int(star_tag.text.strip().split()[0])
+            star = int(star_tag.text.strip().split()[0].replace(',', ''))
             star_total += star
 
         # 리드미
