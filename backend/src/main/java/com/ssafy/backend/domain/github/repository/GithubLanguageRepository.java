@@ -9,6 +9,6 @@ import com.ssafy.backend.domain.github.repository.projection.GithubOnly;
 
 public interface GithubLanguageRepository extends JpaRepository<GithubLanguage, Long> {
 
-	List<GithubOnly> findByLanguageIdIn(List<Long> list);
+	List<GithubOnly> findByLanguageId(Long languageId);
 
 }

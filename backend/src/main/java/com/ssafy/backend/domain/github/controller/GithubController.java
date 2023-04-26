@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
+import com.ssafy.backend.domain.github.service.GithubRankingService;
 import com.ssafy.backend.domain.github.service.GithubService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
 import com.ssafy.backend.global.response.CommonResponse;
@@ -37,14 +39,17 @@ public class GithubController {
 
 	private final ResponseService responseService;
 	private final GithubService githubService;
+	private final GithubRankingService githubRankingService;
 	private final GithubCrawlingService crawlingService;
 
 	//깃허브 랭킹
 	@GetMapping("/ranks")
 	public DataResponse<GithubRankingResponse> getGithubRanks(long rank, Long userId, Integer score,
+		GitHubRankingFilter rankingFilter,
 		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
 
-		GithubRankingResponse githubRankingResponse = githubService.getGithubRank(rank, userId, score, pageable);
+		GithubRankingResponse githubRankingResponse = githubRankingService.getGithubRank(rank, userId, score,
+			rankingFilter, pageable);
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
