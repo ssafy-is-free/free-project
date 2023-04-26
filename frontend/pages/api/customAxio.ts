@@ -48,12 +48,16 @@ authApi.interceptors.request.use((config: any) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
+  console.log('config : ', config);
+
   return config;
 });
 
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
   (response) => {
+    console.log('response', response);
+
     return response;
   },
   async (error) => {

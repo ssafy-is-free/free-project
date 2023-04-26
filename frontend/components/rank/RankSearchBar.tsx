@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 import SearchIcon from '../../public/Icon/searchIcon.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IRankSearchBarProps } from './IRank';
+import { getSearchGitUser } from '@/pages/api/rankAxios';
 
 const Wrapper = styled.div`
   width: 85%;
   /* height: 40px; */
   display: flex;
   align-items: start;
+  position: relative;
+  z-index: 5;
 
   .search-box {
+    /* box-shadow: 4px 4px 10px #00000040; */
+
     background-color: ${(props) => props.theme.bgWhite};
     width: 80%;
     display: flex;
@@ -56,14 +61,14 @@ const Wrapper = styled.div`
     background-color: ${(props) => props.theme.bgWhite};
     width: 100%;
     padding-left: 10%;
-    border-top: 1px solid ${(props) => props.theme.footerGray};
-    padding-top: 8px;
 
+    border-top: 1px solid ${(props) => props.theme.footerGray};
+    /* padding-top: 8px; */
     li {
       margin-bottom: 8px;
       color: ${(props) => props.theme.fontBlack};
       font-size: 14px;
-      /* padding: 8px; */
+      padding: 8px 0px 0px;
     }
   }
 `;
@@ -79,21 +84,79 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     }
   }, [props.curRank]);
 
+  // 검색어
+  const [searchKeyword, setSearchKeyword] = useState<string | undefined>();
+
+  // TODO : type 넣을 떄 좀더 깔끔하게 하는법 찾기..
+  // type Information = {
+  //   userId: number;
+  //   nickname: string;
+  // };
+  const [searchResults, setSearchResults] = useState<
+    | string[]
+    | {
+        userId: number;
+        nickname: string;
+      }[]
+  >();
+
+  // 검색창 검색할 떄마다 호출
+  const onChange = (event: any) => {
+    setSearchKeyword(event.target.value);
+  };
+
+  // style 속성 변경 위한 검색창 ref
+  const searchBox = useRef<any>();
+
+  useEffect(() => {
+    // 검색 결과 api
+    if (searchKeyword) {
+      (async () => {
+        const data = await getSearchGitUser(searchKeyword);
+        if (data.data?.length > 0) {
+          setSearchResults([...data.data]);
+        } else {
+          setSearchResults([data.message]);
+        }
+      })();
+
+      // 스타일 속성 변경
+      const style = searchBox.current.style;
+      style.boxShadow = '4px 4px 10px #00000040';
+    } else {
+      const style = searchBox.current.style;
+      style.boxShadow = '';
+    }
+  }, [searchKeyword]);
+
   const resetInput = () => {
     (document.querySelector('.input-box') as HTMLInputElement).value = '';
   };
 
   return (
     <Wrapper>
-      <div className="search-box">
+      <div className="search-box" ref={searchBox}>
         <div className="input-wrapper">
           <SearchIcon />
-          <input type="text" className="input-box" placeholder={text} />
+          <input type="text" className="input-box" placeholder={text} onChange={(event) => onChange(event)} />
         </div>
-        {/* <ul className="related-wrapper">
-          <li>키워드</li>
-          <li>키워드</li>
-        </ul> */}
+        <ul className="related-wrapper">
+          {searchKeyword != '' &&
+            searchResults?.map((el, idx) => {
+              if (typeof el != 'string')
+                return (
+                  <li className="user-li" key={idx}>
+                    {el.nickname}
+                  </li>
+                );
+              else
+                return (
+                  <li className="nouser-li" key={idx}>
+                    {el}
+                  </li>
+                );
+            })}
+        </ul>
       </div>
       <button className="cancel" onClick={resetInput}>
         취소
