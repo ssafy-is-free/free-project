@@ -35,6 +35,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     // Spring Boot Configuration Annotation Processor
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    // Swagger 설정
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.5'
 
 
     compileOnly 'org.projectlombok:lombok'
