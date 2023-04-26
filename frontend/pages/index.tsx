@@ -8,9 +8,9 @@ import Footer from '@/components/common/Footer';
 export default function Home() {
   return (
     <div>
-      <Link href="/">
+      {/* <Link href="/">
         <Main />
-      </Link>
+      </Link> */}
       <Spinner size="5" borderWidth="0.5" duration={0.8} />
     </div>
   );
