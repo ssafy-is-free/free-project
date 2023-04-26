@@ -1,11 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
 import Link from 'next/link';
-
-interface IProps {
-  onClick: () => void;
-  onChangeCurRank: Function;
-}
+import { IRankMenuSelectProps } from './ICommon';
 
 const moveUp = keyframes`
  from{
@@ -48,7 +44,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const RankMenuSelectModal = (props: IProps) => {
+const RankMenuSelectModal = (props: IRankMenuSelectProps) => {
   return (
     <>
       <DarkBg onClick={props.onClick} />

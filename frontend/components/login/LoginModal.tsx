@@ -2,11 +2,7 @@ import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import BigBtn from '../common/BigBtn';
-
-interface IProps {
-  onClick: () => void;
-  setOpenBoj: React.Dispatch<React.SetStateAction<boolean>>;
-}
+import { ILoginProps } from './ILogin';
 
 const moveUp = keyframes`
  from{
@@ -53,14 +49,13 @@ const StyledCloseIcon = styled(CloseIcon)`
   cursor: pointer;
 `;
 
-const LoginModal = (props: IProps) => {
+const LoginModal = (props: ILoginProps) => {
   const onBtnClick = () => {
     // 기존 로그인 모달 창 닫기
     props.onClick();
 
     // 깃허브 로그인
-    // window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
-    props.setOpenBoj(true);
+    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
   };
 
   // modal drag

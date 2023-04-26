@@ -11,7 +11,7 @@ const initialState: SplashState = {
 };
 
 const splashSlice = createSlice({
-  name: 'splashState',
+  name: 'splash',
   initialState,
   reducers: {
     splashCheck(state) {

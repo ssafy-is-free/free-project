@@ -39,3 +39,51 @@ export interface ICustomNav {
    */
   selectIdx: (idx: number) => void;
 }
+
+/**
+ * 큰 버튼을 위한 props
+ */
+export interface IBigBtnProps {
+  /**
+   * button 안에 들어갈 text
+   */
+  text: string;
+
+  /**
+   *
+   * 클릭 시 발생할 이벤트
+   */
+  onClick: () => void;
+}
+
+/**
+ * 랭킹 페이지 메뉴 props
+ */
+export interface IRankMenuProps {
+  /**
+   *
+   * 클릭시 발생할 이벤트
+   */
+  onClick: () => void;
+
+  /**
+   * 현재 조회중인 rank (0 : 깃허브, 1: 백준)
+   */
+  curRank: number;
+}
+
+/**
+ * 랭킹 메뉴 클릭시 띄울 모달 props
+ */
+
+export interface IRankMenuSelectProps {
+  /**
+   * 모달 닫는 메소드
+   */
+  onClick: () => void;
+
+  /**
+   * 현재 조회하는 랭킹 종류 교체하는 메소드
+   */
+  onChangeCurRank: Function;
+}
