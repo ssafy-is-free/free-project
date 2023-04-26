@@ -5,6 +5,8 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.ssafy.backend.domain.entity.Github;
@@ -41,6 +43,7 @@ public class GithubService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional
 	public GithubDetailResponse getDetails(long userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 		Github github = githubRepository.findByUser(user).orElseThrow(() -> new CustomException(NOT_FOUND_GITHUB));
