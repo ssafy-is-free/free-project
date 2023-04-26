@@ -57,7 +57,7 @@ function Footer() {
     {
       icon: HomeIcon,
       name: '메인',
-      path: '/',
+      path: '/main',
     },
     {
       icon: CareerIcon,

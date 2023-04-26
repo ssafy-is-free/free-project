@@ -1,7 +1,7 @@
 import styled, { css, keyframes } from 'styled-components';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
@@ -119,6 +119,9 @@ const StyledCancelOk = styled(CancelOk)`
 `;
 
 const FilterModal = (props: IFilterModalProps) => {
+  // fi;ter 목록 가져오기
+  useEffect(() => {}, []);
+
   // 옵션 이름
   const optionNames = ['언어', '그룹'];
 

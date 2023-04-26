@@ -230,13 +230,13 @@ const Main = () => {
             <ul className="rank-list">
               <p>전체 랭킹</p>
               {curRank == 0
-                ? gitRankList.map((el) => (
-                    <li>
+                ? gitRankList.map((el, idx) => (
+                    <li key={idx}>
                       <MainOtherItem curRank={curRank} item={el} />
                     </li>
                   ))
-                : bojRankList.map((el) => (
-                    <li>
+                : bojRankList.map((el, idx) => (
+                    <li key={idx}>
                       <MainOtherItem curRank={curRank} item={el} />
                     </li>
                   ))}
