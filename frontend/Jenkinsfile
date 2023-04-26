@@ -76,7 +76,7 @@ pipeline {
 
         stage("Server Run") {
             steps {
-                script{
+                dir("${DOCKER_FILE_PATH}"){
                     sh "docker compose up -d"
                 }
             }
