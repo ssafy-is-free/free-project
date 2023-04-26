@@ -28,6 +28,7 @@ const BasicInfoDiv = styled.div`
   grid-template-rows: auto auto;
   grid-column-gap: 6%;
   grid-row-gap: 6%;
+  margin-bottom: 2rem;
 `;
 
 const BoxDiv = styled.div`
