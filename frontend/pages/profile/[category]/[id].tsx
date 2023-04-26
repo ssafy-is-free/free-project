@@ -1,10 +1,15 @@
-import GithubInfo from '../../../components/profile/GithubInfo';
+// import GithubInfo from '../../../components/profile/GithubInfo';
 import BojInfo from '../../../components/profile/BojInfo';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import Footer from '@/components/common/Footer';
 import { Spinner } from '@/components/common/Spinner';
+import dynamic from 'next/dynamic';
+
+const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
+  ssr: false,
+});
 
 const ProfileInfoDiv = styled.div`
   margin: 1rem;

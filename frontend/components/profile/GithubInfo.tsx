@@ -87,8 +87,8 @@ const ReadmeDiv = styled.div`
 export default function GithubInfo({ githubId }: IGithubInfo) {
   const [github2, setGithub] = useState<IGithubProfile>();
   const getData = async () => {
-    // const data = await getGithub(githubId);
-    // setGithub(data);
+    const data = await getGithub(githubId);
+    setGithub(data);
   };
   useEffect(() => {
     getData();
