@@ -34,6 +34,19 @@ pipeline {
                 // }
             }
         }
+        stage("Copy Application.yml"){
+            steps{
+                script{
+                    sh "cd gradleResources" 
+                    sh "cp gradle.properties ${PROJECT_DIR}"
+                }
+                // dir("${APPLICATION_YML_PATH}"){
+                //     sh "pwd"
+                //     sh "ls"
+                //     sh "cp -r -f resources ${PROJECT_DIR}/resources"
+                // }
+            }
+        }
         // //스프링 빌드
         // stage("Clean Build Test") {
         //     steps {
