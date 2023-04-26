@@ -37,8 +37,10 @@ pipeline {
         stage("Copy gradle.properties"){
             steps{
                 script{
+                    sh "pwd"
+                    sh "ls" 
                     sh "cd gradleResources" 
-                    sh "cp -f gradle.properties ${PROJECT_DIR}"
+                    sh "cp -f gradle.properties ${WORKSPACE}/${PROJECT_DIR}"
                 }
                 // dir("${APPLICATION_YML_PATH}"){
                 //     sh "pwd"
