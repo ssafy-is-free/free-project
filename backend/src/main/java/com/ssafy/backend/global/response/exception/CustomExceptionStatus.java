@@ -11,6 +11,7 @@ public enum CustomExceptionStatus {
 
 	/*유저*/
 	NOT_FOUND_USER(ResponseStatus.FAIL, "해당하는 유저정보가 없습니다."), BOJ_DUPLICATED(ResponseStatus.FAIL, "이미 존재하는 아이디입니다."),
+	NOT_FOUND_BOJ_USER(ResponseStatus.FAIL, "해당하는 백준 유저 정보가 없습니다."),
 
 	/*인증 - 토큰 관련*/
 	TOKEN_INVALID(ResponseStatus.FAIL, "유효하지 않은 토큰입니다."), TOKEN_EXPIRE(ResponseStatus.FAIL,
