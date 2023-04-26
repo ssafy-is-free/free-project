@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script{
 
-                    sh "docker compose down" 
+                    sh "docker compose ps -q | grep -q . && docker compose down" 
                     // // //컨테이너 확인 후 정지
                     // sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
 
