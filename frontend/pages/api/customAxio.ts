@@ -44,11 +44,52 @@ export const basicApi = axios.create({
 authApi.interceptors.request.use((config: any) => {
   const accessToken = localStorage.getItem('accessToken');
 
-  //   if (!accessToken) {
-  console.log(config);
-  //   }
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
+
   return config;
 });
 
 // 응답 인터셉터 추가
-authApi.interceptors.response.use();
+authApi.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    console.log('error', error);
+
+    return error;
+    // const { config, response } = error;
+    // const originalRequest = config;
+
+    // if (response.status === 401) {
+    //   console.log('access 만료');
+    //   const accessToken = localStorage.getItem('accessToken');
+
+    //   await axios
+    //     .get(`${BASE_URL}/reissue`, {
+    //       withCredentials: true,
+    //       headers: {
+    //         Authorization: `Bearer ${accessToken}`,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       if (res.status === 200) {
+    //         const newAccessToken = res.headers.authorization;
+    //         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+    //         localStorage.setItem('accessToken', newAccessToken);
+    //         return axios(originalRequest);
+    //       }
+    //     })
+    //     .catch((err) => {
+    //       if (err.response.status === 401) {
+    //         localStorage.removeItem('accessToken');
+    //         window.location.href = '/';
+    //       }
+    //     });
+    // }
+
+    // return Promise.reject(error);
+  }
+);
