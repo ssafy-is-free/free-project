@@ -40,6 +40,7 @@ pipeline {
                 dir("${DOCKER_FILE_PATH}"){
 
                     sh "pwd"
+                    sh "docker compose ps -q" 
                     
                     sh "docker compose ps -q | grep -q . && docker compose down" 
                     // // //컨테이너 확인 후 정지
