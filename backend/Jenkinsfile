@@ -47,12 +47,9 @@ pipeline {
         // }
          stage('SonarQube Analysis') {
             steps {                
-                withSonarQubeEnv(installationName :'SonarServer', envOnly: true) {
-                    dir("${PROJECT_DIR}"){
-                        // 이 스코프에서는 SONAR_CONFIG_NAME, SONAR_HOST_URL, SONAR_AUTH_TOKEN 환경 변수를 사용할 수 있습니다.                        
-                        sh "chmod +x gradlew"
-                        sh './gradlew sonar -Dsonar.verbose=true'
-                    }
+                dir("${PROJECT_DIR}"){
+                    sh "chmod +x gradlew"
+                    sh './gradlew sonar'
                 }
                 
             }
