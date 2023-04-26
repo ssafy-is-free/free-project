@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoResponseDTO;
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
@@ -53,10 +53,10 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
 		//백준 아이디로 크롤링
-		BojInformationResponseDTO bojInformationResponseDTO = webClient.get()
+		BojInfoResponseDTO bojInfoResponseDTO = webClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(user.getBojId()))
 			.retrieve()
-			.bodyToMono(BojInformationResponseDTO.class)
+			.bodyToMono(BojInfoResponseDTO.class)
 			.block();
 
 		//백준 아이디로 비동기 크롤링
@@ -75,24 +75,24 @@ public class AlgorithmServiceImpl implements AlgorithmService {
                     return getFallbackDto();
                 });*/
 		//저장
-		if (bojInformationResponseDTO.getTier() != null) {
+		if (bojInfoResponseDTO.getTier() != null) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
 			Baekjoon baekjoon = oBaekjoon.orElse(null);
 			// 비어있다면 추가하고 이미 있다면 업데이트
 			if (baekjoon == null) {
-				baekjoon = Baekjoon.createBaekjoon(bojInformationResponseDTO, user);
+				baekjoon = Baekjoon.createBaekjoon(bojInfoResponseDTO, user);
 			} else {
-				baekjoon.updateBaekjoon(bojInformationResponseDTO);
+				baekjoon.updateBaekjoon(bojInfoResponseDTO);
 			}
 			bojRepository.save(baekjoon);
 			// 리스트 저장
 			// 리스트가 비어있지 않을 때
-			if (bojInformationResponseDTO.getLanguagesResult() != null) {
+			if (bojInfoResponseDTO.getLanguagesResult() != null) {
 				List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
 				bojLanguageRepository.deleteAllByBaekjoonId(baekjoon.getId());
 
-				for (BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()) {
+				for (BojLanguageResultDTO bojLanguageResultDTO : bojInfoResponseDTO.getLanguagesResult()) {
 
 					// 언어 정보 받아오기
 					Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(),
