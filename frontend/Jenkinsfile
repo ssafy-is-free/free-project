@@ -13,7 +13,7 @@ pipeline {
                     // ESLINTIGNORE_PATH = "/var/jenkins_home/workspace/free-frontend"
                     CONTAINER_NAME = "manamana-fronted"
                     PROJECT_DIR = "frontend"
-                    DOCKER_FILE_PATH = "frontend/"
+                    DOCKER_FILE_PATH = "./frontend"
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
 
         stage("Clean Container&Image") {
             steps {
-                script{
+                dir("${DOCKER_FILE_PATH}"){
 
                     sh "docker compose ps -q | grep -q . && docker compose down" 
                     // // //컨테이너 확인 후 정지
