@@ -67,17 +67,18 @@ const Wrapper = styled.div`
 `;
 
 const Main = () => {
-  // splash screen 적용하기
-  const [splash, setSplash] = useState<boolean>(false);
+  // login 상태값 가져오기
+  const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
   const dispatch = useDispatch();
+  // splash screen 적용하기
+  const [splash, setSplash] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setSplash(true);
-      // splash 상태값 변경
       dispatch(splashCheck());
     }, 1500);
     return () => clearTimeout(timer);
@@ -85,6 +86,12 @@ const Main = () => {
 
   // 랭크 menu select 모달 열기
   const [openSelect, setOpenSelect] = useState<boolean>(false);
+  // 로그인 모달 열기
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
+  // 백준 모달 열기
+  const [opeBoj, setOpenBoj] = useState<boolean>(false);
+  // filter 모달 열기
+  const [openFilter, setOpenFilter] = useState<boolean>(false);
 
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준
   const [curRank, setCurRank] = useState<number>(0);
@@ -92,14 +99,6 @@ const Main = () => {
     setCurRank(el);
     setOpenSelect(false);
   };
-
-  // 로그인 모달 열기
-  const [openLogin, setOpenLogin] = useState<boolean>(false);
-  // 백준 모달 열기
-  const [opeBoj, setOpenBoj] = useState<boolean>(false);
-
-  // filter 모달 열기
-  const [openFilter, setOpenFilter] = useState<boolean>(false);
 
   // rank list
   const gitRankList = [
@@ -224,8 +223,11 @@ const Main = () => {
             </div>
             <div className="my-rank">
               <p>나의 랭킹</p>
-              {/* <MainUserItem curRank={curRank} /> */}
-              <NoAccount curRank={curRank} onClick={() => setOpenLogin(true)} />
+              {isLogin ? (
+                <MainUserItem curRank={curRank} />
+              ) : (
+                <NoAccount curRank={curRank} onClick={() => setOpenLogin(true)} />
+              )}
             </div>
             <ul className="rank-list">
               <p>전체 랭킹</p>
@@ -246,7 +248,7 @@ const Main = () => {
         {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} setOpenBoj={setOpenBoj} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
-        {openFilter && <FilterModal onClick={() => setOpenFilter(false)} />}
+        {openFilter && <FilterModal onClick={() => setOpenFilter(false)} curRank={curRank} />}
       </>
     );
   }

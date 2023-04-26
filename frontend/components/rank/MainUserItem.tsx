@@ -45,8 +45,8 @@ const MainUserItem = (props: IMainUserItemProps) => {
   return (
     <Wrapper>
       <div className="rank-num">300</div>
-      <div className="user-photo"></div>
-      <div className="user-nickname">아이디{props.curRank == 1 && <div className="user-tier"></div>}</div>
+      <img src="" className="user-photo" />
+      <div className="user-nickname">아이디{props.curRank == 1 && <img src="" className="user-tier" />}</div>
       <div className="user-score">점수</div>
     </Wrapper>
   );

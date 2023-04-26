@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
+import { getFilter } from '@/pages/api/rankAxios';
 
 const moveUp = keyframes`
  from{
@@ -119,33 +120,36 @@ const StyledCancelOk = styled(CancelOk)`
 `;
 
 const FilterModal = (props: IFilterModalProps) => {
-  // fi;ter 목록 가져오기
-  useEffect(() => {}, []);
-
   // 옵션 이름
   const optionNames = ['언어', '그룹'];
 
   // 옵션
-  const languages = [
-    'Java',
-    'Python',
-    'C++',
-    'C#',
-    'C',
-    'Javascript',
-    'Ruby',
-    'Kotlin',
-    'Swift',
-    'Go',
-    'Php',
-    'Rust',
-    'Pascal',
-    'Scala',
-    'R',
-  ];
-  // 옵션2
-  const groups = ['Ssafy', 'Samsung'];
-  const optionTypes = [languages, groups];
+  const [languages, setLanguages] = useState<string[]>([]);
+  const [groups, setGroups] = useState<string[]>([]);
+  const [optionTypes, setOptionTypes] = useState<string[][]>([]);
+
+  // filter 목록 가져오기
+  useEffect(() => {
+    (async () => {
+      if (props.curRank == 0) {
+        // 깃허브
+        // const data = await getFilter('GITHUB');
+        const data = ['css', 'java', 'html', 'python'];
+        setLanguages([...data]);
+        setGroups([...data]);
+      } else {
+        // 백준
+        // const data = await getFilter('BAEKJOON');
+        const data = ['css', 'java', 'html', 'python'];
+        setLanguages([...data]);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    let newArr = [languages, groups];
+    setOptionTypes(newArr);
+  }, [languages, groups]);
 
   // option창 보이기
   const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([

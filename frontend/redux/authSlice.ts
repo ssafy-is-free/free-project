@@ -13,6 +13,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state) {
+      console.log('로그인');
       state.isLogin = true;
     },
     logout(state) {

@@ -7,6 +7,11 @@ export interface IFilterModalProps {
    * 모달창 닫는 메소드
    */
   onClick: () => void;
+
+  /**
+   *  현재 조회중인 랭킹 종류(0: 깃허브, 1: 백준)
+   */
+  curRank: number;
 }
 
 /**
