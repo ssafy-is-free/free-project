@@ -20,25 +20,12 @@ pipeline {
             }
         }
 
-        stage("Copy Application.yml"){
+        stage("Copy Setting File"){
             steps{
                 script{
                     sh "pwd"
                     sh "ls" 
                     sh "cp -r -f resources ${PROJECT_DIR}"
-                }
-                // dir("${APPLICATION_YML_PATH}"){
-                //     sh "pwd"
-                //     sh "ls"
-                //     sh "cp -r -f resources ${PROJECT_DIR}/resources"
-                // }
-            }
-        }
-        stage("Copy gradle.properties"){
-            steps{
-                script{
-                    sh "pwd"
-                    sh "ls"                     
                     sh "cp -f gradleResources/gradle.properties ${PROJECT_DIR}"
                 }
                 // dir("${APPLICATION_YML_PATH}"){
@@ -48,6 +35,7 @@ pipeline {
                 // }
             }
         }
+
         // //스프링 빌드
         // stage("Clean Build Test") {
         //     steps {
