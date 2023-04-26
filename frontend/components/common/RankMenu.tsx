@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
-
-interface IProps {
-  onClick: () => void;
-  curRank: number;
-}
+import { IRankMenuProps } from './ICommon';
 
 const Wrapper = styled.div`
   display: flex;
@@ -28,7 +24,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const RankMenu = (props: IProps) => {
+const RankMenu = (props: IRankMenuProps) => {
   return (
     <Wrapper onClick={props.onClick}>
       <div className="menu">

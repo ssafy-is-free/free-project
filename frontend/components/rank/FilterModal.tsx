@@ -1,17 +1,10 @@
 import styled, { css, keyframes } from 'styled-components';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
-
-interface IProps {
-  onClick: () => void;
-}
-
-interface IOption {
-  openOption: { id: number; state: boolean | undefined }[];
-}
+import { IFilterModalProps } from './IRank';
 
 const moveUp = keyframes`
  from{
@@ -32,7 +25,7 @@ const DarkBg = styled.div`
   background-color: ${(props) => props.theme.modalGray};
 `;
 
-const Wrapper = styled.div<IOption>`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -125,7 +118,10 @@ const StyledCancelOk = styled(CancelOk)`
   font-size: 14px;
 `;
 
-const FilterModal = (props: IProps) => {
+const FilterModal = (props: IFilterModalProps) => {
+  // fi;ter 목록 가져오기
+  useEffect(() => {}, []);
+
   // 옵션 이름
   const optionNames = ['언어', '그룹'];
 
@@ -263,7 +259,7 @@ const FilterModal = (props: IProps) => {
   return (
     <>
       <DarkBg onClick={props.onClick} />
-      <Wrapper openOption={openOption}>
+      <Wrapper>
         <StyledCloseIcon onClick={props.onClick} />
         <div className="title">검색 필터</div>
         {optionTypes.map((el, idx) => {

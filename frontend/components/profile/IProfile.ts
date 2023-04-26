@@ -65,3 +65,19 @@ export interface CircleChartProps {
   fontsize?: number;
   label?: boolean;
 }
+
+/**
+ * 아바타 데이터
+ */
+export interface IAvatarData {
+  avatarUrl: string;
+  name: string;
+}
+
+/**
+ * Profile 컴포넌트에 prop해야할 값
+ */
+export interface IProfile {
+  category?: string;
+  userId?: string;
+}

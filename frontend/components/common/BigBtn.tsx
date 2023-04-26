@@ -1,10 +1,6 @@
 import styled from 'styled-components';
 import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
-
-interface IProps {
-  text: string;
-  onClick: () => void;
-}
+import { IBigBtnProps } from './ICommon';
 
 const Wrapper = styled.button`
   background-color: ${(props) => props.theme.primary};
@@ -16,7 +12,7 @@ const Wrapper = styled.button`
   width: 80%;
 `;
 
-const BigBtn = (props: IProps) => {
+const BigBtn = (props: IBigBtnProps) => {
   return <Wrapper onClick={props.onClick}>{props.text}</Wrapper>;
 };
 

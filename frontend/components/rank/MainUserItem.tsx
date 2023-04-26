@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-
-interface IProps {
-  curRank: number;
-}
+import { IMainUserItemProps } from './IRank';
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.primary};
@@ -44,7 +41,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const MainUserItem = (props: IProps) => {
+const MainUserItem = (props: IMainUserItemProps) => {
   return (
     <Wrapper>
       <div className="rank-num">300</div>

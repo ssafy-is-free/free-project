@@ -1,10 +1,7 @@
 import styled from 'styled-components';
 import SearchIcon from '../../public/Icon/searchIcon.svg';
 import { useEffect, useState } from 'react';
-
-interface IProps {
-  curRank: number;
-}
+import { IRankSearchBarProps } from './IRank';
 
 const Wrapper = styled.div`
   width: 85%;
@@ -71,7 +68,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const RankSearchBar = (props: IProps) => {
+const RankSearchBar = (props: IRankSearchBarProps) => {
   const [text, setText] = useState<string>('깃허브');
 
   useEffect(() => {

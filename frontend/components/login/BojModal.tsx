@@ -1,10 +1,7 @@
 import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import BigBtn from '../common/BigBtn';
-
-interface IProps {
-  onClick: () => void;
-}
+import { IBojProps } from './ILogin';
 
 const moveUp = keyframes`
  from{
@@ -84,7 +81,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const BojModal = (props: IProps) => {
+const BojModal = (props: IBojProps) => {
   return (
     <>
       <DarkBg onClick={props.onClick} />

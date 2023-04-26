@@ -1,18 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-interface IProps {
-  curRank: number;
-  item: {
-    userId: number;
-    nickname: string;
-    rank: number;
-    tierUrl?: string;
-    score: string;
-    avatarUrl: string;
-    rankUpDown: number;
-  };
-}
+import { IMainOtherItemProps } from './IRank';
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.bgWhite};
@@ -56,7 +44,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const MainOtherItem = (props: IProps) => {
+const MainOtherItem = (props: IMainOtherItemProps) => {
   return (
     <Wrapper>
       <div className="rank-num">{props.item?.rank}</div>
