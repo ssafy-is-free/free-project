@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponseDTO;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
 import com.ssafy.backend.domain.algorithm.service.AlgorithmService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
@@ -62,6 +63,13 @@ public class AlgorithmController {
 		BojRankResponseDTO bojRankResponseDTO = algorithmService.getBojByUserId(userId);
 		return bojRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankResponseDTO, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/users/{userId}")
+	public DataResponse<BojInfoDetailResponseDTO> getBojInfoDetail(@PathVariable("userId") Long userId) {
+		BojInfoDetailResponseDTO bojInfoDetailResponseDTO = algorithmService.getBojInfoDetailByUserId(userId);
+		return bojInfoDetailResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojInfoDetailResponseDTO, RESPONSE_SUCCESS);
 	}
 
 }
