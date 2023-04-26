@@ -87,3 +87,21 @@ export interface IRankMenuSelectProps {
    */
   onChangeCurRank: Function;
 }
+
+/**
+ * spinner
+ */
+export interface ISpinner {
+  /**
+   * 가로세로 크기
+   */
+  size?: string;
+  /**
+   * 두께
+   */
+  borderWidth?: string;
+  /**
+   * 회전속도 숫자가 작을수록 빨라짐
+   */
+  duration?: number;
+}
