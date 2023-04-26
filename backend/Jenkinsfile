@@ -52,12 +52,14 @@ pipeline {
             steps{
                 dir("${DOCKER_FILE_PATH}"){
 
-                    sh "docker compose ps -q | xargs -r docker compose down"
-                    // sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
+                    // sh "docker compose ps -q | xargs -r docker compose down"
+                    
+                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
+
+                    // // //컨테이너 삭제
+                    sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
 
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
-                    sh "docker ps -a"
-                    sh "docker images"
                 }
             }
         }
