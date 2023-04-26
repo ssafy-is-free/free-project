@@ -37,8 +37,10 @@ public class GithubQueryRepository {
 	}
 
 	private BooleanExpression checkCursor(Integer score, Long githubId) {
-		if (score == null || githubId == null)
+		if (score == null || githubId == null) {
 			return null;
+
+		}
 		return scoreLt(score).or(scoreEqAndGithubIdGt(score, githubId));
 	}
 
