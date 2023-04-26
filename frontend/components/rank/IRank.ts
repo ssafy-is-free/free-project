@@ -27,13 +27,13 @@ export interface IMainOtherItemProps {
    * 조회할 item 정보
    */
   item: {
-    userId: number;
+    avatarUrl: string;
     nickname: string;
     rank: number;
-    tierUrl?: string;
-    score: string;
-    avatarUrl: string;
     rankUpDown: number;
+    score: number;
+    userId: number;
+    tierUrl?: string;
   };
 }
 

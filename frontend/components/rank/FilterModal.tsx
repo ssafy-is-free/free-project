@@ -20,6 +20,7 @@ const moveUp = keyframes`
 
 const DarkBg = styled.div`
   position: fixed;
+  z-index: 10;
   top: 0;
   width: 100%;
   height: 100%;
@@ -35,6 +36,7 @@ const Wrapper = styled.div`
   /* padding: 32px 24px; */
   padding: 32px 0px 0px;
   position: fixed;
+  z-index: 15;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
   animation: 0.4s ease-in-out 0s ${moveUp};
@@ -121,35 +123,42 @@ const StyledCancelOk = styled(CancelOk)`
 
 const FilterModal = (props: IFilterModalProps) => {
   // 옵션 이름
-  const optionNames = ['언어', '그룹'];
+  // const optionNames = ['언어', '그룹'];
+  const optionNames = ['언어'];
 
   // 옵션
-  const [languages, setLanguages] = useState<string[]>([]);
-  const [groups, setGroups] = useState<string[]>([]);
-  const [optionTypes, setOptionTypes] = useState<string[][]>([]);
+  const [languages, setLanguages] = useState<
+    {
+      landguageId: number;
+      name: string;
+    }[]
+  >([]);
+  // const [groups, setGroups] = useState<string[]>([]);
+  const [optionTypes, setOptionTypes] = useState<
+    {
+      landguageId: number;
+      name: string;
+    }[][]
+  >([]);
 
   // filter 목록 가져오기
   useEffect(() => {
     (async () => {
       if (props.curRank == 0) {
         // 깃허브
-        // const data = await getFilter('GITHUB');
-        const data = ['css', 'java', 'html', 'python'];
+        const data = await getFilter('GITHUB');
         setLanguages([...data]);
-        setGroups([...data]);
       } else {
         // 백준
-        // const data = await getFilter('BAEKJOON');
-        const data = ['css', 'java', 'html', 'python'];
+        const data = await getFilter('BAEKJOON');
         setLanguages([...data]);
       }
     })();
   }, []);
 
   useEffect(() => {
-    let newArr = [languages, groups];
-    setOptionTypes(newArr);
-  }, [languages, groups]);
+    setOptionTypes([languages]);
+  }, [languages]);
 
   // option창 보이기
   const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
@@ -272,9 +281,9 @@ const FilterModal = (props: IFilterModalProps) => {
               <div className="box-top" ref={(el) => (arrowRefs.current[idx] = el)}>
                 <div className="label">
                   {optionNames[idx]}
-                  {selected[idx]?.itemArr?.length ? (
+                  {/* {selected[idx]?.itemArr?.length ? (
                     <div className="selected-label">{selected[idx]?.itemArr?.length}개 선택</div>
-                  ) : null}
+                  ) : null} */}
                 </div>
                 <StyledFilterArrowIcon className="arrow" onClick={() => onHandleOptionBox(idx + 1)} />
               </div>
@@ -282,7 +291,7 @@ const FilterModal = (props: IFilterModalProps) => {
                 {el.map((item, itemIdx) => {
                   return (
                     <div className="option-item" key={itemIdx} onClick={() => onClickOption(itemIdx, idx)}>
-                      {item}
+                      {item.name}
                     </div>
                   );
                 })}

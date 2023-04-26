@@ -17,6 +17,7 @@ const moveUp = keyframes`
 
 const DarkBg = styled.div`
   position: fixed;
+  z-index: 10;
   top: 0;
   width: 100%;
   height: 100%;
@@ -31,6 +32,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 40%;
   position: fixed;
+  z-index: 15;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
   animation: 0.4s ease-in-out 0s ${moveUp};
@@ -56,6 +58,8 @@ const LoginModal = (props: ILoginProps) => {
 
     // 깃허브 로그인
     window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+
+    // props.setOpenBoj(true);
   };
 
   // modal drag
