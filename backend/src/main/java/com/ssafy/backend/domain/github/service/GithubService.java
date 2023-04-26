@@ -13,6 +13,7 @@ import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.GithubRepo;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
+import com.ssafy.backend.domain.github.dto.GithubDetailLanguage;
 import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingCover;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
@@ -21,6 +22,7 @@ import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.repository.GithubLanguageRepository;
 import com.ssafy.backend.domain.github.repository.GithubRepoRepository;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
+import com.ssafy.backend.domain.github.repository.querydsl.GithubLanguageQueryRepository;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
@@ -35,6 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GithubService {
 	private final GithubRepoRepository githubRepoRepository;
 	private final GithubLanguageRepository githubLanguageRepository;
+	private final GithubLanguageQueryRepository githubLanguageQueryRepository;
 	private final GithubRepository githubRepository;
 	private final UserQueryRepository userQueryRepository;
 	private final UserRepository userRepository;
@@ -106,7 +109,8 @@ public class GithubService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 		Github github = githubRepository.findByUser(user).orElseThrow(() -> new CustomException(NOT_FOUND_GITHUB));
 
+		List<GithubDetailLanguage> githubLanguages = githubLanguageQueryRepository.findByGithub(github);
 		log.info(github.toString());
-		return new GithubDetailResponse(github);
+		return new GithubDetailResponse(github, githubLanguages);
 	}
 }
