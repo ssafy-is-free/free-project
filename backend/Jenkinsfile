@@ -47,15 +47,16 @@ pipeline {
         //         }   
         //     }
         // }
-         stage('SonarQube Analysis') {
-            steps {                
-                dir("${PROJECT_DIR}"){
-                    sh "chmod +x gradlew"
-                    sh './gradlew sonar'
-                }
+        // 소나큐브 빌드
+        //  stage('SonarQube Analysis') {
+        //     steps {                
+        //         dir("${PROJECT_DIR}"){
+        //             sh "chmod +x gradlew"
+        //             sh './gradlew sonar'
+        //         }
                 
-            }
-        }
+        //     }
+        // }
 
         //기존 컨테이너 내리고 이미지 삭제
         stage("container down&image remove"){
