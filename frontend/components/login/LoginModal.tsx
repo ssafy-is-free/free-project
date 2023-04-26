@@ -59,14 +59,17 @@ const LoginModal = (props: IProps) => {
     props.onClick();
 
     // 깃허브 로그인
-    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
-    // props.setOpenBoj(true);
+    // window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+    props.setOpenBoj(true);
   };
+
+  // modal drag
+  const onHandleDrag = () => {};
 
   return (
     <>
       <DarkBg onClick={props.onClick} />
-      <Wrapper>
+      <Wrapper onClick={onHandleDrag}>
         <StyledCloseIcon onClick={props.onClick} />
         <LogoPrimary />
         <div className="label">로그인 후 이용 가능합니다. </div>

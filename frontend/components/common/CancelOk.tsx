@@ -4,7 +4,8 @@ import { ICancelOk } from './ICommon';
 const CancelOkDiv = styled.div`
   display: flex;
   width: 100%;
-  height: 10vh;
+  /* height: 10vh; */
+  height: 5vh;
   min-height: 4rem;
 `;
 const CancelDiv = styled.div`
@@ -15,8 +16,10 @@ const CancelDiv = styled.div`
   justify-content: center;
   span {
     margin-top: 0.2rem;
-    margin-bottom: 0.3rem;
-    font-size: 200%;
+    /* margin-bottom: 0.3rem; */
+    margin-bottom: 0.2rem;
+    /* font-size: 200%; */
+    font-size: 1.2rem;
     color: ${(props) => props.theme.fontWhite};
   }
 `;
@@ -28,8 +31,9 @@ const OkDiv = styled.div`
   justify-content: center;
   span {
     margin-top: 0.2rem;
-    margin-bottom: 0.3rem;
-    font-size: 200%;
+    margin-bottom: 0.2rem;
+    /* font-size: 200%; */
+    font-size: 1.2rem;
     color: ${(props) => props.theme.fontWhite};
   }
 `;

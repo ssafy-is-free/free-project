@@ -82,6 +82,10 @@ const RankSearchBar = (props: IProps) => {
     }
   }, [props.curRank]);
 
+  const resetInput = () => {
+    (document.querySelector('.input-box') as HTMLInputElement).value = '';
+  };
+
   return (
     <Wrapper>
       <div className="search-box">
@@ -94,7 +98,9 @@ const RankSearchBar = (props: IProps) => {
           <li>키워드</li>
         </ul> */}
       </div>
-      <button className="cancel">취소</button>
+      <button className="cancel" onClick={resetInput}>
+        취소
+      </button>
     </Wrapper>
   );
 };
