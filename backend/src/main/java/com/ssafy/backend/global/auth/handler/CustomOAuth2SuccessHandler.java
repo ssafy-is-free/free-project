@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.auth.util.CookieUtils;
@@ -39,10 +40,12 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 	private final UserRepository userRepository;
 	private final AuthProperties authProperties;
 	private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
+	//깃허브 정보 저장
+	private final GithubCrawlingService githubCrawlingService;
 	private static final int REFRESH_TOKEN_VALIDATE_TIME = 1000 * 60 * 60 * 24 * 7; // 1주일
 
 	//로그인 성공후 동작하는 메서드
+	// TODO: 2023-04-26 깃허브 정보를 가져오는 것을 여기서 처리하고 있지만, oauth 로그인이 된 직후에 같이 처리하도록 수정필요.
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
@@ -52,6 +55,9 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
 		//받은 유저 정보 객체 가져오기
 		UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
+
+		//깃허브 정보 업로드.
+		githubCrawlingService.getGithubInfo(userPrincipal.getNickname(), userPrincipal.getId());
 
 		//로그인에 성공하면 리프레시 토큰을 생성해서 디비에 저장함.
 		String refreshToken = tokenProvider.createRefreshToken();
@@ -66,7 +72,6 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 		CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, refreshToken,
 			REFRESH_TOKEN_VALIDATE_TIME);
 
-		log.info("[redirect] : {}", redirectUrl);
 		//해당 주소로 리다이렉트.
 		getRedirectStrategy().sendRedirect(request, response, redirectUrl);
 	}
