@@ -91,5 +91,5 @@ export interface IAvatar {
 export interface IProfile {
   isGithub: boolean;
   userId: number;
-  back: () => void;
+  // back: () => void;
 }

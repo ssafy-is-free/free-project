@@ -3,6 +3,8 @@ import { IAvatarData, IGithubInfo, IGithubProfile } from './IProfile';
 import CircleChart from './CircleChart';
 import Readme from './Readme';
 import Avatar from './Avatar';
+import { useState, useEffect } from 'react';
+import { getGithub } from '@/pages/api/profileAxios';
 
 /**dummydata
  *
@@ -83,6 +85,15 @@ const ReadmeDiv = styled.div`
 `;
 
 export default function GithubInfo({ githubId }: IGithubInfo) {
+  const [github2, setGithub] = useState<IGithubProfile>();
+  const getData = async () => {
+    // const data = await getGithub(githubId);
+    // setGithub(data);
+  };
+  useEffect(() => {
+    getData();
+  }, []);
+
   const github = gitdata;
   const basicInfo = [
     {
