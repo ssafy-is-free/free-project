@@ -11,7 +11,7 @@ pipeline {
                     NODE_BUILD_PATH = "./build"
                     APPLICATION_ENV_PATH = "/var/jenkins_home/workspace"
                     // ESLINTIGNORE_PATH = "/var/jenkins_home/workspace/free-frontend"
-                    CONTAINER_NAME = "manamana-fronted"
+                    CONTAINER_NAME = "frontend-app-1"
                     PROJECT_DIR = "frontend"
                     DOCKER_FILE_PATH = "./frontend"
                 }
@@ -39,12 +39,12 @@ pipeline {
             steps {
                 dir("${DOCKER_FILE_PATH}"){
                     
-                    sh "docker compose ps -q | xargs -r docker compose down"
+                    // sh "docker compose ps -q | xargs -r docker compose down"
                     // // //컨테이너 확인 후 정지
-                    // sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
+                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
 
                     // // //컨테이너 삭제
-                    // sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
+                    sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
 
                     //기존 이미지 삭제
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
