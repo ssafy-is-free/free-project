@@ -34,7 +34,7 @@ pipeline {
                 // }
             }
         }
-        stage("Copy Application.yml"){
+        stage("Copy gradle.properties"){
             steps{
                 script{
                     sh "cd gradleResources" 
