@@ -82,8 +82,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 			user = registerUser(nickname, image);
 		}
 
-		// TODO: 2023-04-22 깃허브 정보 저장하는 api 호출 필요.
-
 		return UserPrincipal.createUserDetails(user);
 	}
 
