@@ -1,9 +1,5 @@
 import styled from 'styled-components';
-
-interface IProps {
-  curRank: number;
-  onClick: () => void;
-}
+import { INoAccountProps } from './IRank';
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.secondary};
@@ -17,7 +13,7 @@ const Wrapper = styled.div`
   font-size: 14px;
 `;
 
-const NoAccount = (props: IProps) => {
+const NoAccount = (props: INoAccountProps) => {
   return (
     <Wrapper onClick={props.onClick}>
       {props.curRank == 0 ? <>로그인을 해서 랭킹을 확인해보세요</> : <>백준 계정 등록 후 랭킹을 확인해보세요</>}
