@@ -133,7 +133,7 @@ export default function Profile() {
     router.back();
   };
   const compare = () => {
-    alert('아직 미구현이에요!');
+    alert('업데이트 예정!');
   };
 
   return (

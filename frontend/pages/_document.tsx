@@ -29,6 +29,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="icon" href="/favicon.ico" />
+          <title>CHPO</title>
         </Head>
         <body style={{ margin: '0px' }}>
           <Main />
