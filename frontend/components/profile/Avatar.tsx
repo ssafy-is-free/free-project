@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { IAvatar, IAvatarData } from './IProfile';
 
 const AvatarDiv = styled.div<{ active: boolean }>`
+  margin-top: 2rem;
   margin-bottom: 2rem;
   display: flex;
   align-items: center;
@@ -24,7 +25,6 @@ const AvatarDiv = styled.div<{ active: boolean }>`
 const CompareDiv = styled.div`
   position: absolute;
   margin-left: 50%;
-  height: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
