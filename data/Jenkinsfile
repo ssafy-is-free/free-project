@@ -62,15 +62,15 @@ pipeline {
             }
         }
 
-        stage("Push Container Image") {
-            steps {
-                script {
-                    docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
-                        image.push("latest")
-                    }
-                }
-            }
-        }
+        // stage("Push Container Image") {
+        //     steps {
+        //         script {
+        //             docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
+        //                 image.push("latest")
+        //             }
+        //         }
+        //     }
+        // }
 
         stage("Server Run") {
             steps {
