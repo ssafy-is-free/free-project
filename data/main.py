@@ -198,11 +198,12 @@ def getRepo(username: str, result: dict):
             star_total += star
 
         # 리드미
-        readme_html = soup.select_one('article[class="markdown-body entry-content container-lg"]')
-        if readme_html is not None:
-            repo['readme'] = str(readme_html)
-        else:
-            repo['readme'] = ""
+        # readme_html = soup.select_one('article[class="markdown-body entry-content container-lg"]')
+        # if readme_html is not None:
+        #     repo['readme'] = str(readme_html)
+        # else:
+        #     repo['readme'] = ""
+        repo['readme'] = f"https://raw.githubusercontent.com/{username}/{repo_name}/main/README.md"
 
         repo['name'] = repo_name
         repo['link'] = repo_url
