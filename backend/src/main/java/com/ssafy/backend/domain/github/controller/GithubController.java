@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/github")
+@RequestMapping("/github")
 public class GithubController {
 
 	private final ResponseService responseService;
@@ -47,7 +47,7 @@ public class GithubController {
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
-	
+
 	@GetMapping("/{githubId}/repositories/{repositoryId}")
 	public DataResponse<ReadmeResponse> getReadme(@PathVariable long githubId, @PathVariable long repositoryId) {
 		ReadmeResponse readmeResponse = githubService.findReadme(githubId, repositoryId);
