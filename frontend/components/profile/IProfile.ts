@@ -31,7 +31,7 @@ export interface IGithubProfile {
  * githubInfo에 prop 해야할 값
  */
 export interface IGithubInfo {
-  github: IGithubProfile;
+  githubId: number;
 }
 
 /**
@@ -54,7 +54,7 @@ export interface IBojProfile {
  * bojInfo에 prop 해야할 값
  */
 export interface IBojInfo {
-  boj: IBojProfile;
+  bojId: number;
 }
 
 /**
@@ -64,4 +64,32 @@ export interface CircleChartProps {
   data: ChartInput[];
   fontsize?: number;
   label?: boolean;
+}
+
+/**
+ * 아바타 데이터
+ */
+export interface IAvatarData {
+  avatarUrl: string;
+  name: string;
+}
+
+/**
+ * Avatar 컴포넌트에 prop해야할 값
+ */
+export interface IAvatar {
+  /**
+   * isCircle : 아바타를 원 형태로 바꿀지
+   */
+  isCircle: boolean;
+  data: IAvatarData;
+}
+
+/**
+ * Profile 컴포넌트에 prop해야할 값
+ */
+export interface IProfile {
+  isGithub: boolean;
+  userId: number;
+  back: () => void;
 }

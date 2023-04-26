@@ -3,11 +3,21 @@ import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { myChartData } from '@/utils/chartDatasets';
 import { CircleChartProps } from './IProfile';
+import styled from 'styled-components';
+
+const ChartDiv = styled.div`
+  canvas {
+    margin-inline: auto;
+    height: 40vh !important;
+    width: 40vh !important;
+  }
+`;
 
 export default function CircleChart({ data, fontsize, label }: CircleChartProps) {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const options = {
     responsive: true,
+    // maintainAspectRatio: false,
     plugins: {
       legend: {
         display: label ? true : false,
@@ -22,8 +32,8 @@ export default function CircleChart({ data, fontsize, label }: CircleChartProps)
   };
 
   return (
-    <div>
+    <ChartDiv>
       <Doughnut options={options} data={myChartData(data)}></Doughnut>
-    </div>
+    </ChartDiv>
   );
 }

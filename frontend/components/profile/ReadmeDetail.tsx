@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import '@uiw/react-markdown-preview/markdown.css';
 import { MarkdownPreviewProps } from '@uiw/react-markdown-preview';
 import { readmeApi } from '@/utils/api/getReadme';
+import { Spinner } from '../common/Spinner';
 
 const MDPreview = dynamic<MarkdownPreviewProps>(() => import('@uiw/react-markdown-preview'), {
   ssr: false,
+  loading: () => <Spinner></Spinner>,
 });
 
 interface IReadmeDetail {
