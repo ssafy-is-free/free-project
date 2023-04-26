@@ -38,7 +38,7 @@ pipeline {
             steps{
                 script{
                     sh "cd gradleResources" 
-                    sh "cp gradle.properties ${PROJECT_DIR}"
+                    sh "cp -f gradle.properties ${PROJECT_DIR}"
                 }
                 // dir("${APPLICATION_YML_PATH}"){
                 //     sh "pwd"
