@@ -20,6 +20,7 @@ const DarkBg = styled.div`
   width: 100%;
   height: 100%;
   background-color: ${(props) => props.theme.modalGray};
+  z-index: 10;
 `;
 
 const Wrapper = styled.div`
@@ -30,6 +31,7 @@ const Wrapper = styled.div`
   width: 100%;
   height: 20%;
   position: fixed;
+  z-index: 15;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
   animation: 0.4s ease-in-out 0s ${moveUp};
