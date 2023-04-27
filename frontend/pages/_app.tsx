@@ -14,7 +14,7 @@ function App({ Component, ...rest }: AppProps) {
       <GlobalStyle />
       <ThemeProvider theme={lightTheme}>
         <Component {...props.pageProps} />
-        {/* <Footer /> */}
+        <Footer />
       </ThemeProvider>
     </Provider>
   );

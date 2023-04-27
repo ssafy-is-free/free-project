@@ -48,7 +48,7 @@ authApi.interceptors.request.use((config: any) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  console.log('config : ', config);
+  console.log('request config : ', config);
 
   return config;
 });

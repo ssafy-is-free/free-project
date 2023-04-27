@@ -6,7 +6,7 @@ import { getSearchGitUser } from '@/pages/api/rankAxios';
 
 const Wrapper = styled.div`
   width: 85%;
-  /* height: 40px; */
+  /* height: 5vh; */
   display: flex;
   align-items: start;
   position: relative;
@@ -31,7 +31,8 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     width: 100%;
-    height: 40px;
+    /* height: 40px; */
+    height: 5vh;
   }
 
   .input-box {
@@ -49,7 +50,7 @@ const Wrapper = styled.div`
   }
 
   .cancel {
-    margin-top: 4px;
+    margin-top: 8px;
     background-color: transparent;
     color: ${(props) => props.theme.fontWhite};
     font-size: 20px;
