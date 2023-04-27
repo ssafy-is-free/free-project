@@ -21,6 +21,7 @@ export default function ProfilePage() {
     setSelectedIdx(idx);
   };
 
+  // 사용자 아이디 //
   const githubId = 1;
   const bojId = 1;
 

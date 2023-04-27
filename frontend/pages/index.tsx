@@ -207,6 +207,7 @@ const Main = () => {
             </ul>
           </div>
         </Wrapper>
+        <Footer></Footer>
         {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} setOpenBoj={setOpenBoj} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
