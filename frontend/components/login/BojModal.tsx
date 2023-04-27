@@ -123,7 +123,7 @@ const BojModal = (props: IBojProps) => {
 
     if (id == '') {
       style.border = '';
-      setCheck(2);
+      setCheck(3);
       setBojId('');
       return;
     }
@@ -148,6 +148,10 @@ const BojModal = (props: IBojProps) => {
       router.push('/');
     } else {
       // 등록 불가능
+      // 경고 메시지 띄우기
+      const style = inputRef.current.style;
+      style.border = '2px solid #e93f3f';
+      setCheck(2);
     }
   };
 
@@ -170,6 +174,8 @@ const BojModal = (props: IBojProps) => {
           <div className="label3-true">등록 가능한 아이디 입니다.</div>
         ) : check == 1 ? (
           <div className="label3-false">중복된 아이디 입니다.</div>
+        ) : check == 2 ? (
+          <div className="label3-false">아이디를 입력해주세요.</div>
         ) : null}
         <BigBtn text={'등록하기'} onClick={onClickBojId} />
         <div className="btn-wrapper">

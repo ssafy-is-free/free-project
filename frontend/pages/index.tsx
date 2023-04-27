@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { SplashState, splashCheck } from '@/redux/splashSlice';
 import { RootState } from '@/redux';
 import { getBojRanking, getGithubRanking, getMyBojRanking, getMyGitRanking } from './api/rankAxios';
-import { resultInformation } from '@/components/rank/IRank';
+import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -76,6 +76,8 @@ const Wrapper = styled.div`
 const Main = () => {
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+  // isnew 상태값 가져오기
+  const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
@@ -102,7 +104,7 @@ const Main = () => {
       setSplash(true);
     }
 
-    if (isLogin) {
+    if (isNew) {
       setOpenBoj(true);
     }
 
@@ -131,28 +133,15 @@ const Main = () => {
   /**
    *  나의 깃허브 랭킹, 나의 백준 랭킹
    */
-  const [myGitRank, setMyGitRank] = useState<{
-    userId: number;
-    nickname: string;
-    rank: number;
-    score: number;
-    avatarUrl: string;
-    rankUpDown: number;
-  }>();
-  const [myBojRank, setMyBojRank] = useState<{
-    userId: number;
-    nickname: string;
-    rank: number;
-    score: number;
-    avatarUrl: string;
-    rankUpDown: number;
-    tierUrl: string;
-  }>();
+  const [myGitRank, setMyGitRank] = useState<resultMyInformation>();
+  const [myBojRank, setMyBojRank] = useState<resultMyInformation>();
 
   /**
    * 랭킹 api
    */
   useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken');
+
     if (curRank == 0) {
       // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
       (async () => {
@@ -161,7 +150,7 @@ const Main = () => {
       })();
 
       // 나의 깃허브 랭킹 가져오기
-      if (isLogin) {
+      if (accessToken) {
         (async () => {
           const data = await getMyGitRanking();
 
@@ -177,15 +166,40 @@ const Main = () => {
       })();
 
       // 나의 백준 랭킹 가져오기
-      if (isLogin) {
+      if (accessToken) {
         (async () => {
           const data = await getMyBojRanking();
 
-          setMyBojRank(data.data);
+          if (data.status == 'SUCCESS') {
+            setMyBojRank(data.data);
+          }
         })();
       }
     }
   }, [curRank]);
+
+  // nouserItem 클릭시
+  const onClickNoUser = () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (curRank == 0) {
+      // 깃허브 페이지 일 때
+      // 로그인 모달 띄우기
+      setOpenLogin(true);
+    } else if (curRank == 1) {
+      // 백준 페이지 일 때
+
+      if (accessToken) {
+        // 이미 로그인한 상태면
+        // 백준 모달 띄우기
+        setOpenBoj(true);
+      } else {
+        // 로그인 하지 않은 상태라면
+        // 로그인 모달 부터 띄우기
+        setOpenLogin(true);
+      }
+    }
+  };
 
   if (!splash && !splashState) {
     // if (splashStorage) {
@@ -207,7 +221,7 @@ const Main = () => {
               ) : myBojRank && curRank == 1 ? (
                 <MainUserItem curRank={curRank} item={myBojRank} />
               ) : (
-                <NoAccount curRank={curRank} onClick={() => setOpenLogin(true)} />
+                <NoAccount curRank={curRank} onClick={onClickNoUser} />
               )}
             </div>
             <ul className="rank-list">
@@ -227,9 +241,18 @@ const Main = () => {
           </div>
         </Wrapper>
         {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
-        {openLogin && <LoginModal onClick={() => setOpenLogin(false)} setOpenBoj={setOpenBoj} />}
+        {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
-        {openFilter && <FilterModal onClick={() => setOpenFilter(false)} curRank={curRank} />}
+        {openFilter && (
+          <FilterModal
+            onClick={() => setOpenFilter(false)}
+            curRank={curRank}
+            setGitRankList={setGitRankList}
+            setBojRankList={setBojRankList}
+            setMyGitRank={setMyGitRank}
+            setMyBojRank={setMyBojRank}
+          />
+        )}
       </>
     );
   }

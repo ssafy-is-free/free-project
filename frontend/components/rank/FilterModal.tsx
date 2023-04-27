@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
-import { getFilter } from '@/pages/api/rankAxios';
+import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
 
 const moveUp = keyframes`
  from{
@@ -168,10 +168,10 @@ const FilterModal = (props: IFilterModalProps) => {
   ]);
 
   // option 카운트 변수
-  const [selected, setSelected] = useState<({ id: number; itemArr: number[] | undefined } | undefined)[]>([
-    { id: 1, itemArr: [] },
-    { id: 2, itemArr: [] },
-  ]);
+  // const [selected, setSelected] = useState<({ id: number; itemArr: number[] | undefined } | undefined)[]>([
+  //   { id: 1, itemArr: [] },
+  //   { id: 2, itemArr: [] },
+  // ]);
 
   // 클릭한 element 접근
   const itemRefs = useRef<any>([]);
@@ -211,63 +211,132 @@ const FilterModal = (props: IFilterModalProps) => {
     setOpenOption(newArr);
   };
 
-  // option 클릭 시
-  const onClickOption = (itemIdx: number, parentIdx: number) => {
-    const style = itemRefs.current[parentIdx].childNodes[itemIdx].style;
+  // TODO : 그룹 추가되면 2차원 배열로 변경
+  // 선택된 옵션
+  const [selected, setSelected] = useState<number[]>();
 
-    const newArr = selected.map((item, idx) => {
-      if (parentIdx == idx) {
-        if (!selected.at(idx)?.itemArr?.includes(itemIdx)) {
-          // 존재하지 않는 경우 => 배열에 추가,  style 교체
+  useEffect(() => {
+    if (selected?.length && selected?.length > 0) {
+      const arr = itemRefs.current[selected[0]].childNodes;
+
+      arr.forEach((element: any, idx: number) => {
+        const style = itemRefs.current[selected[0]].childNodes[idx].style;
+        if (idx == selected[1]) {
           style.backgroundColor = '#4A58A9';
           style.color = '#ffffff';
-
-          let newItemArr = selected.at(idx)?.itemArr;
-
-          if (newItemArr != undefined) {
-            return {
-              id: idx + 1,
-              itemArr: [...newItemArr, itemIdx],
-            };
-          }
         } else {
-          // 존재하는 경우 => 배열에서 제거, style 교체
           style.backgroundColor = '#ffffff';
           style.color = '#4A58A9';
-
-          let newItemArr = selected.at(idx)?.itemArr?.filter((el) => el != itemIdx);
-
-          return {
-            id: idx + 1,
-            itemArr: newItemArr,
-          };
         }
-      } else {
-        return {
-          id: idx + 1,
-          itemArr: selected.at(idx)?.itemArr,
-        };
-      }
-    });
+      });
+    }
+  }, [selected]);
 
-    setSelected(newArr);
+  // option 클릭 시
+  const onClickOption = (itemIdx: number, parentIdx: number) => {
+    setSelected([parentIdx, itemIdx]);
+
+    // const newArr = selected.map((item, idx) => {
+    //   if (parentIdx == idx) {
+    //     if (!selected.at(idx)?.itemArr?.includes(itemIdx)) {
+    //       // 존재하지 않는 경우 => 배열에 추가,  style 교체
+    //       style.backgroundColor = '#4A58A9';
+    //       style.color = '#ffffff';
+
+    //       let newItemArr = selected.at(idx)?.itemArr;
+
+    //       if (newItemArr != undefined) {
+    //         return {
+    //           id: idx + 1,
+    //           itemArr: [...newItemArr, itemIdx],
+    //         };
+    //       }
+    //     } else {
+    //       // 존재하는 경우 => 배열에서 제거, style 교체
+    //       style.backgroundColor = '#ffffff';
+    //       style.color = '#4A58A9';
+
+    //       let newItemArr = selected.at(idx)?.itemArr?.filter((el) => el != itemIdx);
+
+    //       return {
+    //         id: idx + 1,
+    //         itemArr: newItemArr,
+    //       };
+    //     }
+    //   } else {
+    //     return {
+    //       id: idx + 1,
+    //       itemArr: selected.at(idx)?.itemArr,
+    //     };
+    //   }
+    // });
+
+    // setSelected(newArr);
   };
 
+  // TODO : 더 좋은 방법이 없을까..?
   // 초기화 버튼 클릭 시
   const onInit = () => {
-    let newArr = new Array();
-    selected.map((el, parentIdx) => {
-      // style 초기화
-      itemRefs.current[parentIdx].childNodes.forEach((el: any) => {
-        el.style.backgroundColor = '#ffffff';
-        el.style.color = '#4A58A9';
-      });
+    setSelected([]);
 
-      el?.itemArr?.splice(0);
-      newArr.push(el);
+    itemRefs.current.map((parent: any) => {
+      parent.childNodes.forEach((child: any) => {
+        child.style.backgroundColor = '#ffffff';
+        child.style.color = '#4A58A9';
+      });
     });
 
-    setSelected(newArr);
+    // let newArr = new Array();
+    // selected.map((el, parentIdx) => {
+    //   // style 초기화
+    //   itemRefs.current[parentIdx].childNodes.forEach((el: any) => {
+    //     el.style.backgroundColor = '#ffffff';
+    //     el.style.color = '#4A58A9';
+    //   });
+    //   el?.itemArr?.splice(0);
+    //   newArr.push(el);
+    // });
+    // setSelected(newArr);
+  };
+
+  const onClickFilter = () => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    if (props.curRank == 0) {
+      // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
+      (async () => {
+        const data = await getGithubRanking(5, 1);
+        props.setGitRankList(data);
+      })();
+
+      // 나의 깃허브 랭킹 가져오기
+      if (accessToken) {
+        (async () => {
+          if (selected) {
+            const data = await getMyGitRanking(selected[1] + 1);
+            props.setMyGitRank(data.data.githubRankingCover);
+          }
+        })();
+      }
+    } else {
+      // 백준 랭크 가져오기
+      (async () => {
+        // const data = await getBojRanking();
+        // console.log(data);
+        // props.setBojRankList(data);
+      })();
+
+      // 나의 백준 랭킹 가져오기
+      if (accessToken) {
+        (async () => {
+          const data = await getMyBojRanking();
+
+          if (data.status == 'SUCCESS') {
+            props.setMyBojRank(data.data);
+          }
+        })();
+      }
+    }
   };
 
   return (
@@ -300,7 +369,7 @@ const FilterModal = (props: IFilterModalProps) => {
             </div>
           );
         })}
-        <StyledCancelOk cancelWord="초기화" okWord="필터적용" cancel={onInit} ok={props.onClick} />
+        <StyledCancelOk cancelWord="초기화" okWord="필터적용" cancel={onInit} ok={onClickFilter} />
       </Wrapper>
     </>
   );
