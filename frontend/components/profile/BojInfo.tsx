@@ -1,25 +1,7 @@
 import styled from 'styled-components';
-import { IBojInfo, IAvatarData, IBojProfile } from './IProfile';
+import { IBojInfo, IAvatarData } from './IProfile';
 import CircleChart from './CircleChart';
 import Avatar from './Avatar';
-
-/** dummydata
- *
- */
-const bojdata: IBojProfile = {
-  bojId: 'fixup719',
-  tierUrl: 'https://d2gd6pc034wcta.cloudfront.net/tier/17.svg',
-  languages: [
-    {
-      name: 'java',
-      percentage: 98,
-    },
-  ],
-  pass: 719,
-  tryFail: 5,
-  submit: 1000,
-  fail: 500,
-};
 
 const BojInfoDiv = styled.div``;
 const BasicInfoDiv = styled.div`
@@ -44,37 +26,37 @@ const BoxDiv = styled.div`
   }
 `;
 
-export default function BojInfo({ bojId }: IBojInfo) {
-  const boj = bojdata;
+const BojInfo = ({ bojData, my }: IBojInfo) => {
   const infoList = [
     {
       name: '맞은 문제',
-      value: boj.pass,
+      value: bojData.pass,
       icon: '/Icon/CorrectIcon.svg',
     },
     {
       name: '틀렸습니다',
-      value: boj.fail,
+      value: bojData.fail,
       icon: '/Icon/WrongIcon.svg',
     },
     {
       name: '제출',
-      value: boj.submit,
+      value: bojData.submit,
       icon: '/Icon/SubmitIcon.svg',
     },
     {
       name: '시도했지만 맞지 못한 문제',
-      value: boj.tryFail,
+      value: bojData.tryFail,
       icon: '/Icon/CryIcon.svg',
     },
   ];
   const avatarData: IAvatarData = {
-    avatarUrl: boj.tierUrl,
-    name: boj.bojId,
+    avatarUrl: bojData.tierUrl,
+    name: bojData.bojId,
   };
+
   return (
     <BojInfoDiv>
-      <Avatar isCircle={false} data={avatarData}></Avatar>
+      <Avatar isCircle={false} data={avatarData} my={my}></Avatar>
       <BasicInfoDiv>
         {infoList.map((info, idx) => (
           <BoxDiv key={idx}>
@@ -86,7 +68,9 @@ export default function BojInfo({ bojId }: IBojInfo) {
           </BoxDiv>
         ))}
       </BasicInfoDiv>
-      <CircleChart data={boj.languages} label={true}></CircleChart>
+      <CircleChart data={bojData.languages} label={true}></CircleChart>
     </BojInfoDiv>
   );
-}
+};
+
+export default BojInfo;
