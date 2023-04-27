@@ -32,6 +32,7 @@ export interface IGithubProfile {
  */
 export interface IGithubInfo {
   githubData: IGithubProfile;
+  my?: boolean;
 }
 
 /**
@@ -42,7 +43,7 @@ export interface IBojProfile {
   tierUrl: string;
   languages: {
     name: string;
-    percentage: number;
+    passPercentage: string;
   }[];
   pass: number;
   tryFail: number;
@@ -55,6 +56,7 @@ export interface IBojProfile {
  */
 export interface IBojInfo {
   bojData: IBojProfile;
+  my?: boolean;
 }
 
 /**
@@ -83,6 +85,7 @@ export interface IAvatar {
    */
   isCircle: boolean;
   data: IAvatarData;
+  my?: boolean;
 }
 
 /**

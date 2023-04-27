@@ -45,8 +45,7 @@ function Readme({ repository, githubId }: IReadme) {
   useEffect(() => {
     (async () => {
       const data = await getReadme(githubId, repository.id);
-      setLink(data.readme);
-      console.log(data.readme);
+      setLink(data.data.readme);
     })();
   }, []);
 

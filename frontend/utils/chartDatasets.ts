@@ -1,6 +1,7 @@
 export interface ChartInput {
   name: string;
-  percentage: string;
+  percentage?: string;
+  passPercentage?: string;
 }
 
 /**
@@ -13,7 +14,11 @@ export const myChartData = (data: ChartInput[]) => {
     return item.name;
   });
   const percentages = data.map((item: ChartInput) => {
-    return parseFloat(item.percentage.replace('%', ''));
+    if (item.percentage) {
+      return parseFloat(item.percentage.replace('%', ''));
+    } else if (item.passPercentage) {
+      return parseFloat(item.passPercentage.replace('%', ''));
+    }
   });
 
   const dataset = {

@@ -28,7 +28,7 @@ export const getBoj = async (userId: string) => {
 export const getMyBoj = async () => {
   const { data } = await authApi({
     method: 'get',
-    url: `boj/users`,
+    url: `boj/users/5`,
   });
 
   return data;

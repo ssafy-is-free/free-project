@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { Spinner } from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
 import { ParsedUrlQuery } from 'querystring';
-import { getGithub } from '@/pages/api/profileAxios';
+import { getBoj, getGithub } from '@/pages/api/profileAxios';
 import { IBojProfile, IGithubProfile } from '@/components/profile/IProfile';
 
 const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
@@ -33,19 +33,20 @@ const Profile = () => {
   const [bojData, setBojData] = useState<IBojProfile>();
 
   const getGithubData = async () => {
-    const data = await getGithub(id);
-    setGithubData(data.data);
-    // setGithubData({
-    //   githubId: 4,
-    //   nickname: 'noobsoda',
-    //   profileLink: 'https://github.com/noobsoda',
-    //   avatarUrl: 'https://avatars.githubusercontent.com/u/76441040?v=4',
-    //   commit: 1087,
-    //   star: 1,
-    //   followers: 2,
-    //   repositories: [],
-    //   languages: [],
-    // });
+    const res = await getGithub(id);
+    if (res.data) {
+      setGithubData(res.data);
+    } else {
+      alert(res.message);
+    }
+  };
+  const getBojData = async () => {
+    const res = await getBoj(id);
+    if (res.data) {
+      setBojData(res.data);
+    } else {
+      alert(res.message);
+    }
   };
 
   const back = () => {
@@ -54,17 +55,18 @@ const Profile = () => {
 
   useEffect(() => {
     if (category === 'github') {
-      console.log('깃허브');
       getGithubData();
+    } else if (category === 'boj') {
+      getBojData();
     }
-  }, [category]);
+  }, [category, id]);
 
   return (
     <div>
       <ProfileHeader back={back}></ProfileHeader>
       <ProfileInfoDiv>
         {githubData && <GithubInfo githubData={githubData}></GithubInfo>}
-        {/* {bojData && <BojInfo bojData={bojData}></BojInfo>} */}
+        {bojData && <BojInfo bojData={bojData}></BojInfo>}
       </ProfileInfoDiv>
     </div>
   );

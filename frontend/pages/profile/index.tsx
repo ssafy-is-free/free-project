@@ -24,22 +24,25 @@ const MyProfile = () => {
 
   const [githubData, setGithubData] = useState<IGithubProfile>();
   const [bojData, setBojData] = useState<IBojProfile>();
-  const [message, setMessate] = useState<string>('');
+  // const [message, setMessate] = useState<string>('');
 
   useEffect(() => {
     (async () => {
-      console.log('api호출');
       const res = await getMyGithub();
       if (res.data) {
-        setGithubData(res);
+        setGithubData(res.data);
       } else {
-        setMessate(res.message);
+        alert(res.message);
       }
     })();
-    // (async () => {
-    //   const data = await getMyBoj();
-    //   setBojData(data);
-    // })();
+    (async () => {
+      const res = await getMyBoj();
+      if (res.data) {
+        setBojData(res.data);
+      } else {
+        alert(res.message);
+      }
+    })();
   }, []);
 
   return (
@@ -48,8 +51,8 @@ const MyProfile = () => {
         <div className="nav">
           <CustomNav lists={navList} selectIdx={selectIdx}></CustomNav>
         </div>
-        {selectedIdx === 0 && githubData ? <GithubInfo githubData={githubData}></GithubInfo> : <div>{message}</div>}
-        {/* {selectedIdx === 1 && bojData && <BojInfo bojData={bojData}></BojInfo>} */}
+        {selectedIdx === 0 && githubData && <GithubInfo githubData={githubData} my={true}></GithubInfo>}
+        {selectedIdx === 1 && bojData && <BojInfo bojData={bojData} my={true}></BojInfo>}
       </ProfileContentDiv>
     </div>
   );

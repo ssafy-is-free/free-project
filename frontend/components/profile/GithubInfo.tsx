@@ -37,7 +37,7 @@ const ReadmeDiv = styled.div`
   gap: 0.5rem;
 `;
 
-const GithubInfo = ({ githubData }: IGithubInfo) => {
+const GithubInfo = ({ githubData, my }: IGithubInfo) => {
   const basicInfo = [
     {
       name: 'Commits',
@@ -59,7 +59,7 @@ const GithubInfo = ({ githubData }: IGithubInfo) => {
 
   return (
     <GithubDiv>
-      <Avatar isCircle={true} data={avatarData}></Avatar>
+      <Avatar isCircle={true} data={avatarData} my={my}></Avatar>
       <CommitDiv>
         {basicInfo.map((info, idx) => (
           <div key={idx}>

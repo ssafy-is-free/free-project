@@ -1,25 +1,7 @@
 import styled from 'styled-components';
-import { IBojInfo, IAvatarData, IBojProfile } from './IProfile';
+import { IBojInfo, IAvatarData } from './IProfile';
 import CircleChart from './CircleChart';
 import Avatar from './Avatar';
-
-/** dummydata
- *
- */
-const bojdataDummy: IBojProfile = {
-  bojId: 'fixup719',
-  tierUrl: 'https://d2gd6pc034wcta.cloudfront.net/tier/17.svg',
-  languages: [
-    {
-      name: 'java',
-      percentage: 98,
-    },
-  ],
-  pass: 719,
-  tryFail: 5,
-  submit: 1000,
-  fail: 500,
-};
 
 const BojInfoDiv = styled.div``;
 const BasicInfoDiv = styled.div`
@@ -44,7 +26,7 @@ const BoxDiv = styled.div`
   }
 `;
 
-const BojInfo = ({ bojData }: IBojInfo) => {
+const BojInfo = ({ bojData, my }: IBojInfo) => {
   const infoList = [
     {
       name: '맞은 문제',
@@ -71,9 +53,10 @@ const BojInfo = ({ bojData }: IBojInfo) => {
     avatarUrl: bojData.tierUrl,
     name: bojData.bojId,
   };
+
   return (
     <BojInfoDiv>
-      <Avatar isCircle={false} data={avatarData}></Avatar>
+      <Avatar isCircle={false} data={avatarData} my={my}></Avatar>
       <BasicInfoDiv>
         {infoList.map((info, idx) => (
           <BoxDiv key={idx}>
