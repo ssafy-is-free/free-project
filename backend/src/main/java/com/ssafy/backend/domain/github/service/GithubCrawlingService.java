@@ -61,8 +61,13 @@ public class GithubCrawlingService {
 		Optional<Github> githubOptional = githubRepository.findByUserId(findUser.getId());
 		if (githubOptional.isPresent()) {   // 기존 유저
 			Github github = githubOptional.get();
+
+			int score = Github.calcScore(githubCrawling.getCommit(), githubCrawling.getFollowers(),
+				githubCrawling.getStar(), githubCrawling.getRepositories().size());
+
+
 			github.update(githubCrawling.getCommit(), githubCrawling.getFollowers(),
-				githubCrawling.getStar(), githubCrawling.getProfileLink());
+				githubCrawling.getStar(), githubCrawling.getProfileLink(), score);
 
 			List<GithubRepo> githubRepos = new ArrayList<>();
 			for (CGithubRepoDTO g : githubCrawling.getRepositories()) {
@@ -94,9 +99,12 @@ public class GithubCrawlingService {
 			}
 
 		} else {    // 새로운 유저
+			int score = Github.calcScore(githubCrawling.getCommit(), githubCrawling.getFollowers(),
+				githubCrawling.getStar(), githubCrawling.getRepositories().size());
+
 			Github github = Github.create(
 				githubCrawling.getCommit(), githubCrawling.getFollowers(),
-				githubCrawling.getStar(), githubCrawling.getProfileLink(), findUser
+				githubCrawling.getStar(), githubCrawling.getProfileLink(), findUser, score
 			);
 
 			githubRepository.save(github);

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
@@ -52,6 +53,7 @@ public class GithubRankingService {
 		return FilteredGithubIdSet.create(filterdIdSet);
 	}
 
+	@Transactional
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdBy(rankingFilter);

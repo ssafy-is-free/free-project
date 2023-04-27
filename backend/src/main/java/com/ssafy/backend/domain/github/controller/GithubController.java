@@ -91,10 +91,8 @@ public class GithubController {
 	}
 
 	@GetMapping("/my-rank")
-	public CommonResponse getMyGithubRank(
-		@AuthenticationPrincipal UserPrincipal userPrincipal,
-		GitHubRankingFilter rankingFilter
-	) {
+	public CommonResponse getMyGithubRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
+		GitHubRankingFilter rankingFilter) {
 		GithubRankingOneResponse githubRankOne = githubRankingService.getGithubRankOne(userPrincipal.getId(),
 			rankingFilter);
 		return githubRankOne.getGithubRankingCover() == null ?
@@ -109,4 +107,5 @@ public class GithubController {
 			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(githubRankOne, RESPONSE_SUCCESS);
 	}
+
 }
