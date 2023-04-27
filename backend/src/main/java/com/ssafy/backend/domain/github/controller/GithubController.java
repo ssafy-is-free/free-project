@@ -62,8 +62,10 @@ public class GithubController {
 		return responseService.getDataResponse(readmeResponse, RESPONSE_SUCCESS);
 	}
 
-	@GetMapping("/users/{userId}")
-	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable long userId) {
+	@GetMapping(value = {"/users/{userId}", "/users"})
+	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable(required = false) Long userId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		userId = userId != null ? userId : userPrincipal.getId();
 		GithubDetailResponse details = githubService.getDetails(userId);
 		return responseService.getDataResponse(details, RESPONSE_SUCCESS);
 
