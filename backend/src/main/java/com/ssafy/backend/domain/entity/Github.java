@@ -72,24 +72,26 @@ public class Github extends BaseTimeEntity {
 	@Column(name = "github_previous_rank", nullable = false)
 	private long previousRank;
 
-	public static Github create(int commits, int followers, int stars, String profileLink, User user) {
-		// calc score
-		int s = 0;
-
+	public static Github create(int commits, int followers, int stars, String profileLink, User user, int score) {
 		return Github.builder()
 			.commitTotalCount(commits)
 			.followerTotalCount(followers)
 			.starTotalCount(stars)
 			.profileLink(profileLink)
-			.score(s)
+			.score(score)
 			.user(user)
 			.build();
 	}
 
-	public void update(int commit, int followers, int star, String profileLink) {
+	public void update(int commit, int followers, int star, String profileLink, int score) {
 		this.commitTotalCount = commit;
 		this.followerTotalCount = followers;
 		this.starTotalCount = star;
 		this.profileLink = profileLink;
+		this.score = score;
+	}
+
+	public static int calcScore(int commits, int followers, int stars, int repoSize) {
+		return (int)(stars * 100 + commits + followers * 0.5 + repoSize * 0.1);
 	}
 }
