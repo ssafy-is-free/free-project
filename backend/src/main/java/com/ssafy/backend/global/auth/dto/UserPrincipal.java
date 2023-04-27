@@ -22,12 +22,22 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	private long id;
 
 	private String nickname;
+	private boolean isNew;
 
 	public static UserPrincipal createUserDetails(User user) {
 
 		return UserPrincipal.builder()
 			.id(user.getId())
 			.nickname(user.getNickname())
+			.build();
+	}
+
+	public static UserPrincipal createUserDetails(User user, boolean isNew) {
+
+		return UserPrincipal.builder()
+			.id(user.getId())
+			.nickname(user.getNickname())
+			.isNew(isNew)
 			.build();
 	}
 
@@ -76,5 +86,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	@Override
 	public String getName() {
 		return String.valueOf(this.id);
+	}
+
+	public boolean isNew() {
+		return this.isNew;
 	}
 }

@@ -88,6 +88,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 		}
 
 		return UriComponentsBuilder.fromUriString(redirectUrl)
+			.queryParam("isNew", userPrincipal.isNew())
 			.queryParam("token", accessToken)
 			.build().toString();
 	}

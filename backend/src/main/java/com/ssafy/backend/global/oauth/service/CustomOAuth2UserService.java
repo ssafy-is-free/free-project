@@ -59,13 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		String nickname = oAuth2UserInfo.getName();
 		String image = oAuth2UserInfo.getProfileImage();
 
-		userRepository.findByNicknameAndIsDeletedFalse(nickname)
-			.ifPresentOrElse(
-				//있으면 업데이트
-				user -> updateUser(user, nickname, image),
-				//없으면 저장.
-				() -> registerUser(nickname, image)
-			);
+		boolean isNew = true;
 
 		Optional<User> userOptional = userRepository.findByNicknameAndIsDeletedFalse(nickname);
 
@@ -75,13 +69,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		if (userOptional.isPresent()) {
 			user = userOptional.get();
 			updateUser(user, nickname, image);
+			isNew = false;
 		}
 		//조회했을 때 없으면 생성.
 		else {
 			user = registerUser(nickname, image);
 		}
 
-		return UserPrincipal.createUserDetails(user);
+		return UserPrincipal.createUserDetails(user, isNew);
 	}
 
 	//db에 없으면 등록
