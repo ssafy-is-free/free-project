@@ -50,7 +50,7 @@ public class GithubService {
 
 		List<GithubDetailLanguage> githubLanguages = githubLanguageQueryRepository.findByGithub(github);
 		log.info(github.toString());
-		return new GithubDetailResponse(github, githubLanguages);
+		return GithubDetailResponse.create(github, githubLanguages);
 	}
 
 	public ReadmeResponse getReadme(long githubId, long repositoryId) {
@@ -59,7 +59,7 @@ public class GithubService {
 		});
 
 		githubRepo.validateGithubId(githubId);
-		return new ReadmeResponse(githubRepo);
+		return ReadmeResponse.create(githubRepo.getReadme());
 	}
 
 }

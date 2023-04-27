@@ -1,15 +1,15 @@
 package com.ssafy.backend.domain.github.dto;
 
-import com.ssafy.backend.domain.entity.GithubRepo;
-
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class ReadmeResponse {
 	String readme;
 
-	public ReadmeResponse(GithubRepo githubRepo) {
-		this.readme = githubRepo.getReadme();
+	public static ReadmeResponse create(String readme) {
+		return ReadmeResponse.builder().readme(readme).build();
 	}
 
 }
