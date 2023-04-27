@@ -183,7 +183,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
 		Baekjoon baekjoon = oBaekjoon.orElseThrow(() -> new CustomException(NOT_FOUND_BOJ_USER));
 
-		List<BaekjoonLanguage> baekjoonLanguageList = bojLanguageRepository.findAllById(baekjoon.getId());
+		List<BaekjoonLanguage> baekjoonLanguageList = bojLanguageRepository.findAllByBaekjoonId(baekjoon.getId());
 		//언어 정보 불러와서 해쉬에 저장
 		List<Language> languageList = languageRepository.findAllByType(LanguageType.BAEKJOON);
 		for (Language language : languageList) {

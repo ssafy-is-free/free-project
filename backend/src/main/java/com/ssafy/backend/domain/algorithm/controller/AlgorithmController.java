@@ -59,14 +59,14 @@ public class AlgorithmController {
 	}
 
 	@GetMapping("/user-rank/{userId}")
-	public CommonResponse getBojId(@PathVariable("userId") Long userId) {
+	public CommonResponse getBojId(@PathVariable Long userId) {
 		BojRankResponseDTO bojRankResponseDTO = algorithmService.getBojByUserId(userId);
 		return bojRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankResponseDTO, RESPONSE_SUCCESS);
 	}
 
 	@GetMapping("/users/{userId}")
-	public DataResponse<BojInfoDetailResponseDTO> getBojInfoDetail(@PathVariable("userId") Long userId) {
+	public DataResponse<BojInfoDetailResponseDTO> getBojInfoDetail(@PathVariable Long userId) {
 		BojInfoDetailResponseDTO bojInfoDetailResponseDTO = algorithmService.getBojInfoDetailByUserId(userId);
 		return bojInfoDetailResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojInfoDetailResponseDTO, RESPONSE_SUCCESS);

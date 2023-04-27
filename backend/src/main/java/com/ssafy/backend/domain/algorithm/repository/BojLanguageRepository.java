@@ -12,5 +12,5 @@ public interface BojLanguageRepository extends JpaRepository<BaekjoonLanguage, L
 
 	List<BaekjoonLanguage> deleteAllByBaekjoonId(Long baekjoonId);
 
-	List<BaekjoonLanguage> findAllById(long id);
+	List<BaekjoonLanguage> findAllByBaekjoonId(long id);
 }
