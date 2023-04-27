@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -91,10 +92,8 @@ public class GithubController {
 	}
 
 	@GetMapping("/my-rank")
-	public CommonResponse getMyGithubRank(
-		@AuthenticationPrincipal UserPrincipal userPrincipal,
-		GitHubRankingFilter rankingFilter
-	) {
+	public CommonResponse getMyGithubRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
+		GitHubRankingFilter rankingFilter) {
 		GithubRankingOneResponse githubRankOne = githubRankingService.getGithubRankOne(userPrincipal.getId(),
 			rankingFilter);
 		return githubRankOne.getGithubRankingCover() == null ?
@@ -108,5 +107,10 @@ public class GithubController {
 		return githubRankOne.getGithubRankingCover() == null ?
 			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(githubRankOne, RESPONSE_SUCCESS);
+	}
+
+	@PostMapping("/test")
+	public CommonResponse testApi() {
+		return responseService.getDataResponse("Hi", RESPONSE_SUCCESS);
 	}
 }
