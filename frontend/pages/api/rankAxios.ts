@@ -25,10 +25,11 @@ export const getFilter = async (languageType: String) => {
  * @param rankParam 시작랭킹
  * @returns
  */
-export const getGithubRanking = async (sizeParam: number, rankParam: number) => {
+export const getGithubRanking = async (sizeParam: number, rankParam: number, languageParam?: number) => {
   const params = {
     size: sizeParam,
     rank: rankParam,
+    language: languageParam,
   };
 
   const { data } = await basicApi({
