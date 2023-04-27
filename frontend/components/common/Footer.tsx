@@ -10,9 +10,11 @@ const FooterDiv = styled.div`
   min-height: 4rem;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
-  box-shadow: 0px -1px 3px 0px gray;
+  /* box-shadow: 0px -1px 3px 0px gray; */
+  box-shadow: 0px -2px 10px #4a58a94b;
   display: flex;
   position: fixed;
+  z-index: 5;
 `;
 
 const IconDiv = styled.div`

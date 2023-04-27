@@ -32,10 +32,12 @@ const Wrapper = styled.div`
     position: absolute;
     z-index: 1;
     bottom: 0;
-    margin-top: 32px;
-    padding: 72px 32px 32px;
+    /* margin-top: 32px; */
+    /* padding: 72px 32px 32px; */
+    padding: 5rem 2rem 2rem;
     width: 100%;
-    height: 672px;
+    /* height: 672px; */
+    height: 80vh;
     background-color: ${(props) => props.theme.bgWhite};
     border-radius: 50px 50px 0px 0px;
     display: flex;
@@ -43,8 +45,8 @@ const Wrapper = styled.div`
 
     .filter-box {
       position: absolute;
-      top: 40px;
-      right: 40px;
+      top: 2rem;
+      right: 2rem;
       cursor: pointer;
     }
 

@@ -17,7 +17,7 @@ const Redirect = () => {
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       dispatch(login());
-      router.push('/main');
+      router.push('/');
     }
   }, []);
 
