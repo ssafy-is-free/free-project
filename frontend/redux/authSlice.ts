@@ -2,10 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export interface LoginState {
   isLogin: boolean;
+  isNew: boolean;
 }
 
 const initialState: LoginState = {
   isLogin: false,
+  isNew: false,
 };
 
 const authSlice = createSlice({
@@ -20,8 +22,11 @@ const authSlice = createSlice({
       localStorage.removeItem('accessToken');
       state.isLogin = false;
     },
+    setNew(state) {
+      state.isNew = true;
+    },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setNew } = authSlice.actions;
 export default authSlice.reducer;

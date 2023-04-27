@@ -11,5 +11,5 @@ export interface IBojProps {
  */
 export interface ILoginProps {
   onClick: () => void;
-  setOpenBoj: React.Dispatch<React.SetStateAction<boolean>>;
+  // setOpenBoj: React.Dispatch<React.SetStateAction<boolean>>;
 }
