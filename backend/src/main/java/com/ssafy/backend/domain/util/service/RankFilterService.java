@@ -2,9 +2,9 @@ package com.ssafy.backend.domain.util.service;
 
 import java.util.List;
 
-import com.ssafy.backend.domain.util.dto.LanguageDTO;
+import com.ssafy.backend.domain.util.dto.LanguageResponse;
 
 public interface RankFilterService {
 
-	List<LanguageDTO> getLanguageList(String type);
+	List<LanguageResponse> getLanguageList(String type);
 }

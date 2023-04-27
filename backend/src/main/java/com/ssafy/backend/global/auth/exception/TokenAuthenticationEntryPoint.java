@@ -31,39 +31,39 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ResponseService responseService;
-    private final ObjectMapper objectMapper;
+	private final ResponseService responseService;
+	private final ObjectMapper objectMapper;
 
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-        AuthenticationException authException) throws IOException, ServletException {
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException authException) throws IOException, ServletException {
 
-        log.error("Authentication error");
+		log.error("Authentication error");
 
-        String exception = (String)request.getAttribute(TOKEN_EXCEPTION_KEY);
+		String exception = (String)request.getAttribute(TOKEN_EXCEPTION_KEY);
 
-        if (exception == null)
-            return;
+		if (exception == null)
+			return;
 
-        CommonResponse exceptionResponse;
+		CommonResponse exceptionResponse;
 
-        if (exception.equals(TOKEN_INVALID)) {
-            exceptionResponse = responseService.getExceptionResponse(TOKEN_INVALID);
-        } else if (exception.equals(TOKEN_EXPIRE)) {
-            exceptionResponse = responseService.getExceptionResponse(TOKEN_EXPIRE);
-        } else if (exception.equals(TOKEN_UNSUPPORTED)) {
-            exceptionResponse = responseService.getExceptionResponse(TOKEN_UNSUPPORTED);
-        } else {
-            exceptionResponse = responseService.getExceptionResponse(TOKEN_ILLEGAL);
-        }
+		if (exception.equals(TOKEN_INVALID)) {
+			exceptionResponse = responseService.getExceptionResponse(TOKEN_INVALID);
+		} else if (exception.equals(TOKEN_EXPIRE)) {
+			exceptionResponse = responseService.getExceptionResponse(TOKEN_EXPIRE);
+		} else if (exception.equals(TOKEN_UNSUPPORTED)) {
+			exceptionResponse = responseService.getExceptionResponse(TOKEN_UNSUPPORTED);
+		} else {
+			exceptionResponse = responseService.getExceptionResponse(TOKEN_ILLEGAL);
+		}
 
-        String error = objectMapper.writeValueAsString(exceptionResponse);
+		String error = objectMapper.writeValueAsString(exceptionResponse);
 
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
 
-        response.setStatus(401);
+		response.setStatus(401);
 
-        response.getWriter().write(error);
-    }
+		response.getWriter().write(error);
+	}
 }

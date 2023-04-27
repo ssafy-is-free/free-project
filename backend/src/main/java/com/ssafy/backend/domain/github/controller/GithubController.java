@@ -23,7 +23,7 @@ import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.github.service.GithubRankingService;
 import com.ssafy.backend.domain.github.service.GithubService;
-import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.response.CommonResponse;
 import com.ssafy.backend.global.response.CustomSuccessStatus;
@@ -81,7 +81,7 @@ public class GithubController {
 
 	@GetMapping("/search")
 	public CommonResponse getNicknameList(@RequestParam String nickname) {
-		List<NicknameListResponseDTO> nicknameList = githubService.getNicknameList(nickname);
+		List<NicknameListResponse> nicknameList = githubService.getNicknameList(nickname);
 		return nicknameList.size() == 0 ?
 			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(nicknameList, RESPONSE_SUCCESS);
