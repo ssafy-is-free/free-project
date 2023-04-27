@@ -2,6 +2,9 @@ import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import BigBtn from '../common/BigBtn';
 import { IBojProps } from './ILogin';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { postBojId } from '@/pages/api/rankAxios';
 
 const moveUp = keyframes`
  from{
@@ -84,6 +87,18 @@ const Wrapper = styled.div`
 `;
 
 const BojModal = (props: IBojProps) => {
+  const router = useRouter();
+
+  const [bojId, setBojId] = useState<string>();
+
+  const onChange = (event: any) => {
+    setBojId(event.target.value);
+  };
+
+  const onClickBojId = () => {
+    if (bojId) postBojId(bojId);
+  };
+
   return (
     <>
       <DarkBg onClick={props.onClick} />
@@ -92,10 +107,12 @@ const BojModal = (props: IBojProps) => {
         <LogoPrimary />
         <div className="label1">백준 아이디를 등록하시겠습니까? </div>
         <div className="label2">백준 아이디를 등록해서 랭킹을 확인해보세요. </div>
-        <input type="text" className="input-id" placeholder="아이디" />
-        <BigBtn text={'등록하기'} onClick={props.onClick} />
+        <input type="text" className="input-id" placeholder="아이디" onChange={(event) => onChange(event)} />
+        <BigBtn text={'등록하기'} onClick={onClickBojId} />
         <div className="btn-wrapper">
-          <button className="passBtn">건너뛰기</button>
+          <button className="passBtn" onClick={() => router.push('/')}>
+            건너뛰기
+          </button>
         </div>
       </Wrapper>
     </>

@@ -80,3 +80,17 @@ export const getSearchGitUser = async (nicknameParam: string | undefined) => {
 
   return data;
 };
+
+export const postBojId = async (bojId: string) => {
+  const postBody = {
+    boj_id: bojId,
+  };
+
+  await authApi({
+    method: 'patch',
+    url: '/boj-id',
+    data: postBody,
+  });
+
+  // return data;
+};

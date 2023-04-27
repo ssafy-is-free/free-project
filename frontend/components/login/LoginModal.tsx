@@ -3,6 +3,7 @@ import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import BigBtn from '../common/BigBtn';
 import { ILoginProps } from './ILogin';
+import { useEffect } from 'react';
 
 const moveUp = keyframes`
  from{

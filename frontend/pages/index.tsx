@@ -81,18 +81,8 @@ const Main = () => {
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
   const dispatch = useDispatch();
   // splash screen 적용하기
+  // const [splash, setSplash] = useState<boolean>(false);
   const [splash, setSplash] = useState<boolean>(false);
-
-  /**
-   * splash check useEffect
-   */
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSplash(true);
-      dispatch(splashCheck());
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // 랭크 menu select 모달 열기
   const [openSelect, setOpenSelect] = useState<boolean>(false);
@@ -102,6 +92,27 @@ const Main = () => {
   const [opeBoj, setOpenBoj] = useState<boolean>(false);
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
+
+  /**
+   * splash check useEffect
+   */
+  useEffect(() => {
+    const splashStorage = localStorage.getItem('splash');
+    if (splashStorage) {
+      setSplash(true);
+    }
+
+    if (isLogin) {
+      setOpenBoj(true);
+    }
+
+    const timer = setTimeout(() => {
+      // setSplash(true);
+      dispatch(splashCheck());
+      localStorage.setItem('splash', 'true');
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준
   const [curRank, setCurRank] = useState<number>(0);
@@ -160,6 +171,7 @@ const Main = () => {
   }, [curRank]);
 
   if (!splash && !splashState) {
+    // if (splashStorage) {
     return <Splash />;
   } else {
     return (
