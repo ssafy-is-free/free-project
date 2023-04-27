@@ -14,7 +14,6 @@ import BojModal from '@/components/login/BojModal';
 import FilterModal from '@/components/rank/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { SplashState, splashCheck } from '@/redux/splashSlice';
-import Footer from '@/components/common/Footer';
 import { RootState } from '@/redux';
 
 const Wrapper = styled.div`
@@ -245,7 +244,6 @@ const Main = () => {
             </ul>
           </div>
         </Wrapper>
-        <Footer></Footer>
         {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} setOpenBoj={setOpenBoj} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}

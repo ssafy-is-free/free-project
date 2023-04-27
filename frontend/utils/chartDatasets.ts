@@ -1,6 +1,6 @@
 export interface ChartInput {
   name: string;
-  percentage: number;
+  percentage: string;
 }
 
 /**
@@ -9,11 +9,11 @@ export interface ChartInput {
  * @returns
  */
 export const myChartData = (data: ChartInput[]) => {
-  const labels = data.map((data: ChartInput) => {
-    return data.name;
+  const labels = data.map((item: ChartInput) => {
+    return item.name;
   });
-  const percentages = data.map((data: ChartInput) => {
-    return data.percentage;
+  const percentages = data.map((item: ChartInput) => {
+    return parseFloat(item.percentage.replace('%', ''));
   });
 
   const dataset = {

@@ -1,7 +1,8 @@
 import ReadmeDetail from './ReadmeDetail';
+import { useState, useEffect } from 'react';
 import { IRepository } from './IProfile';
-import { useState } from 'react';
 import styled from 'styled-components';
+import { getReadme } from '@/pages/api/profileAxios';
 
 const ReadmeDiv = styled.div`
   border: solid;
@@ -31,13 +32,24 @@ const ReadmeDetailDiv = styled.div`
 
 interface IReadme {
   repository: IRepository;
+  githubId: number;
 }
 
-function Readme({ repository }: IReadme) {
+function Readme({ repository, githubId }: IReadme) {
+  const [link, setLink] = useState<string>('');
   const [open, setOpen] = useState(false);
   const clicked = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    (async () => {
+      const data = await getReadme(githubId, repository.id);
+      setLink(data.readme);
+      console.log(data.readme);
+    })();
+  }, []);
+
   return (
     <ReadmeDiv>
       <ReadmeTitle onClick={clicked} active={open}>
@@ -47,7 +59,7 @@ function Readme({ repository }: IReadme) {
       {open && (
         <ReadmeDetailDiv>
           <p>README.md</p>
-          <ReadmeDetail link={repository.link}></ReadmeDetail>
+          <ReadmeDetail link={link}></ReadmeDetail>
         </ReadmeDetailDiv>
       )}
     </ReadmeDiv>

@@ -6,7 +6,7 @@ import Avatar from './Avatar';
 /** dummydata
  *
  */
-const bojdata: IBojProfile = {
+const bojdataDummy: IBojProfile = {
   bojId: 'fixup719',
   tierUrl: 'https://d2gd6pc034wcta.cloudfront.net/tier/17.svg',
   languages: [
@@ -44,33 +44,32 @@ const BoxDiv = styled.div`
   }
 `;
 
-export default function BojInfo({ bojId }: IBojInfo) {
-  const boj = bojdata;
+const BojInfo = ({ bojData }: IBojInfo) => {
   const infoList = [
     {
       name: '맞은 문제',
-      value: boj.pass,
+      value: bojData.pass,
       icon: '/Icon/CorrectIcon.svg',
     },
     {
       name: '틀렸습니다',
-      value: boj.fail,
+      value: bojData.fail,
       icon: '/Icon/WrongIcon.svg',
     },
     {
       name: '제출',
-      value: boj.submit,
+      value: bojData.submit,
       icon: '/Icon/SubmitIcon.svg',
     },
     {
       name: '시도했지만 맞지 못한 문제',
-      value: boj.tryFail,
+      value: bojData.tryFail,
       icon: '/Icon/CryIcon.svg',
     },
   ];
   const avatarData: IAvatarData = {
-    avatarUrl: boj.tierUrl,
-    name: boj.bojId,
+    avatarUrl: bojData.tierUrl,
+    name: bojData.bojId,
   };
   return (
     <BojInfoDiv>
@@ -86,7 +85,9 @@ export default function BojInfo({ bojId }: IBojInfo) {
           </BoxDiv>
         ))}
       </BasicInfoDiv>
-      <CircleChart data={boj.languages} label={true}></CircleChart>
+      <CircleChart data={bojData.languages} label={true}></CircleChart>
     </BojInfoDiv>
   );
-}
+};
+
+export default BojInfo;

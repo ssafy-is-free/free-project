@@ -23,7 +23,7 @@ export interface IGithubProfile {
   repositories: IRepository[];
   languages: {
     name: string;
-    percentage: number;
+    percentage: string;
   }[];
 }
 
@@ -31,7 +31,7 @@ export interface IGithubProfile {
  * githubInfo에 prop 해야할 값
  */
 export interface IGithubInfo {
-  githubId: number;
+  githubData: IGithubProfile;
 }
 
 /**
@@ -54,7 +54,7 @@ export interface IBojProfile {
  * bojInfo에 prop 해야할 값
  */
 export interface IBojInfo {
-  bojId: number;
+  bojData: IBojProfile;
 }
 
 /**
