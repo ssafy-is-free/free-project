@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.github.service.GithubRankingService;
 import com.ssafy.backend.domain.github.service.GithubService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
+import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.response.CommonResponse;
 import com.ssafy.backend.global.response.CustomSuccessStatus;
 import com.ssafy.backend.global.response.DataResponse;
@@ -67,8 +69,12 @@ public class GithubController {
 
 	}
 
-	@PatchMapping("/crawling/{nickname}/{userId}")
-	public CommonResponse githubCrawling(@PathVariable String nickname, @PathVariable long userId) {
+	@PatchMapping("/crawling")
+	public CommonResponse githubCrawling(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+		String nickname = userPrincipal.getNickname();
+		long userId = userPrincipal.getId();
+
 		crawlingService.getGithubInfo(nickname, userId);
 		return responseService.getSuccessResponse();
 	}
