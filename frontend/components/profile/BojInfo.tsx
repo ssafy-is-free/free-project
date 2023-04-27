@@ -50,22 +50,22 @@ export default function BojInfo({ bojId }: IBojInfo) {
     {
       name: '맞은 문제',
       value: boj.pass,
-      icon: 'Icon/CorrectIcon.svg',
+      icon: '/Icon/CorrectIcon.svg',
     },
     {
       name: '틀렸습니다',
       value: boj.fail,
-      icon: 'Icon/WrongIcon.svg',
+      icon: '/Icon/WrongIcon.svg',
     },
     {
       name: '제출',
       value: boj.submit,
-      icon: 'Icon/SubmitIcon.svg',
+      icon: '/Icon/SubmitIcon.svg',
     },
     {
       name: '시도했지만 맞지 못한 문제',
       value: boj.tryFail,
-      icon: 'Icon/CryIcon.svg',
+      icon: '/Icon/CryIcon.svg',
     },
   ];
   const avatarData: IAvatarData = {

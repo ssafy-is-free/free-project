@@ -20,7 +20,7 @@ interface IProfileHeader {
 export default function ProfileHeader({ back }: IProfileHeader) {
   return (
     <HeaderDiv>
-      <img src="Icon/VectorIcon.svg" alt="화살표" onClick={back} />
+      <img src="/Icon/VectorIcon.svg" alt="화살표" onClick={back} />
     </HeaderDiv>
   );
 }
