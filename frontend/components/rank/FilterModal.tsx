@@ -302,41 +302,88 @@ const FilterModal = (props: IFilterModalProps) => {
   const onClickFilter = () => {
     const accessToken = localStorage.getItem('accessToken');
 
-    if (props.curRank == 0) {
-      // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
-      (async () => {
-        const data = await getGithubRanking(5, 1);
-        props.setGitRankList(data);
-      })();
-
-      // 나의 깃허브 랭킹 가져오기
-      if (accessToken) {
+    if (selected && selected?.length > 0) {
+      // 필터를 선택했을 때
+      if (props.curRank == 0) {
+        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
         (async () => {
           if (selected) {
-            const data = await getMyGitRanking(selected[1] + 1);
-            props.setMyGitRank(data.data.githubRankingCover);
+            const data = await getGithubRanking(5, 1, selected[1] + 1);
+
+            props.setGitRankList(data);
           }
         })();
+
+        // 나의 깃허브 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            if (selected) {
+              const data = await getMyGitRanking(selected[1] + 1);
+              props.setMyGitRank(data.data.githubRankingCover);
+            }
+          })();
+        }
+      } else {
+        // 백준 랭크 가져오기
+        (async () => {
+          // const data = await getBojRanking();
+          // console.log(data);
+          // props.setBojRankList(data);
+        })();
+
+        // 나의 백준 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            const data = await getMyBojRanking();
+
+            if (data.status == 'SUCCESS') {
+              props.setMyBojRank(data.data);
+            }
+          })();
+        }
       }
     } else {
-      // 백준 랭크 가져오기
-      (async () => {
-        // const data = await getBojRanking();
-        // console.log(data);
-        // props.setBojRankList(data);
-      })();
-
-      // 나의 백준 랭킹 가져오기
-      if (accessToken) {
+      // 필터를 선택하지 않았을 때
+      if (props.curRank == 0) {
+        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
         (async () => {
-          const data = await getMyBojRanking();
+          const data = await getGithubRanking(5, 1);
 
-          if (data.status == 'SUCCESS') {
-            props.setMyBojRank(data.data);
-          }
+          props.setGitRankList(data);
         })();
+
+        // 나의 깃허브 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            if (selected) {
+              const data = await getMyGitRanking();
+              props.setMyGitRank(data.data.githubRankingCover);
+            }
+          })();
+        }
+      } else {
+        // 백준 랭크 가져오기
+        (async () => {
+          // const data = await getBojRanking();
+          // console.log(data);
+          // props.setBojRankList(data);
+        })();
+
+        // 나의 백준 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            const data = await getMyBojRanking();
+
+            if (data.status == 'SUCCESS') {
+              props.setMyBojRank(data.data);
+            }
+          })();
+        }
       }
     }
+
+    // 모달창 닫기
+    props.onClick();
   };
 
   return (
