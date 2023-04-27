@@ -18,6 +18,13 @@
       "@/*": ["./*"]
     }
   },
+
+
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+
+    // 임시로 "./node_modules/redux-persist/types" 추가(redux-persist)
+  "files": [
+    "./node_modules/redux-persist/types/integration/react.d.ts"
+  ]
 }

@@ -11,7 +11,7 @@ const nextConfig = {
     });
     return config;
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
   async headers() {
     return [
       {
@@ -26,6 +26,7 @@ const nextConfig = {
       },
     ];
   },
+  // CORS 처리 다른 방법
   // swcMinify: true,
   // async rewrites() {
   //   return [

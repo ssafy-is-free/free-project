@@ -23,11 +23,13 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
+    "redux-persist": "^6.0.0",
     "styled-components": "^5.3.9",
     "typescript": "5.0.4"
   },
   "devDependencies": {
     "@svgr/webpack": "^7.0.0",
+    "@types/redux-persist": "^4.3.1",
     "@types/styled-components": "^5.1.26",
     "prettier": "^2.8.7"
   }

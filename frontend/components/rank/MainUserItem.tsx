@@ -21,7 +21,7 @@ const Wrapper = styled.div`
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: white;
+    /* background-color: white; */
   }
   .user-nickname {
     width: 50%;
@@ -29,10 +29,9 @@ const Wrapper = styled.div`
     align-items: center;
 
     .user-tier {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: white;
+      width: 24px;
+      height: 24px;
+      /* border-radius: 50%; */
       margin-left: 8px;
     }
   }
@@ -44,10 +43,13 @@ const Wrapper = styled.div`
 const MainUserItem = (props: IMainUserItemProps) => {
   return (
     <Wrapper>
-      <div className="rank-num">300</div>
-      <img src="" className="user-photo" />
-      <div className="user-nickname">아이디{props.curRank == 1 && <img src="" className="user-tier" />}</div>
-      <div className="user-score">점수</div>
+      <div className="rank-num">{props.item.rank}</div>
+      <img src={props.item.avatarUrl} className="user-photo" />
+      <div className="user-nickname">
+        {props.item.nickname}
+        {props.curRank == 1 && <img src={props.item.tierUrl} className="user-tier" />}
+      </div>
+      <div className="user-score">{props.item.score}</div>
     </Wrapper>
   );
 };

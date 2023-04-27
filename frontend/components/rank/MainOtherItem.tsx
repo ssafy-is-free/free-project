@@ -30,10 +30,9 @@ const Wrapper = styled.div`
     align-items: center;
 
     .user-tier {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: black;
+      width: 24px;
+      height: 24px;
+      /* border-radius: 50%; */
       margin-left: 8px;
     }
   }

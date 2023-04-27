@@ -76,6 +76,7 @@ const Wrapper = styled.div`
     }
 
     .box-content {
+      overflow-y: scroll;
       max-height: 0;
       opacity: 0;
       visibility: hidden;
