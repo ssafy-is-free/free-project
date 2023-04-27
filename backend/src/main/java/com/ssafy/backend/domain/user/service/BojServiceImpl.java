@@ -54,7 +54,7 @@ public class BojServiceImpl implements BojService {
 
 		//백준 아이디로 크롤링
 		BojInfoResponseDTO bojInfoResponseDTO = webClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
+			.uri(uriBuilder -> uriBuilder.path("/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
 			.retrieve()
 			.bodyToMono(BojInfoResponseDTO.class)
 			.block();
