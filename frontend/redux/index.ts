@@ -2,6 +2,15 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { useDispatch } from 'react-redux';
 import rootReducer from './reducer';
+import storage from 'redux-persist/lib/storage';
+
+// redux-persist 적용하기
+const persistConfig = {
+  key: 'root',
+  storage,
+};
+
+// npm i --save-dev @types/redux-persist
 
 const isDev = process.env.NODE_ENV === 'development';
 const makeStore = () => {

@@ -15,7 +15,8 @@ import FilterModal from '@/components/rank/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { SplashState, splashCheck } from '@/redux/splashSlice';
 import { RootState } from '@/redux';
-import { getBojRanking, getGithubRanking, getMyBojRanking } from './api/rankAxios';
+import { getBojRanking, getGithubRanking, getMyBojRanking, getMyGitRanking } from './api/rankAxios';
+import { resultInformation } from '@/components/rank/IRank';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -80,18 +81,8 @@ const Main = () => {
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
   const dispatch = useDispatch();
   // splash screen 적용하기
+  // const [splash, setSplash] = useState<boolean>(false);
   const [splash, setSplash] = useState<boolean>(false);
-
-  /**
-   * splash check useEffect
-   */
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSplash(true);
-      dispatch(splashCheck());
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // 랭크 menu select 모달 열기
   const [openSelect, setOpenSelect] = useState<boolean>(false);
@@ -102,6 +93,27 @@ const Main = () => {
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
 
+  /**
+   * splash check useEffect
+   */
+  useEffect(() => {
+    const splashStorage = localStorage.getItem('splash');
+    if (splashStorage) {
+      setSplash(true);
+    }
+
+    if (isLogin) {
+      setOpenBoj(true);
+    }
+
+    const timer = setTimeout(() => {
+      // setSplash(true);
+      dispatch(splashCheck());
+      localStorage.setItem('splash', 'true');
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준
   const [curRank, setCurRank] = useState<number>(0);
   const onChangeCurRank = (el: number) => {
@@ -109,30 +121,33 @@ const Main = () => {
     setOpenSelect(false);
   };
 
+  // TODO 이렇게 타입을 일일이 써줘야 하나..
   /**
    * 깃허브 랭크 리스트, 백준 랭크 리스트
    */
-  const [gitRankList, setGitRankList] = useState<
-    {
-      avatarUrl: string;
-      nickname: string;
-      rank: number;
-      rankUpDown: number;
-      score: number;
-      userId: number;
-    }[]
-  >();
-  const [bojRankList, setBojRankList] = useState<
-    {
-      avatarUrl: string;
-      nickname: string;
-      rank: number;
-      rankUpDown: number;
-      score: number;
-      userId: number;
-      tierUrl: string;
-    }[]
-  >();
+  const [gitRankList, setGitRankList] = useState<resultInformation>();
+  const [bojRankList, setBojRankList] = useState<resultInformation>();
+
+  /**
+   *  나의 깃허브 랭킹, 나의 백준 랭킹
+   */
+  const [myGitRank, setMyGitRank] = useState<{
+    userId: number;
+    nickname: string;
+    rank: number;
+    score: number;
+    avatarUrl: string;
+    rankUpDown: number;
+  }>();
+  const [myBojRank, setMyBojRank] = useState<{
+    userId: number;
+    nickname: string;
+    rank: number;
+    score: number;
+    avatarUrl: string;
+    rankUpDown: number;
+    tierUrl: string;
+  }>();
 
   /**
    * 랭킹 api
@@ -144,36 +159,53 @@ const Main = () => {
         const data = await getGithubRanking(5, 1);
         setGitRankList(data);
       })();
+
+      // 나의 깃허브 랭킹 가져오기
+      if (isLogin) {
+        (async () => {
+          const data = await getMyGitRanking();
+
+          setMyGitRank(data.data.githubRankingCover);
+        })();
+      }
     } else {
       // 백준 랭크 가져오기
       (async () => {
         // const data = await getBojRanking();
+        // console.log(data);
         // setBojRankList(data);
       })();
 
       // 나의 백준 랭킹 가져오기
-      (async () => {
-        const data = await getMyBojRanking();
-      })();
+      if (isLogin) {
+        (async () => {
+          const data = await getMyBojRanking();
+
+          setMyBojRank(data.data);
+        })();
+      }
     }
   }, [curRank]);
 
   if (!splash && !splashState) {
+    // if (splashStorage) {
     return <Splash />;
   } else {
     return (
       <>
         <Wrapper>
           <RankMenu onClick={() => setOpenSelect(true)} curRank={curRank} />
-          <SearchBar curRank={curRank} />
+          <SearchBar curRank={curRank} setGitRankList={setGitRankList} setBojRankList={setBojRankList} />
           <div className="content-wrapper">
             <div className="filter-box">
               <FilterIcon onClick={() => setOpenFilter(true)} />
             </div>
             <div className="my-rank">
               <p>나의 랭킹</p>
-              {isLogin ? (
-                <MainUserItem curRank={curRank} />
+              {myGitRank && curRank == 0 ? (
+                <MainUserItem curRank={curRank} item={myGitRank} />
+              ) : myBojRank && curRank == 1 ? (
+                <MainUserItem curRank={curRank} item={myBojRank} />
               ) : (
                 <NoAccount curRank={curRank} onClick={() => setOpenLogin(true)} />
               )}

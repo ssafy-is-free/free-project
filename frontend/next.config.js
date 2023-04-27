@@ -26,12 +26,13 @@ const nextConfig = {
       },
     ];
   },
+  // CORS 처리 다른 방법
   // swcMinify: true,
   // async rewrites() {
   //   return [
   //     {
   //       source: '/:path*',
-  //       destination: 'https://k8b102.p.ssafy.io/api/:path*',
+  //       destination: 'https://k8b102.p.ssafy.io/api:path*',
   //     },
   //   ];
   // },

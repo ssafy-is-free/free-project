@@ -61,6 +61,60 @@ export const getMyBojRanking = async () => {
     method: 'get',
     url: '/boj/my-rank',
   });
+
+  return data;
+};
+
+/**
+ * 백준 아이디 중복체크 API
+ * @param bojId 중복체크할 백준 아이디
+ */
+export const checkBojId = async (bojId: string) => {
+  const params = {
+    id: bojId,
+  };
+
+  const { data } = await authApi({
+    method: 'get',
+    url: '/boj-id',
+    params: params,
+  });
+
+  return data;
+};
+
+/**
+ * 백준 아이디 등록 API
+ * @param bojId 등록할 백준 아이디
+ */
+export const postBojId = async (bojId: string) => {
+  const body = {
+    boj_id: bojId,
+  };
+
+  await authApi({
+    method: 'patch',
+    url: '/boj-id',
+    data: body,
+  });
+};
+
+/**
+ * 내 깃허브 랭킹 조회 api
+ * @param languageParam 필터 검색 시 언어
+ * @returns
+ */
+export const getMyGitRanking = async (languageParam?: number) => {
+  const params = {
+    language: languageParam,
+  };
+  const { data } = await authApi({
+    method: 'get',
+    url: '/github/my-rank',
+    params: params,
+  });
+
+  return data;
 };
 
 /**
@@ -76,6 +130,58 @@ export const getSearchGitUser = async (nicknameParam: string | undefined) => {
     method: 'get',
     url: '/github/search',
     params: params,
+  });
+
+  return data;
+};
+
+/**
+ * 검색 결과 클릭 후 요청하는 깃허브 랭크 정보 api
+ * @param userIdParam 유저 아이디
+ * @param languageParam 필터 적용시 언어 번호
+ * @returns
+ */
+export const getSearchGitResult = async (userIdParam: number, languageParam?: number) => {
+  const params = {
+    language: languageParam,
+  };
+
+  const { data } = await authApi({
+    method: 'get',
+    url: `/github/user-rank/${userIdParam}`,
+    params: params,
+  });
+
+  return data;
+};
+
+/**
+ * 백준 닉네임 검색
+ * @param nicknameParam 검색할 닉네임
+ */
+export const getSearchBojUser = async (nicknameParam?: string | undefined) => {
+  const params = {
+    nickname: nicknameParam,
+  };
+
+  const { data } = await basicApi({
+    method: 'get',
+    url: '/boj/search',
+    params: params,
+  });
+
+  return data;
+};
+
+/**
+ * 검색 결과 클릭 후 요청하는 백준 랭크 정보 api
+ * @param userIdParam 유저 아이디
+ * @returns
+ */
+export const getSearchBojResult = async (userIdParam: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/boj/user-rank/${userIdParam}`,
   });
 
   return data;

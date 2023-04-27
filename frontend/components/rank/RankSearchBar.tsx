@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import SearchIcon from '../../public/Icon/searchIcon.svg';
 import { useEffect, useRef, useState } from 'react';
 import { IRankSearchBarProps } from './IRank';
-import { getSearchGitUser } from '@/pages/api/rankAxios';
+import { getSearchBojResult, getSearchBojUser, getSearchGitResult, getSearchGitUser } from '@/pages/api/rankAxios';
 
 const Wrapper = styled.div`
   width: 85%;
@@ -71,6 +71,10 @@ const Wrapper = styled.div`
       font-size: 14px;
       padding: 8px 0px 0px;
     }
+
+    .user-li {
+      cursor: pointer;
+    }
   }
 `;
 
@@ -112,14 +116,27 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
   useEffect(() => {
     // 검색 결과 api
     if (searchKeyword) {
-      (async () => {
-        const data = await getSearchGitUser(searchKeyword);
-        if (data.data?.length > 0) {
-          setSearchResults([...data.data]);
-        } else {
-          setSearchResults([data.message]);
-        }
-      })();
+      if (props.curRank == 0) {
+        // 깃허브 검색
+        (async () => {
+          const data = await getSearchGitUser(searchKeyword);
+          if (data.data?.length > 0) {
+            setSearchResults([...data.data]);
+          } else {
+            setSearchResults([data.message]);
+          }
+        })();
+      } else {
+        // 백준 검색
+        (async () => {
+          const data = await getSearchBojUser(searchKeyword);
+          if (data.data?.length > 0) {
+            setSearchResults([...data.data]);
+          } else {
+            setSearchResults([data.message]);
+          }
+        })();
+      }
 
       // 스타일 속성 변경
       const style = searchBox.current.style;
@@ -134,6 +151,23 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     (document.querySelector('.input-box') as HTMLInputElement).value = '';
   };
 
+  // 닉네임 검색 결과
+  const onSearchNick = async (userId: number, nickName: string) => {
+    (document.querySelector('.input-box') as HTMLInputElement).value = `${nickName}`;
+    setSearchResults([]);
+    const style = searchBox.current.style;
+    style.boxShadow = '';
+
+    if (props.curRank == 0) {
+      const data = await getSearchGitResult(userId);
+      props.setGitRankList([data.data.githubRankingCover]);
+    } else {
+      const data = await getSearchBojResult(userId);
+      console.log('data : ', data);
+      props.setBojRankList([data.data]);
+    }
+  };
+
   return (
     <Wrapper>
       <div className="search-box" ref={searchBox}>
@@ -146,7 +180,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
             searchResults?.map((el, idx) => {
               if (typeof el != 'string')
                 return (
-                  <li className="user-li" key={idx}>
+                  <li className="user-li" key={idx} onClick={() => onSearchNick(el.userId, el.nickname)}>
                     {el.nickname}
                   </li>
                 );

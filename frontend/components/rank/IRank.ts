@@ -45,6 +45,19 @@ export interface IMainUserItemProps {
    *  현재 조회중인 랭킹 종류(0: 깃허브, 1: 백준)
    */
   curRank: number;
+
+  /**
+   * 조회할 item 정보
+   */
+  item: {
+    userId: number;
+    nickname: string;
+    rank: number;
+    score: number;
+    avatarUrl: string;
+    rankUpDown: number;
+    tierUrl?: string;
+  };
 }
 
 /**
@@ -63,6 +76,18 @@ export interface INoAccountProps {
   onClick: () => void;
 }
 
+// 임시로 만듬 => interface로 만들 방법 생각
+export type resultInformation =
+  | {
+      avatarUrl: string;
+      nickname: string;
+      rank: number;
+      rankUpDown: number;
+      score: number;
+      userId: number;
+      tierUrl?: string;
+    }[]
+  | undefined;
 /**
  * 검색창 props => placeholder 값 셋팅
  */
@@ -71,4 +96,10 @@ export interface IRankSearchBarProps {
    *  현재 조회중인 랭킹 종류(0: 깃허브, 1: 백준)
    */
   curRank: number;
+
+  /**
+   * 자식에서 부모컴포넌트로 data 받기()
+   */
+  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
+  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
 }

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { config } from 'process';
 
 const BASE_URL = 'https://k8b102.p.ssafy.io/api';
+// const BASE_URL = '';
 
 /**
  * 회원 전용 기능일 때 사용할 axios
@@ -48,7 +49,7 @@ authApi.interceptors.request.use((config: any) => {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
 
-  console.log('request config : ', config);
+  // console.log('request config : ', config);
 
   return config;
 });
@@ -56,12 +57,12 @@ authApi.interceptors.request.use((config: any) => {
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
   (response) => {
-    console.log('response', response);
+    // console.log('response', response);
 
     return response;
   },
   async (error) => {
-    console.log('error', error);
+    // console.log('error', error);
 
     return error;
     // const { config, response } = error;
