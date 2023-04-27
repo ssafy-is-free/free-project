@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.backend.domain.util.dto.LanguageDTO;
+import com.ssafy.backend.domain.util.dto.LanguageResponse;
 import com.ssafy.backend.domain.util.service.RankFilterService;
 import com.ssafy.backend.global.response.DataResponse;
 import com.ssafy.backend.global.response.ResponseService;
@@ -27,15 +27,15 @@ public class RankFilterController {
 	private final RankFilterService rankFilterService;
 
 	@GetMapping("/language")
-	public DataResponse<List<LanguageDTO>> getLanguageList(
+	public DataResponse<List<LanguageResponse>> getLanguageList(
 		@RequestParam(value = "type") String type) {
 
-		List<LanguageDTO> languageDTOS = rankFilterService.getLanguageList(type);
+		List<LanguageResponse> languageResponses = rankFilterService.getLanguageList(type);
 
 		// TODO: 2023-04-24 삼항연산자로 개선
-		if (languageDTOS.isEmpty())
-			return responseService.getDataResponse(languageDTOS, RESPONSE_NO_CONTENT);
+		if (languageResponses.isEmpty())
+			return responseService.getDataResponse(languageResponses, RESPONSE_NO_CONTENT);
 
-		return responseService.getDataResponse(languageDTOS, RESPONSE_SUCCESS);
+		return responseService.getDataResponse(languageResponses, RESPONSE_SUCCESS);
 	}
 }

@@ -2,7 +2,6 @@ package com.ssafy.backend.domain.util.repository;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -11,15 +10,13 @@ import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.QLanguage;
 import com.ssafy.backend.domain.entity.common.LanguageType;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Repository
-public class LanguageRepositorySupport extends QuerydslRepositorySupport {
+public class LanguageQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
-
-	public LanguageRepositorySupport(JPAQueryFactory queryFactory) {
-		super(Language.class);
-		this.queryFactory = queryFactory;
-	}
 
 	public List<Language> findLanguageByType(String type) {
 

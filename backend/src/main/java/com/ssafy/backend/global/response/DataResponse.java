@@ -1,6 +1,5 @@
 package com.ssafy.backend.global.response;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DataResponse<T> extends CommonResponse{
+public class DataResponse<T> extends CommonResponse {
 
-    T data;
+	T data;
 }

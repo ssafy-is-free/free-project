@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.backend.domain.user.dto.BojIdRequestDTO;
+import com.ssafy.backend.domain.user.dto.BojIdRequest;
 import com.ssafy.backend.domain.user.service.BojService;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.response.CommonResponse;
@@ -28,12 +28,12 @@ public class BojController {
 
 	@PatchMapping("boj-id")
 	public CommonResponse saveBojId(
-		@RequestBody BojIdRequestDTO bojIdRequestDTO,
+		@RequestBody BojIdRequest bojIdRequest,
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
 		long userId = userPrincipal.getId();
 
-		bojService.saveId(userId, bojIdRequestDTO);
+		bojService.saveId(userId, bojIdRequest);
 
 		return responseService.getSuccessResponse();
 	}

@@ -18,7 +18,7 @@ import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.repository.GithubRepoRepository;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.github.repository.querydsl.GithubLanguageQueryRepository;
-import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
@@ -36,10 +36,10 @@ public class GithubService {
 	private final UserQueryRepository userQueryRepository;
 	private final UserRepository userRepository;
 
-	public List<NicknameListResponseDTO> getNicknameList(String nickname) {
+	public List<NicknameListResponse> getNicknameList(String nickname) {
 		List<User> userList = userQueryRepository.findByNickname(nickname);
 		return userList.stream()
-			.map(u -> NicknameListResponseDTO.create(u.getId(), u.getNickname()))
+			.map(u -> NicknameListResponse.create(u.getId(), u.getNickname()))
 			.collect(Collectors.toList());
 	}
 

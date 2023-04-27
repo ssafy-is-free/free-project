@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
 import com.ssafy.backend.domain.algorithm.service.AlgorithmService;
-import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.response.CommonResponse;
 import com.ssafy.backend.global.response.DataResponse;
@@ -52,7 +52,7 @@ public class AlgorithmController {
 	}*/
 	@GetMapping("/search")
 	public CommonResponse getBojIdList(@RequestParam String nickname) {
-		List<NicknameListResponseDTO> bojIdList = algorithmService.getBojListByBojId(nickname);
+		List<NicknameListResponse> bojIdList = algorithmService.getBojListByBojId(nickname);
 		return bojIdList.size() == 0 ? responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojIdList, RESPONSE_SUCCESS);
 	}
