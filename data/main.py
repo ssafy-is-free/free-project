@@ -3,9 +3,18 @@ import httpx
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 허용되는 도메인 목록. 와일드카드(*)를 사용하여 모든 도메인을 허용할 수 있습니다.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 크롬 헤더 안 넣으면 인증 실패
 headers = {
