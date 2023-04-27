@@ -113,9 +113,16 @@ public class BojServiceImpl implements BojService {
 	@Override
 	public void checkDuplicateId(String bojId) {
 
+		System.out.println(bojId);
+
 		//백준 ID로 유저 조회
-		userRepository.findByBojIdAndIsDeletedFalse(bojId)
-			.ifPresent(user -> new CustomException(BOJ_DUPLICATED));
+		// userRepository.findUserByBojIdAndIsDeletedFalse(bojId)
+		// 	.ifPresent(user -> new CustomException(BOJ_DUPLICATED));
+
+		if (userRepository.findUserByBojIdAndIsDeletedFalse(bojId).isPresent()) {
+			throw new CustomException(BOJ_DUPLICATED);
+		}
+
 	}
 
 }

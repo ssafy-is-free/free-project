@@ -42,7 +42,7 @@ public class BojController {
 	public CommonResponse checkBojId(
 		@RequestParam("id") String bojId) {
 
-		bojService.checkDuplicateId(bojId);
+		bojService.checkDuplicateId(bojId.trim());
 
 		return responseService.getSuccessResponse();
 	}
