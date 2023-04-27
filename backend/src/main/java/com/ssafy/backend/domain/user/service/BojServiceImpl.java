@@ -19,7 +19,7 @@ import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
-import com.ssafy.backend.domain.user.dto.BojIdRequestDTO;
+import com.ssafy.backend.domain.user.dto.BojIdRequest;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
@@ -41,19 +41,20 @@ public class BojServiceImpl implements BojService {
 	private final WebClient webClient;
 
 	@Override
-	public void saveId(long userId, BojIdRequestDTO bojIdRequestDTO) {
+
+	public void saveId(long userId, BojIdRequest bojIdRequest) {
 
 		//유저 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
 		//백준 ID 저장
-		user.saveBojId(bojIdRequestDTO.getBojId());
+		user.saveBojId(bojIdRequest.getBojId());
 		userRepository.save(user);
 
 		//백준 아이디로 크롤링
 		BojInfoResponseDTO bojInfoResponseDTO = webClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/data/baekjoon/{name}").build(bojIdRequestDTO.getBojId()))
+			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
 			.retrieve()
 			.bodyToMono(BojInfoResponseDTO.class)
 			.block();

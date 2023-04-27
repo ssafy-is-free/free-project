@@ -6,33 +6,41 @@ import static com.ssafy.backend.domain.entity.QUser.*;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.entity.Github;
+import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 
 import lombok.RequiredArgsConstructor;
 
+@Repository
 @RequiredArgsConstructor
-public class GithubRepositoryImpl implements GithubRepositoryCustom {
+public class GithubQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
-	@Override
-	public List<Github> findAll(Long userId, Integer score, Pageable pageable) {
+	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet, Pageable pageable) {
 
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(checkCursor(score, userId))
+			.where(githubIdIn(githubIdSet), checkCursor(score, userId))
 			.orderBy(github.score.desc())
 			.limit(pageable.getPageSize())
 			.fetch();
 	}
 
-	public BooleanExpression checkCursor(Integer score, Long githubId) {
-		if (score == null || githubId == null)
+	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {
+		return githubIdSet != null ? github.id.in(githubIdSet.getGithubIds()) : null;
+	}
+
+	private BooleanExpression checkCursor(Integer score, Long githubId) {
+		if (score == null || githubId == null) {
 			return null;
+
+		}
 		return scoreLt(score).or(scoreEqAndGithubIdGt(score, githubId));
 	}
 
@@ -51,5 +59,4 @@ public class GithubRepositoryImpl implements GithubRepositoryCustom {
 	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long githubId) {
 		return scoreEq(score).and(userIdGt(githubId));
 	}
-
 }

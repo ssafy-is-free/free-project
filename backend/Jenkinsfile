@@ -20,12 +20,13 @@ pipeline {
             }
         }
 
-        stage("Copy Application.yml"){
+        stage("Copy Setting File"){
             steps{
                 script{
                     sh "pwd"
                     sh "ls" 
                     sh "cp -r -f resources ${PROJECT_DIR}"
+                    sh "cp -f gradleResources/gradle.properties ${PROJECT_DIR}"
                 }
                 // dir("${APPLICATION_YML_PATH}"){
                 //     sh "pwd"
@@ -34,6 +35,7 @@ pipeline {
                 // }
             }
         }
+
         // //스프링 빌드
         // stage("Clean Build Test") {
         //     steps {
@@ -45,18 +47,31 @@ pipeline {
         //         }   
         //     }
         // }
+        // 소나큐브 빌드
+        //  stage('SonarQube Analysis') {
+        //     steps {                
+        //         dir("${PROJECT_DIR}"){
+        //             sh "chmod +x gradlew"
+        //             sh './gradlew sonar'
+        //         }
+                
+        //     }
+        // }
 
         //기존 컨테이너 내리고 이미지 삭제
         stage("container down&image remove"){
             // 컴포즈 down 후 컨테이너 삭제.
             steps{
                 dir("${DOCKER_FILE_PATH}"){
-                    sh "docker compose down"
-                    // sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
+
+                    // sh "docker compose ps -q | xargs -r docker compose down"
+                    
+                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
+
+                    // // //컨테이너 삭제
+                    sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
 
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
-                    sh "docker ps -a"
-                    sh "docker images"
                 }
             }
         }
@@ -92,5 +107,6 @@ pipeline {
                 }
             }
         }
+        
     }
 }

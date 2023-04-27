@@ -22,7 +22,8 @@ public enum CustomExceptionStatus {
 	NOT_INVALID_REFRESH_TOKEN(ResponseStatus.FAIL, "유효하지 않은 리프레시 토큰입니다."),
 
 	/*깃허브 관련*/
-	NOT_FOUND_REPOSITORY(ResponseStatus.FAIL, "해당하는 리포지토리가 없습니다."), INCONSISTENT_GITHUB_ID(ResponseStatus.FAIL,
+	NOT_FOUND_GITHUB(ResponseStatus.FAIL, "해당하는 유저의 깃허브 정보가 없습니다."),
+	NOT_FOUND_REPOSITORY(ResponseStatus.FAIL, "해당하는 리포지토리 정보가 없습니다."), INCONSISTENT_GITHUB_ID(ResponseStatus.FAIL,
 		"깃허브 아이디가 일치하지 않습니다.");
 
 	private final ResponseStatus status;

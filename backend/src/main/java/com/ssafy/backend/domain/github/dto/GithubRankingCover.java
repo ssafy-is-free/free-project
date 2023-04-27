@@ -3,13 +3,13 @@ package com.ssafy.backend.domain.github.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.backend.domain.entity.Github;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class GithubRankingCover {
 	long userId;
 	String nickname;
@@ -20,12 +20,23 @@ public class GithubRankingCover {
 	@JsonIgnore
 	long prevRank;
 
-	public GithubRankingCover(Github github) {
-		this.userId = github.getUser().getId();
-		this.nickname = github.getUser().getNickname();
-		this.prevRank = github.getPreviousRank();
-		this.score = github.getScore();
-		this.avatarUrl = github.getUser().getImage();
+	public static GithubRankingCover create(Github github) {
+		return GithubRankingCover.builder()
+			.userId(github.getUser().getId())
+			.nickname(github.getUser().getNickname())
+			.prevRank(github.getPreviousRank())
+			.score(github.getScore())
+			.avatarUrl(github.getUser().getImage())
+			.build();
 
+	}
+
+	public void updateRankInfo(long rank, long rankUpDown) {
+		this.rank = rank;
+		this.rankUpDown = rankUpDown;
+	}
+
+	public long getRankUpDown(long rank) {
+		return this.getPrevRank() - rank;
 	}
 }

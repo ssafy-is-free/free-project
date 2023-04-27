@@ -25,7 +25,7 @@ import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
-import com.ssafy.backend.domain.user.dto.NicknameListResponseDTO;
+import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
@@ -157,10 +157,10 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 * @author noobsoda
 	 * @return NicknameListResponseDTO 객체 목록
 	 */
-	public List<NicknameListResponseDTO> getBojListByBojId(String nickname) {
+	public List<NicknameListResponse> getBojListByBojId(String nickname) {
 		List<User> userList = userQueryRepository.findByBojId(nickname);
 		return userList.stream()
-			.map(u -> NicknameListResponseDTO.create(u.getId(), u.getBojId()))
+			.map(u -> NicknameListResponse.create(u.getId(), u.getBojId()))
 			.collect(Collectors.toList());
 	}
 
