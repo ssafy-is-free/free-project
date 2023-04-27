@@ -4,7 +4,7 @@ import BigBtn from '../common/BigBtn';
 import { IBojProps } from './ILogin';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { checkBojId, postBojId } from '@/pages/api/rankAxios';
+import { checkBojId, postBojId } from '@/pages/api/loginAxios';
 
 const moveUp = keyframes`
  from{
