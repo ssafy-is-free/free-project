@@ -30,13 +30,14 @@ public class GithubRankingService {
 
 		List<GithubRankingCover> githubCovers = githubQueryRepository.findAll(userId, score, githubIdSet, pageable)
 			.stream()
-			.map(GithubRankingCover::new)
+			.map(GithubRankingCover::create)
 			.collect(Collectors.toList());
 
-		setRankToResult(rank, githubCovers);
+		GithubRankingResponse githubRankingResponse = GithubRankingResponse.create(githubCovers);
+		githubRankingResponse.setRank(rank);
 
-		log.info(githubCovers.toString());
-		return new GithubRankingResponse(githubCovers);
+		log.info(githubRankingResponse.toString());
+		return githubRankingResponse;
 	}
 
 	private FilteredGithubIdSet getGithubIdBy(GitHubRankingFilter rankingFilter) {
@@ -44,15 +45,6 @@ public class GithubRankingService {
 			.stream()
 			.map(g -> g.getGithub().getId())
 			.collect(Collectors.toSet()));
-	}
-
-	//랭킹 반영
-	private static void setRankToResult(long rank, List<GithubRankingCover> rankingCovers) {
-		for (GithubRankingCover rankingCover : rankingCovers) {
-			rankingCover.setRank(rank);
-			rankingCover.setRankUpDown(rankingCover.getPrevRank() - rank);
-			rank++;
-		}
 	}
 
 }
