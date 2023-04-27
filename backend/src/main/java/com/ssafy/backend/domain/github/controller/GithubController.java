@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
+import com.ssafy.backend.domain.github.dto.GithubRankingOneResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
@@ -62,8 +63,10 @@ public class GithubController {
 		return responseService.getDataResponse(readmeResponse, RESPONSE_SUCCESS);
 	}
 
-	@GetMapping("/users/{userId}")
-	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable long userId) {
+	@GetMapping(value = {"/users/{userId}", "/users"})
+	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable(required = false) Long userId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		userId = userId != null ? userId : userPrincipal.getId();
 		GithubDetailResponse details = githubService.getDetails(userId);
 		return responseService.getDataResponse(details, RESPONSE_SUCCESS);
 
@@ -85,5 +88,25 @@ public class GithubController {
 		return nicknameList.size() == 0 ?
 			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(nicknameList, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/my-rank")
+	public CommonResponse getMyGithubRank(
+		@AuthenticationPrincipal UserPrincipal userPrincipal,
+		GitHubRankingFilter rankingFilter
+	) {
+		GithubRankingOneResponse githubRankOne = githubRankingService.getGithubRankOne(userPrincipal.getId(),
+			rankingFilter);
+		return githubRankOne.getGithubRankingCover() == null ?
+			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(githubRankOne, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/user-rank/{userId}")
+	public CommonResponse searchGithubRank(@PathVariable long userId, GitHubRankingFilter rankingFilter) {
+		GithubRankingOneResponse githubRankOne = githubRankingService.getGithubRankOne(userId, rankingFilter);
+		return githubRankOne.getGithubRankingCover() == null ?
+			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(githubRankOne, RESPONSE_SUCCESS);
 	}
 }

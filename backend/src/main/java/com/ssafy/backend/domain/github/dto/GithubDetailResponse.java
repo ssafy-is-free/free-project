@@ -1,14 +1,19 @@
 package com.ssafy.backend.domain.github.dto;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.GithubRepo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class GithubDetailResponse {
 	Long githubId;
 	String nickname;
@@ -17,32 +22,26 @@ public class GithubDetailResponse {
 	Integer commit;
 	Integer star;
 	Integer followers;
-	List<Repo> repositories;
+	List<GithubDetailRepo> repositories;
 	List<GithubDetailLanguage> languages;
 
-	@Getter
-	public static class Repo {
-		long id;
-		String name;
-		String link;
-
-		public Repo(GithubRepo githubRepo) {
-			this.id = githubRepo.getId();
-			this.name = githubRepo.getName();
-			this.link = githubRepo.getRepositoryLink();
-		}
+	public static GithubDetailResponse create(Github github, List<GithubDetailLanguage> languages) {
+		return GithubDetailResponse.builder()
+			.githubId(github.getId())
+			.nickname(github.getUser().getNickname())
+			.profileLink(github.getProfileLink())
+			.avatarUrl(github.getUser().getImage())
+			.commit(github.getCommitTotalCount())
+			.star(github.getStarTotalCount())
+			.followers(github.getFollowerTotalCount())
+			.repositories(toDetailRepoDto(github.getGithubRepos()))
+			.languages(languages)
+			.build();
 	}
 
-	public GithubDetailResponse(Github github, List<GithubDetailLanguage> languages) {
-		this.githubId = github.getId();
-		this.nickname = github.getUser().getNickname();
-		this.profileLink = github.getProfileLink();
-		this.avatarUrl = github.getUser().getImage();
-		this.commit = github.getCommitTotalCount();
-		this.star = github.getStarTotalCount();
-		this.followers = github.getFollowerTotalCount();
-		this.repositories = github.getGithubRepos().stream().map(Repo::new).collect(Collectors.toList());
-		this.languages = languages;
+	private static List<GithubDetailRepo> toDetailRepoDto(Set<GithubRepo> githubRepoSet) {
+		return githubRepoSet.stream().map(GithubDetailRepo::create).collect(Collectors.toList());
+
 	}
 
 }

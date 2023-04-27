@@ -13,11 +13,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 
 import lombok.AllArgsConstructor;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,22 +60,22 @@ public class Baekjoon extends BaseTimeEntity {
 	@Column(name = "boj_previous_rank", nullable = false)
 	private long previousRank;
 
-	public static Baekjoon createBaekjoon(BojInformationResponseDTO bojInformationResponseDTO, User user) {
+	public static Baekjoon createBaekjoon(CBojInfoResponse CBojInfoResponse, User user) {
 		return Baekjoon.builder()
-			.tier(bojInformationResponseDTO.getTier())
-			.passCount(bojInformationResponseDTO.getPassCount())
-			.tryFailCount(bojInformationResponseDTO.getTryFailCount())
-			.submitCount(bojInformationResponseDTO.getSubmitCount())
-			.failCount(bojInformationResponseDTO.getFailCount())
+			.tier(CBojInfoResponse.getTier())
+			.passCount(CBojInfoResponse.getPassCount())
+			.tryFailCount(CBojInfoResponse.getTryFailCount())
+			.submitCount(CBojInfoResponse.getSubmitCount())
+			.failCount(CBojInfoResponse.getFailCount())
 			.user(user)
 			.build();
 	}
 
-	public void updateBaekjoon(BojInformationResponseDTO bojInformationResponseDTO) {
-		this.tier = bojInformationResponseDTO.getTier();
-		this.passCount = bojInformationResponseDTO.getPassCount();
-		this.tryFailCount = bojInformationResponseDTO.getTryFailCount();
-		this.submitCount = bojInformationResponseDTO.getSubmitCount();
-		this.failCount = bojInformationResponseDTO.getFailCount();
+	public void updateBaekjoon(CBojInfoResponse CBojInfoResponse) {
+		this.tier = CBojInfoResponse.getTier();
+		this.passCount = CBojInfoResponse.getPassCount();
+		this.tryFailCount = CBojInfoResponse.getTryFailCount();
+		this.submitCount = CBojInfoResponse.getSubmitCount();
+		this.failCount = CBojInfoResponse.getFailCount();
 	}
 }

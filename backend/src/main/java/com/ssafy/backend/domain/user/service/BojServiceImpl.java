@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInformationResponseDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojLanguageResultResponse;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
@@ -41,6 +41,7 @@ public class BojServiceImpl implements BojService {
 	private final WebClient webClient;
 
 	@Override
+
 	public void saveId(long userId, BojIdRequest bojIdRequest) {
 
 		//유저 조회
@@ -52,10 +53,10 @@ public class BojServiceImpl implements BojService {
 		userRepository.save(user);
 
 		//백준 아이디로 크롤링
-		BojInformationResponseDTO bojInformationResponseDTO = webClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
+		CBojInfoResponse CBojInfoResponse = webClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
 			.retrieve()
-			.bodyToMono(BojInformationResponseDTO.class)
+			.bodyToMono(CBojInfoResponse.class)
 			.block();
 
 		//백준 아이디로 비동기 크롤링
@@ -74,33 +75,33 @@ public class BojServiceImpl implements BojService {
                     return getFallbackDto();
                 });*/
 		//저장
-		if (bojInformationResponseDTO.getTier() != null) {
+		if (CBojInfoResponse.getTier() != null) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
 			Baekjoon baekjoon = oBaekjoon.orElse(null);
 			// 비어있다면 추가하고 이미 있다면 업데이트
 			if (baekjoon == null) {
-				baekjoon = Baekjoon.createBaekjoon(bojInformationResponseDTO, user);
+				baekjoon = Baekjoon.createBaekjoon(CBojInfoResponse, user);
 			} else {
-				baekjoon.updateBaekjoon(bojInformationResponseDTO);
+				baekjoon.updateBaekjoon(CBojInfoResponse);
 			}
 			bojRepository.save(baekjoon);
 			// 리스트 저장
 			// 리스트가 비어있지 않을 때
-			if (bojInformationResponseDTO.getLanguagesResult() != null) {
+			if (CBojInfoResponse.getLanguagesResult() != null) {
 				List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
 				bojLanguageRepository.deleteAllByBaekjoonId(baekjoon.getId());
 
-				for (BojLanguageResultDTO bojLanguageResultDTO : bojInformationResponseDTO.getLanguagesResult()) {
+				for (CBojLanguageResultResponse CBojLanguageResultResponse : CBojInfoResponse.getLanguagesResult()) {
 
 					// 언어 정보 받아오기
-					Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(),
+					Language language = languageRepository.findByNameAndType(CBojLanguageResultResponse.getLanguage(),
 						LanguageType.BAEKJOON).orElseGet(
 						() -> null  // 언어정보가 없다면 언어 생성, 저장, 반환 2023-04-21 이성복
 					);
 
 					BaekjoonLanguage baekjoonLanguage = BaekjoonLanguage.createBaekjoonLanguage(language.getId(),
-						bojLanguageResultDTO, baekjoon);
+						CBojLanguageResultResponse, baekjoon);
 					baekjoonLanguageList.add(baekjoonLanguage);
 				}
 				bojLanguageRepository.saveAll(baekjoonLanguageList);

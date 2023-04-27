@@ -14,7 +14,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BojRankResponseDTO {
+public class BojRankResponse {
 	private Long userId;
 	private String nickname;
 	private Integer rank;
@@ -23,8 +23,8 @@ public class BojRankResponseDTO {
 	private Long rankUpDown;
 	private String tierUrl;
 
-	public static BojRankResponseDTO createBojMyRankResponseDTO(Baekjoon baekjoon, User user, int rank) {
-		return BojRankResponseDTO.builder()
+	public static BojRankResponse createBojMyRankResponseDTO(Baekjoon baekjoon, User user, int rank) {
+		return BojRankResponse.builder()
 			.userId(user.getId())
 			.nickname(user.getBojId())
 			.rank(rank)

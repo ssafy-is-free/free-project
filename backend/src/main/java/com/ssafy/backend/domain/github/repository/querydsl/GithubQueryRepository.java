@@ -59,5 +59,4 @@ public class GithubQueryRepository {
 	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long githubId) {
 		return scoreEq(score).and(userIdGt(githubId));
 	}
-
 }

@@ -50,7 +50,7 @@ public class GithubService {
 
 		List<GithubDetailLanguage> githubLanguages = githubLanguageQueryRepository.findByGithub(github);
 		log.info(github.toString());
-		return new GithubDetailResponse(github, githubLanguages);
+		return GithubDetailResponse.create(github, githubLanguages);
 	}
 
 	public ReadmeResponse getReadme(long githubId, long repositoryId) {
@@ -58,16 +58,8 @@ public class GithubService {
 			throw new CustomException(NOT_FOUND_REPOSITORY);
 		});
 
-		validateReadme(githubId, githubRepo);
-
-		return new ReadmeResponse(githubRepo);
-
-	}
-
-	private void validateReadme(long githubId, GithubRepo githubRepo) {
-		if (githubRepo.getGithub().getId() != githubId) {
-			throw new CustomException(INCONSISTENT_GITHUB_ID);
-		}
+		githubRepo.validateGithubId(githubId);
+		return ReadmeResponse.create(githubRepo.getReadme());
 	}
 
 }
