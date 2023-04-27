@@ -58,16 +58,8 @@ public class GithubService {
 			throw new CustomException(NOT_FOUND_REPOSITORY);
 		});
 
-		validateReadme(githubId, githubRepo);
-
+		githubRepo.validateGithubId(githubId);
 		return new ReadmeResponse(githubRepo);
-
-	}
-
-	private void validateReadme(long githubId, GithubRepo githubRepo) {
-		if (githubRepo.getGithub().getId() != githubId) {
-			throw new CustomException(INCONSISTENT_GITHUB_ID);
-		}
 	}
 
 }
