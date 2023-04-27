@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponseDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojInfoResponseDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResultDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojLanguageResultResponse;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepositorySupport;
@@ -56,10 +56,10 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
 		//백준 아이디로 크롤링
-		BojInfoResponseDTO bojInfoResponseDTO = webClient.get()
+		CBojInfoResponse CBojInfoResponse = webClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(user.getBojId()))
 			.retrieve()
-			.bodyToMono(BojInfoResponseDTO.class)
+			.bodyToMono(CBojInfoResponse.class)
 			.block();
 
 		//백준 아이디로 비동기 크롤링
@@ -78,33 +78,33 @@ public class AlgorithmServiceImpl implements AlgorithmService {
                     return getFallbackDto();
                 });*/
 		//저장
-		if (bojInfoResponseDTO.getTier() != null) {
+		if (CBojInfoResponse.getTier() != null) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
 			Baekjoon baekjoon = oBaekjoon.orElse(null);
 			// 비어있다면 추가하고 이미 있다면 업데이트
 			if (baekjoon == null) {
-				baekjoon = Baekjoon.createBaekjoon(bojInfoResponseDTO, user);
+				baekjoon = Baekjoon.createBaekjoon(CBojInfoResponse, user);
 			} else {
-				baekjoon.updateBaekjoon(bojInfoResponseDTO);
+				baekjoon.updateBaekjoon(CBojInfoResponse);
 			}
 			bojRepository.save(baekjoon);
 			// 리스트 저장
 			// 리스트가 비어있지 않을 때
-			if (bojInfoResponseDTO.getLanguagesResult() != null) {
+			if (CBojInfoResponse.getLanguagesResult() != null) {
 				List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
 				bojLanguageRepository.deleteAllByBaekjoonId(baekjoon.getId());
 
-				for (BojLanguageResultDTO bojLanguageResultDTO : bojInfoResponseDTO.getLanguagesResult()) {
+				for (CBojLanguageResultResponse CBojLanguageResultResponse : CBojInfoResponse.getLanguagesResult()) {
 
 					// 언어 정보 받아오기
-					Language language = languageRepository.findByNameAndType(bojLanguageResultDTO.getLanguage(),
+					Language language = languageRepository.findByNameAndType(CBojLanguageResultResponse.getLanguage(),
 						LanguageType.BAEKJOON).orElseGet(
 						() -> null  // 언어정보가 없다면 언어 생성, 저장, 반환 2023-04-21 이성복
 					);
 
 					BaekjoonLanguage baekjoonLanguage = BaekjoonLanguage.createBaekjoonLanguage(language.getId(),
-						bojLanguageResultDTO, baekjoon);
+						CBojLanguageResultResponse, baekjoon);
 					baekjoonLanguageList.add(baekjoonLanguage);
 				}
 				bojLanguageRepository.saveAll(baekjoonLanguageList);
@@ -122,7 +122,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponseDTO getBojByUserId(long userId) {
+	public BojRankResponse getBojByUserId(long userId) {
 		int rank = 1;
 		//유저 아이디로 백준 아이디 조회
 		Optional<User> oUser = userRepository.findById(userId);
@@ -137,9 +137,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		// 랭크 세기
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
-				BojRankResponseDTO bojRankResponseDTO = BojRankResponseDTO.createBojMyRankResponseDTO(baekjoon,
+				BojRankResponse bojRankResponse = BojRankResponse.createBojMyRankResponseDTO(baekjoon,
 					user, rank);
-				return bojRankResponseDTO;
+				return bojRankResponse;
 			} else {
 				rank++;
 			}
@@ -171,7 +171,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
 	 */
 	@Override
-	public BojInfoDetailResponseDTO getBojInfoDetailByUserId(Long userId) {
+	public BojInfoDetailResponse getBojInfoDetailByUserId(Long userId) {
 		//언어 정보를 저장할 해쉬맵
 		HashMap<Long, String> languageMap = new HashMap<>();
 
@@ -191,13 +191,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		//언어 정보
-		List<BojLanguageDTO> bojLanguageDTOList = baekjoonLanguageList.stream()
-			.map(u -> BojLanguageDTO.create(languageMap.get(u.getLanguageId()), u.getPassPercentage()))
+		List<BojLanguageResponse> bojLanguageDTOList = baekjoonLanguageList.stream()
+			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()), u.getPassPercentage()))
 			.collect(Collectors.toList());
-		BojInfoDetailResponseDTO bojInfoDetailResponseDTO = BojInfoDetailResponseDTO.create(user, baekjoon,
+		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.create(user, baekjoon,
 			bojLanguageDTOList);
 
-		return bojInfoDetailResponseDTO;
+		return bojInfoDetailResponse;
 	}
 
 }

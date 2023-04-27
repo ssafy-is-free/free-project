@@ -16,17 +16,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BojInfoDetailResponseDTO {
+public class BojInfoDetailResponse {
 	private String bojId;
 	private String tierUrl;
 	private int pass;
 	private int tryFail;
 	private int submit;
 	private int fail;
-	private List<BojLanguageDTO> languages;
+	private List<BojLanguageResponse> languages;
 
-	public static BojInfoDetailResponseDTO create(User user, Baekjoon baekjoon, List<BojLanguageDTO> languageDTOList) {
-		return BojInfoDetailResponseDTO.builder()
+	public static BojInfoDetailResponse create(User user, Baekjoon baekjoon,
+		List<BojLanguageResponse> languageDTOList) {
+		return BojInfoDetailResponse.builder()
 			.bojId(user.getBojId())
 			.tierUrl(baekjoon.getTier())
 			.pass(baekjoon.getPassCount())

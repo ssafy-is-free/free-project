@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BojInfoResponseDTO {
+public class CBojInfoResponse {
 	@JsonProperty("tier")
 	private String tier;
 
@@ -28,6 +28,6 @@ public class BojInfoResponseDTO {
 	private int failCount;
 
 	@JsonProperty("languages_result")
-	private List<BojLanguageResultDTO> languagesResult;
+	private List<CBojLanguageResultResponse> languagesResult;
 
 }

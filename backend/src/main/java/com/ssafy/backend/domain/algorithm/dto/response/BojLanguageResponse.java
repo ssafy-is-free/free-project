@@ -11,12 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BojLanguageDTO {
+public class BojLanguageResponse {
 	private String name;
 	private String passPercentage;
 
-	public static BojLanguageDTO create(String name, String passPercentage) {
-		return BojLanguageDTO.builder()
+	public static BojLanguageResponse create(String name, String passPercentage) {
+		return BojLanguageResponse.builder()
 			.name(name)
 			.passPercentage(passPercentage)
 			.build();

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponseDTO;
-import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
 import com.ssafy.backend.domain.algorithm.service.AlgorithmService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
@@ -37,8 +37,8 @@ public class AlgorithmController {
 
 	@GetMapping("/my-rank")
 
-	public DataResponse<BojRankResponseDTO> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-		BojRankResponseDTO bojMyRankResponseDTO = algorithmService.getBojByUserId(userPrincipal.getId());
+	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		BojRankResponse bojMyRankResponseDTO = algorithmService.getBojByUserId(userPrincipal.getId());
 		//백준 아이디가 없다면 비어있는 컨텐츠
 		return bojMyRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojMyRankResponseDTO, RESPONSE_SUCCESS);
@@ -60,16 +60,16 @@ public class AlgorithmController {
 
 	@GetMapping("/user-rank/{userId}")
 	public CommonResponse getBojId(@PathVariable Long userId) {
-		BojRankResponseDTO bojRankResponseDTO = algorithmService.getBojByUserId(userId);
-		return bojRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
-			responseService.getDataResponse(bojRankResponseDTO, RESPONSE_SUCCESS);
+		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId);
+		return bojRankResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS);
 	}
 
 	@GetMapping("/users/{userId}")
-	public DataResponse<BojInfoDetailResponseDTO> getBojInfoDetail(@PathVariable Long userId) {
-		BojInfoDetailResponseDTO bojInfoDetailResponseDTO = algorithmService.getBojInfoDetailByUserId(userId);
-		return bojInfoDetailResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
-			responseService.getDataResponse(bojInfoDetailResponseDTO, RESPONSE_SUCCESS);
+	public DataResponse<BojInfoDetailResponse> getBojInfoDetail(@PathVariable Long userId) {
+		BojInfoDetailResponse bojInfoDetailResponse = algorithmService.getBojInfoDetailByUserId(userId);
+		return bojInfoDetailResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);
 	}
 
 }

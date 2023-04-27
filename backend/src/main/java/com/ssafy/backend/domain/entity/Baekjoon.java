@@ -13,7 +13,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import com.ssafy.backend.domain.algorithm.dto.response.BojInfoResponseDTO;
+import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 
 import lombok.AllArgsConstructor;
@@ -60,22 +60,22 @@ public class Baekjoon extends BaseTimeEntity {
 	@Column(name = "boj_previous_rank", nullable = false)
 	private long previousRank;
 
-	public static Baekjoon createBaekjoon(BojInfoResponseDTO bojInfoResponseDTO, User user) {
+	public static Baekjoon createBaekjoon(CBojInfoResponse CBojInfoResponse, User user) {
 		return Baekjoon.builder()
-			.tier(bojInfoResponseDTO.getTier())
-			.passCount(bojInfoResponseDTO.getPassCount())
-			.tryFailCount(bojInfoResponseDTO.getTryFailCount())
-			.submitCount(bojInfoResponseDTO.getSubmitCount())
-			.failCount(bojInfoResponseDTO.getFailCount())
+			.tier(CBojInfoResponse.getTier())
+			.passCount(CBojInfoResponse.getPassCount())
+			.tryFailCount(CBojInfoResponse.getTryFailCount())
+			.submitCount(CBojInfoResponse.getSubmitCount())
+			.failCount(CBojInfoResponse.getFailCount())
 			.user(user)
 			.build();
 	}
 
-	public void updateBaekjoon(BojInfoResponseDTO bojInfoResponseDTO) {
-		this.tier = bojInfoResponseDTO.getTier();
-		this.passCount = bojInfoResponseDTO.getPassCount();
-		this.tryFailCount = bojInfoResponseDTO.getTryFailCount();
-		this.submitCount = bojInfoResponseDTO.getSubmitCount();
-		this.failCount = bojInfoResponseDTO.getFailCount();
+	public void updateBaekjoon(CBojInfoResponse CBojInfoResponse) {
+		this.tier = CBojInfoResponse.getTier();
+		this.passCount = CBojInfoResponse.getPassCount();
+		this.tryFailCount = CBojInfoResponse.getTryFailCount();
+		this.submitCount = CBojInfoResponse.getSubmitCount();
+		this.failCount = CBojInfoResponse.getFailCount();
 	}
 }
