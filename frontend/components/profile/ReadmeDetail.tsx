@@ -16,13 +16,11 @@ interface IReadmeDetail {
 
 export default function ReadmeDetail({ link }: IReadmeDetail) {
   const [readme, setReadme] = useState<string>('');
-  const getReadme = async () => {
-    readmeApi(link).then((answer) => {
-      setReadme(answer.data);
-    });
-  };
   useEffect(() => {
-    getReadme();
+    (async () => {
+      const response = await readmeApi(link);
+      setReadme(response.data);
+    })();
   }, []);
   return <MDPreview source={readme} />;
 }

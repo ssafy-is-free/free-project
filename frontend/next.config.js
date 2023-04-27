@@ -11,7 +11,7 @@ const nextConfig = {
     });
     return config;
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
   async headers() {
     return [
       {

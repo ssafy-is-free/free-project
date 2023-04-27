@@ -3,40 +3,73 @@ import BojInfo from '../../../components/profile/BojInfo';
 import ProfileHeader from '../../../components/profile/ProfileHeader';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import Footer from '@/components/common/Footer';
+import { useState, useEffect } from 'react';
 import { Spinner } from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
+import { ParsedUrlQuery } from 'querystring';
+import { getBoj, getGithub } from '@/pages/api/profileAxios';
+import { IBojProfile, IGithubProfile } from '@/components/profile/IProfile';
 
 const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
   ssr: false,
+  loading: () => <Spinner></Spinner>,
 });
+
+interface IProfileQuery extends ParsedUrlQuery {
+  category: string;
+  id: string;
+}
 
 const ProfileInfoDiv = styled.div`
   margin: 1rem;
   margin-bottom: max(4rem, 10vh);
 `;
 
-export default function Profile() {
+const Profile = () => {
   const router = useRouter();
-  const { category, id } = router.query;
-  if (typeof category === 'string' && typeof id === 'string') {
-    const back = () => {
-      router.back();
-    };
-    return (
-      <div>
-        <ProfileHeader back={back}></ProfileHeader>
-        <ProfileInfoDiv>
-          {category === 'github' ? (
-            <GithubInfo githubId={parseInt(id)}></GithubInfo>
-          ) : (
-            <BojInfo bojId={parseInt(id)}></BojInfo>
-          )}
-        </ProfileInfoDiv>
-        <Footer></Footer>
-      </div>
-    );
-  } else {
-    return <Spinner></Spinner>;
-  }
-}
+  const { category, id } = useRouter().query as IProfileQuery;
+
+  const [githubData, setGithubData] = useState<IGithubProfile>();
+  const [bojData, setBojData] = useState<IBojProfile>();
+
+  const getGithubData = async () => {
+    const res = await getGithub(id);
+    if (res.data) {
+      setGithubData(res.data);
+    } else {
+      alert(res.message);
+    }
+  };
+  const getBojData = async () => {
+    const res = await getBoj(id);
+    if (res.data) {
+      setBojData(res.data);
+    } else {
+      alert(res.message);
+    }
+  };
+
+  const back = () => {
+    router.back();
+  };
+
+  useEffect(() => {
+    if (category === 'github') {
+      getGithubData();
+    } else if (category === 'boj') {
+      getBojData();
+    }
+  }, [category, id]);
+
+  return (
+    <div>
+      <ProfileHeader back={back}></ProfileHeader>
+      <ProfileInfoDiv>
+        {githubData && <GithubInfo githubData={githubData}></GithubInfo>}
+        {bojData && <BojInfo bojData={bojData}></BojInfo>}
+      </ProfileInfoDiv>
+    </div>
+  );
+};
+
+export default Profile;

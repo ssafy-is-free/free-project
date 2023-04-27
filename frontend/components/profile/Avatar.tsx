@@ -42,11 +42,15 @@ const mydata: IAvatarData = {
   name: 'ssafy',
 };
 
-export default function Avatar({ isCircle, data }: IAvatar) {
+export default function Avatar({ isCircle, data, my }: IAvatar) {
+  const toCompare = () => {
+    alert('업데이트 예정입니다.');
+  };
+
   const compare = () => {
-    if (data.name !== mydata.name) {
+    if (!my) {
       return (
-        <CompareDiv>
+        <CompareDiv onClick={toCompare}>
           <img src="/Icon/Compare.svg" alt="" />
           <p>나와 비교하기</p>
         </CompareDiv>

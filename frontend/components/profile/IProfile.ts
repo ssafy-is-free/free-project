@@ -23,7 +23,7 @@ export interface IGithubProfile {
   repositories: IRepository[];
   languages: {
     name: string;
-    percentage: number;
+    percentage: string;
   }[];
 }
 
@@ -31,7 +31,8 @@ export interface IGithubProfile {
  * githubInfo에 prop 해야할 값
  */
 export interface IGithubInfo {
-  githubId: number;
+  githubData: IGithubProfile;
+  my?: boolean;
 }
 
 /**
@@ -42,7 +43,7 @@ export interface IBojProfile {
   tierUrl: string;
   languages: {
     name: string;
-    percentage: number;
+    passPercentage: string;
   }[];
   pass: number;
   tryFail: number;
@@ -54,7 +55,8 @@ export interface IBojProfile {
  * bojInfo에 prop 해야할 값
  */
 export interface IBojInfo {
-  bojId: number;
+  bojData: IBojProfile;
+  my?: boolean;
 }
 
 /**
@@ -83,6 +85,7 @@ export interface IAvatar {
    */
   isCircle: boolean;
   data: IAvatarData;
+  my?: boolean;
 }
 
 /**
