@@ -40,7 +40,7 @@ export const postBojId = async (bojId: string) => {
 export const patchCrawaling = async () => {
   const { data } = await authApi({
     method: 'patch',
-    url: ' /github/crawling',
+    url: '/github/crawling',
   });
 
   return data;
