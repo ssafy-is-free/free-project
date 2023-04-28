@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.algorithm.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -15,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository
-public class BojRepositorySupport {
+public class BojQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	// TODO: 2023-04-28 언어별, 그룹별 추가 필요
-	public List<Baekjoon> findAllByScore(String group, Long language, Integer score,
+	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Long language, Integer score,
 		Long userId, Pageable pageable) {
 
 		QBaekjoon baekjoon = QBaekjoon.baekjoon;
@@ -28,7 +29,8 @@ public class BojRepositorySupport {
 		return queryFactory
 			.selectFrom(baekjoon)
 			.leftJoin(baekjoon.user, user).fetchJoin()
-			.where(cursorCondition(score, userId))
+			.where(cursorCondition(score, userId),
+				inBaekjoonId(baekjoonIdSet))
 			.orderBy(baekjoon.score.desc(),
 				baekjoon.user.id.asc())
 			.limit(pageable.getPageSize())
@@ -45,6 +47,15 @@ public class BojRepositorySupport {
 
 		//마지막 스코어 > 테이블 스코어 or (마지막 스코어 = 테이블 스코어 and 마지막 유저 id > 테이블 유저)
 		return baekjoon.score.lt(score).or(baekjoon.score.eq(score).and(baekjoon.user.id.gt(userId)));
+	}
+
+	private BooleanExpression inBaekjoonId(Set<Long> baekjoonIdSet) {
+
+		if (baekjoonIdSet == null || baekjoonIdSet.isEmpty())
+			return null;
+
+		return QBaekjoon.baekjoon.id.in(baekjoonIdSet);
+
 	}
 
 }

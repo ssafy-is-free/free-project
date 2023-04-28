@@ -2,9 +2,11 @@ package com.ssafy.backend.domain.algorithm.service;
 
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Pageable;
@@ -15,9 +17,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
+import com.ssafy.backend.domain.algorithm.repository.BojLanguageQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
+import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
-import com.ssafy.backend.domain.algorithm.repository.BojRepositorySupport;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.Language;
@@ -43,7 +46,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	private final UserRepository userRepository;
 	private final WebClient webClient;
 	private final UserQueryRepository userQueryRepository;
-	private final BojRepositorySupport bojRepositorySupport;
+	private final BojQueryRepository bojQueryRepository;
+	private final BojLanguageQueryRepository bojLanguageQueryRepository;
 
 	@Override
 	@Transactional
@@ -145,7 +149,17 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	public List<BojRankResponse> getBojRankListByBojId(String group, Long language, Integer score,
 		Long rank, Long userId, Pageable pageable) {
 
-		List<Baekjoon> baekjoonList = bojRepositorySupport.findAllByScore(group, language, score,
+		//해당 언어를 사용하는 정보 조회
+		List<BaekjoonLanguage> baekjoonLanguageList = language == null ?
+			Collections.EMPTY_LIST :
+			bojLanguageQueryRepository.findBojLanguageByLanguage(language);
+
+		//조회 된 정보에서 baekjoon id만 set으로 추출
+		Set<Long> baekjoonIdSet = baekjoonLanguageList.stream()
+			.map((b) -> b.getBaekjoon().getId())
+			.collect(Collectors.toSet());
+
+		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, language, score,
 			userId, pageable);
 
 		return BojRankResponse.createList(baekjoonList, rank);
