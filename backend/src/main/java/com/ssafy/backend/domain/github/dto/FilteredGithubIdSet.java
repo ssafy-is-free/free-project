@@ -15,4 +15,8 @@ public class FilteredGithubIdSet {
 	public static FilteredGithubIdSet create(Set<Long> githubIds) {
 		return FilteredGithubIdSet.builder().githubIds(githubIds).build();
 	}
+
+	public boolean isNotIn(long userId) {
+		return !(this.githubIds.contains(userId));
+	}
 }

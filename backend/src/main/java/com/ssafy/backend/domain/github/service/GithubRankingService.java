@@ -58,6 +58,11 @@ public class GithubRankingService {
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdBy(rankingFilter);
 
+		// 내가 속해있는지 확인하기
+		if (githubIdSet.isNotIn(userId)) {
+			return GithubRankingOneResponse.createEmpty();
+		}
+
 		// 깃허브 불러오기
 		Github github = githubRepository.findByUserId(userId).orElseThrow(
 			() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB)
