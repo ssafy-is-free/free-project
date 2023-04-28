@@ -52,7 +52,7 @@ public class ControllerAdvisor {
 	@ExceptionHandler
 	public CommonResponse exceptionHandler(Exception e, HttpServletRequest req) {
 
-		//        e.printStackTrace();
+		e.printStackTrace();
 
 		log.error(
 			"[" + " Exception - " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")) + "]"
