@@ -1,3 +1,5 @@
+import { chartColors } from '@/public/chartcolors';
+
 export interface ChartInput {
   name: string;
   percentage?: string;
@@ -10,7 +12,11 @@ export interface ChartInput {
  * @returns
  */
 export const myChartData = (data: ChartInput[]) => {
+  let colors = [];
   const labels = data.map((item: ChartInput) => {
+    const label0 = item.name.split(' ')[0].replace(/[1-9]/g, '');
+    if (label0 in chartColors) {
+    }
     return item.name;
   });
   const percentages = data.map((item: ChartInput) => {
