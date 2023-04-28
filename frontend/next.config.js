@@ -32,7 +32,7 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path*',
+        source: '/api/:path*',
         destination: 'https://k8b102.p.ssafy.io/api/:path*',
       },
     ];
