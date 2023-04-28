@@ -42,12 +42,14 @@ public class BojRankResponse {
 
 	public static BojRankResponse create(Baekjoon baekjoon, int index, long rank) {
 
-		System.out.println(index);
+		int returnScore = baekjoon.getScore() < 0 ?
+			0 : baekjoon.getScore();
+
 		return BojRankResponse.builder()
 			.userId(baekjoon.getUser().getId())
 			.nickname(baekjoon.getUser().getBojId())
 			.rank((int)rank + index)
-			.score(baekjoon.getScore())
+			.score(returnScore)
 			.avatarUrl(baekjoon.getUser().getImage())
 			.rankUpDown(baekjoon.getPreviousRank() - rank)
 			.tierUrl(baekjoon.getTier())
