@@ -5,7 +5,6 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -67,29 +66,34 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 	@Override
 	public BojRankResponse getBojByUserId(long userId) {
-		int rank = 1;
-		//유저 아이디로 백준 아이디 조회
-		Optional<User> oUser = userRepository.findById(userId);
-		User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
-		//백준 아이디 없다면 돌아가기
+		//유저 아이디로 백준 아이디 조회
+		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+
+		//백준 아이디를 입력하지 않은 유저의 경우
 		if (user.getBojId() == null) {
+			return null;
+		}
+		Baekjoon boj = bojRepository.findByUserId(userId).orElse(null);
+		//백준 아이디 없다면 돌아가기
+		if (boj == null) {
 			return null;
 		}
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 
+		BojRankResponse bojRankResponse = null;
 		// 랭크 세기
+		int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
-				BojRankResponse bojRankResponse = BojRankResponse.createBojMyRankResponseDTO(baekjoon,
+				bojRankResponse = BojRankResponse.createBojMyRankResponseDTO(baekjoon,
 					user, rank);
-				return bojRankResponse;
+				break;
 			} else {
 				rank++;
 			}
 		}
-		//유저 아아디에는 백준이 있는데 조회가 안된다면 에러
-		throw new CustomException(NOT_FOUND_BOJ_USER);
+		return bojRankResponse;
 
 	}
 
@@ -114,18 +118,19 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 @author noobsoda
 	 @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
 	 */
+	@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 	@Override
 	public BojInfoDetailResponse getBojInfoDetailByUserId(Long userId) {
 		//언어 정보를 저장할 해쉬맵
 		HashMap<Long, String> languageMap = new HashMap<>();
-
 		//유저 아이디로 백준 아이디 조회
-		Optional<User> oUser = userRepository.findById(userId);
-		User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		// 백준 아이디 조회
+		Baekjoon baekjoon = bojRepository.findByUserId(userId).orElse(null);
 
-		// 백준 아이디가 없는 유저입니다.
-		Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
-		Baekjoon baekjoon = oBaekjoon.orElseThrow(() -> new CustomException(NOT_FOUND_BOJ_USER));
+		// 유저테이블에 백준 아이디는 있는데 백준 테이블에 정보가 없는 경우 비어있는 콘텐츠
+		if (baekjoon == null)
+			return null;
 
 		List<BaekjoonLanguage> baekjoonLanguageList = bojLanguageRepository.findAllByBaekjoonId(baekjoon.getId());
 		//언어 정보 불러와서 해쉬에 저장
@@ -135,13 +140,11 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		//언어 정보
-		List<BojLanguageResponse> bojLanguageDTOList = baekjoonLanguageList.stream()
+		List<BojLanguageResponse> bojLanguageList = baekjoonLanguageList.stream()
 			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()), u.getPassPercentage()))
 			.collect(Collectors.toList());
-		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.create(user, baekjoon,
-			bojLanguageDTOList);
-
-		return bojInfoDetailResponse;
+		return BojInfoDetailResponse.create(user, baekjoon,
+			bojLanguageList);
 	}
 
 	/*백준 검색 - 랭킹*/
