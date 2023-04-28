@@ -54,12 +54,17 @@ public class BojRankResponse {
 			.build();
 	}
 
-	public static List<BojRankResponse> createList(List<Baekjoon> baekjoon, long rank) {
+	public static List<BojRankResponse> createList(List<Baekjoon> baekjoon, Long rank) {
 		AtomicInteger index = new AtomicInteger(0);
 
-		return baekjoon.stream()
-			.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), rank))
-			.collect(Collectors.toList());
+		// TODO: 2023-04-28 좀 더 간단하게 처리 할 수 있을듯.
+		return rank == null ?
+			baekjoon.stream()
+				.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), 0L))
+				.collect(Collectors.toList()) :
+			baekjoon.stream()
+				.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), rank))
+				.collect(Collectors.toList());
 
 	}
 }
