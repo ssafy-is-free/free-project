@@ -5,6 +5,7 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,7 +75,11 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		if (user.getBojId() == null) {
 			return null;
 		}
-		Baekjoon boj = bojRepository.findByUserId(userId).orElse(null);
+		Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
+		Baekjoon boj = null;
+		if (oBaekjoon.isPresent()) {
+			boj = oBaekjoon.get();
+		}
 		//백준 아이디 없다면 돌아가기
 		if (boj == null) {
 			return null;
@@ -126,7 +131,11 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 		// 백준 아이디 조회
-		Baekjoon baekjoon = bojRepository.findByUserId(userId).orElse(null);
+		Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
+		Baekjoon baekjoon = null;
+		if (oBaekjoon.isPresent()) {
+			baekjoon = oBaekjoon.get();
+		}
 
 		// 유저테이블에 백준 아이디는 있는데 백준 테이블에 정보가 없는 경우 비어있는 콘텐츠
 		if (baekjoon == null)
