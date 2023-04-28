@@ -4,7 +4,6 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,8 +82,7 @@ public class BojServiceImpl implements BojService {
 		//백준 아이디가 조회될 때만 저장
 		if (!CBojInfoResponse.isNull()) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
-			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
-			Baekjoon baekjoon = oBaekjoon.orElse(null);
+			Baekjoon baekjoon = bojRepository.findByUserId(userId).orElse(null);
 			// 백준 스코어 저장 로직
 			int score = BojScoreEvaluator.scoreEvaluator(baekjoon);
 			// 비어있다면 추가하고 이미 있다면 업데이트
@@ -115,6 +113,10 @@ public class BojServiceImpl implements BojService {
 				}
 				bojLanguageRepository.saveAll(baekjoonLanguageList);
 			}
+		} else {
+			//입력한 백준아아디가 크롤링이 되지 않았거나 올바르지 않습니다.
+			throw new CustomException(NOT_FOUND_BOJ_USER);
+
 		}
 
 	}
