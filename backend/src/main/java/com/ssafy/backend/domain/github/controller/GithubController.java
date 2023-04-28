@@ -48,7 +48,7 @@ public class GithubController {
 
 	//깃허브 랭킹
 	@GetMapping("/ranks")
-	public DataResponse<GithubRankingResponse> getGithubRanks(@RequestParam long rank,
+	public DataResponse<GithubRankingResponse> getGithubRanks(@RequestParam(required = false) Long rank,
 		@RequestParam(required = false) Long userId, @RequestParam(required = false) Integer score,
 		@ModelAttribute GitHubRankingFilter rankingFilter,
 		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
