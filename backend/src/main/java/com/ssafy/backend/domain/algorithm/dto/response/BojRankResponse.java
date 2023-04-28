@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.algorithm.dto.response;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -40,33 +41,35 @@ public class BojRankResponse {
 			.build();
 	}
 
-	public static BojRankResponse create(Baekjoon baekjoon, int index, long rank) {
+	public static BojRankResponse create(Baekjoon baekjoon, int index, Long prevRank, Set<Long> baekjoonIdSet) {
 
 		int returnScore = baekjoon.getScore() < 0 ?
 			0 : baekjoon.getScore();
 
+		long returnRank = prevRank == null ?
+			0 : prevRank;
+
+		//랭크 등락 폭
+		long rankUpdate = baekjoonIdSet.isEmpty() ?
+			0 : baekjoon.getPreviousRank() - returnRank;
+
 		return BojRankResponse.builder()
 			.userId(baekjoon.getUser().getId())
 			.nickname(baekjoon.getUser().getBojId())
-			.rank((int)rank + index)
+			.rank((int)returnRank + index)
 			.score(returnScore)
 			.avatarUrl(baekjoon.getUser().getImage())
-			.rankUpDown(baekjoon.getPreviousRank() - rank)
+			.rankUpDown(rankUpdate)
 			.tierUrl(baekjoon.getTier())
 			.build();
 	}
 
-	public static List<BojRankResponse> createList(List<Baekjoon> baekjoon, Long rank) {
+	public static List<BojRankResponse> createList(List<Baekjoon> baekjoon, Long prevRank, Set<Long> baekjoonIdSet) {
 		AtomicInteger index = new AtomicInteger(0);
 
-		// TODO: 2023-04-28 좀 더 간단하게 처리 할 수 있을듯.
-		return rank == null ?
-			baekjoon.stream()
-				.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), 0L))
-				.collect(Collectors.toList()) :
-			baekjoon.stream()
-				.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), rank))
-				.collect(Collectors.toList());
+		return baekjoon.stream()
+			.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), prevRank, baekjoonIdSet))
+			.collect(Collectors.toList());
 
 	}
 }

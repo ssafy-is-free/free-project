@@ -54,6 +54,8 @@ public class GithubRankingService {
 		} else {
 			githubRankingResponse.updateRankAnRankUpDown(rank);
 		}
+
+		// withFilter ? githubRankingResponse.updateRank(rank) : githubRankingResponse.updateRankAnRankUpDown(rank);
 	}
 
 	private FilteredGithubIdSet getGithubIdBy(GitHubRankingFilter rankingFilter) {

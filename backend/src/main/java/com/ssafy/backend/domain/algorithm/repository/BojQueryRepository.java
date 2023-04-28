@@ -51,7 +51,7 @@ public class BojQueryRepository {
 
 	private BooleanExpression inBaekjoonId(Set<Long> baekjoonIdSet) {
 
-		if (baekjoonIdSet == null || baekjoonIdSet.isEmpty())
+		if (baekjoonIdSet == null)
 			return null;
 
 		return QBaekjoon.baekjoon.id.in(baekjoonIdSet);

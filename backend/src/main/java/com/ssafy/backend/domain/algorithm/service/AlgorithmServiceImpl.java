@@ -165,7 +165,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score,
 			userId, pageable);
 
-		return BojRankResponse.createList(baekjoonList, rank);
+		return BojRankResponse.createList(baekjoonList, rank, baekjoonIdSet);
 
 	}
 

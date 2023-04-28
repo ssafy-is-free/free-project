@@ -75,7 +75,6 @@ public class AlgorithmController {
 			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);
 	}
 
-	// TODO: 2023-04-27 group, language는 랭킹 만들고 나중에
 	@GetMapping("ranks")
 	public DataResponse<List<BojRankResponse>> getBojRank(
 		@RequestParam(value = "group", required = false) String group,
