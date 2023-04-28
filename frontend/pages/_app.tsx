@@ -6,9 +6,18 @@ import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 import Footer from '@/components/common/Footer';
 import Head from 'next/head';
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
+  const [cookies, setCookie] = useCookies(['redirect-uri']);
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_AUTHURL === 'prod') {
+      setCookie('redirect-uri', 'deploy');
+    }
+  }, []);
 
   return (
     <Provider store={store}>
