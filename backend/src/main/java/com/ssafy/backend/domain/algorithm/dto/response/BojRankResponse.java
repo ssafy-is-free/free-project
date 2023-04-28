@@ -1,5 +1,9 @@
 package com.ssafy.backend.domain.algorithm.dto.response;
 
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.User;
 
@@ -9,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+// TODO: 2023-04-28 유저테이블의 식별자를 Long로 설정했기 때문에 rank 또한 long이 되어야 함.
 @Getter
 @Setter
 @Builder
@@ -33,6 +38,29 @@ public class BojRankResponse {
 			.rankUpDown(baekjoon.getPreviousRank() - rank)
 			.tierUrl(baekjoon.getTier())
 			.build();
+	}
+
+	public static BojRankResponse create(Baekjoon baekjoon, int index, long rank) {
+
+		System.out.println(index);
+		return BojRankResponse.builder()
+			.userId(baekjoon.getUser().getId())
+			.nickname(baekjoon.getUser().getBojId())
+			.rank((int)rank + index)
+			.score(baekjoon.getScore())
+			.avatarUrl(baekjoon.getUser().getImage())
+			.rankUpDown(baekjoon.getPreviousRank() - rank)
+			.tierUrl(baekjoon.getTier())
+			.build();
+	}
+
+	public static List<BojRankResponse> createList(List<Baekjoon> baekjoon, long rank) {
+		AtomicInteger index = new AtomicInteger(0);
+
+		return baekjoon.stream()
+			.map((b) -> BojRankResponse.create(b, index.incrementAndGet(), rank))
+			.collect(Collectors.toList());
+
 	}
 }
 
