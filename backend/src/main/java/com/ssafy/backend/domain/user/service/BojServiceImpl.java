@@ -40,8 +40,14 @@ public class BojServiceImpl implements BojService {
 
 	private final WebClient webClient;
 
+	/**
+	 * @param userId 유저의 아이디
+	 * @apiNote 백준 아이디를 저장하고 크롤링한 데이터를 저장하는 메소드
+	 * @author noobsoda
+	 * @param bojIdRequest 백준 아이디 요청 객체
+	 * @throws CustomException 사용자를 찾을 수 없거나, 백준 아이디가 조회되지 않을 때 발생
+	 */
 	@Override
-
 	public void saveId(long userId, BojIdRequest bojIdRequest) {
 
 		//유저 조회
@@ -74,7 +80,7 @@ public class BojServiceImpl implements BojService {
                     // 에러 처리 및 대체 DTO 반환
                     return getFallbackDto();
                 });*/
-		//저장
+		//백준 아이디가 조회될 때만 저장
 		if (CBojInfoResponse.getTier() != null) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
@@ -85,6 +91,12 @@ public class BojServiceImpl implements BojService {
 			} else {
 				baekjoon.updateBaekjoon(CBojInfoResponse);
 			}
+
+			// 스코어 저장 로직 시작
+
+			//
+			// 스코어 저장 로직 끝
+
 			bojRepository.save(baekjoon);
 			// 리스트 저장
 			// 리스트가 비어있지 않을 때

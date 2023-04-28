@@ -2,7 +2,6 @@ package com.ssafy.backend.domain.algorithm.service;
 
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +15,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
-import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
-import com.ssafy.backend.domain.algorithm.dto.response.CBojLanguageResultResponse;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepositorySupport;
@@ -52,65 +49,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Transactional
 	// TODO: 2023-04-24 나중에 12시에 한번에 배치할 때 사용할것
 	public void patchBojByUserId(long userId) {
-		//유저 아이디로 백준 아이디 조회
-		Optional<User> oUser = userRepository.findById(userId);
-		User user = oUser.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
-
-		//백준 아이디로 크롤링
-		CBojInfoResponse CBojInfoResponse = webClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(user.getBojId()))
-			.retrieve()
-			.bodyToMono(CBojInfoResponse.class)
-			.block();
-
-		//백준 아이디로 비동기 크롤링
-        /*Mono<BojInformationRequestDTO> mono = webClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/data/baekjoon/{name}").build(name))
-                .exchangeToMono(clientResponse  -> clientResponse.toEntity(BojInformationRequestDTO.class)) // 요청 실행 후 Mono<ClientResponse> 반환
-                .flatMap(responseEntity -> {
-                    if(responseEntity.getStatusCode().is2xxSuccessful()){
-                        return Mono.just(responseEntity.getBody());
-                    }else{
-                        return Mono.error(new RuntimeException("Unexpected response")); // 실패한 경우 에러 처리
-                    }
-                })
-                .onErrorResume(e -> {
-                    // 에러 처리 및 대체 DTO 반환
-                    return getFallbackDto();
-                });*/
-		//저장
-		if (CBojInfoResponse.getTier() != null) {
-			//유저가 이미 백준 아이디를 저장했는지 확인하기
-			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
-			Baekjoon baekjoon = oBaekjoon.orElse(null);
-			// 비어있다면 추가하고 이미 있다면 업데이트
-			if (baekjoon == null) {
-				baekjoon = Baekjoon.createBaekjoon(CBojInfoResponse, user);
-			} else {
-				baekjoon.updateBaekjoon(CBojInfoResponse);
-			}
-			bojRepository.save(baekjoon);
-			// 리스트 저장
-			// 리스트가 비어있지 않을 때
-			if (CBojInfoResponse.getLanguagesResult() != null) {
-				List<BaekjoonLanguage> baekjoonLanguageList = new ArrayList<>();
-				bojLanguageRepository.deleteAllByBaekjoonId(baekjoon.getId());
-
-				for (CBojLanguageResultResponse CBojLanguageResultResponse : CBojInfoResponse.getLanguagesResult()) {
-
-					// 언어 정보 받아오기
-					Language language = languageRepository.findByNameAndType(CBojLanguageResultResponse.getLanguage(),
-						LanguageType.BAEKJOON).orElseGet(
-						() -> null  // 언어정보가 없다면 언어 생성, 저장, 반환 2023-04-21 이성복
-					);
-
-					BaekjoonLanguage baekjoonLanguage = BaekjoonLanguage.createBaekjoonLanguage(language.getId(),
-						CBojLanguageResultResponse, baekjoon);
-					baekjoonLanguageList.add(baekjoonLanguage);
-				}
-				bojLanguageRepository.saveAll(baekjoonLanguageList);
-			}
-		}
+		return;
 	}
 
 	/**
