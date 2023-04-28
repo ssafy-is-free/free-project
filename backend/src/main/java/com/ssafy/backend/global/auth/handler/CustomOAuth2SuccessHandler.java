@@ -84,10 +84,11 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
 		//쿠키에 url이 있다면 해당 url 리턴.
 		if (redirectUrlOptional.isPresent()) {
-			redirectUrl = redirectUrlOptional.get();
-			System.out.println("redirect URl : " + redirectUrl);
+			// redirectUrl = redirectUrlOptional.get();
+			redirectUrl = "http://k8b102.p.ssafy.io/redirect";
 		}
 
+		log.warn("redirect : {}", redirectUrl);
 		return UriComponentsBuilder.fromUriString(redirectUrl)
 			.queryParam("isNew", userPrincipal.isNew())
 			.queryParam("token", accessToken)
