@@ -25,11 +25,17 @@ export const getFilter = async (languageType: String) => {
  * @param rankParam 시작랭킹
  * @returns
  */
-export const getGithubRanking = async (sizeParam: number, rankParam: number, languageParam?: number) => {
+export const getGithubRanking = async (
+  sizeParam: number,
+  rankParam: number,
+  useIdParam?: number,
+  scoreParam?: number
+) => {
   const params = {
     size: sizeParam,
     rank: rankParam,
-    language: languageParam,
+    userId: useIdParam,
+    score: scoreParam,
   };
 
   const { data } = await basicApi({
@@ -38,48 +44,145 @@ export const getGithubRanking = async (sizeParam: number, rankParam: number, lan
     params: params,
   });
 
+  // console.log('필터 반영 X 깃허브 data ', data.data);
+
   return data.data.ranks;
 };
 
 /**
- * 백준 랭킹 조회 api
+ * 깃허브 랭킹 조회 api 필터 반영
+ * @param sizeParam
+ * @param rankParam
+ * @param languageParam
+ * @param useIdParam
+ * @param scoreParam
  * @returns
  */
-export const getBojRanking = async () => {
+export const getGithubRankingFilter = async (
+  sizeParam: number,
+  rankParam: number,
+  languageParam: number,
+  useIdParam?: number,
+  scoreParam?: number
+) => {
+  const params = {
+    size: sizeParam,
+    rank: rankParam,
+    languageId: languageParam,
+    userId: useIdParam,
+    score: scoreParam,
+  };
+
   const { data } = await basicApi({
     method: 'get',
-    url: '/boj/ranks',
+    url: '/github/ranks',
+    params: params,
   });
 
+  // console.log('필터 반영 O 깃허브 data ', data);
   return data.data.ranks;
-};
-
-/**
- * 내 백준 랭킹 조회 api
- */
-export const getMyBojRanking = async () => {
-  const { data } = await authApi({
-    method: 'get',
-    url: '/boj/my-rank',
-  });
-
-  return data;
+  // return data;
 };
 
 /**
  * 내 깃허브 랭킹 조회 api
- * @param languageParam 필터 검색 시 언어
+ * @param languageParam
  * @returns
  */
 export const getMyGitRanking = async (languageParam?: number) => {
   const params = {
-    language: languageParam,
+    languageId: languageParam,
   };
   const { data } = await authApi({
     method: 'get',
     url: '/github/my-rank',
     params: params,
   });
+
+  console.log('내 깃허브 data ', data);
+  return data;
+};
+
+/**
+ * 백준 랭킹 조회
+ * @param sizeParam
+ * @param rankParam
+ * @param useIdParam
+ * @param scoreParam
+ * @returns
+ */
+export const getBojRanking = async (sizeParam: number, rankParam: number, useIdParam?: number, scoreParam?: number) => {
+  const params = {
+    size: sizeParam,
+    rank: rankParam,
+    userId: useIdParam,
+    score: scoreParam,
+  };
+
+  const { data } = await basicApi({
+    method: 'get',
+    url: '/boj/ranks',
+    params: params,
+  });
+
+  console.log('필터 반영 X 백준 data ', data);
+
+  // return data.data.ranks;
+  return data;
+};
+
+/**
+ * 백준 랭킹 조회 api 필터 반영
+ * @param sizeParam
+ * @param rankParam
+ * @param languageParam
+ * @param useIdParam
+ * @param scoreParam
+ * @returns
+ */
+export const getBojRankingFilter = async (
+  sizeParam: number,
+  rankParam: number,
+  languageParam: number,
+  useIdParam?: number,
+  scoreParam?: number
+) => {
+  const params = {
+    size: sizeParam,
+    rank: rankParam,
+    languageId: languageParam,
+    userId: useIdParam,
+    score: scoreParam,
+  };
+
+  const { data } = await basicApi({
+    method: 'get',
+    url: '/github/ranks',
+    params: params,
+  });
+
+  console.log('필터 반영 O 백준 data ', data);
+
+  // return data.data.ranks;
+  return data;
+};
+
+/**
+ * 내 백준 랭킹 조회 api
+ * @param languageParam
+ * @returns
+ */
+export const getMyBojRanking = async (languageParam?: number) => {
+  const params = {
+    languageId: languageParam,
+  };
+  const { data } = await authApi({
+    method: 'get',
+    url: '/boj/my-rank',
+    params: params,
+  });
+
+  console.log('내 백준', data);
 
   return data;
 };

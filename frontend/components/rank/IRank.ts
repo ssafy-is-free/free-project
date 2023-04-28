@@ -38,12 +38,27 @@ export interface IFilterModalProps {
   curRank: number;
 
   /**
+   * size
+   */
+  size: number;
+
+  /**
+   * nextRank
+   */
+  nextRank: number;
+
+  /**
+   * fetch 메소드
+   */
+  getRankList: Function;
+
+  /**
    * 자식에서 부모컴포넌트로 data 받기()
    */
-  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
-  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
-  setMyGitRank: React.Dispatch<React.SetStateAction<resultMyInformation>>;
-  setMyBojRank: React.Dispatch<React.SetStateAction<resultMyInformation>>;
+  // setGitRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
+  // setBojRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
+  // setMyGitRank: React.Dispatch<React.SetStateAction<resultMyInformation | null>>;
+  // setMyBojRank: React.Dispatch<React.SetStateAction<resultMyInformation>>;
 }
 
 /**

@@ -10,9 +10,9 @@ const Wrapper = styled.div`
   font-weight: bold;
   font-size: 20px;
   width: 100%;
-  height: 100px;
+  height: 8vh;
   /* padding: 48px 0px 24px; */
-  padding: 1rem 0px 1rem;
+  padding: 2vh 0px 2vh;
 
   .menu {
     cursor: pointer;
