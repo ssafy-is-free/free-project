@@ -14,4 +14,5 @@ public class AuthProperties {
 
 	private String tokenSecret;
 	private String redirectPage;
+	private String redirectPageServer;
 }
