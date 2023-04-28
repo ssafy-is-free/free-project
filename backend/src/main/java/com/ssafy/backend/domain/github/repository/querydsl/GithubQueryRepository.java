@@ -21,7 +21,6 @@ public class GithubQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet, Pageable pageable) {
-
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
@@ -36,12 +35,12 @@ public class GithubQueryRepository {
 		return githubIdSet != null ? github.id.in(githubIdSet.getGithubIds()) : null;
 	}
 
-	private BooleanExpression checkCursor(Integer score, Long githubId) {
-		if (score == null || githubId == null) {
+	private BooleanExpression checkCursor(Integer score, Long userId) {
+		if (score == null || userId == null) {
 			return null;
 
 		}
-		return scoreLt(score).or(scoreEqAndGithubIdGt(score, githubId));
+		return scoreLt(score).or(scoreEqAndGithubIdGt(score, userId));
 	}
 
 	private BooleanExpression scoreLt(Integer score) {
@@ -56,7 +55,7 @@ public class GithubQueryRepository {
 		return userId != null ? github.user.id.gt(userId) : null;
 	}
 
-	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long githubId) {
-		return scoreEq(score).and(userIdGt(githubId));
+	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long userId) {
+		return scoreEq(score).and(userIdGt(userId));
 	}
 }
