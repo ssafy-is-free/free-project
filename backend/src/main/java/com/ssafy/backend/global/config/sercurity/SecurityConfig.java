@@ -1,4 +1,4 @@
-package com.ssafy.backend.global.config;
+package com.ssafy.backend.global.config.sercurity;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +16,7 @@ import com.ssafy.backend.global.auth.exception.TokenAuthenticationEntryPoint;
 import com.ssafy.backend.global.auth.filter.TokenAuthenticationFilter;
 import com.ssafy.backend.global.auth.handler.CustomOAuth2FailureHandler;
 import com.ssafy.backend.global.auth.handler.CustomOAuth2SuccessHandler;
+import com.ssafy.backend.global.config.properties.AuthorizeUrlProperties;
 import com.ssafy.backend.global.oauth.service.CustomOAuth2UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class SecurityConfig {
 	private final TokenAuthenticationFilter tokenAuthenticationFilter;
 	private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
 	private final TokenAuthenticationEntryPoint tokenAuthenticationEntryPoint;
+	private final AuthorizeUrlProperties authorizeUrlProperties;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,12 +50,12 @@ public class SecurityConfig {
 			.formLogin().disable() //로그인 폼 사용안하는 rest 방식이므로 제외.
 			.httpBasic().disable(); //기본인증 로그인창사용 안하기 때문에 제외.
 
-
 		/*시큐리티 허용 url*/
 		http
 			.authorizeRequests()
-			//                .antMatchers("/auth/**","/oauth2/**", "/token/**").permitAll();
-			.antMatchers("/**").permitAll()//테스트를 위해서 모든 경로 열어두기.
+			.antMatchers(authorizeUrlProperties.getDenyUrls().stream().toArray(String[]::new)).denyAll()
+			.antMatchers().permitAll()
+			// .antMatchers("/**").permitAll()//테스트를 위해서 모든 경로 열어두기.
 			.anyRequest().authenticated();
 
 		/*oauth 인증 후 처리*/
