@@ -60,7 +60,7 @@ public class Baekjoon extends BaseTimeEntity {
 	@Column(name = "boj_previous_rank", nullable = false)
 	private long previousRank;
 
-	public static Baekjoon createBaekjoon(CBojInfoResponse CBojInfoResponse, User user) {
+	public static Baekjoon createBaekjoon(CBojInfoResponse CBojInfoResponse, User user, int score) {
 		return Baekjoon.builder()
 			.tier(CBojInfoResponse.getTier())
 			.passCount(CBojInfoResponse.getPassCount())
@@ -68,14 +68,16 @@ public class Baekjoon extends BaseTimeEntity {
 			.submitCount(CBojInfoResponse.getSubmitCount())
 			.failCount(CBojInfoResponse.getFailCount())
 			.user(user)
+			.score(score)
 			.build();
 	}
 
-	public void updateBaekjoon(CBojInfoResponse CBojInfoResponse) {
+	public void updateBaekjoon(CBojInfoResponse CBojInfoResponse, int score) {
 		this.tier = CBojInfoResponse.getTier();
 		this.passCount = CBojInfoResponse.getPassCount();
 		this.tryFailCount = CBojInfoResponse.getTryFailCount();
 		this.submitCount = CBojInfoResponse.getSubmitCount();
 		this.failCount = CBojInfoResponse.getFailCount();
+		this.score = score;
 	}
 }

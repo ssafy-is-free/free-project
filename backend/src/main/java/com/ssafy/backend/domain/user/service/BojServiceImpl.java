@@ -22,6 +22,7 @@ import com.ssafy.backend.domain.entity.common.LanguageType;
 import com.ssafy.backend.domain.user.dto.BojIdRequest;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
+import com.ssafy.backend.domain.util.service.BojScoreEvaluator;
 import com.ssafy.backend.global.response.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,6 @@ public class BojServiceImpl implements BojService {
 	private final BojRepository bojRepository;
 	private final LanguageRepository languageRepository;
 	private final BojLanguageRepository bojLanguageRepository;
-
 	private final WebClient webClient;
 
 	/**
@@ -85,17 +85,14 @@ public class BojServiceImpl implements BojService {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUserId(userId);
 			Baekjoon baekjoon = oBaekjoon.orElse(null);
+			// 백준 스코어 저장 로직
+			int score = BojScoreEvaluator.scoreEvaluator(baekjoon);
 			// 비어있다면 추가하고 이미 있다면 업데이트
 			if (baekjoon == null) {
-				baekjoon = Baekjoon.createBaekjoon(CBojInfoResponse, user);
+				baekjoon = Baekjoon.createBaekjoon(CBojInfoResponse, user, score);
 			} else {
-				baekjoon.updateBaekjoon(CBojInfoResponse);
+				baekjoon.updateBaekjoon(CBojInfoResponse, score);
 			}
-
-			// 스코어 저장 로직 시작
-
-			//
-			// 스코어 저장 로직 끝
 
 			bojRepository.save(baekjoon);
 			// 리스트 저장
