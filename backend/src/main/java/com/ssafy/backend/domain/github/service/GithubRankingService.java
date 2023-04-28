@@ -59,7 +59,7 @@ public class GithubRankingService {
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdBy(rankingFilter);
 
 		// 내가 속해있는지 확인하기
-		if (githubIdSet.isNotIn(userId)) {
+		if (githubIdSet != null && githubIdSet.isNotIn(userId)) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
