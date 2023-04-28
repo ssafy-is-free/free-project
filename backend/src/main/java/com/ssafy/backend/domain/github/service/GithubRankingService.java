@@ -45,7 +45,7 @@ public class GithubRankingService {
 	}
 
 	private FilteredGithubIdSet getGithubIdBy(GitHubRankingFilter rankingFilter) {
-		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(rankingFilter.getLanguage())
+		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(rankingFilter.getLanguageId())
 			.stream()
 			.map(g -> g.getGithub().getId())
 			.collect(Collectors.toSet());

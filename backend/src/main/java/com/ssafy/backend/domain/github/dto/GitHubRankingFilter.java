@@ -6,10 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GitHubRankingFilter {
-	private Long language;
+	private Long languageId;
 
 	public boolean isNull() {
-		return language == null;
+		return languageId == null;
 	}
 
 }
