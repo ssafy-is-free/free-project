@@ -21,11 +21,20 @@ public class GithubRankingResponse {
 		return GithubRankingResponse.builder().ranks(githubRankingCovers).build();
 	}
 
-	public void setRank(long rank) {
+	public void updateRank(long rank) {
 		for (GithubRankingCover rankingCover : this.ranks) {
-			long rankUpDown = rankingCover.getRankUpDown(rank);
-			rankingCover.updateRankInfo(rank, rankUpDown);
+			rankingCover.setRank(rank);
 			rank++;
 		}
 	}
+
+	public void updateRankAnRankUpDown(long rank) {
+		for (GithubRankingCover rankingCover : this.ranks) {
+			long rankUpDown = rankingCover.getRankUpDown(rank);
+			rankingCover.setRank(rank);
+			rankingCover.setRankUpDown(rankUpDown);
+			rank++;
+		}
+	}
+
 }

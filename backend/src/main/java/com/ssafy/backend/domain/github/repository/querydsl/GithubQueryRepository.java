@@ -27,7 +27,7 @@ public class GithubQueryRepository {
 			.innerJoin(github.user, user)
 			.fetchJoin()
 			.where(githubIdIn(githubIdSet), checkCursor(score, userId))
-			.orderBy(github.score.desc())
+			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
 	}
