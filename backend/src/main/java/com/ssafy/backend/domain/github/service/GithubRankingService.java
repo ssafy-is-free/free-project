@@ -33,15 +33,27 @@ public class GithubRankingService {
 
 	public GithubRankingResponse getGithubRank(long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
 		Pageable pageable) {
-
+		//필터링된 githubId List
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdBy(rankingFilter);
 
+		//페이지네이션된 깃허브 데이터
 		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, pageable);
 		GithubRankingResponse githubRankingResponse = GithubRankingResponse.create(githubList);
-		githubRankingResponse.setRank(rank);
+
+		//랭킹 정보 설정
+		setRankInfo(rank, !rankingFilter.isNull(), githubRankingResponse);
 
 		log.info(githubRankingResponse.toString());
 		return githubRankingResponse;
+	}
+
+	private void setRankInfo(long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
+		//필터 검색이 아닐때만 랭킹폭 세팅
+		if (withFilter) {
+			githubRankingResponse.updateRank(rank);
+		} else {
+			githubRankingResponse.updateRankAnRankUpDown(rank);
+		}
 	}
 
 	private FilteredGithubIdSet getGithubIdBy(GitHubRankingFilter rankingFilter) {
@@ -64,9 +76,8 @@ public class GithubRankingService {
 		}
 
 		// 깃허브 불러오기
-		Github github = githubRepository.findByUserId(userId).orElseThrow(
-			() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB)
-		);
+		Github github = githubRepository.findByUserId(userId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
 
 		// 랭킹 계산
 		int rank;

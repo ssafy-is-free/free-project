@@ -19,6 +19,7 @@ public class GithubRankingOneResponse {
 
 	public void setRank(long rank) {
 		long rankUpDown = this.githubRankingCover.getRankUpDown(rank);
-		this.githubRankingCover.updateRankInfo(rank, rankUpDown);
+		this.githubRankingCover.setRank(rank);
+		this.githubRankingCover.setRankUpDown(rankUpDown);
 	}
 }

@@ -16,7 +16,7 @@ public class GithubRankingCover {
 	long rank;
 	Integer score;
 	String avatarUrl;
-	long rankUpDown;
+	Long rankUpDown;
 	@JsonIgnore
 	long prevRank;
 
@@ -31,8 +31,11 @@ public class GithubRankingCover {
 
 	}
 
-	public void updateRankInfo(long rank, long rankUpDown) {
+	public void setRank(long rank) {
 		this.rank = rank;
+	}
+
+	public void setRankUpDown(long rankUpDown) {
 		this.rankUpDown = rankUpDown;
 	}
 
