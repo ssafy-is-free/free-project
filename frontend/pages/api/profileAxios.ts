@@ -3,7 +3,7 @@ import { authApi, basicApi } from './customAxio';
 export const getGithub = async (userId: string) => {
   const { data } = await basicApi({
     method: 'get',
-    url: `github/users/${userId}`,
+    url: `/github/users/${userId}`,
   });
   return data;
 };
@@ -11,7 +11,7 @@ export const getGithub = async (userId: string) => {
 export const getMyGithub = async () => {
   const { data } = await authApi({
     method: 'get',
-    url: `github/users`,
+    url: `/github/users`,
   });
   return data;
 };
@@ -19,7 +19,7 @@ export const getMyGithub = async () => {
 export const getBoj = async (userId: string) => {
   const { data } = await basicApi({
     method: 'get',
-    url: `boj/users/${userId}`,
+    url: `/boj/users/${userId}`,
   });
 
   return data;
@@ -28,7 +28,7 @@ export const getBoj = async (userId: string) => {
 export const getMyBoj = async () => {
   const { data } = await authApi({
     method: 'get',
-    url: `boj/users/5`,
+    url: `/boj/users`,
   });
 
   return data;
@@ -38,7 +38,7 @@ export const getReadme = async (githubId: number, repoId: number) => {
   console.log(`github/${githubId}/repositories/${repoId}`);
   const { data } = await basicApi({
     method: 'get',
-    url: `github/${githubId}/repositories/${repoId}`,
+    url: `/github/${githubId}/repositories/${repoId}`,
   });
 
   return data;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { config } from 'process';
 
 // const BASE_URL = 'https://k8b102.p.ssafy.io/api';
-const BASE_URL = '';
+const BASE_URL = '/api';
 
 /**
  * 회원 전용 기능일 때 사용할 axios

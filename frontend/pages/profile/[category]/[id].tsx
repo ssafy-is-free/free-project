@@ -27,7 +27,7 @@ const ProfileInfoDiv = styled.div`
 
 const Profile = () => {
   const router = useRouter();
-  const { category, id } = useRouter().query as IProfileQuery;
+  const { category, id } = router.query as IProfileQuery;
 
   const [githubData, setGithubData] = useState<IGithubProfile>();
   const [bojData, setBojData] = useState<IBojProfile>();
