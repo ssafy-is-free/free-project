@@ -149,20 +149,20 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 	/*백준 검색 - 랭킹*/
 	@Override
-	public List<BojRankResponse> getBojRankListByBojId(String group, Long language, Integer score,
+	public List<BojRankResponse> getBojRankListByBojId(String group, Long languageId, Integer score,
 		Long rank, Long userId, Pageable pageable) {
 
 		//해당 언어를 사용하는 정보 조회
-		List<BaekjoonLanguage> baekjoonLanguageList = language == null ?
+		List<BaekjoonLanguage> baekjoonLanguageList = languageId == null ?
 			Collections.EMPTY_LIST :
-			bojLanguageQueryRepository.findBojLanguageByLanguage(language);
+			bojLanguageQueryRepository.findBojLanguageByLanguage(languageId);
 
 		//조회 된 정보에서 baekjoon id만 set으로 추출
 		Set<Long> baekjoonIdSet = baekjoonLanguageList.stream()
 			.map((b) -> b.getBaekjoon().getId())
 			.collect(Collectors.toSet());
 
-		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, language, score,
+		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score,
 			userId, pageable);
 
 		return BojRankResponse.createList(baekjoonList, rank);

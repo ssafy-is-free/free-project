@@ -20,7 +20,7 @@ public class BojQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	// TODO: 2023-04-28 언어별, 그룹별 추가 필요
-	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Long language, Integer score,
+	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Integer score,
 		Long userId, Pageable pageable) {
 
 		QBaekjoon baekjoon = QBaekjoon.baekjoon;

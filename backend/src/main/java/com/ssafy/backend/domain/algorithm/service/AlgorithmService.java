@@ -19,7 +19,7 @@ public interface AlgorithmService {
 
 	// TODO: 2023-04-28 인자로 넘기는 값이 너무 많음, 필터 클래스를 생성해서 줄여야됨.
 	/*백준 랭킹*/
-	List<BojRankResponse> getBojRankListByBojId(String group, Long language, Integer score, Long rank,
+	List<BojRankResponse> getBojRankListByBojId(String group, Long languageId, Integer score, Long rank,
 		Long userId,
 		Pageable pageable);
 
