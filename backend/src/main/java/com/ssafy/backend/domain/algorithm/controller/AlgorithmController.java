@@ -79,13 +79,13 @@ public class AlgorithmController {
 	@GetMapping("ranks")
 	public DataResponse<List<BojRankResponse>> getBojRank(
 		@RequestParam(value = "group", required = false) String group,
-		@RequestParam(value = "language", required = false) Long language,
+		@RequestParam(value = "languageId", required = false) Long languageId,
 		@RequestParam(value = "score", required = false) Integer score,
 		@RequestParam(value = "id", required = false) Long userId,
 		@RequestParam(value = "rank", required = false) Long rank,
 		Pageable pageable) {
 
-		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, language,
+		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, languageId,
 			score, userId, rank, pageable);
 
 		return bojRankResponseList.isEmpty() ?

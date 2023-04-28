@@ -53,7 +53,7 @@ public class SecurityConfig {
 		/*시큐리티 허용 url*/
 		http
 			.authorizeRequests()
-			.antMatchers(authorizeUrlProperties.getDenyUrls().stream().toArray(String[]::new)).denyAll()
+			.antMatchers(authorizeUrlProperties.getDenyUrls().stream().toArray(String[]::new)).authenticated()
 			// .antMatchers().permitAll()
 			.antMatchers("/**").permitAll()//테스트를 위해서 모든 경로 열어두기.
 			.anyRequest().authenticated();
