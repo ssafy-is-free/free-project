@@ -32,7 +32,7 @@ const MyProfile = () => {
       if (res.data) {
         setGithubData(res.data);
       } else {
-        alert(res.message);
+        console.log(res.message);
       }
     })();
     (async () => {
@@ -40,7 +40,7 @@ const MyProfile = () => {
       if (res.data) {
         setBojData(res.data);
       } else {
-        alert(res.message);
+        console.log(res.message);
       }
     })();
   }, []);
