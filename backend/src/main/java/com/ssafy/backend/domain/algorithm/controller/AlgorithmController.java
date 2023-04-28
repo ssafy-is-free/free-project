@@ -65,8 +65,10 @@ public class AlgorithmController {
 			responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS);
 	}
 
-	@GetMapping("/users/{userId}")
-	public DataResponse<BojInfoDetailResponse> getBojInfoDetail(@PathVariable Long userId) {
+	@GetMapping(value = {"/users/{userId}", "/users"})
+	public DataResponse<BojInfoDetailResponse> getBojInfoDetail(@PathVariable(required = false) Long userId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		userId = userId != null ? userId : userPrincipal.getId();
 		BojInfoDetailResponse bojInfoDetailResponse = algorithmService.getBojInfoDetailByUserId(userId);
 		return bojInfoDetailResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);

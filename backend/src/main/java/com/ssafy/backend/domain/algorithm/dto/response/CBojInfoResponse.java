@@ -30,4 +30,8 @@ public class CBojInfoResponse {
 	@JsonProperty("languages_result")
 	private List<CBojLanguageResultResponse> languagesResult;
 
+	public boolean isNull() {
+		return tier == null;
+	}
+
 }
