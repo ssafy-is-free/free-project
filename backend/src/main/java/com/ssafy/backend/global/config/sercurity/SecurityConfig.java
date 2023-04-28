@@ -54,8 +54,8 @@ public class SecurityConfig {
 		http
 			.authorizeRequests()
 			.antMatchers(authorizeUrlProperties.getDenyUrls().stream().toArray(String[]::new)).denyAll()
-			.antMatchers().permitAll()
-			// .antMatchers("/**").permitAll()//테스트를 위해서 모든 경로 열어두기.
+			// .antMatchers().permitAll()
+			.antMatchers("/**").permitAll()//테스트를 위해서 모든 경로 열어두기.
 			.anyRequest().authenticated();
 
 		/*oauth 인증 후 처리*/

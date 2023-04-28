@@ -88,7 +88,6 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 			redirectUrl = authProperties.getRedirectPageServer();
 		}
 
-		log.warn("redirect : {}", redirectUrl);
 		return UriComponentsBuilder.fromUriString(redirectUrl)
 			.queryParam("isNew", userPrincipal.isNew())
 			.queryParam("token", accessToken)

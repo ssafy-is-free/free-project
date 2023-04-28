@@ -5,6 +5,7 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.TOKEN_ILLEGAL;
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.TOKEN_INVALID;
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.TOKEN_UNSUPPORTED;
+import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
 import java.io.IOException;
 
@@ -42,12 +43,10 @@ public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 		String exception = (String)request.getAttribute(TOKEN_EXCEPTION_KEY);
 
-		if (exception == null)
-			return;
-
 		CommonResponse exceptionResponse;
-
-		if (exception.equals(TOKEN_INVALID)) {
+		if (exception == null)
+			exceptionResponse = responseService.getExceptionResponse(TOKEN_NOT_FOUND);
+		else if (exception.equals(TOKEN_INVALID)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_INVALID);
 		} else if (exception.equals(TOKEN_EXPIRE)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_EXPIRE);

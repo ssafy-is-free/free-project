@@ -48,9 +48,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		try {
 			String jwt = getJwtFromRequest(request);
 
-			log.info("token provider : {}", tokenProvider);
-
 			if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+
 				Long userId = tokenProvider.getUserIdFromToken(jwt);
 
 				UserDetails userDetails = createUserDetail(userId);
