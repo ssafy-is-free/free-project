@@ -5,6 +5,7 @@ import static com.ssafy.backend.global.response.CustomSuccessStatus.*;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,10 +39,10 @@ public class AlgorithmController {
 	@GetMapping("/my-rank")
 
 	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-		BojRankResponse bojMyRankResponseDTO = algorithmService.getBojByUserId(userPrincipal.getId());
+		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId());
 		//백준 아이디가 없다면 비어있는 컨텐츠
-		return bojMyRankResponseDTO == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
-			responseService.getDataResponse(bojMyRankResponseDTO, RESPONSE_SUCCESS);
+		return bojMyRankResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojMyRankResponse, RESPONSE_SUCCESS);
 	}
 
 	// TODO: 2023-04-25 12시에 한꺼번에 배치할떄 사용할 백준 크롤링
@@ -70,6 +71,24 @@ public class AlgorithmController {
 		BojInfoDetailResponse bojInfoDetailResponse = algorithmService.getBojInfoDetailByUserId(userId);
 		return bojInfoDetailResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);
+	}
+
+	// TODO: 2023-04-27 group, language는 랭킹 만들고 나중에
+	@GetMapping("ranks")
+	public DataResponse<List<BojRankResponse>> getBojRank(
+		@RequestParam(value = "group", required = false) String group,
+		@RequestParam(value = "language", required = false) Long language,
+		@RequestParam(value = "score", required = false) Integer score,
+		@RequestParam(value = "id", required = false) Long userId,
+		@RequestParam(value = "rank", required = false) Long rank,
+		Pageable pageable) {
+
+		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, language,
+			score, userId, rank, pageable);
+
+		return bojRankResponseList.isEmpty() ?
+			responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojRankResponseList, RESPONSE_SUCCESS);
 	}
 
 }

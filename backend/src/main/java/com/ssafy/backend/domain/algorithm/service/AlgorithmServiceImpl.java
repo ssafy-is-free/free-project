@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -198,6 +199,20 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			bojLanguageDTOList);
 
 		return bojInfoDetailResponse;
+	}
+
+	/*백준 검색 - 랭킹*/
+	@Override
+	public List<BojRankResponse> getBojRankListByBojId(String group, Long language, Integer score,
+		Long rank, Long userId, Pageable pageable) {
+
+		List<Baekjoon> baekjoonList = bojRepositorySupport.findAllByScore(group, language, score,
+			userId, pageable);
+
+		return rank == null ?
+			BojRankResponse.createList(baekjoonList, 0L) :
+			BojRankResponse.createList(baekjoonList, rank);
+
 	}
 
 }

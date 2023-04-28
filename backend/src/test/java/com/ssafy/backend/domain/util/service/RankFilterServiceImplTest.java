@@ -59,6 +59,7 @@ class RankFilterServiceImplTest {
 		Assertions.assertNotNull(languageGithubResponses);
 		Assertions.assertNotNull(languageBaekjoonResponses);
 
-		Assertions.assertEquals(languageGithubResponses.size(), languageBaekjoonResponses.size());
+		Assertions.assertEquals(languageGithubResponses.size(), 4);
+		Assertions.assertEquals(languageBaekjoonResponses.size(), 4);
 	}
 }
