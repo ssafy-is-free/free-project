@@ -47,8 +47,8 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
 
-		//기존에 쿠키에 담겨있는 객체들 전부 삭제.
-		clearAuthenticationAttributes(request, response);
+		// //기존에 쿠키에 담겨있는 객체들 전부 삭제.
+		// clearAuthenticationAttributes(request, response);
 
 		//받은 유저 정보 객체 가져오기
 		UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
