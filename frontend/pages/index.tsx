@@ -117,7 +117,7 @@ const Main = () => {
   const [ref, inView] = useInView();
   const [inViewFirst, setInViewFirst] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [size, setSize] = useState<number>(2);
+  const [size, setSize] = useState<number>(5);
   const [nextRank, setNextRank] = useState<number>(1);
   const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
 

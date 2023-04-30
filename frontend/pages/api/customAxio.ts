@@ -68,7 +68,7 @@ authApi.interceptors.response.use(
     const { config, response } = error;
     const originalRequest = config;
 
-    if (response.status === 403) {
+    if (response.status === 401) {
       console.log('access 만료');
       const accessToken = localStorage.getItem('accessToken');
 
