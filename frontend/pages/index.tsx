@@ -117,9 +117,10 @@ const Main = () => {
   const [ref, inView] = useInView();
   const [inViewFirst, setInViewFirst] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [size, setSize] = useState<number>(5);
+  const [size, setSize] = useState<number>(2);
   const [nextRank, setNextRank] = useState<number>(1);
   const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
+  const [noMore, setNoMore] = useState<boolean>(false);
 
   // TODO 이렇게 타입을 일일이 써줘야 하나..
   /**
@@ -193,14 +194,16 @@ const Main = () => {
 
   // 무한 스크롤 구현하기
   useEffect(() => {
-    if (inView && !inViewFirst) {
-      // inView가 true 일때만 실행한다.
-      setInViewFirst(true);
-    }
+    if (!noMore) {
+      if (inView && !inViewFirst) {
+        // inView가 true 일때만 실행한다.
+        setInViewFirst(true);
+      }
 
-    if (inView && inViewFirst) {
-      // inView가 true 일때만 실행한다.
-      setNextRank((prev) => prev + size);
+      if (inView && inViewFirst) {
+        // inView가 true 일때만 실행한다.
+        setNextRank((prev) => prev + size);
+      }
     }
   }, [inView]);
 
@@ -211,6 +214,10 @@ const Main = () => {
       getRankList(size, nextRank, isLangId);
     }
   }, [nextRank, curRank]);
+
+  useEffect(() => {
+    setNoMore(false);
+  }, [curRank]);
 
   useEffect(() => {}, [gitRankList]);
 
@@ -267,19 +274,24 @@ const Main = () => {
               }
             }
 
-            // 새로 추가될 배열
-            let newArr = new Array();
-            data?.map((el: any) => {
-              newArr.push(el);
-            });
+            if (data?.length == 0) {
+              // 더이상 조회할 데이터 X
+              setNoMore(true);
+            } else {
+              // 새로 추가될 배열
+              let newArr = new Array();
+              data?.map((el: any) => {
+                newArr.push(el);
+              });
 
-            // 이전 배열
-            let oldArr = new Array();
-            gitRankList?.map((el) => {
-              oldArr.push(el);
-            });
+              // 이전 배열
+              let oldArr = new Array();
+              gitRankList?.map((el) => {
+                oldArr.push(el);
+              });
 
-            setGitRankList([...oldArr, ...newArr]);
+              setGitRankList([...oldArr, ...newArr]);
+            }
           }
         })();
 
@@ -341,19 +353,24 @@ const Main = () => {
               }
             }
 
-            // 새로 추가될 배열
-            let newArr = new Array();
-            data?.map((el: any) => {
-              newArr.push(el);
-            });
+            if (data?.length == 0) {
+              // 더이상 조회할 데이터 X
+              setNoMore(true);
+            } else {
+              // 새로 추가될 배열
+              let newArr = new Array();
+              data?.map((el: any) => {
+                newArr.push(el);
+              });
 
-            // 이전 배열
-            let oldArr = new Array();
-            bojRankList?.map((el) => {
-              oldArr.push(el);
-            });
+              // 이전 배열
+              let oldArr = new Array();
+              bojRankList?.map((el) => {
+                oldArr.push(el);
+              });
 
-            setBojRankList([...oldArr, ...newArr]);
+              setBojRankList([...oldArr, ...newArr]);
+            }
           }
         })();
 
