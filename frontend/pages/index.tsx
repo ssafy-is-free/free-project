@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
 import RankMenu from '@/components/common/RankMenu';
@@ -15,8 +15,17 @@ import FilterModal from '@/components/rank/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { SplashState, splashCheck } from '@/redux/splashSlice';
 import { RootState } from '@/redux';
-import { getBojRanking, getGithubRanking, getMyBojRanking, getMyGitRanking } from './api/rankAxios';
+import {
+  getBojRanking,
+  getBojRankingFilter,
+  getGithubRanking,
+  getGithubRankingFilter,
+  getMyBojRanking,
+  getMyGitRanking,
+} from './api/rankAxios';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
+import { Spinner } from '@/components/common/Spinner';
+import { useInView } from 'react-intersection-observer';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -37,7 +46,7 @@ const Wrapper = styled.div`
     padding: 5rem 2rem 2rem;
     width: 100%;
     /* height: 672px; */
-    height: 80vh;
+    height: 83vh;
     background-color: ${(props) => props.theme.bgWhite};
     border-radius: 50px 50px 0px 0px;
     display: flex;
@@ -59,12 +68,20 @@ const Wrapper = styled.div`
       margin-bottom: 32px;
     }
 
+    .all-rank-label {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
     .rank-list {
-      p {
+      /* p {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 16px;
-      }
+      } */
+
+      overflow-y: scroll;
 
       li {
         margin-bottom: 8px;
@@ -76,6 +93,7 @@ const Wrapper = styled.div`
 const Main = () => {
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+  const [login, setLogin] = useState<boolean>(false);
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
 
@@ -95,6 +113,27 @@ const Main = () => {
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
 
+  // 무한 스크롤 구현하기
+  const [ref, inView] = useInView();
+  const [inViewFirst, setInViewFirst] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [size, setSize] = useState<number>(2);
+  const [nextRank, setNextRank] = useState<number>(1);
+  const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
+
+  // TODO 이렇게 타입을 일일이 써줘야 하나..
+  /**
+   * 깃허브 랭크 리스트, 백준 랭크 리스트
+   */
+  const [gitRankList, setGitRankList] = useState<resultInformation | null>(null);
+  const [bojRankList, setBojRankList] = useState<resultInformation | null>(null);
+
+  /**
+   *  나의 깃허브 랭킹, 나의 백준 랭킹
+   */
+  const [myGitRank, setMyGitRank] = useState<resultMyInformation | null>(null);
+  const [myBojRank, setMyBojRank] = useState<resultMyInformation | null>(null);
+
   /**
    * splash check useEffect
    */
@@ -108,6 +147,11 @@ const Main = () => {
       setOpenBoj(true);
     }
 
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      setLogin(true);
+    }
+
     const timer = setTimeout(() => {
       // setSplash(true);
       dispatch(splashCheck());
@@ -119,64 +163,10 @@ const Main = () => {
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준
   const [curRank, setCurRank] = useState<number>(0);
   const onChangeCurRank = (el: number) => {
+    setNextRank(1);
     setCurRank(el);
     setOpenSelect(false);
   };
-
-  // TODO 이렇게 타입을 일일이 써줘야 하나..
-  /**
-   * 깃허브 랭크 리스트, 백준 랭크 리스트
-   */
-  const [gitRankList, setGitRankList] = useState<resultInformation>();
-  const [bojRankList, setBojRankList] = useState<resultInformation>();
-
-  /**
-   *  나의 깃허브 랭킹, 나의 백준 랭킹
-   */
-  const [myGitRank, setMyGitRank] = useState<resultMyInformation>();
-  const [myBojRank, setMyBojRank] = useState<resultMyInformation>();
-
-  /**
-   * 랭킹 api
-   */
-  useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (curRank == 0) {
-      // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
-      (async () => {
-        const data = await getGithubRanking(5, 1);
-        setGitRankList(data);
-      })();
-
-      // 나의 깃허브 랭킹 가져오기
-      if (accessToken) {
-        (async () => {
-          const data = await getMyGitRanking();
-
-          setMyGitRank(data.data.githubRankingCover);
-        })();
-      }
-    } else {
-      // 백준 랭크 가져오기
-      (async () => {
-        // const data = await getBojRanking();
-        // console.log(data);
-        // setBojRankList(data);
-      })();
-
-      // 나의 백준 랭킹 가져오기
-      if (accessToken) {
-        (async () => {
-          const data = await getMyBojRanking();
-
-          if (data.status == 'SUCCESS') {
-            setMyBojRank(data.data);
-          }
-        })();
-      }
-    }
-  }, [curRank]);
 
   // nouserItem 클릭시
   const onClickNoUser = () => {
@@ -201,6 +191,194 @@ const Main = () => {
     }
   };
 
+  // 무한 스크롤 구현하기
+  useEffect(() => {
+    if (inView && !inViewFirst) {
+      // inView가 true 일때만 실행한다.
+      setInViewFirst(true);
+    }
+
+    if (inView && inViewFirst) {
+      // inView가 true 일때만 실행한다.
+      setNextRank((prev) => prev + size);
+    }
+  }, [inView]);
+
+  useEffect(() => {
+    if (isLangId > 0) {
+      getRankList(size, nextRank);
+    } else {
+      getRankList(size, nextRank, isLangId);
+    }
+  }, [nextRank, curRank]);
+
+  useEffect(() => {}, [gitRankList]);
+
+  // 랭킹 정보 가져오기
+  const getRankList = (sizeParam: number, nextRankParam: number, languageIdParam?: number) => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      if (curRank == 0) {
+        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
+
+        (async () => {
+          let data;
+
+          if (nextRank == 1) {
+            // 1등
+            let data;
+            if (languageIdParam) {
+              // 필터 적용 O
+              setIsLangId(languageIdParam);
+              data = await getGithubRankingFilter(sizeParam, languageIdParam);
+            } else {
+              // 필터 적용 X
+              setIsLangId(0);
+              data = await getGithubRanking(sizeParam);
+            }
+
+            if (data.length > 0) {
+              setGitRankList([...data]);
+            } else {
+              setGitRankList(null);
+            }
+          } else {
+            // 그 이후
+            let data;
+            if (languageIdParam) {
+              // 필터 적용 O
+              if (gitRankList) {
+                setIsLangId(languageIdParam);
+
+                const userId = gitRankList[gitRankList?.length - 1]?.userId;
+                const score = gitRankList[gitRankList?.length - 1]?.score;
+
+                data = await getGithubRankingFilter(sizeParam, nextRankParam - 1, languageIdParam, userId, score);
+              }
+            } else {
+              // 필터 적용 X
+              if (gitRankList) {
+                setIsLangId(0);
+
+                const userId = gitRankList[gitRankList?.length - 1]?.userId;
+                const score = gitRankList[gitRankList?.length - 1]?.score;
+
+                data = await getGithubRanking(sizeParam, nextRankParam - 1, userId, score);
+              }
+            }
+
+            // 새로 추가될 배열
+            let newArr = new Array();
+            data?.map((el: any) => {
+              newArr.push(el);
+            });
+
+            // 이전 배열
+            let oldArr = new Array();
+            gitRankList?.map((el) => {
+              oldArr.push(el);
+            });
+
+            setGitRankList([...oldArr, ...newArr]);
+          }
+        })();
+
+        // 나의 깃허브 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            let data;
+            if (languageIdParam) {
+              // 필터 적용 O
+              data = await getMyGitRanking(languageIdParam);
+            } else {
+              // 필터 적용 X
+              data = await getMyGitRanking();
+            }
+
+            if (data.data?.githubRankingCover) setMyGitRank(data.data?.githubRankingCover);
+            else setMyGitRank(null);
+          })();
+        }
+      } else {
+        // 백준 랭크 가져오기
+        (async () => {
+          let data;
+
+          if (nextRank == 1) {
+            // 1등
+            let data;
+            if (languageIdParam) {
+              // 필터 적용 O
+              data = await getBojRankingFilter(sizeParam, languageIdParam);
+            } else {
+              // 필터 적용 X
+              data = await getBojRanking(sizeParam);
+            }
+
+            if (data.length > 0) {
+              setBojRankList([...data]);
+            } else {
+              setBojRankList(null);
+            }
+          } else {
+            // 그 이후
+            let data;
+            if (languageIdParam) {
+              // 필터 적용 O
+              if (bojRankList) {
+                const userId = bojRankList[bojRankList?.length - 1]?.userId;
+                const score = bojRankList[bojRankList?.length - 1]?.score;
+
+                data = await getBojRankingFilter(sizeParam, nextRankParam - 1, languageIdParam, userId, score);
+              }
+            } else {
+              // 필터 적용 X
+              if (bojRankList) {
+                const userId = bojRankList[bojRankList?.length - 1]?.userId;
+                const score = bojRankList[bojRankList?.length - 1]?.score;
+
+                data = await getBojRanking(sizeParam, nextRankParam - 1, userId, score);
+              }
+            }
+
+            // 새로 추가될 배열
+            let newArr = new Array();
+            data?.map((el: any) => {
+              newArr.push(el);
+            });
+
+            // 이전 배열
+            let oldArr = new Array();
+            bojRankList?.map((el) => {
+              oldArr.push(el);
+            });
+
+            setBojRankList([...oldArr, ...newArr]);
+          }
+        })();
+
+        // 나의 백준 랭킹 가져오기
+        if (accessToken) {
+          (async () => {
+            let data;
+            if (languageIdParam) {
+              data = await getMyBojRanking(languageIdParam);
+            } else {
+              data = await getMyBojRanking();
+            }
+
+            if (data?.data) setMyBojRank(data?.data);
+            else {
+              setMyBojRank(null);
+            }
+          })();
+        }
+      }
+    } finally {
+      // console.log('finally');
+    }
+  };
+
   if (!splash && !splashState) {
     // if (splashStorage) {
     return <Splash />;
@@ -214,29 +392,72 @@ const Main = () => {
             <div className="filter-box">
               <FilterIcon onClick={() => setOpenFilter(true)} />
             </div>
-            <div className="my-rank">
-              <p>나의 랭킹</p>
-              {myGitRank && curRank == 0 ? (
-                <MainUserItem curRank={curRank} item={myGitRank} />
-              ) : myBojRank && curRank == 1 ? (
-                <MainUserItem curRank={curRank} item={myBojRank} />
-              ) : (
+            {myGitRank ? (
+              <div className="my-rank">
+                <p>나의 랭킹</p>
+                {myGitRank && curRank == 0 ? (
+                  <MainUserItem curRank={curRank} item={myGitRank} />
+                ) : myBojRank && curRank == 1 ? (
+                  <MainUserItem curRank={curRank} item={myBojRank} />
+                ) : null}
+              </div>
+            ) : !login ? (
+              <div className="my-rank">
+                <p>나의 랭킹</p>
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
-              )}
-            </div>
+              </div>
+            ) : null}
+            <p className="all-rank-label">전체 랭킹</p>
             <ul className="rank-list">
-              <p>전체 랭킹</p>
               {curRank == 0
-                ? gitRankList?.map((el, idx) => (
+                ? gitRankList &&
+                  gitRankList?.map((el, idx) => (
                     <li key={idx}>
                       <MainOtherItem curRank={curRank} item={el} />
                     </li>
                   ))
-                : bojRankList?.map((el, idx) => (
+                : bojRankList &&
+                  bojRankList?.map((el, idx) => {
+                    return (
+                      <li key={idx}>
+                        <MainOtherItem curRank={curRank} item={el} />
+                      </li>
+                    );
+                  })}
+              {curRank == 0
+                ? gitRankList &&
+                  gitRankList?.map((el, idx) => (
                     <li key={idx}>
                       <MainOtherItem curRank={curRank} item={el} />
                     </li>
-                  ))}
+                  ))
+                : bojRankList &&
+                  bojRankList?.map((el, idx) => {
+                    return (
+                      <li key={idx}>
+                        <MainOtherItem curRank={curRank} item={el} />
+                      </li>
+                    );
+                  })}
+              {curRank == 0
+                ? gitRankList &&
+                  gitRankList?.map((el, idx) => (
+                    <li key={idx}>
+                      <MainOtherItem curRank={curRank} item={el} />
+                    </li>
+                  ))
+                : bojRankList &&
+                  bojRankList?.map((el, idx) => {
+                    return (
+                      <li key={idx}>
+                        <MainOtherItem curRank={curRank} item={el} />
+                      </li>
+                    );
+                  })}
+              {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
+              {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
+              {loading && <Spinner />}
+              <div ref={ref}></div>
             </ul>
           </div>
         </Wrapper>
@@ -247,10 +468,10 @@ const Main = () => {
           <FilterModal
             onClick={() => setOpenFilter(false)}
             curRank={curRank}
-            setGitRankList={setGitRankList}
-            setBojRankList={setBojRankList}
-            setMyGitRank={setMyGitRank}
-            setMyBojRank={setMyBojRank}
+            size={size}
+            nextRank={nextRank}
+            getRankList={getRankList}
+            setIsLangId={setIsLangId}
           />
         )}
       </>

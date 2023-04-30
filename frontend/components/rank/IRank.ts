@@ -38,12 +38,24 @@ export interface IFilterModalProps {
   curRank: number;
 
   /**
-   * 자식에서 부모컴포넌트로 data 받기()
+   * size
    */
-  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
-  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
-  setMyGitRank: React.Dispatch<React.SetStateAction<resultMyInformation>>;
-  setMyBojRank: React.Dispatch<React.SetStateAction<resultMyInformation>>;
+  size: number;
+
+  /**
+   * nextRank
+   */
+  nextRank: number;
+
+  /**
+   * api 메소드
+   */
+  getRankList: Function;
+
+  /**
+   * isLangId useState set 메소드
+   */
+  setIsLangId: React.Dispatch<React.SetStateAction<number>>;
 }
 
 /**
@@ -105,7 +117,7 @@ export interface INoAccountProps {
    *
    * 클릭시 발생시킬 이벤트
    */
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 /**
@@ -120,6 +132,6 @@ export interface IRankSearchBarProps {
   /**
    * 자식에서 부모컴포넌트로 data 받기()
    */
-  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
-  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation>>;
+  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
+  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
 }

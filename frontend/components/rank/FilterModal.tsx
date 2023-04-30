@@ -130,14 +130,14 @@ const FilterModal = (props: IFilterModalProps) => {
   // 옵션
   const [languages, setLanguages] = useState<
     {
-      landguageId: number;
+      languageId: number;
       name: string;
     }[]
   >([]);
   // const [groups, setGroups] = useState<string[]>([]);
   const [optionTypes, setOptionTypes] = useState<
     {
-      landguageId: number;
+      languageId: number;
       name: string;
     }[][]
   >([]);
@@ -166,12 +166,6 @@ const FilterModal = (props: IFilterModalProps) => {
     { id: 1, state: false },
     { id: 2, state: false },
   ]);
-
-  // option 카운트 변수
-  // const [selected, setSelected] = useState<({ id: number; itemArr: number[] | undefined } | undefined)[]>([
-  //   { id: 1, itemArr: [] },
-  //   { id: 2, itemArr: [] },
-  // ]);
 
   // 클릭한 element 접근
   const itemRefs = useRef<any>([]);
@@ -233,45 +227,8 @@ const FilterModal = (props: IFilterModalProps) => {
   }, [selected]);
 
   // option 클릭 시
-  const onClickOption = (itemIdx: number, parentIdx: number) => {
-    setSelected([parentIdx, itemIdx]);
-
-    // const newArr = selected.map((item, idx) => {
-    //   if (parentIdx == idx) {
-    //     if (!selected.at(idx)?.itemArr?.includes(itemIdx)) {
-    //       // 존재하지 않는 경우 => 배열에 추가,  style 교체
-    //       style.backgroundColor = '#4A58A9';
-    //       style.color = '#ffffff';
-
-    //       let newItemArr = selected.at(idx)?.itemArr;
-
-    //       if (newItemArr != undefined) {
-    //         return {
-    //           id: idx + 1,
-    //           itemArr: [...newItemArr, itemIdx],
-    //         };
-    //       }
-    //     } else {
-    //       // 존재하는 경우 => 배열에서 제거, style 교체
-    //       style.backgroundColor = '#ffffff';
-    //       style.color = '#4A58A9';
-
-    //       let newItemArr = selected.at(idx)?.itemArr?.filter((el) => el != itemIdx);
-
-    //       return {
-    //         id: idx + 1,
-    //         itemArr: newItemArr,
-    //       };
-    //     }
-    //   } else {
-    //     return {
-    //       id: idx + 1,
-    //       itemArr: selected.at(idx)?.itemArr,
-    //     };
-    //   }
-    // });
-
-    // setSelected(newArr);
+  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number) => {
+    setSelected([parentIdx, itemIdx, languageId]);
   };
 
   // TODO : 더 좋은 방법이 없을까..?
@@ -285,101 +242,17 @@ const FilterModal = (props: IFilterModalProps) => {
         child.style.color = '#4A58A9';
       });
     });
-
-    // let newArr = new Array();
-    // selected.map((el, parentIdx) => {
-    //   // style 초기화
-    //   itemRefs.current[parentIdx].childNodes.forEach((el: any) => {
-    //     el.style.backgroundColor = '#ffffff';
-    //     el.style.color = '#4A58A9';
-    //   });
-    //   el?.itemArr?.splice(0);
-    //   newArr.push(el);
-    // });
-    // setSelected(newArr);
   };
 
   const onClickFilter = () => {
-    const accessToken = localStorage.getItem('accessToken');
-
     if (selected && selected?.length > 0) {
       // 필터를 선택했을 때
-      if (props.curRank == 0) {
-        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
-        (async () => {
-          if (selected) {
-            const data = await getGithubRanking(5, 1, selected[1] + 1);
-
-            props.setGitRankList(data);
-          }
-        })();
-
-        // 나의 깃허브 랭킹 가져오기
-        if (accessToken) {
-          (async () => {
-            if (selected) {
-              const data = await getMyGitRanking(selected[1] + 1);
-              props.setMyGitRank(data.data.githubRankingCover);
-            }
-          })();
-        }
-      } else {
-        // 백준 랭크 가져오기
-        (async () => {
-          // const data = await getBojRanking();
-          // console.log(data);
-          // props.setBojRankList(data);
-        })();
-
-        // 나의 백준 랭킹 가져오기
-        if (accessToken) {
-          (async () => {
-            const data = await getMyBojRanking();
-
-            if (data.status == 'SUCCESS') {
-              props.setMyBojRank(data.data);
-            }
-          })();
-        }
+      if (selected) {
+        props.getRankList(props.size, 1, selected[2]);
       }
     } else {
       // 필터를 선택하지 않았을 때
-      if (props.curRank == 0) {
-        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
-        (async () => {
-          const data = await getGithubRanking(5, 1);
-
-          props.setGitRankList(data);
-        })();
-
-        // 나의 깃허브 랭킹 가져오기
-        if (accessToken) {
-          (async () => {
-            if (selected) {
-              const data = await getMyGitRanking();
-              props.setMyGitRank(data.data.githubRankingCover);
-            }
-          })();
-        }
-      } else {
-        // 백준 랭크 가져오기
-        (async () => {
-          // const data = await getBojRanking();
-          // console.log(data);
-          // props.setBojRankList(data);
-        })();
-
-        // 나의 백준 랭킹 가져오기
-        if (accessToken) {
-          (async () => {
-            const data = await getMyBojRanking();
-
-            if (data.status == 'SUCCESS') {
-              props.setMyBojRank(data.data);
-            }
-          })();
-        }
-      }
+      props.getRankList(props.size, 1);
     }
 
     // 모달창 닫기
@@ -396,18 +269,17 @@ const FilterModal = (props: IFilterModalProps) => {
           return (
             <div className="filter-box" key={idx}>
               <div className="box-top" ref={(el) => (arrowRefs.current[idx] = el)}>
-                <div className="label">
-                  {optionNames[idx]}
-                  {/* {selected[idx]?.itemArr?.length ? (
-                    <div className="selected-label">{selected[idx]?.itemArr?.length}개 선택</div>
-                  ) : null} */}
-                </div>
+                <div className="label">{optionNames[idx]}</div>
                 <StyledFilterArrowIcon className="arrow" onClick={() => onHandleOptionBox(idx + 1)} />
               </div>
               <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
                 {el.map((item, itemIdx) => {
                   return (
-                    <div className="option-item" key={itemIdx} onClick={() => onClickOption(itemIdx, idx)}>
+                    <div
+                      className="option-item"
+                      key={itemIdx}
+                      onClick={() => onClickOption(itemIdx, idx, item.languageId)}
+                    >
                       {item.name}
                     </div>
                   );
