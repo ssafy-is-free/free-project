@@ -98,7 +98,11 @@ public class GithubRankingService {
 		GithubRankingOneResponse githubRankingResponse = GithubRankingOneResponse.create(githubRankingCover);
 
 		// githubList 사이즈 --> 랭킹
-		githubRankingResponse.setRank(rank);
+		if (githubIdSet != null) {
+			githubRankingResponse.setRank(rank);
+		} else {
+			githubRankingResponse.setRankAndRankUpDown(rank);
+		}
 
 		return githubRankingResponse;
 	}
