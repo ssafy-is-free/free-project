@@ -31,7 +31,7 @@ public class GithubRankingService {
 	private final GithubLanguageRepository githubLanguageRepository;
 	private final GithubRepository githubRepository;
 
-	public GithubRankingResponse getGithubRank(long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
+	public GithubRankingResponse getGithubRank(Long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
 		Pageable pageable) {
 		//필터링된 githubId List
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdBy(rankingFilter);
@@ -47,12 +47,14 @@ public class GithubRankingService {
 		return githubRankingResponse;
 	}
 
-	private void setRankInfo(long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
+	private void setRankInfo(Long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
+
+		long prevRank = rank != null ? rank+1 : 1;
 		//필터 검색이 아닐때만 랭킹폭 세팅
 		if (withFilter) {
-			githubRankingResponse.updateRank(rank);
+			githubRankingResponse.updateRank(prevRank);
 		} else {
-			githubRankingResponse.updateRankAnRankUpDown(rank);
+			githubRankingResponse.updateRankAnRankUpDown(prevRank);
 		}
 	}
 
@@ -94,7 +96,11 @@ public class GithubRankingService {
 		GithubRankingOneResponse githubRankingResponse = GithubRankingOneResponse.create(githubRankingCover);
 
 		// githubList 사이즈 --> 랭킹
-		githubRankingResponse.setRank(rank);
+		if (githubIdSet != null) {
+			githubRankingResponse.setRank(rank);
+		} else {
+			githubRankingResponse.setRankAndRankUpDown(rank);
+		}
 
 		return githubRankingResponse;
 	}
