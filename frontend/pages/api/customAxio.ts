@@ -62,7 +62,7 @@ authApi.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // console.log('error', error);
+    console.log('error', error);
 
     // // return error;
     const { config, response } = error;
@@ -81,19 +81,20 @@ authApi.interceptors.response.use(
         })
         .then((res) => {
           console.log('res', res);
-
-          // if (res.status === 200) {
-          //   const newAccessToken = res.headers.authorization;
-          //   originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-          //   localStorage.setItem('accessToken', newAccessToken);
-          //   return axios(originalRequest);
-          // }
+          if (res.status === 200) {
+            console.log('originalRequest', originalRequest);
+            const newAccessToken = res.headers.authorization;
+            // const newAccessToken = res.data.data.access - token;
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            localStorage.setItem('accessToken', newAccessToken);
+            return axios(originalRequest);
+          }
         })
         .catch((err) => {
-          // if (err.response.status === 401) {
-          //   localStorage.removeItem('accessToken');
-          //   window.location.href = '/';
-          // }
+          if (err.response.status === 401) {
+            localStorage.removeItem('accessToken');
+            window.location.href = '/';
+          }
         });
     }
 
