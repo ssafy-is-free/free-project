@@ -20,7 +20,7 @@ public class BojQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	// TODO: 2023-04-28 언어별, 그룹별 추가 필요
-	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Integer score,
+	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Integer score, Long languageId,
 		Long userId, Pageable pageable) {
 
 		QBaekjoon baekjoon = QBaekjoon.baekjoon;
@@ -30,7 +30,7 @@ public class BojQueryRepository {
 			.selectFrom(baekjoon)
 			.leftJoin(baekjoon.user, user).fetchJoin()
 			.where(cursorCondition(score, userId),
-				inBaekjoonId(baekjoonIdSet))
+				inBaekjoonId(baekjoonIdSet, languageId))
 			.orderBy(baekjoon.score.desc(),
 				baekjoon.user.id.asc())
 			.limit(pageable.getPageSize())
@@ -49,9 +49,9 @@ public class BojQueryRepository {
 		return baekjoon.score.lt(score).or(baekjoon.score.eq(score).and(baekjoon.user.id.gt(userId)));
 	}
 
-	private BooleanExpression inBaekjoonId(Set<Long> baekjoonIdSet) {
+	private BooleanExpression inBaekjoonId(Set<Long> baekjoonIdSet, Long languageId) {
 
-		if (baekjoonIdSet == null || baekjoonIdSet.isEmpty())
+		if (baekjoonIdSet == null || languageId == null)
 			return null;
 
 		return QBaekjoon.baekjoon.id.in(baekjoonIdSet);

@@ -171,7 +171,11 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			.map((b) -> b.getBaekjoon().getId())
 			.collect(Collectors.toSet());
 
-		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score,
+		//조회된 값이 없으면 빈 리스트 반환
+		if (baekjoonIdSet.isEmpty())
+			return Collections.EMPTY_LIST;
+
+		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score, languageId,
 			userId, pageable);
 
 		return BojRankResponse.createList(baekjoonList, rank, baekjoonIdSet);
