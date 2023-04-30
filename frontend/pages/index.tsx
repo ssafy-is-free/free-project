@@ -43,7 +43,7 @@ const Wrapper = styled.div`
     bottom: 0;
     /* margin-top: 32px; */
     /* padding: 72px 32px 32px; */
-    padding: 5rem 2rem 2rem;
+    padding: 3rem 2rem 2rem;
     width: 100%;
     /* height: 672px; */
     height: 83vh;
