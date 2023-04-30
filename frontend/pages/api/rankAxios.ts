@@ -27,7 +27,7 @@ export const getFilter = async (languageType: String) => {
  */
 export const getGithubRanking = async (
   sizeParam: number,
-  rankParam: number,
+  rankParam?: number,
   useIdParam?: number,
   scoreParam?: number
 ) => {
@@ -44,8 +44,6 @@ export const getGithubRanking = async (
     params: params,
   });
 
-  // console.log('필터 반영 X 깃허브 data ', data.data);
-
   return data.data.ranks;
 };
 
@@ -60,8 +58,8 @@ export const getGithubRanking = async (
  */
 export const getGithubRankingFilter = async (
   sizeParam: number,
-  rankParam: number,
   languageParam: number,
+  rankParam?: number,
   useIdParam?: number,
   scoreParam?: number
 ) => {
@@ -79,9 +77,7 @@ export const getGithubRankingFilter = async (
     params: params,
   });
 
-  // console.log('필터 반영 O 깃허브 data ', data);
   return data.data.ranks;
-  // return data;
 };
 
 /**
@@ -99,7 +95,6 @@ export const getMyGitRanking = async (languageParam?: number) => {
     params: params,
   });
 
-  console.log('내 깃허브 data ', data);
   return data;
 };
 
@@ -111,7 +106,12 @@ export const getMyGitRanking = async (languageParam?: number) => {
  * @param scoreParam
  * @returns
  */
-export const getBojRanking = async (sizeParam: number, rankParam: number, useIdParam?: number, scoreParam?: number) => {
+export const getBojRanking = async (
+  sizeParam: number,
+  rankParam?: number,
+  useIdParam?: number,
+  scoreParam?: number
+) => {
   const params = {
     size: sizeParam,
     rank: rankParam,
@@ -125,10 +125,7 @@ export const getBojRanking = async (sizeParam: number, rankParam: number, useIdP
     params: params,
   });
 
-  console.log('필터 반영 X 백준 data ', data);
-
-  // return data.data.ranks;
-  return data;
+  return data.data;
 };
 
 /**
@@ -142,8 +139,8 @@ export const getBojRanking = async (sizeParam: number, rankParam: number, useIdP
  */
 export const getBojRankingFilter = async (
   sizeParam: number,
-  rankParam: number,
   languageParam: number,
+  rankParam?: number,
   useIdParam?: number,
   scoreParam?: number
 ) => {
@@ -157,14 +154,11 @@ export const getBojRankingFilter = async (
 
   const { data } = await basicApi({
     method: 'get',
-    url: '/github/ranks',
+    url: '/boj/ranks',
     params: params,
   });
 
-  console.log('필터 반영 O 백준 data ', data);
-
-  // return data.data.ranks;
-  return data;
+  return data.data;
 };
 
 /**
@@ -181,8 +175,6 @@ export const getMyBojRanking = async (languageParam?: number) => {
     url: '/boj/my-rank',
     params: params,
   });
-
-  console.log('내 백준', data);
 
   return data;
 };
