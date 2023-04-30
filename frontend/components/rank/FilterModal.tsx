@@ -90,7 +90,8 @@ const Wrapper = styled.div`
         border: 1px solid ${(props) => props.theme.primary};
         border-radius: 50px;
         color: ${(props) => props.theme.primary};
-        font-size: 16px;
+        font-size: 0.8rem;
+        text-align: center;
         width: 92%;
         height: 40px;
         display: flex;
