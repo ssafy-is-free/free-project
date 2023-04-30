@@ -424,36 +424,6 @@ const Main = () => {
                       </li>
                     );
                   })}
-              {curRank == 0
-                ? gitRankList &&
-                  gitRankList?.map((el, idx) => (
-                    <li key={idx}>
-                      <MainOtherItem curRank={curRank} item={el} />
-                    </li>
-                  ))
-                : bojRankList &&
-                  bojRankList?.map((el, idx) => {
-                    return (
-                      <li key={idx}>
-                        <MainOtherItem curRank={curRank} item={el} />
-                      </li>
-                    );
-                  })}
-              {curRank == 0
-                ? gitRankList &&
-                  gitRankList?.map((el, idx) => (
-                    <li key={idx}>
-                      <MainOtherItem curRank={curRank} item={el} />
-                    </li>
-                  ))
-                : bojRankList &&
-                  bojRankList?.map((el, idx) => {
-                    return (
-                      <li key={idx}>
-                        <MainOtherItem curRank={curRank} item={el} />
-                      </li>
-                    );
-                  })}
               {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
               {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
               {loading && <Spinner />}
