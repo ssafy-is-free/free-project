@@ -4,6 +4,7 @@ export default function Career() {
   return (
     <div>
       <CareerCard></CareerCard>
+      <CareerCard></CareerCard>
     </div>
   );
 }
