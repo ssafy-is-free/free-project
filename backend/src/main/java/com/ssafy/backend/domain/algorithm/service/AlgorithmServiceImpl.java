@@ -85,9 +85,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		if (boj == null) {
 			return BojRankResponse.createEmpty();
 		}
-		String s1 = "asd";
-		s1.isBlank();
-		s1.isEmpty();
 
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
@@ -98,16 +95,27 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
+
+		int rank;
+		if(bojIdSet == null){
+			rank = bojRepository.getRank(boj.getScore(), userId);
+		}else{
+			rank = bojRepository.getRankWithFilter(bojIdSet.getBojIds(), boj.getScore(), userId);
+		}
+		rank += 1;
+
+
 		// 랭크 세기
-		int rank = 1;
+		/*int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
 				return BojRankResponse.createBojMyRankResponseDTO(baekjoon, user, rank);
 			} else {
 				rank++;
 			}
-		}
-		return BojRankResponse.createEmpty();
+		}*/
+
+		return BojRankResponse.createBojMyRankResponseDTO(boj, user, rank);
 
 	}
 
