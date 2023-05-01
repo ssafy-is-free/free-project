@@ -12,7 +12,7 @@ if [[ "$(sudo docker compose ps -q)" ]]; then
     sudo docker compose down
 fi
 
-sleep(1)
+sleep 1
 
 # 이미지 파일 삭제.
 echo "기존 이미지 파일을 삭제 합니다."
@@ -20,7 +20,7 @@ sudo docker images ${BE_IMAGE_NAME} -q | xargs -r docker rmi -f
 sudo docker images ${FE_IMAGE_NAME} -q | xargs -r docker rmi -f
 sudo docker images ${DATA_IMAGE_NAME} -q | xargs -r docker rmi -f
 
-sleep(1)
+sleep 1
 
 # 컨테이너 실행
 echo "컨테이너를 실행합니다."
