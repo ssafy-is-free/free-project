@@ -13,7 +13,6 @@ pipeline {
                     IMAGE_STORAGE_CREDENTIAL = "docker-hub"
                     SSH_CONNECTION = "${env.SSH_CONNECTION}"
                     SSH_CONNECTION_CREDENTIAL = "product-server-ssh-credential"
-                    SPRING_BUILD_PATH = "./backend/smile"
                     APPLICATION_YML_PATH = "/var/jenkins_home/workspace"
                     CONTAINER_NAME_FE = "product_FE"
                     CONTAINER_NAME_BE = "product_BE"
@@ -21,6 +20,7 @@ pipeline {
                     PROJECT_DIR_FE = "frontend/"
                     PROJECT_DIR_BE = "backend/"
                     PROJECT_DIR_DATA = "data/"
+                    PRODUCT_DOMAIN = "ubuntu@k8b1021.p.ssafy.io"
                 }
             }
         }
@@ -30,10 +30,7 @@ pipeline {
                 stage("docker compose yml"){
                     steps {
                         script {
-                            docker.withRegistry("${IMAGE_STORAGE}", "docker-hub") {
-                                image.push("${env.BUILD_NUMBER}")
-                                image.push("latest")
-                                image
+                                sh "scp docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                             }
                         }
                     }
@@ -41,10 +38,7 @@ pipeline {
                 stage("script"){
                     steps {
                         script {
-                            docker.withRegistry("${IMAGE_STORAGE}", "docker-hub") {
-                                image.push("${env.BUILD_NUMBER}")
-                                image.push("latest")
-                                image
+                                sh "pwd"
                             }
                         }
                     }
