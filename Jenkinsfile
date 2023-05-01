@@ -72,7 +72,9 @@ pipeline {
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_BE}"){
                     script{
-                        image = docker.build("${IMAGE_NAME_BE}")
+                        image = docker.build("${IMAGE_NAME_BE}"){
+                            args "--no-cache"
+                        }
                         //     sh "docker build -t ${IMAGE_NAME_BE} ." 
                     }
                 }
@@ -96,7 +98,9 @@ pipeline {
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_FE}"){
                     script {
-                        image = docker.build("${IMAGE_NAME_FE}")
+                        image = docker.build("${IMAGE_NAME_FE}"){
+                            args "--no-cache"
+                        }
                         // sh "docker build -t ${IMAGE_NAME_FE} ." 
                     }
                 }
@@ -117,7 +121,9 @@ pipeline {
             steps{
                 dir("${PROJECT_DIR_DATA}"){
                     script {
-                        image = docker.build("${IMAGE_NAME_DATA}")
+                        image = docker.build("${IMAGE_NAME_DATA}"){
+                            args "--no-cache"
+                        }
                         // sh "docker build -t ${IMAGE_NAME_DATA} ." 
                     }
                 }
