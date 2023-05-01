@@ -29,6 +29,10 @@ public class BojRankResponse {
 	private Long rankUpDown;
 	private String tierUrl;
 
+	public static BojRankResponse createEmpty() {
+		return BojRankResponse.builder().build();
+	}
+
 	public static BojRankResponse createBojMyRankResponseDTO(Baekjoon baekjoon, User user, int rank) {
 		return BojRankResponse.builder()
 			.userId(user.getId())
