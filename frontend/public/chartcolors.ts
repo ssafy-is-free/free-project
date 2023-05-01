@@ -1,4 +1,10 @@
-export const chartColors = {
+interface IColor {
+  [key: string]: {
+    color: string;
+  };
+}
+
+export const chartColors: IColor = {
   '1C Enterprise': {
     color: '#814CCC',
   },
@@ -86,9 +92,6 @@ export const chartColors = {
   AsciiDoc: {
     color: '#73a0c5',
   },
-  ASL: {
-    color: null,
-  },
   'ASP.NET': {
     color: '#9400ff',
   },
@@ -133,9 +136,6 @@ export const chartColors = {
   },
   Beef: {
     color: '#a52f4e',
-  },
-  Befunge: {
-    color: null,
   },
   Berry: {
     color: '#15A13C',
@@ -194,9 +194,6 @@ export const chartColors = {
   'C++': {
     color: '#f34b7d',
   },
-  'C2hs Haskell': {
-    color: null,
-  },
   'Cabal Config': {
     color: '#483465',
   },
@@ -215,17 +212,11 @@ export const chartColors = {
   "Cap'n Proto": {
     color: '#c42727',
   },
-  CartoCSS: {
-    color: null,
-  },
   Ceylon: {
     color: '#dfa535',
   },
   Chapel: {
     color: '#8dc63f',
-  },
-  Charity: {
-    color: null,
   },
   ChucK: {
     color: '#3f8000',
@@ -266,9 +257,6 @@ export const chartColors = {
   CMake: {
     color: '#DA3434',
   },
-  COBOL: {
-    color: null,
-  },
   CodeQL: {
     color: '#140f46',
   },
@@ -292,9 +280,6 @@ export const chartColors = {
   },
   'Component Pascal': {
     color: '#B0CE4E',
-  },
-  Cool: {
-    color: null,
   },
   Coq: {
     color: '#d0b68c',
@@ -332,9 +317,6 @@ export const chartColors = {
   CWeb: {
     color: '#00007a',
   },
-  Cycript: {
-    color: null,
-  },
   Cypher: {
     color: '#34c0eb',
   },
@@ -365,9 +347,6 @@ export const chartColors = {
   Dhall: {
     color: '#dfafff',
   },
-  'DIGITAL Command Language': {
-    color: null,
-  },
   'DirectX 3D File': {
     color: '#aace60',
   },
@@ -382,9 +361,6 @@ export const chartColors = {
   },
   Dotenv: {
     color: '#e5d559',
-  },
-  DTrace: {
-    color: null,
   },
   Dylan: {
     color: '#6c616e',
@@ -476,9 +452,6 @@ export const chartColors = {
   'Filebench WML': {
     color: '#F6B900',
   },
-  Filterscript: {
-    color: null,
-  },
   fish: {
     color: '#4aae47',
   },
@@ -526,9 +499,6 @@ export const chartColors = {
   },
   'GCC Machine Description': {
     color: '#FFCFAB',
-  },
-  GDB: {
-    color: null,
   },
   GDScript: {
     color: '#355570',
@@ -695,9 +665,6 @@ export const chartColors = {
   Hy: {
     color: '#7790B2',
   },
-  HyPhy: {
-    color: null,
-  },
   IDL: {
     color: '#a3522f',
   },
@@ -716,14 +683,8 @@ export const chartColors = {
   Imba: {
     color: '#16cec6',
   },
-  'Inform 7': {
-    color: null,
-  },
   INI: {
     color: '#d1dbe0',
-  },
-  Ink: {
-    color: null,
   },
   'Inno Setup': {
     color: '#264b99',
@@ -860,9 +821,6 @@ export const chartColors = {
   Latte: {
     color: '#f2a542',
   },
-  Lean: {
-    color: null,
-  },
   Less: {
     color: '#1d365d',
   },
@@ -877,9 +835,6 @@ export const chartColors = {
   },
   LilyPond: {
     color: '#9ccc7c',
-  },
-  Limbo: {
-    color: null,
   },
   Liquid: {
     color: '#67b8de',
@@ -899,9 +854,6 @@ export const chartColors = {
   LLVM: {
     color: '#185619',
   },
-  Logos: {
-    color: null,
-  },
   Logtalk: {
     color: '#295b9a',
   },
@@ -911,23 +863,11 @@ export const chartColors = {
   LookML: {
     color: '#652B81',
   },
-  LoomScript: {
-    color: null,
-  },
   LSL: {
     color: '#3d9970',
   },
   Lua: {
     color: '#000080',
-  },
-  M: {
-    color: null,
-  },
-  M4: {
-    color: null,
-  },
-  M4Sugar: {
-    color: null,
   },
   Macaulay2: {
     color: '#d8ffff',
@@ -974,9 +914,6 @@ export const chartColors = {
   Metal: {
     color: '#8f14e9',
   },
-  MiniD: {
-    color: null,
-  },
   MiniYAML: {
     color: '#ff1111',
   },
@@ -1001,17 +938,8 @@ export const chartColors = {
   'Modula-3': {
     color: '#223388',
   },
-  'Module Management System': {
-    color: null,
-  },
-  Monkey: {
-    color: null,
-  },
   'Monkey C': {
     color: '#8D6747',
-  },
-  Moocode: {
-    color: null,
   },
   MoonScript: {
     color: '#ff4585',
@@ -1034,26 +962,17 @@ export const chartColors = {
   MTML: {
     color: '#b7e1f4',
   },
-  MUF: {
-    color: null,
-  },
   mupad: {
     color: '#244963',
   },
   Mustache: {
     color: '#724b3b',
   },
-  Myghty: {
-    color: null,
-  },
   nanorc: {
     color: '#2d004d',
   },
   Nasal: {
     color: '#1d2c4e',
-  },
-  NASL: {
-    color: null,
   },
   NCL: {
     color: '#28431f',
@@ -1096,9 +1015,6 @@ export const chartColors = {
   },
   'NPM Config': {
     color: '#cb3837',
-  },
-  NSIS: {
-    color: null,
   },
   Nu: {
     color: '#c9df40',
@@ -1148,9 +1064,6 @@ export const chartColors = {
   ooc: {
     color: '#b0b77e',
   },
-  Opa: {
-    color: null,
-  },
   Opal: {
     color: '#f7ede0',
   },
@@ -1172,9 +1085,6 @@ export const chartColors = {
   OpenQASM: {
     color: '#AA70FF',
   },
-  'OpenRC runscript': {
-    color: null,
-  },
   OpenSCAD: {
     color: '#e5cd45',
   },
@@ -1183,9 +1093,6 @@ export const chartColors = {
   },
   Org: {
     color: '#77aa99',
-  },
-  Ox: {
-    color: null,
   },
   Oxygene: {
     color: '#cdd0e3',
@@ -1204,12 +1111,6 @@ export const chartColors = {
   },
   Parrot: {
     color: '#f3ca0a',
-  },
-  'Parrot Assembly': {
-    color: null,
-  },
-  'Parrot Internal Representation': {
-    color: null,
   },
   Pascal: {
     color: '#E3F171',
@@ -1255,9 +1156,6 @@ export const chartColors = {
   },
   Polar: {
     color: '#ae81ff',
-  },
-  Pony: {
-    color: null,
   },
   Portugol: {
     color: '#f8bd00',
@@ -1325,9 +1223,6 @@ export const chartColors = {
   'Q#': {
     color: '#fed659',
   },
-  QMake: {
-    color: null,
-  },
   QML: {
     color: '#44a51c',
   },
@@ -1358,9 +1253,6 @@ export const chartColors = {
   RDoc: {
     color: '#701516',
   },
-  REALbasic: {
-    color: null,
-  },
   Reason: {
     color: '#ff5847',
   },
@@ -1376,17 +1268,11 @@ export const chartColors = {
   Red: {
     color: '#f50000',
   },
-  Redcode: {
-    color: null,
-  },
   'Regular Expression': {
     color: '#009a00',
   },
   "Ren'Py": {
     color: '#ff7f7f',
-  },
-  RenderScript: {
-    color: null,
   },
   ReScript: {
     color: '#ed5051',
@@ -1421,9 +1307,6 @@ export const chartColors = {
   'RouterOS Script': {
     color: '#DE3941',
   },
-  RPC: {
-    color: null,
-  },
   RPGLE: {
     color: '#2BDE21',
   },
@@ -1435,9 +1318,6 @@ export const chartColors = {
   },
   Rust: {
     color: '#dea584',
-  },
-  Sage: {
-    color: null,
   },
   SaltStack: {
     color: '#646464',
@@ -1481,14 +1361,8 @@ export const chartColors = {
   'ShellCheck Config': {
     color: '#cecfcb',
   },
-  ShellSession: {
-    color: null,
-  },
   Shen: {
     color: '#120F14',
-  },
-  Sieve: {
-    color: null,
   },
   'Simple File Verification': {
     color: '#C9BFED',
@@ -1505,9 +1379,6 @@ export const chartColors = {
   Slim: {
     color: '#2b2b2b',
   },
-  Smali: {
-    color: null,
-  },
   Smalltalk: {
     color: '#596706',
   },
@@ -1519,9 +1390,6 @@ export const chartColors = {
   },
   SmPL: {
     color: '#c94949',
-  },
-  SMT: {
-    color: null,
   },
   Snakemake: {
     color: '#419179',
@@ -1592,9 +1460,6 @@ export const chartColors = {
   Swift: {
     color: '#F05138',
   },
-  SWIG: {
-    color: null,
-  },
   SystemVerilog: {
     color: '#DAE1C2',
   },
@@ -1603,9 +1468,6 @@ export const chartColors = {
   },
   Tcl: {
     color: '#e4cc98',
-  },
-  Tcsh: {
-    color: null,
   },
   Terra: {
     color: '#00004c',
@@ -1657,9 +1519,6 @@ export const chartColors = {
   },
   'Unity3D Asset': {
     color: '#222c37',
-  },
-  'Unix Assembly': {
-    color: null,
   },
   Uno: {
     color: '#9933cc',
@@ -1730,9 +1589,6 @@ export const chartColors = {
   WebAssembly: {
     color: '#04133b',
   },
-  WebIDL: {
-    color: null,
-  },
   Whiley: {
     color: '#d5c397',
   },
@@ -1778,14 +1634,8 @@ export const chartColors = {
   Xonsh: {
     color: '#285EEF',
   },
-  XProc: {
-    color: null,
-  },
   XQuery: {
     color: '#5232e7',
-  },
-  XS: {
-    color: null,
   },
   XSLT: {
     color: '#EB8CEB',
@@ -1810,9 +1660,6 @@ export const chartColors = {
   },
   ZAP: {
     color: '#0d665e',
-  },
-  Zeek: {
-    color: null,
   },
   ZenScript: {
     color: '#00BCD1',
