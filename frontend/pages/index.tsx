@@ -119,6 +119,7 @@ const Main = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [size, setSize] = useState<number>(5);
   const [nextRank, setNextRank] = useState<number>(1);
+  const [tempRank, setTempRank] = useState<number>(1);
   const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
   const [noMore, setNoMore] = useState<boolean>(false);
 
@@ -192,6 +193,7 @@ const Main = () => {
     }
   };
 
+  // TODO : 유저가 한 명일 떄 대응하는 걸 해야함
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore) {
@@ -202,18 +204,19 @@ const Main = () => {
 
       if (inView && inViewFirst) {
         // inView가 true 일때만 실행한다.
-        setNextRank((prev) => prev + size);
+        setTempRank(nextRank);
       }
     }
   }, [inView]);
 
   useEffect(() => {
     if (isLangId > 0) {
-      getRankList(size, nextRank);
-    } else {
       getRankList(size, nextRank, isLangId);
+    } else {
+      getRankList(size, nextRank);
     }
-  }, [nextRank, curRank]);
+    setIsLangId(0);
+  }, [tempRank, curRank]);
 
   useEffect(() => {
     setNoMore(false);
@@ -224,6 +227,7 @@ const Main = () => {
   // 랭킹 정보 가져오기
   const getRankList = (sizeParam: number, nextRankParam: number, languageIdParam?: number) => {
     const accessToken = localStorage.getItem('accessToken');
+
     try {
       if (curRank == 0) {
         // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
@@ -231,7 +235,7 @@ const Main = () => {
         (async () => {
           let data;
 
-          if (nextRank == 1) {
+          if (nextRank == 1 || nextRankParam == 1) {
             // 1등
             let data;
             if (languageIdParam) {
@@ -246,6 +250,7 @@ const Main = () => {
 
             if (data.length > 0) {
               setGitRankList([...data]);
+              setNextRank(data[data?.length - 1]?.rank);
             } else {
               setGitRankList(null);
             }
@@ -260,7 +265,7 @@ const Main = () => {
                 const userId = gitRankList[gitRankList?.length - 1]?.userId;
                 const score = gitRankList[gitRankList?.length - 1]?.score;
 
-                data = await getGithubRankingFilter(sizeParam, nextRankParam - 1, languageIdParam, userId, score);
+                data = await getGithubRankingFilter(sizeParam, languageIdParam, nextRankParam, userId, score);
               }
             } else {
               // 필터 적용 X
@@ -270,7 +275,7 @@ const Main = () => {
                 const userId = gitRankList[gitRankList?.length - 1]?.userId;
                 const score = gitRankList[gitRankList?.length - 1]?.score;
 
-                data = await getGithubRanking(sizeParam, nextRankParam - 1, userId, score);
+                data = await getGithubRanking(sizeParam, nextRankParam, userId, score);
               }
             }
 
@@ -290,6 +295,7 @@ const Main = () => {
                 oldArr.push(el);
               });
 
+              setNextRank(data[data?.length - 1]?.rank);
               setGitRankList([...oldArr, ...newArr]);
             }
           }
@@ -316,7 +322,7 @@ const Main = () => {
         (async () => {
           let data;
 
-          if (nextRank == 1) {
+          if (nextRank == 1 || nextRankParam == 1) {
             // 1등
             let data;
             if (languageIdParam) {
@@ -329,6 +335,7 @@ const Main = () => {
 
             if (data.length > 0) {
               setBojRankList([...data]);
+              setNextRank(data[data?.length - 1].rank);
             } else {
               setBojRankList(null);
             }
@@ -341,7 +348,7 @@ const Main = () => {
                 const userId = bojRankList[bojRankList?.length - 1]?.userId;
                 const score = bojRankList[bojRankList?.length - 1]?.score;
 
-                data = await getBojRankingFilter(sizeParam, nextRankParam - 1, languageIdParam, userId, score);
+                data = await getBojRankingFilter(sizeParam, languageIdParam, nextRankParam, userId, score);
               }
             } else {
               // 필터 적용 X
@@ -349,7 +356,7 @@ const Main = () => {
                 const userId = bojRankList[bojRankList?.length - 1]?.userId;
                 const score = bojRankList[bojRankList?.length - 1]?.score;
 
-                data = await getBojRanking(sizeParam, nextRankParam - 1, userId, score);
+                data = await getBojRanking(sizeParam, nextRankParam, userId, score);
               }
             }
 
@@ -369,6 +376,7 @@ const Main = () => {
                 oldArr.push(el);
               });
 
+              setNextRank(data[data?.length - 1].rank);
               setBojRankList([...oldArr, ...newArr]);
             }
           }
@@ -441,6 +449,7 @@ const Main = () => {
                       </li>
                     );
                   })}
+
               {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
               {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
               {loading && <Spinner />}

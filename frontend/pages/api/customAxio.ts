@@ -83,8 +83,8 @@ authApi.interceptors.response.use(
           console.log('res', res);
           if (res.status === 200) {
             console.log('originalRequest', originalRequest);
-            const newAccessToken = res.headers.authorization;
-            // const newAccessToken = res.data.data.access - token;
+            // const newAccessToken = res.headers.authorization;
+            const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             return axios(originalRequest);
