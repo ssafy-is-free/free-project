@@ -180,7 +180,13 @@ const BojModal = (props: IBojProps) => {
         ) : null}
         <BigBtn text={'등록하기'} onClick={onClickBojId} />
         <div className="btn-wrapper">
-          <button className="passBtn" onClick={() => router.push('/')}>
+          <button
+            className="passBtn"
+            onClick={() => {
+              props.onClick;
+              router.push('/');
+            }}
+          >
             건너뛰기
           </button>
         </div>

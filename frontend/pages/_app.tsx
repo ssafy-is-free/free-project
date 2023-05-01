@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app';
-import wrapper from '@/redux';
+import wrapper, { persistor } from '@/redux';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
@@ -8,6 +8,7 @@ import Footer from '@/components/common/Footer';
 import Head from 'next/head';
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
+import { PersistGate } from 'redux-persist/integration/react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
@@ -21,14 +22,16 @@ function App({ Component, ...rest }: AppProps) {
 
   return (
     <Provider store={store}>
-      <GlobalStyle />
-      <ThemeProvider theme={lightTheme}>
-        <Head>
-          <title>CHPO</title>
-        </Head>
-        <Component {...props.pageProps} />
-        <Footer />
-      </ThemeProvider>
+      <PersistGate persistor={persistor} loading={null}>
+        <GlobalStyle />
+        <ThemeProvider theme={lightTheme}>
+          <Head>
+            <title>CHPO</title>
+          </Head>
+          <Component {...props.pageProps} />
+          <Footer />
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   );
 }

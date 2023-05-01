@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Home from 'public/Icon/HomeIcon.svg';
 import Career from 'public/Icon/CareerIcon.svg';
 import Profile from 'public/Icon/ProfileIcon.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const FooterDiv = styled.div`
   width: 100%;
@@ -55,6 +57,9 @@ const ProfileIcon = styled(Profile)`
  */
 function Footer() {
   const router = useRouter();
+  // login 상태값 가져오기
+  const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+
   const footerItems = [
     {
       icon: HomeIcon,
@@ -64,7 +69,8 @@ function Footer() {
     {
       icon: CareerIcon,
       name: '취업관리',
-      path: '/career',
+      // path: '/career',
+      path: '/temp',
     },
     {
       icon: ProfileIcon,
@@ -73,12 +79,26 @@ function Footer() {
     },
   ];
 
+  const goPage = (item: any) => {
+    console.log('item', item);
+    if (isLogin) {
+      router.push(item.path);
+    } else {
+      if (item.path == '/profile') {
+        alert('로그인 후 이용 가능합니다.');
+      } else {
+        router.push(item.path);
+      }
+    }
+  };
+
   return (
     <FooterDiv>
       {footerItems.map((item, idx) => (
         <IconDiv
           onClick={() => {
-            router.push(item.path);
+            // router.push(item.path);
+            goPage(item);
           }}
           key={idx}
         >

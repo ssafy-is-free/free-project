@@ -269,9 +269,13 @@ const FilterModal = (props: IFilterModalProps) => {
         {optionTypes.map((el, idx) => {
           return (
             <div className="filter-box" key={idx}>
-              <div className="box-top" ref={(el) => (arrowRefs.current[idx] = el)}>
+              <div
+                className="box-top"
+                ref={(el) => (arrowRefs.current[idx] = el)}
+                onClick={() => onHandleOptionBox(idx + 1)}
+              >
                 <div className="label">{optionNames[idx]}</div>
-                <StyledFilterArrowIcon className="arrow" onClick={() => onHandleOptionBox(idx + 1)} />
+                <StyledFilterArrowIcon className="arrow" />
               </div>
               <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
                 {el.map((item, itemIdx) => {

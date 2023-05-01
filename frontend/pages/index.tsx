@@ -26,6 +26,7 @@ import {
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
+import { login, setNew } from '@/redux/authSlice';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -93,16 +94,12 @@ const Wrapper = styled.div`
 const Main = () => {
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
-  const [login, setLogin] = useState<boolean>(false);
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
   const dispatch = useDispatch();
-  // splash screen 적용하기
-  // const [splash, setSplash] = useState<boolean>(false);
-  const [splash, setSplash] = useState<boolean>(false);
 
   // 랭크 menu select 모달 열기
   const [openSelect, setOpenSelect] = useState<boolean>(false);
@@ -140,24 +137,12 @@ const Main = () => {
    * splash check useEffect
    */
   useEffect(() => {
-    const splashStorage = localStorage.getItem('splash');
-    if (splashStorage) {
-      setSplash(true);
-    }
-
     if (isNew) {
       setOpenBoj(true);
     }
 
-    const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      setLogin(true);
-    }
-
     const timer = setTimeout(() => {
-      // setSplash(true);
       dispatch(splashCheck());
-      localStorage.setItem('splash', 'true');
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
@@ -172,8 +157,6 @@ const Main = () => {
 
   // nouserItem 클릭시
   const onClickNoUser = () => {
-    const accessToken = localStorage.getItem('accessToken');
-
     if (curRank == 0) {
       // 깃허브 페이지 일 때
       // 로그인 모달 띄우기
@@ -181,7 +164,7 @@ const Main = () => {
     } else if (curRank == 1) {
       // 백준 페이지 일 때
 
-      if (accessToken) {
+      if (isLogin) {
         // 이미 로그인한 상태면
         // 백준 모달 띄우기
         setOpenBoj(true);
@@ -226,8 +209,6 @@ const Main = () => {
 
   // 랭킹 정보 가져오기
   const getRankList = (sizeParam: number, nextRankParam: number, languageIdParam?: number) => {
-    const accessToken = localStorage.getItem('accessToken');
-
     try {
       if (curRank == 0) {
         // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
@@ -302,7 +283,7 @@ const Main = () => {
         })();
 
         // 나의 깃허브 랭킹 가져오기
-        if (accessToken) {
+        if (isLogin) {
           (async () => {
             let data;
             if (languageIdParam) {
@@ -383,7 +364,7 @@ const Main = () => {
         })();
 
         // 나의 백준 랭킹 가져오기
-        if (accessToken) {
+        if (isLogin) {
           (async () => {
             let data;
             if (languageIdParam) {
@@ -406,8 +387,8 @@ const Main = () => {
     }
   };
 
-  if (!splash && !splashState) {
-    // if (splashStorage) {
+  // if (!splash && !splashState) {
+  if (!splashState) {
     return <Splash />;
   } else {
     return (
@@ -432,7 +413,7 @@ const Main = () => {
               </div>
             ) : null}
 
-            {!login ? (
+            {!isLogin ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
