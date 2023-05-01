@@ -119,6 +119,10 @@ async def read_baekjoon(name):
             pass_count = columns[0].text.strip(
             ) if columns[0].text.strip() != "" else "0"
             # 결과 값에 저장할 배열을 생성하고 언어, 정답 비율, 맞춘 수를 저장합니다.
+
+            # columns[11].text가 "0.000%"인 경우 건너뜁니다.
+            if columns[11].text == "0.000%":
+                continue
             language_result = {
                 "language": header.text,
                 "pass_percentage": columns[11].text,
