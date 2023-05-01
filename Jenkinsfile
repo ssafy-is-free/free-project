@@ -20,7 +20,6 @@ pipeline {
                     PROJECT_DIR_FE = "frontend/"
                     PROJECT_DIR_BE = "backend/"
                     PROJECT_DIR_DATA = "data/"
-                    PRODUCT_DOMAIN = "ubuntu@k8b1021.p.ssafy.io"
                 }
             }
         }
@@ -140,9 +139,9 @@ pipeline {
             steps {
                 sshagent([SSH_CONNECTION_CREDENTIAL]) {
                     // 실행파일로 만들기
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 'chmod + x container-start.sh'"
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_CONNECTION} 'chmod + x container-start.sh'"
                     //실행
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null './container-start.sh'"
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_CONNECTION} './container-start.sh'"
                 }   
             }
         }
