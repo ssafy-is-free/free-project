@@ -1,4 +1,4 @@
-import { ChartInput } from '@/utils/chartDatasets';
+import { IChartInput } from '@/utils/chartDatasets';
 
 export interface IRepository {
   id: number;
@@ -63,7 +63,7 @@ export interface IBojInfo {
  * 차트 생성시 필요한 값
  */
 export interface CircleChartProps {
-  data: ChartInput[];
+  data: IChartInput[];
   fontsize?: number;
   label?: boolean;
 }
