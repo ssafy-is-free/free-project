@@ -72,16 +72,20 @@ pipeline {
                 }
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_BE}"){
-                    script {
-                        sh "docker build -t ${IMAGE_NAME_BE} ." 
+                    script{
+                        image = docker.build("${IMAGE_NAME_BE}")
+                        //     sh "docker build -t ${IMAGE_NAME_BE} ." 
                     }
                 }
                 // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
-                    script {
-                        sh "docker push ${IMAGE_NAME_BE}"
+                script{
+                    docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
+                        image.push("latest")
+                        //     sh "docker push ${IMAGE_NAME_BE}"
                     }
-                // }
+
+                }
             }
         }
         stage("FE image build&push"){
@@ -93,13 +97,17 @@ pipeline {
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_FE}"){
                     script {
-                        sh "docker build -t ${IMAGE_NAME_FE} ." 
+                        image = docker.build("${IMAGE_NAME_FE}")
+                        // sh "docker build -t ${IMAGE_NAME_FE} ." 
                     }
                 }
                 // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
                     script {
-                        sh "docker push ${IMAGE_NAME_FE}"
+                            docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
+                            image.push("latest")
+                        }
+                        // sh "docker push ${IMAGE_NAME_FE}"
                     }
                 // }
                 
@@ -110,13 +118,17 @@ pipeline {
             steps{
                 dir("${PROJECT_DIR_DATA}"){
                     script {
-                        sh "docker build -t ${IMAGE_NAME_DATA} ." 
+                        image = docker.build("${IMAGE_NAME_DATA}")
+                        // sh "docker build -t ${IMAGE_NAME_DATA} ." 
                     }
                 }
                 // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                     //도커 허브에 푸시
                     script {
-                        sh "docker push ${IMAGE_NAME_DATA}"
+                            docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
+                            image.push("latest")
+                        }
+                        // sh "docker push ${IMAGE_NAME_DATA}"
                     }
                 // }
             }
