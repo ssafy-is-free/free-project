@@ -33,20 +33,20 @@ pipeline {
                                 sh "scp docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                             }
                         }
-                    }
                 }
+                
                 stage("script"){
                     steps {
                         script {
                                 sh "pwd"
                             }
-                        }
                     }
                 }
-                
             }
-            
+                
         }
+            
+        
     
         //ssh를 이용해서 이미지 pull
         // stage("Pull Container Image") {
