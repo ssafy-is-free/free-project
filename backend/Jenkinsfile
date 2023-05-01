@@ -1,0 +1,112 @@
+pipeline {
+    agent any
+
+    // tools{
+    //     gradle "spring boot gradle"
+    // }
+
+    stages {
+        stage("Set Variable") {
+            steps {
+                script {
+                    IMAGE_NAME = "sh80165/free-springboot"
+                    IMAGE_STORAGE = "https://registry.hub.docker.com"
+                    IMAGE_STORAGE_CREDENTIAL = "docker-hub"
+                    // APPLICATION_YML_PATH = "/home/ubuntu/jenkins/workspace/backend-pipeline"
+                    CONTAINER_NAME = "backend-app-1"
+                    PROJECT_DIR = "backend/"
+                    DOCKER_FILE_PATH = "./backend"
+                }
+            }
+        }
+
+        stage("Copy Setting File"){
+            steps{
+                script{
+                    sh "pwd"
+                    sh "ls" 
+                    sh "cp -r -f resources ${PROJECT_DIR}"
+                    sh "cp -f gradleResources/gradle.properties ${PROJECT_DIR}"
+                }
+                // dir("${APPLICATION_YML_PATH}"){
+                //     sh "pwd"
+                //     sh "ls"
+                //     sh "cp -r -f resources ${PROJECT_DIR}/resources"
+                // }
+            }
+        }
+
+        // //스프링 빌드
+        // stage("Clean Build Test") {
+        //     steps {
+        //         dir("${PROJECT_DIR}"){
+        //             sh "pwd"
+        //             sh "chmod +x gradlew"
+        //             sh "./gradlew clean build -x test"
+        //             sh "ls -al ./build"
+        //         }   
+        //     }
+        // }
+        // 소나큐브 빌드
+        //  stage('SonarQube Analysis') {
+        //     steps {                
+        //         dir("${PROJECT_DIR}"){
+        //             sh "chmod +x gradlew"
+        //             sh './gradlew sonar'
+        //         }
+                
+        //     }
+        // }
+
+        //기존 컨테이너 내리고 이미지 삭제
+        stage("container down&image remove"){
+            // 컴포즈 down 후 컨테이너 삭제.
+            steps{
+                dir("${DOCKER_FILE_PATH}"){
+
+                    // sh "docker compose ps -q | xargs -r docker compose down"
+                    
+                    sh "docker ps -f name=${CONTAINER_NAME} -q | xargs --no-run-if-empty docker container stop"
+
+                    // // //컨테이너 삭제
+                    sh "docker container ls -a -f name=${CONTAINER_NAME} -q | xargs -r docker container rm"
+
+                    sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
+                }
+            }
+        }
+
+        //이미지 빌드.
+        stage("Build Container Image") {
+            steps {
+                dir("${DOCKER_FILE_PATH}"){
+                    script {
+                        sh "ls"
+                        image = docker.build("${IMAGE_NAME}")
+                    }
+
+                }
+            }
+        }
+//
+//         stage("Push Container Image") {
+//             steps {
+//                 script {
+
+//                     docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
+//                         image.push("latest")
+//                     }
+//                 }
+//             }
+//         }
+// //
+        stage("Server Run") {
+            steps {
+                dir("${DOCKER_FILE_PATH}"){
+                    sh "docker compose up -d --build"
+                }
+            }
+        }
+        
+    }
+}

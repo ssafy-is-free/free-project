@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  fastapi_app:
+    build:            
+      dockerfile: Dockerfile
+    image: my_fastapi_app
+    ports:
+      - "8000:8000"
+    container_name: my_fastapi_container
+    networks:
+      - mysql_application_network
+networks: 
+  mysql_application_network:
+    external: true
+
