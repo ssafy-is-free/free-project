@@ -45,8 +45,8 @@ const Splash = () => {
       const data = await patchCrawaling();
 
       if (data.status == 'SUCCESS') {
-        route.push('/');
         dispatch(setNew());
+        route.push('/');
       }
     })();
   }, []);
