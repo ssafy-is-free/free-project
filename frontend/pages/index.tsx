@@ -215,11 +215,11 @@ const Main = () => {
     } else {
       getRankList(size, nextRank);
     }
-    setIsLangId(0);
-  }, [tempRank, curRank]);
+  }, [tempRank]);
 
   useEffect(() => {
     setNoMore(false);
+    getRankList(size, 1);
   }, [curRank]);
 
   useEffect(() => {}, [gitRankList]);
