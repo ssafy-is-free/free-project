@@ -8,43 +8,48 @@ import { RootState } from '@/redux';
 
 const FooterDiv = styled.div`
   width: 100%;
-  height: 10vh;
+  /* height: 10vh; */
+  height: 8vh;
   min-height: 4rem;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
   /* box-shadow: 0px -1px 3px 0px gray; */
-  box-shadow: 0px -2px 10px #4a58a94b;
+  box-shadow: 0px -5px 20px #8389a52d;
   display: flex;
+  align-items: center;
   position: fixed;
   z-index: 5;
 `;
 
 const IconDiv = styled.div`
   flex: 1;
-  margin-top: 0.5rem;
+  /* margin-top: 0.5rem; */
   display: flex;
   flex-direction: column;
   align-items: center;
   span {
     margin-top: 0.2rem;
-    margin-bottom: 0.3rem;
+    /* margin-bottom: 0.3rem; */
     font-size: 80%;
   }
 `;
 
 const HomeIcon = styled(Home)`
+  width: 33.33px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
 `;
 
 const CareerIcon = styled(Career)`
+  width: 33.33px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
 `;
 
 const ProfileIcon = styled(Profile)`
+  width: 33.33px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
