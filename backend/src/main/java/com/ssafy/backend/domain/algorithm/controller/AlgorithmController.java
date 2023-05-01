@@ -85,7 +85,7 @@ public class AlgorithmController {
 		Pageable pageable) {
 
 		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, languageId,
-			score, userId, rank, pageable);
+			score, rank, userId, pageable);
 
 		log.info("languageId : {}", languageId);
 		log.info("score : {}", score);
