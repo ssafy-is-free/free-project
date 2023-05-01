@@ -25,10 +25,10 @@ public interface GithubRepository extends JpaRepository<Github, Long> {
 			+ " where g.id in :githubIdSet"
 			+ " and g.score > :score"
 			+ " or g.score = :score"
-			+ " and g.user.id > :userId"
+			+ " and g.user.id < :userId"
 	)
 	int getRankWithFilter(Set<Long> githubIdSet, @Param("score") int score, @Param("userId") long userId);
 
-	@Query("select count(g) from Github g where g.score > :score or g.score = :score and g.user.id > :userId")
+	@Query("select count(g) from Github g where g.score > :score or g.score = :score and g.user.id < :userId")
 	int getRank(@Param("score") int score, @Param("userId") long userId);
 }
