@@ -3,11 +3,15 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface LoginState {
   isLogin: boolean;
   isNew: boolean;
+  loginStart: boolean;
+  isLoginIng: boolean;
 }
 
 const initialState: LoginState = {
   isLogin: false,
   isNew: false,
+  loginStart: false,
+  isLoginIng: true,
 };
 
 const authSlice = createSlice({
@@ -25,8 +29,14 @@ const authSlice = createSlice({
     setNew(state) {
       state.isNew = true;
     },
+    setLoginIng(state) {
+      state.isLoginIng = false;
+    },
+    setLoginStart(state) {
+      state.loginStart = true;
+    },
   },
 });
 
-export const { login, logout, setNew } = authSlice.actions;
+export const { login, logout, setNew, setLoginIng, setLoginStart } = authSlice.actions;
 export default authSlice.reducer;

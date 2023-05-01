@@ -9,7 +9,7 @@ import storageSession from 'redux-persist/lib/storage/session';
 
 const persistConfig = {
   key: 'root',
-  storage: storageSession,
+  storage,
 };
 
 const reducers = combineReducers({
