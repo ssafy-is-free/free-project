@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IMainUserItemProps } from './IRank';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div`
   background-color: ${(props) => props.theme.primary};
@@ -41,8 +42,17 @@ const Wrapper = styled.div`
 `;
 
 const MainUserItem = (props: IMainUserItemProps) => {
+  const router = useRouter();
+  const goProfile = () => {
+    if (props.curRank == 0) {
+      router.push(`/profile/github/${props.item.userId}`);
+    } else {
+      router.push(`/profile/boj/${props.item.userId}`);
+    }
+  };
+
   return (
-    <Wrapper>
+    <Wrapper onClick={goProfile}>
       <div className="rank-num">{props.item.rank}</div>
       <img src={props.item.avatarUrl} className="user-photo" />
       <div className="user-nickname">

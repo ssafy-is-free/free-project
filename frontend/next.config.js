@@ -33,13 +33,16 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
-        // destination: 'https://k8b102.p.ssafy.io/api/:path*',
+        destination: 'https://k8b102.p.ssafy.io/api/:path*',
       },
     ];
   },
 };
 
 const removeImports = require('next-remove-imports')();
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+});
 
-module.exports = removeImports(nextConfig);
+module.exports = removeImports(withPWA(nextConfig));

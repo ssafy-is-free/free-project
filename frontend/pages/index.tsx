@@ -26,7 +26,7 @@ import {
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
-import { login, setNew } from '@/redux/authSlice';
+import { login, setLoginIng, setNew } from '@/redux/authSlice';
 
 const Wrapper = styled.div`
   width: 100vw;
@@ -97,6 +97,9 @@ const Main = () => {
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
+  // 로그인 중임을 나타내는 state
+  const isLoginIng = useSelector<RootState>((selector) => selector.authChecker.isLoginIng);
+  const loginStart = useSelector<RootState>((selector) => selector.authChecker.loginStart);
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
@@ -138,9 +141,13 @@ const Main = () => {
    * splash check useEffect
    */
   useEffect(() => {
-    if (isNew) {
-      setOpenBoj(true);
+    if (loginStart) {
+      if (!isNew && isLoginIng) {
+        setOpenBoj(true);
+      }
     }
+
+    dispatch(setLoginIng());
 
     const timer = setTimeout(() => {
       dispatch(splashCheck());
@@ -201,6 +208,7 @@ const Main = () => {
   }, [tempRank]);
 
   useEffect(() => {
+    console.log('isLogin', isLogin);
     setNoMore(false);
     getRankList(size, 1);
   }, [curRank]);
@@ -373,7 +381,7 @@ const Main = () => {
               data = await getMyBojRanking();
             }
 
-            console.log('data', data);
+            console.log('boj data', data);
 
             if (data?.data?.userId != null) setMyBojRank(data?.data);
             else {
@@ -413,12 +421,13 @@ const Main = () => {
               </div>
             ) : null}
 
-            {!isLogin ? (
+            {!isLogin || (curRank == 1 && isLogin && myBojRank == null) ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
               </div>
             ) : null}
+
             <p className="all-rank-label">전체 랭킹</p>
             <ul className="rank-list">
               {curRank == 0

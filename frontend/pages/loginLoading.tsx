@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { patchCrawaling } from './api/loginAxios';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { setNew } from '@/redux/authSlice';
+import { setLoginIng, setNew } from '@/redux/authSlice';
 
 const upDown = keyframes`
     from{
