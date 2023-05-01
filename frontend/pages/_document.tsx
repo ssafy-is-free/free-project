@@ -28,7 +28,12 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="apple-touch-icon" href="/pwa/icon-192x192.png"></link>
+          <link rel="icon" href="/favicon.ico" sizes="16x16" />
+          <link rel="icon" href="/favicon.ico" sizes="32x32" />
+          <meta name="msapplication-TileColor" content="#4A58A9"></meta>
+          <meta name="theme-color" content="#4A58A9" />
         </Head>
         <body style={{ margin: '0px' }}>
           <Main />
