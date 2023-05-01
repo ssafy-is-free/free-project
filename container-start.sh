@@ -22,6 +22,14 @@ sudo docker images ${DATA_IMAGE_NAME} -q | xargs -r docker rmi -f
 
 sleep 1
 
+# 이미지 pull
+echo "이미지를 받아옵니다."
+sudo docker pull ${BE_IMAGE_NAME}
+sudo docker pull ${FE_IMAGE_NAME}
+sudo docker pull ${DATA_IMAGE_NAME}
+
+
+
 # 컨테이너 실행
 echo "컨테이너를 실행합니다."
 sudo docker compose up -d
