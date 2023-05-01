@@ -55,42 +55,55 @@ pipeline {
         //     }
                 
         // }
+        //기존 이미지 삭제
+        stage("image rm"){
+            steps{
+                sh "docker rmi ${IMAGE_NAME_FE}"
+                sh "docker rmi ${IMAGE_NAME_BE}"
+                sh "docker rmi ${IMAGE_NAME_DATA}"
+            }
+        }
+
         stage("image build&push"){
             parallel {
                 stage("BE"){
                     steps{
-                        //설정파일 카피
-                        script{
-                            sh "cp -r -f resources ${PROJECT_DIR_BE}"
-                        }
-                        //도커 이미지 빌드
-                        dir("${PROJECT_DIR_BE}"){
-                            script {
-                                sh "docker build -t ${IMAGE_NAME_BE} ." 
+                        withCredentials([usernamePassword(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}"]) {
+                            //설정파일 카피
+                            script{
+                                sh "cp -r -f resources ${PROJECT_DIR_BE}"
                             }
-                        }
-                        //도커 허브에 푸시
-                        script {
-                            sh "docker push ${IMAGE_NAME_BE}"
+                            //도커 이미지 빌드
+                            dir("${PROJECT_DIR_BE}"){
+                                script {
+                                    sh "docker build -t ${IMAGE_NAME_BE} ." 
+                                }
+                            }
+                            //도커 허브에 푸시
+                            script {
+                                sh "docker push ${IMAGE_NAME_BE}"
+                            }
                         }
                     }
                 }
                 stage("FE"){
                     //설정 파일 카피
                     steps{
-                        script{
-                            sh "cp -f .env ${PROJECT_DIR_FE}.env"
-                        }
-                        
-                        //도커 이미지 빌드
-                        dir("${PROJECT_DIR_FE}"){
-                            script {
-                                sh "docker build -t ${IMAGE_NAME_FE} ." 
+                        withCredentials([usernamePassword(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}"]) {
+                            script{
+                                sh "cp -f .env ${PROJECT_DIR_FE}.env"
                             }
-                        }
-                        //도커 허브에 푸시
-                        script {
-                            sh "docker push ${IMAGE_NAME_FE}"
+                            
+                            //도커 이미지 빌드
+                            dir("${PROJECT_DIR_FE}"){
+                                script {
+                                    sh "docker build -t ${IMAGE_NAME_FE} ." 
+                                }
+                            }
+                            //도커 허브에 푸시
+                            script {
+                                sh "docker push ${IMAGE_NAME_FE}"
+                            }
                         }
                     }
 
@@ -98,14 +111,16 @@ pipeline {
                 stage("DATA"){
                     //이미지 빌드
                     steps{
-                        dir("${PROJECT_DIR_DATA}"){
-                            script {
-                                sh "docker build -t ${IMAGE_NAME_DATA} ." 
+                        withCredentials([usernamePassword(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}"]) {
+                            dir("${PROJECT_DIR_DATA}"){
+                                script {
+                                    sh "docker build -t ${IMAGE_NAME_DATA} ." 
+                                }
                             }
-                        }
-                        //도커 허브에 푸시
-                        script {
-                            sh "docker push ${IMAGE_NAME_DATA}"
+                            //도커 허브에 푸시
+                            script {
+                                sh "docker push ${IMAGE_NAME_DATA}"
+                            }
                         }
                     }
                 }
