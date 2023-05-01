@@ -408,7 +408,6 @@ const Main = () => {
             <div className="filter-box">
               <FilterIcon onClick={() => setOpenFilter(true)} />
             </div>
-
             {myGitRank && curRank == 0 ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
@@ -420,14 +419,13 @@ const Main = () => {
                 <MainUserItem curRank={curRank} item={myBojRank} />
               </div>
             ) : null}
-
-            {!isLogin || (curRank == 1 && isLogin && myBojRank == null) ? (
+            {/* // || (curRank == 1 && isLogin && myBojRank == null) */}
+            {!isLogin ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
               </div>
             ) : null}
-
             <p className="all-rank-label">전체 랭킹</p>
             <ul className="rank-list">
               {curRank == 0
