@@ -28,7 +28,7 @@ pipeline {
         stage("Send file") {
             parallel{
                 stage("docker compose yml"){
-                    steps {
+                    sshagent([SSH_CONNECTION_CREDENTIAL]) {
                         script {
                                 sh "scp docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                             }
