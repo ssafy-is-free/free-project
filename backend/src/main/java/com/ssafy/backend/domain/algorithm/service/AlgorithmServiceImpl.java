@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.ssafy.backend.domain.algorithm.dto.FilteredBojIdSet;
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
@@ -66,7 +67,14 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId) {
+	public BojRankResponse getBojByUserId(long userId, Long languageId) {
+		// 필터에 걸리는 유저 아이디들을 불러온다.
+		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
+
+		// 내가 속해있는지 확인하기
+		if (bojIdSet != null && bojIdSet.isNotIn(userId)) {
+			return BojRankResponse.createEmpty();
+		}
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
@@ -180,6 +188,15 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		return BojRankResponse.createList(baekjoonList, rank, baekjoonIdSet);
 
+	}
+
+	private FilteredBojIdSet getBojIdBy(Long languageId) {
+		Set<Long> filterdIdSet = bojLanguageRepository.findByLanguageId(languageId)
+			.stream()
+			.map(g -> g.getBaekjoon().getId())
+			.collect(Collectors.toSet());
+
+		return FilteredBojIdSet.create(filterdIdSet);
 	}
 
 }
