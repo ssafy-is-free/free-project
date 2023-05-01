@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sshagent([SSH_CONNECTION_CREDENTIAL]) {
                         
-                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
+                    sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                 }
             }  
         }
@@ -76,7 +76,7 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_BE} ." 
                     }
                 }
-                withCredentials([usernamePassword(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
+                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
                     script {
                         sh "docker push ${IMAGE_NAME_BE}"
@@ -96,9 +96,11 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_FE} ." 
                     }
                 }
+                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
-                script {
-                    sh "docker push ${IMAGE_NAME_FE}"
+                    script {
+                        sh "docker push ${IMAGE_NAME_FE}"
+                    }
                 }
                 
             }
@@ -111,9 +113,11 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_DATA} ." 
                     }
                 }
-                //도커 허브에 푸시
-                script {
-                    sh "docker push ${IMAGE_NAME_DATA}"
+                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
+                    //도커 허브에 푸시
+                    script {
+                        sh "docker push ${IMAGE_NAME_DATA}"
+                    }
                 }
             }
         }
