@@ -16,9 +16,9 @@ sleep(1)
 
 # 이미지 파일 삭제.
 echo "기존 이미지 파일을 삭제 합니다."
-sudo docker rmi $BE_IMAGE_NAME
-sudo docker rmi $FE_IMAGE_NAME
-sudo docker rmi $DATA_IMAGE_NAME
+sudo docker images ${BE_IMAGE_NAME} -q | xargs -r docker rmi -f
+sudo docker images ${FE_IMAGE_NAME} -q | xargs -r docker rmi -f
+sudo docker images ${DATA_IMAGE_NAME} -q | xargs -r docker rmi -f
 
 sleep(1)
 
