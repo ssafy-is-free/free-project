@@ -3,6 +3,13 @@ import { HYDRATE } from 'next-redux-wrapper';
 import countSlice from './countSlice';
 import splashSlice from './splashSlice';
 import authSlice from './authSlice';
+import storage from 'redux-persist';
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+};
 
 const combinedReducer = combineReducers({
   counter: countSlice,

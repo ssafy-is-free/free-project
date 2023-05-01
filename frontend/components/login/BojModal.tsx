@@ -145,6 +145,7 @@ const BojModal = (props: IBojProps) => {
     if (bojId != '') {
       // 등록 가능
       postBojId(bojId);
+      props.onClick;
       router.push('/');
     } else {
       // 등록 불가능
