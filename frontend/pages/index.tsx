@@ -163,7 +163,6 @@ const Main = () => {
       setOpenLogin(true);
     } else if (curRank == 1) {
       // 백준 페이지 일 때
-
       if (isLogin) {
         // 이미 로그인한 상태면
         // 백준 모달 띄우기
