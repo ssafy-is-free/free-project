@@ -176,9 +176,8 @@ pipeline {
                     }
                 }
                 //도커 허브에 푸시
-                    script {
-                        sh "docker push ${IMAGE_NAME_DATA}"
-                    }
+                script {
+                    sh "docker push ${IMAGE_NAME_DATA}"
                 }
             }
         }
