@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import org.junit.After;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,21 @@ import com.ssafy.backend.domain.user.repository.UserRepository;
 @Transactional
 class GithubLanguageRepositoryTest {
 	@Autowired
+	private EntityManager entityManager;
+	@Autowired
 	private GithubLanguageRepository githubLanguageRepository;
 	@Autowired
 	private GithubRepository githubRepository;
 	@Autowired
 	private UserRepository userRepository;
+
+	@After
+	public void teardown() {
+		userRepository.deleteAllInBatch();
+		this.entityManager.createNativeQuery(
+				"ALTER TABLE users ALTER COLUMN `id` RESTART WITH 1")
+			.executeUpdate();
+	}
 
 	@Test
 	@DisplayName("해당 언어를 사용하는 깃허브가 없으면 빈배열을 반환한다.")
@@ -98,9 +110,7 @@ class GithubLanguageRepositoryTest {
 		List<GithubOnly> result = githubLanguageRepository.findByLanguageId(languageId);
 
 		//then
-		assertThat(result).hasSize(2)
-			.extracting(githubOnly -> githubOnly.getGithub().getUser().getNickname())
-			.containsExactly("user1", "user2");
+		assertThat(result).hasSize(2).extracting(githubOnly -> githubOnly.getGithub().getId()).containsExactly(1L, 2L);
 	}
 
 	private User createUser(String nickname) {
