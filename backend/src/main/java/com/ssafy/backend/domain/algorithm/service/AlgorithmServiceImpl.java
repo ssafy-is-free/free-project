@@ -172,7 +172,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			.collect(Collectors.toSet());
 
 		//조회된 값이 없으면 빈 리스트 반환
-		if (baekjoonIdSet.isEmpty())
+		if (languageId != null && baekjoonIdSet.isEmpty())
 			return Collections.EMPTY_LIST;
 
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score, languageId,
