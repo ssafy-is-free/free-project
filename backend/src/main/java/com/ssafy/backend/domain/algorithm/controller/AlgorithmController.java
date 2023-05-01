@@ -80,12 +80,17 @@ public class AlgorithmController {
 		@RequestParam(value = "group", required = false) String group,
 		@RequestParam(value = "languageId", required = false) Long languageId,
 		@RequestParam(value = "score", required = false) Integer score,
-		@RequestParam(value = "id", required = false) Long userId,
+		@RequestParam(value = "userId", required = false) Long userId,
 		@RequestParam(value = "rank", required = false) Long rank,
 		Pageable pageable) {
 
 		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, languageId,
 			score, userId, rank, pageable);
+
+		log.info("languageId : {}", languageId);
+		log.info("score : {}", score);
+		log.info("id : {}", userId);
+		log.info("rank : {}", rank);
 
 		return bojRankResponseList.isEmpty() ?
 			responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT) :
