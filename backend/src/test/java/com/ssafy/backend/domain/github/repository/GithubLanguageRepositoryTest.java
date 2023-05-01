@@ -36,6 +36,8 @@ class GithubLanguageRepositoryTest {
 	@After
 	public void teardown() {
 		userRepository.deleteAllInBatch();
+		githubRepository.deleteAllInBatch();
+		githubLanguageRepository.deleteAllInBatch();
 		this.entityManager.createNativeQuery(
 				"ALTER TABLE users ALTER COLUMN `id` RESTART WITH 1")
 			.executeUpdate();
