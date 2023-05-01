@@ -1,6 +1,7 @@
 version: "3"
 services:
   backend: 
+    images: sh80165/product-free-springboot
     container_name: product_be
     restart: always
     ports: 
@@ -8,6 +9,7 @@ services:
     networks:
       - app_network
   frontend: 
+    images: sh80165/product-free-react
     container_name: product_fe
     restart: always
     ports: 
@@ -15,6 +17,7 @@ services:
     networks:
       - app_network
   data: 
+    images: sh80165/product-free-data
     container_name: product_data
     restart: always
     ports: 
