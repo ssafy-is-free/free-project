@@ -139,7 +139,7 @@ pipeline {
             steps {
                 sshagent([SSH_CONNECTION_CREDENTIAL]) {
                     // 실행파일로 만들기
-                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_CONNECTION} 'chmod + x container-start.sh'"
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_CONNECTION} 'chmod +x container-start.sh'"
                     //실행
                     sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${SSH_CONNECTION} './container-start.sh'"
                 }   
