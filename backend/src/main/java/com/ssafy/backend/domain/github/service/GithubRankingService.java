@@ -84,9 +84,9 @@ public class GithubRankingService {
 		// 랭킹 계산
 		int rank;
 		if (githubIdSet == null) {
-			rank = githubRepository.getRank(github.getScore());
+			rank = githubRepository.getRank(github.getScore(), userId);
 		} else {
-			rank = githubRepository.getRankWithFilter(githubIdSet.getGithubIds(), github.getScore());
+			rank = githubRepository.getRankWithFilter(githubIdSet.getGithubIds(), github.getScore(), userId);
 		}
 		rank += 1;
 
