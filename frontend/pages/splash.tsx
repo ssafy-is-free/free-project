@@ -17,8 +17,8 @@ const moveUp = keyframes`
 
 const Wrapper = styled.div`
   width: 100vw;
-  /* height: 100vh; */
-  height: calc(var(--vh, 1vh) * 100);
+  height: 100vh;
+  /* height: calc(var(--vh, 1vh) * 100); */
   background-color: ${(props) => props.theme.primary};
   display: flex;
   align-items: center;
