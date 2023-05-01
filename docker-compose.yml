@@ -25,6 +25,6 @@ services:
     networks:
       - app_network
 networks:
-  app_network: 
+  app-network: 
     external: true
 
