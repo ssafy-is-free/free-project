@@ -76,12 +76,12 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_BE} ." 
                     }
                 }
-                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
+                // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
                     script {
                         sh "docker push ${IMAGE_NAME_BE}"
                     }
-                }
+                // }
             }
         }
         stage("FE image build&push"){
@@ -96,12 +96,12 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_FE} ." 
                     }
                 }
-                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
+                // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
                     script {
                         sh "docker push ${IMAGE_NAME_FE}"
                     }
-                }
+                // }
                 
             }
         }
@@ -113,12 +113,12 @@ pipeline {
                         sh "docker build -t ${IMAGE_NAME_DATA} ." 
                     }
                 }
-                withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
+                // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                     //도커 허브에 푸시
                     script {
                         sh "docker push ${IMAGE_NAME_DATA}"
                     }
-                }
+                // }
             }
         }
         
