@@ -91,6 +91,7 @@ public class AlgorithmController {
 		log.info("score : {}", score);
 		log.info("id : {}", userId);
 		log.info("rank : {}", rank);
+		log.info("size : {}", pageable.getPageSize());
 
 		return bojRankResponseList.isEmpty() ?
 			responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT) :
