@@ -56,22 +56,20 @@ pipeline {
                 
         // }
         stage("image build&push"){
-            parallel{
+            parallel {
                 stage("BE"){
-                    //설정파일 카피
                     steps{
-                        sh "cp -r -f resources ${PROJECT_DIR_BE}"
-                    }
-                    //도커 이미지 빌드
-                    steps{
+                        //설정파일 카피
+                        script{
+                            sh "cp -r -f resources ${PROJECT_DIR_BE}"
+                        }
+                        //도커 이미지 빌드
                         dir("${PROJECT_DIR_BE}"){
                             script {
                                 sh "docker build -t ${IMAGE_NAME_BE} ." 
                             }
                         }
-                    }
-                    //도커 허브에 푸시
-                    steps{
+                        //도커 허브에 푸시
                         script {
                             sh "docker push ${IMAGE_NAME_BE}"
                         }
@@ -80,18 +78,17 @@ pipeline {
                 stage("FE"){
                     //설정 파일 카피
                     steps{
-                        sh "cp -f .env frontend/.env"
-                    }
-                    //도커 이미지 빌드
-                    steps{
+                        script{
+                            sh "cp -f .env ${PROJECT_DIR_FE}.env"
+                        }
+                        
+                        //도커 이미지 빌드
                         dir("${PROJECT_DIR_FE}"){
                             script {
                                 sh "docker build -t ${IMAGE_NAME_FE} ." 
                             }
                         }
-                    }
-                    //도커 허브에 푸시
-                    steps{
+                        //도커 허브에 푸시
                         script {
                             sh "docker push ${IMAGE_NAME_FE}"
                         }
@@ -106,9 +103,7 @@ pipeline {
                                 sh "docker build -t ${IMAGE_NAME_DATA} ." 
                             }
                         }
-                    }
-                    //도커 허브에 푸시
-                    steps{
+                        //도커 허브에 푸시
                         script {
                             sh "docker push ${IMAGE_NAME_DATA}"
                         }
