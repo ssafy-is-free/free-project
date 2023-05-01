@@ -77,17 +77,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return BojRankResponse.createEmpty();
 		}
 		Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
-		Baekjoon boj = null;
-		if (oBaekjoon.isPresent()) {
-			boj = oBaekjoon.get();
-		}
 		//백준 아이디 없다면 돌아가기
-		if (boj == null) {
+		if (!oBaekjoon.isPresent()) {
 			return BojRankResponse.createEmpty();
 		}
-		String s1 = "asd";
-		s1.isBlank();
-		s1.isEmpty();
+
+		Baekjoon boj = oBaekjoon.get();
 
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
@@ -98,6 +93,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
+		
 		// 랭크 세기
 		int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
@@ -141,14 +137,11 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 		// 백준 아이디 조회
 		Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
-		Baekjoon baekjoon = null;
-		if (oBaekjoon.isPresent()) {
-			baekjoon = oBaekjoon.get();
-		}
-
 		// 유저테이블에 백준 아이디는 있는데 백준 테이블에 정보가 없는 경우 비어있는 콘텐츠
-		if (baekjoon == null)
-			return null;
+		if (!oBaekjoon.isPresent())
+			return BojInfoDetailResponse.createEmpty();
+
+		Baekjoon baekjoon = oBaekjoon.get();
 
 		List<BaekjoonLanguage> baekjoonLanguageList = bojLanguageRepository.findAllByBaekjoonId(baekjoon.getId());
 		//언어 정보 불러와서 해쉬에 저장
