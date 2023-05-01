@@ -4,6 +4,8 @@ import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import BigBtn from '../common/BigBtn';
 import { ILoginProps } from './ILogin';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setLoginStart } from '@/redux/authSlice';
 
 const moveUp = keyframes`
  from{
@@ -53,6 +55,11 @@ const StyledCloseIcon = styled(CloseIcon)`
 `;
 
 const LoginModal = (props: ILoginProps) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoginStart());
+  }, []);
+
   const onBtnClick = () => {
     // 기존 로그인 모달 창 닫기
     props.onClick();
