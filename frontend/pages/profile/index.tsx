@@ -52,7 +52,7 @@ const MyProfile = () => {
           <CustomNav lists={navList} selectIdx={selectIdx}></CustomNav>
         </div>
         {selectedIdx === 0 && githubData && <GithubInfo githubData={githubData} my={true}></GithubInfo>}
-        {selectedIdx === 1 && bojData && <BojInfo bojData={bojData} my={true}></BojInfo>}
+        {selectedIdx === 1 && <BojInfo bojData={bojData} my={true}></BojInfo>}
       </ProfileContentDiv>
     </div>
   );
