@@ -15,14 +15,6 @@ function App({ Component, ...rest }: AppProps) {
   const [cookies, setCookie] = useCookies(['redirect-uri']);
 
   useEffect(() => {
-    // 모바일 100vh 문제
-    function setScreenSize() {
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`); //"--vh"라는 속성으로 정의해준다.
-    }
-
-    window.addEventListener('resize', () => setScreenSize());
-
     if (process.env.NEXT_PUBLIC_MODE === 'prod') {
       setCookie('redirect-uri', 'prod');
     }
