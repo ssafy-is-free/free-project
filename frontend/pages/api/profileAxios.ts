@@ -35,7 +35,6 @@ export const getMyBoj = async () => {
 };
 
 export const getReadme = async (githubId: number, repoId: number) => {
-  console.log(`github/${githubId}/repositories/${repoId}`);
   const { data } = await basicApi({
     method: 'get',
     url: `/github/${githubId}/repositories/${repoId}`,
