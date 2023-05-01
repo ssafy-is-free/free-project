@@ -28,7 +28,7 @@ pipeline {
             steps {
                 sshagent([SSH_CONNECTION_CREDENTIAL]) {
                         
-                    sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
+                    sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${SSH_CONNECTION}:~"
                 }
             }  
         }
