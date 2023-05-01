@@ -1,10 +1,9 @@
-import Footer from '@/components/common/Footer';
+import CareerCard from '@/components/career/CareerCard';
 
 export default function Career() {
   return (
     <div>
-      Career 페이지
-      <Footer></Footer>
+      <CareerCard></CareerCard>
     </div>
   );
 }
