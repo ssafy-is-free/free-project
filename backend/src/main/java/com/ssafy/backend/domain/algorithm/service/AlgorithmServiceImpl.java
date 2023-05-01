@@ -93,7 +93,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
-		
+
 		// 랭크 세기
 		int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
