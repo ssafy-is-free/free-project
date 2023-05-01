@@ -30,7 +30,8 @@ pipeline {
                 stage("docker compose yml"){
                     steps {
                         sshagent([SSH_CONNECTION_CREDENTIAL]) {
-                                sh "scp docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
+                                
+                                sh "scp -o StrictHostKeyChecking=no ${SSH_CONNECTION} docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                             }
                         }
                 }
