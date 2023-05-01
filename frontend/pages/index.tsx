@@ -392,7 +392,9 @@ const Main = () => {
               data = await getMyBojRanking();
             }
 
-            if (data?.data) setMyBojRank(data?.data);
+            console.log('data', data);
+
+            if (data?.data?.userId != null) setMyBojRank(data?.data);
             else {
               setMyBojRank(null);
             }
@@ -417,16 +419,20 @@ const Main = () => {
             <div className="filter-box">
               <FilterIcon onClick={() => setOpenFilter(true)} />
             </div>
-            {myGitRank ? (
+
+            {myGitRank && curRank == 0 ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
-                {myGitRank && curRank == 0 ? (
-                  <MainUserItem curRank={curRank} item={myGitRank} />
-                ) : myBojRank && curRank == 1 ? (
-                  <MainUserItem curRank={curRank} item={myBojRank} />
-                ) : null}
+                <MainUserItem curRank={curRank} item={myGitRank} />
               </div>
-            ) : !login ? (
+            ) : myBojRank && curRank == 1 ? (
+              <div className="my-rank">
+                <p>나의 랭킹</p>
+                <MainUserItem curRank={curRank} item={myBojRank} />
+              </div>
+            ) : null}
+
+            {!login ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
