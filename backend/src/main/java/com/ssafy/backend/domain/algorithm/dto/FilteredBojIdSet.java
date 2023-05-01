@@ -12,8 +12,8 @@ import lombok.Getter;
 public class FilteredBojIdSet {
 	Set<Long> BojIds;
 
-	public static FilteredBojIdSet create(Set<Long> githubIds) {
-		return FilteredBojIdSet.builder().BojIds(githubIds).build();
+	public static FilteredBojIdSet create(Set<Long> BojIds) {
+		return FilteredBojIdSet.builder().BojIds(BojIds).build();
 	}
 
 	public boolean isNotIn(long userId) {

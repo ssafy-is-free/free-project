@@ -68,20 +68,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 	@Override
 	public BojRankResponse getBojByUserId(long userId, Long languageId) {
-		// 필터에 걸리는 유저 아이디들을 불러온다.
-		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
-
-		// 내가 속해있는지 확인하기
-		if (bojIdSet != null && bojIdSet.isNotIn(userId)) {
-			return BojRankResponse.createEmpty();
-		}
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
 		//백준 아이디를 입력하지 않은 유저의 경우
 		if (user.getBojId() == null) {
-			return null;
+			return BojRankResponse.createEmpty();
 		}
 		Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
 		Baekjoon boj = null;
@@ -90,23 +83,31 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 		//백준 아이디 없다면 돌아가기
 		if (boj == null) {
-			return null;
+			return BojRankResponse.createEmpty();
 		}
-		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
+		String s1 = "asd";
+		s1.isBlank();
+		s1.isEmpty();
 
-		BojRankResponse bojRankResponse = null;
+		// 필터에 걸리는 유저 아이디들을 불러온다.
+		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
+
+		// 내가 속해있는지 확인하기
+		if (bojIdSet != null && bojIdSet.isNotIn(boj.getId())) {
+			return BojRankResponse.createEmpty();
+		}
+
+		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 		// 랭크 세기
 		int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
-				bojRankResponse = BojRankResponse.createBojMyRankResponseDTO(baekjoon,
-					user, rank);
-				break;
+				return BojRankResponse.createBojMyRankResponseDTO(baekjoon, user, rank);
 			} else {
 				rank++;
 			}
 		}
-		return bojRankResponse;
+		return BojRankResponse.createEmpty();
 
 	}
 
