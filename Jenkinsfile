@@ -26,64 +26,108 @@ pipeline {
         }
         //scp를 이용해서 docker compose, script 파일 전송.
         stage("Send file") {
-            parallel{
-                stage("docker compose yml"){
-                    steps {
-                        sshagent([SSH_CONNECTION_CREDENTIAL]) {
-                                
-                                sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
-                            }
-                        }
+            steps {
+                sshagent([SSH_CONNECTION_CREDENTIAL]) {
+                        
+                        sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
                 }
-                
-                stage("script"){
-                    steps {
-                        script {
-                                sh "pwd"
-                            }
-                    }
-                }
-            }
-                
+            }  
         }
+                
             
-        
-    
-        //ssh를 이용해서 이미지 pull
-        // stage("Pull Container Image") {
-        //     steps {
-        //         script {
-        //             docker.withRegistry("${IMAGE_STORAGE}", "docker-hub") {
-        //                 image.push("${env.BUILD_NUMBER}")
-        //                 image.push("latest")
-        //                 image
+            // stage("Send file") {
+        //         stage("docker compose yml"){
+        //             steps {
+        //                 sshagent([SSH_CONNECTION_CREDENTIAL]) {
+                                
+        //                         sh "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null docker-compose.yml container-start.sh ${PRODUCT_DOMAIN}:~"
+        //                     }
+        //                 }
+        //         }
+                
+        //         stage("script"){
+        //             steps {
+        //                 script {
+        //                         sh "pwd"
+        //                     }
         //             }
         //         }
         //     }
+                
         // }
+        stage("image build&push"){
+            parallel{
+                stage("BE"){
+                    //설정파일 카피
+                    steps{
+                        sh "cp -r -f resources ${PROJECT_DIR_BE}"
+                    }
+                    //도커 이미지 빌드
+                    steps{
+                        dir("${PROJECT_DIR_BE}"){
+                            script {
+                                sh "docker build -t ${IMAGE_NAME_BE} ." 
+                            }
+                        }
+                    }
+                    //도커 허브에 푸시
+                    steps{
+                        script {
+                            sh "docker push ${IMAGE_NAME_BE}"
+                        }
+                    }
+                }
+                stage("FE"){
+                    //설정 파일 카피
+                    steps{
+                        sh "cp -f .env frontend/.env"
+                    }
+                    //도커 이미지 빌드
+                    steps{
+                        dir("${PROJECT_DIR_FE}"){
+                            script {
+                                sh "docker build -t ${IMAGE_NAME_FE} ." 
+                            }
+                        }
+                    }
+                    //도커 허브에 푸시
+                    steps{
+                        script {
+                            sh "docker push ${IMAGE_NAME_FE}"
+                        }
+                    }
 
-        // //ssh를 이용해서 docker compose up -d 
-        // stage("Server send") {
-        //     steps {
-        //         sshagent([SSH_CONNECTION_CREDENTIAL]) {
-        //             // 최신 컨테이너 삭제
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker rm -f ${CONTAINER_NAME}'"
-        //             // 최신 이미지 삭제
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker rmi -f ${IMAGE_NAME}:latest'"
-        //             // 최신 이미지 PULL
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker pull ${IMAGE_NAME}:latest'"
-        //             // 이미지 확인
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker images'"
-        //             // 최신 이미지 RUN
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}:latest'"
-        //             // 컨테이너 확인
-        //             sh "ssh -o StrictHostKeyChecking=no ${SSH_CONNECTION} 'docker ps -a'"
-        //         }   
-        //     }
-        // }
-
-        // stage("Server Run") {
-
-        // }
+                }
+                stage("DATA"){
+                    //이미지 빌드
+                    steps{
+                        dir("${PROJECT_DIR_DATA}"){
+                            script {
+                                sh "docker build -t ${IMAGE_NAME_DATA} ." 
+                            }
+                        }
+                    }
+                    //도커 허브에 푸시
+                    steps{
+                        script {
+                            sh "docker push ${IMAGE_NAME_DATA}"
+                        }
+                    }
+                }
+            }
+        }
+        
+    
+        // //ssh를 이용해서 실행 스크립트 실행하기
+        stage("Server send") {
+            steps {
+                sshagent([SSH_CONNECTION_CREDENTIAL]) {
+                    // 실행파일로 만들기
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null 'chmod + x container-start.sh'"
+                    //실행
+                    sh "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null './container-start.sh'"
+                }   
+            }
+        }
     }
 }
