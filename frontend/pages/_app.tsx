@@ -8,11 +8,17 @@ import Footer from '@/components/common/Footer';
 import Head from 'next/head';
 import { useCookies } from 'react-cookie';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useEffect } from 'react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   const [cookies, setCookie] = useCookies(['redirect-uri']);
 
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
+      setCookie('redirect-uri', 'k8b');
+    }
+  }, []);
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>

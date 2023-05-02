@@ -1,6 +1,6 @@
 // import GithubInfo from '../../../components/profile/GithubInfo';
-import BojInfo from '../../../components/profile/BojInfo';
-import ProfileHeader from '../../../components/profile/ProfileHeader';
+import BojInfo from '@/components/profile/BojInfo';
+import ProfileHeader from '@/components/profile/ProfileHeader';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -15,20 +15,18 @@ const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
   loading: () => <Spinner></Spinner>,
 });
 
-interface IProfileQuery extends ParsedUrlQuery {
-  category: string;
-  id: string;
-}
-
 const ProfileInfoDiv = styled.div`
   margin: 1rem;
   margin-bottom: max(4rem, 10vh);
 `;
 
-const Profile = () => {
-  const router = useRouter();
-  const { category, id } = router.query as IProfileQuery;
+interface IProfileProps {
+  curRank: number;
+  id: number;
+  back: () => void;
+}
 
+const TestProfile = ({ curRank, id, back }: IProfileProps) => {
   const [githubData, setGithubData] = useState<IGithubProfile>();
   const [bojData, setBojData] = useState<IBojProfile>();
   const [headerName, setHeaderName] = useState<string>('');
@@ -51,17 +49,13 @@ const Profile = () => {
     }
   };
 
-  const back = () => {
-    router.back();
-  };
-
   useEffect(() => {
-    if (category === 'github') {
+    if (curRank === 0) {
       getGithubData();
-    } else if (category === 'boj') {
+    } else if (curRank === 1) {
       getBojData();
     }
-  }, [category, id]);
+  }, [curRank, id]);
 
   return (
     <div>
@@ -74,4 +68,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default TestProfile;

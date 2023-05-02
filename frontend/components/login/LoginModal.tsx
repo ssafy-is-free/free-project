@@ -67,7 +67,7 @@ const LoginModal = (props: ILoginProps) => {
     props.onClick();
 
     // 깃허브 로그인
-    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/github`;
 
     // props.setOpenBoj(true);
   };

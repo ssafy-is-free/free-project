@@ -21,7 +21,7 @@ const BasicInfoDiv = styled.div`
   grid-template-rows: auto auto;
   grid-column-gap: 6%;
   grid-row-gap: 6%;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 `;
 
 const BoxDiv = styled.div`
@@ -93,6 +93,7 @@ const BojInfo = ({ bojData, my }: IBojInfo) => {
           </BoxDiv>
         ))}
       </BasicInfoDiv>
+      <p>Language</p>
       <CircleChart data={bojData.languages} label={true}></CircleChart>
     </BojInfoDiv>
   );

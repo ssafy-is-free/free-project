@@ -29,6 +29,8 @@ import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 
+import Profile from '@/components/profile/Profile';
+
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
@@ -134,6 +136,9 @@ const Main = () => {
   const [opeBoj, setOpenBoj] = useState<boolean>(false);
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
+  // 상세정보 열기
+  const [openProfile, setOpenProfile] = useState<boolean>(false);
+  const [clickedUserId, setClickedUserId] = useState<number>(0);
 
   // 무한 스크롤 구현하기
   const [ref, inView, entry] = useInView({
@@ -189,6 +194,17 @@ const Main = () => {
     setCurRank(el);
     setOpenSelect(false);
   };
+
+  // 상세정보 열기
+  const goProfile = (userId: number) => {
+    setClickedUserId(userId);
+  };
+
+  useEffect(() => {
+    if (clickedUserId !== 0) {
+      setOpenProfile(true);
+    }
+  }, [clickedUserId]);
 
   // nouserItem 클릭시
   const onClickNoUser = () => {
@@ -426,6 +442,17 @@ const Main = () => {
   // if (!splash && !splashState) {
   if (!splashState) {
     return <Splash />;
+  } else if (openProfile) {
+    return (
+      <Profile
+        curRank={curRank}
+        id={clickedUserId}
+        back={() => {
+          setOpenProfile(false);
+          setClickedUserId(0);
+        }}
+      ></Profile>
+    );
   } else {
     return (
       <>
@@ -480,14 +507,24 @@ const Main = () => {
               {curRank == 0
                 ? gitRankList &&
                   gitRankList?.map((el, idx) => (
-                    <li key={idx}>
+                    <li
+                      key={idx}
+                      onClick={() => {
+                        goProfile(el.userId);
+                      }}
+                    >
                       <MainOtherItem curRank={curRank} item={el} />
                     </li>
                   ))
                 : bojRankList &&
                   bojRankList?.map((el, idx) => {
                     return (
-                      <li key={idx}>
+                      <li
+                        key={idx}
+                        onClick={() => {
+                          goProfile(el.userId);
+                        }}
+                      >
                         <MainOtherItem curRank={curRank} item={el} />
                       </li>
                     );
