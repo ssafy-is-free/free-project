@@ -94,4 +94,13 @@ public class Github extends BaseTimeEntity {
 	public static int calcScore(int commits, int followers, int stars, int repoSize) {
 		return (int)(stars * 100 + commits + followers * 0.5 + repoSize * 0.1);
 	}
+
+	public long countRepos() {
+		return this.githubRepos.stream().count();
+	}
+
+	public void updateGithubRepos(Set<GithubRepo> githubRepos) {
+		this.githubRepos = githubRepos;
+
+	}
 }
