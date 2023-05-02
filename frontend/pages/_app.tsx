@@ -29,7 +29,7 @@ function App({ Component, ...rest }: AppProps) {
             <title>CHPO</title>
           </Head>
           <Component {...props.pageProps} />
-          <Footer />
+          {/* <Footer /> */}
         </ThemeProvider>
       </PersistGate>
     </Provider>

@@ -85,12 +85,11 @@ function Footer() {
   ];
 
   const goPage = (item: any) => {
-    console.log('item', item);
-    if (isLogin) {
-      router.push(item.path);
+    if (!isLogin && item.path == '/profile') {
+      alert('로그인 후 이용 가능합니다.');
     } else {
-      if (item.path == '/profile') {
-        alert('로그인 후 이용 가능합니다.');
+      if (item.path == '/') {
+        window.location.href = `${item.path}`;
       } else {
         router.push(item.path);
       }

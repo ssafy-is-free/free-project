@@ -7,8 +7,9 @@ import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
 import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
 import FilterOption from './FilterOption';
+import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '@/redux/rankSlice';
-import { useDispatch } from 'react-redux';
+import { RootState } from '@/redux';
 
 const moveUp = keyframes`
  from{
@@ -128,6 +129,8 @@ const StyledCancelOk = styled(CancelOk)`
 
 const FilterModal = (props: IFilterModalProps) => {
   const dispatch = useDispatch();
+  // 옵션
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
 
   // 옵션 이름
   // const optionNames = ['언어', '그룹'];
@@ -148,6 +151,21 @@ const FilterModal = (props: IFilterModalProps) => {
     }[][]
   >([]);
 
+  // 클릭한 element 접근
+  const itemRefs = useRef<any>([]);
+  const arrowRefs = useRef<any>([]);
+
+  // option창 보이기
+  const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
+    { id: 1, state: false },
+    { id: 2, state: false },
+  ]);
+
+  // TODO : 그룹 추가되면 2차원 배열로 변경
+  // 선택된 옵션
+  const [selected, setSelected] = useState<number[]>();
+  const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
+
   // filter 목록 가져오기
   useEffect(() => {
     (async () => {
@@ -164,18 +182,22 @@ const FilterModal = (props: IFilterModalProps) => {
   }, []);
 
   useEffect(() => {
+    console.log('????');
+
+    // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
+    if (filter) {
+      console.log('두둥', itemRefs);
+      console.log('filter', filter);
+
+      itemRefs.current[0]?.childNodes.forEach((el: any) => {
+        console.log('el', el);
+      });
+    }
+  }, [itemRefs]);
+
+  useEffect(() => {
     setOptionTypes([languages]);
   }, [languages]);
-
-  // option창 보이기
-  const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
-    { id: 1, state: false },
-    { id: 2, state: false },
-  ]);
-
-  // 클릭한 element 접근
-  const itemRefs = useRef<any>([]);
-  const arrowRefs = useRef<any>([]);
 
   // option 창 여닫기 함수
   const onHandleOptionBox = (el: number) => {
@@ -210,11 +232,6 @@ const FilterModal = (props: IFilterModalProps) => {
     }
     setOpenOption(newArr);
   };
-
-  // TODO : 그룹 추가되면 2차원 배열로 변경
-  // 선택된 옵션
-  const [selected, setSelected] = useState<number[]>();
-  const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
 
   useEffect(() => {
     if (selected?.length && selected?.length > 0) {
@@ -265,6 +282,8 @@ const FilterModal = (props: IFilterModalProps) => {
       if (selected) {
         props.getRankList(props.size, 1, selected[2]);
       }
+
+      props.insertFilter(selectedItem);
     } else {
       // 필터를 선택하지 않았을 때
       props.getRankList(props.size, 1);
@@ -293,16 +312,13 @@ const FilterModal = (props: IFilterModalProps) => {
               </div>
               <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
                 {el.map((item, itemIdx) => {
-                  console.log(item);
                   return (
-                    // <div
-                    //   className="option-item"
-                    //   key={itemIdx}
-                    //   onClick={() => onClickOption(itemIdx, idx, item.languageId)}
-                    // >
-                    //   {item.name}
-                    // </div>
-                    <FilterOption item={item} onClick={() => onClickOption(itemIdx, idx, item.languageId, item.name)} />
+                    <FilterOption
+                      key={itemIdx}
+                      isInFilter={true}
+                      item={item}
+                      onClick={() => onClickOption(itemIdx, idx, item.languageId, item.name)}
+                    />
                   );
                 })}
               </div>

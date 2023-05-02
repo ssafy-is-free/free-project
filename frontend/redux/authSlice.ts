@@ -27,7 +27,8 @@ const authSlice = createSlice({
       state.isLogin = false;
     },
     setNew(state) {
-      state.isNew = true;
+      // state.isNew = true;
+      state.isNew = !state.isNew;
     },
     setLoginIng(state) {
       state.isLoginIng = false;

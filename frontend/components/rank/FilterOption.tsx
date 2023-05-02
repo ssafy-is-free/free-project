@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IFilterOptionProps } from './IRank';
+import { useEffect, useRef } from 'react';
 
 const Wrapper = styled.div`
   border: 1px solid ${(props) => props.theme.primary};
@@ -7,7 +8,6 @@ const Wrapper = styled.div`
   color: ${(props) => props.theme.primary};
   font-size: 0.8rem;
   text-align: center;
-  width: 92%;
   height: 40px;
   display: flex;
   align-items: center;
@@ -21,7 +21,24 @@ const Wrapper = styled.div`
 `;
 
 const FilterOption = (props: IFilterOptionProps) => {
-  return <Wrapper onClick={props.onClick}> {props.item.name}</Wrapper>;
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const style = ref.current?.style;
+    if (style) {
+      if (props.isInFilter) {
+        style.width = '92%';
+      } else {
+        style.width = `calc((100% - 24px)/3)`;
+      }
+    }
+  }, []);
+
+  return (
+    <Wrapper ref={ref} onClick={props.onClick}>
+      {props?.item?.name}
+    </Wrapper>
+  );
 };
 
 export default FilterOption;

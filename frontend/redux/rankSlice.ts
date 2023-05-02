@@ -1,12 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface RankSlice {
-  filter:
-    | {
-        languageId: number;
-        name: string;
-      }[]
-    | null;
+  filter: {
+    languageId: number;
+    name: string;
+  } | null;
 }
 
 const initialState: RankSlice = {
@@ -18,7 +16,9 @@ const rankSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action: PayloadAction<{ languageId: number; name: string }>) {
-      state.filter?.push(action.payload);
+      console.log('action.payload', action.payload);
+
+      state.filter = action.payload;
     },
   },
 });
