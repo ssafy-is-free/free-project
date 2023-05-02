@@ -1,5 +1,9 @@
 package com.ssafy.backend.domain.algorithm.service;
 
+import static org.mockito.Mockito.*;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +16,8 @@ import com.ssafy.backend.domain.algorithm.repository.BojLanguageQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
+import com.ssafy.backend.domain.entity.Baekjoon;
+import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
@@ -47,7 +53,12 @@ public class BojServiceImplTest {
 	@DisplayName("유저 아이디를 기반으로 해당 유저의 랭킹 정보를 반환하는 테스트")
 	public void testGetBojByUserId() {
 		//given
-
+		User user = new User(1, "soda", "1", "sodamito2", "", false, "");
+		when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+		Baekjoon baekjoon = new Baekjoon(1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 724, 173, 700,
+			user, 0);
+		when(bojRepository.findByUser(user)).thenReturn(Optional.of(baekjoon));
+		
 		//when
 
 		//then
