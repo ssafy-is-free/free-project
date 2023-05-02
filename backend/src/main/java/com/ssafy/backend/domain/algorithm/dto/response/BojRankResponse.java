@@ -29,6 +29,12 @@ public class BojRankResponse {
 	private Long rankUpDown;
 	private String tierUrl;
 
+	public boolean isEmpty() {
+		return this.userId == null && this.nickname == null && this.rank == null &&
+			this.score == null && this.avatarUrl == null && this.rankUpDown == null &&
+			this.tierUrl == null;
+	}
+
 	public static BojRankResponse createEmpty() {
 		return BojRankResponse.builder().build();
 	}
