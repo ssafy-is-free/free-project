@@ -95,13 +95,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 
 		int rank;
-		if(bojIdSet == null){
+		if (bojIdSet == null) {
 			rank = bojRepository.getRank(boj.getScore(), userId);
-		}else{
+		} else {
 			rank = bojRepository.getRankWithFilter(bojIdSet.getBojIds(), boj.getScore(), userId);
 		}
 		rank += 1;
-
 
 		// 랭크 세기
 		/*int rank = 1;
@@ -162,7 +161,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		//언어 정보
 		List<BojLanguageResponse> bojLanguageList = baekjoonLanguageList.stream()
-			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()), u.getPassPercentage()))
+			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()), u.getPassPercentage(),
+				u.getPassCount()))
 			.collect(Collectors.toList());
 		return BojInfoDetailResponse.create(user, baekjoon,
 			bojLanguageList);
