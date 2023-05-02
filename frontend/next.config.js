@@ -40,5 +40,9 @@ const nextConfig = {
 };
 
 const removeImports = require('next-remove-imports')();
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+});
 
-module.exports = removeImports(nextConfig);
+module.exports = removeImports(withPWA(nextConfig));

@@ -26,14 +26,14 @@ pipeline {
         //         }
         //     }
         // }
-        // stage("env copy") {
-        //     steps {
-        //         dir("${APPLICATION_ENV_PATH}"){
-        //             sh "pwd"
-        //             sh "cp -f fronted_env/.env manamana-frontend/frontend/.env"
-        //         }
-        //     }
-        // }
+        stage("env copy") {
+            steps {
+                script{
+                    sh "pwd"
+                    sh "cp -f .env frontend/.env"
+                }
+            }
+        }
 
         stage("Clean Container&Image") {
             steps {
