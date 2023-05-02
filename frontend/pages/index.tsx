@@ -421,6 +421,7 @@ const Main = () => {
         id={clickedUserId}
         back={() => {
           setOpenProfile(false);
+          setClickedUserId(0);
         }}
       ></Profile>
     );
