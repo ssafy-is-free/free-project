@@ -94,16 +94,26 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 
+		int rank;
+		if(bojIdSet == null){
+			rank = bojRepository.getRank(boj.getScore(), userId);
+		}else{
+			rank = bojRepository.getRankWithFilter(bojIdSet.getBojIds(), boj.getScore(), userId);
+		}
+		rank += 1;
+
+
 		// 랭크 세기
-		int rank = 1;
+		/*int rank = 1;
 		for (Baekjoon baekjoon : baekjoonList) {
 			if (baekjoon.getUser().getId() == userId) {
 				return BojRankResponse.createBojMyRankResponseDTO(baekjoon, user, rank);
 			} else {
 				rank++;
 			}
-		}
-		return BojRankResponse.createEmpty();
+		}*/
+
+		return BojRankResponse.createBojMyRankResponseDTO(boj, user, rank);
 
 	}
 
