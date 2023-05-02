@@ -144,15 +144,18 @@ def getUser(username: str, result: dict):
 
     # 닉네임
     nickname_tag = soup.select_one('span[class="p-nickname vcard-username d-block"]')
+    nickname = ""
     if nickname_tag is not None:
         nickname = nickname_tag.text.strip()
 
     # 프로필 이미지
     img_tag = soup.select_one('img[alt="Avatar"]')
+    img = ""
     if img_tag is not None:
         img = img_tag.attrs['src']
 
     # 팔로워
+    followers = 0
     followers_tag = soup.select_one(f'a[href="https://github.com/{username}?tab=followers"]')
     if followers_tag is not None:
         followers = int(followers_tag.text.strip().split()[0].replace(',', ''))
