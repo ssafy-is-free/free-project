@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.github.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,4 +13,8 @@ public class GitHubRankingFilter {
 		return languageId == null;
 	}
 
+	@Builder
+	private GitHubRankingFilter(Long languageId, Long jobPostingId) {
+		this.languageId = languageId;
+	}
 }
