@@ -15,8 +15,8 @@ function App({ Component, ...rest }: AppProps) {
   const [cookies, setCookie] = useCookies(['redirect-uri']);
 
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      setCookie('redirect-uri', 'prod');
+    if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
+      setCookie('redirect-uri', 'k8b');
     }
   }, []);
 
