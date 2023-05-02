@@ -72,7 +72,7 @@ pipeline {
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_BE}"){
                     script{
-                        image = docker.build("${IMAGE_NAME_BE}"){
+                        def image = docker.build("${IMAGE_NAME_BE}"){
                             args "--no-cache"
                         }
                         //     sh "docker build -t ${IMAGE_NAME_BE} ." 
