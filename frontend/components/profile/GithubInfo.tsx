@@ -40,15 +40,15 @@ const ReadmeDiv = styled.div`
 const GithubInfo = ({ githubData, my }: IGithubInfo) => {
   const basicInfo = [
     {
-      name: 'Commits',
+      name: '커밋',
       data: githubData.commit,
     },
     {
-      name: 'Star',
+      name: '스타',
       data: githubData.star,
     },
     {
-      name: 'Followers',
+      name: '팔로워',
       data: githubData.followers,
     },
   ];
