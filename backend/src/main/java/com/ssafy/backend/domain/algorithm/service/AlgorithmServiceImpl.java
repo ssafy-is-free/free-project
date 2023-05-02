@@ -28,9 +28,8 @@ import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
-import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
-import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
+import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
@@ -76,7 +75,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId, Long languageId) {
+	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
