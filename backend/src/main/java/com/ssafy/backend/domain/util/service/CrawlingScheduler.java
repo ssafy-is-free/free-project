@@ -1,6 +1,5 @@
 package com.ssafy.backend.domain.util.service;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -43,14 +42,14 @@ public class CrawlingScheduler {
 			githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
 		}
 	}
+	// TODO: 2023-05-02 이터레이터에서 포이치로 바꾸기~
 
 	@Scheduled(cron = "0 0 2 * * *")
 	public void bojUpdate() {
 		log.info("백준 정보 업데이트 시작");
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 		int rank = 1;
-		for (Iterator<Baekjoon> it = baekjoonList.iterator(); it.hasNext(); ) {
-			Baekjoon baekjoon = it.next();
+		for (Baekjoon baekjoon : baekjoonList) {
 			baekjoon.updatePrevRankBaekjoon(rank++);
 		}
 
