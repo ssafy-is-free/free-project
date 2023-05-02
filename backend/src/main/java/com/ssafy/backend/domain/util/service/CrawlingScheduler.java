@@ -35,7 +35,7 @@ public class CrawlingScheduler {
 		}
 	}
 
-	@Scheduled(cron = "0 52 10 * * *")
+	@Scheduled(cron = "0 0 2 * * *")
 	public void bojUpdate() {
 		log.info("백준 정보 업데이트 시작");
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
