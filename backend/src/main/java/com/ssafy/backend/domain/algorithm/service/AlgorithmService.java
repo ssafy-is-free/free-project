@@ -21,6 +21,7 @@ public interface AlgorithmService {
 	/*백준 랭킹*/
 	List<BojRankResponse> getBojRankListByBojId(String group, Long languageId, Integer score, Long rank,
 		Long userId,
+		Long jobPostingId,
 		Pageable pageable);
 
 }

@@ -18,6 +18,8 @@ import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
+import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
@@ -41,12 +43,17 @@ public class BojServiceImplTest {
 	private BojQueryRepository bojQueryRepository;
 	@Mock
 	private BojLanguageQueryRepository bojLanguageQueryRepository;
+	@Mock
+	private JobPostingRepository jobPostingRepository;
+	@Mock
+	private JobHistoryQueryRepository jobHistoryQueryRepository;
 	private AlgorithmServiceImpl algorithmService;
 
 	@BeforeEach
 	void setUp() {
 		this.algorithmService = new AlgorithmServiceImpl(bojRepository, bojLanguageRepository, languageRepository,
-			userRepository, webClient, userQueryRepository, bojQueryRepository, bojLanguageQueryRepository);
+			userRepository, userQueryRepository, bojQueryRepository, bojLanguageQueryRepository
+			, jobPostingRepository, jobHistoryQueryRepository);
 	}
 
 	@Test

@@ -34,7 +34,7 @@ public class BojQueryRepository {
 	}
 
 	// TODO: 2023-04-28 언어별, 그룹별 추가 필요
-	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, String group, Integer score, Long languageId,
+	public List<Baekjoon> findAllByScore(Set<Long> baekjoonIdSet, Set<Long> jobUserId, String group, Integer score,
 		Long userId, Pageable pageable) {
 
 		QBaekjoon baekjoon = QBaekjoon.baekjoon;
@@ -44,7 +44,8 @@ public class BojQueryRepository {
 			.selectFrom(baekjoon)
 			.leftJoin(baekjoon.user, user).fetchJoin()
 			.where(cursorCondition(score, userId),
-				inBaekjoonId(baekjoonIdSet, languageId))
+				inLanguageBaekjoonId(baekjoonIdSet),
+				inJobUserId(jobUserId))
 			.orderBy(baekjoon.score.desc(),
 				baekjoon.user.id.asc())
 			.limit(pageable.getPageSize())
@@ -63,13 +64,21 @@ public class BojQueryRepository {
 		return baekjoon.score.lt(score).or(baekjoon.score.eq(score).and(baekjoon.user.id.gt(userId)));
 	}
 
-	private BooleanExpression inBaekjoonId(Set<Long> baekjoonIdSet, Long languageId) {
+	private BooleanExpression inLanguageBaekjoonId(Set<Long> baekjoonIdSet) {
 
-		if (baekjoonIdSet == null || languageId == null)
+		if (baekjoonIdSet == null || baekjoonIdSet.isEmpty())
 			return null;
 
 		return baekjoon.id.in(baekjoonIdSet);
 
+	}
+	private BooleanExpression inJobUserId(Set<Long> jobUserId) {
+
+		if (jobUserId == null || jobUserId.isEmpty()) {
+			return null;
+		}
+
+		return QBaekjoon.baekjoon.user.id.in(jobUserId);
 	}
 
 	private BooleanExpression bojIdIn(FilteredBojIdSet baekjoonIdSet) {
@@ -79,5 +88,6 @@ public class BojQueryRepository {
 	private BooleanExpression userIdIn(FilteredUserIdSet userIdSet) {
 		return userIdSet != null ? baekjoon.user.id.in(userIdSet.getUserIds()) : null;
 	}
+
 
 }

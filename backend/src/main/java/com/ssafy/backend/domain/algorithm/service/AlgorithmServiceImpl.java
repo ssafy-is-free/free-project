@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.backend.domain.algorithm.dto.FilteredBojIdSet;
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
@@ -29,6 +28,8 @@ import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
+import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
+import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
@@ -51,12 +52,12 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	private final BojLanguageRepository bojLanguageRepository;
 	private final LanguageRepository languageRepository;
 	private final UserRepository userRepository;
-	private final WebClient webClient;
 	private final UserQueryRepository userQueryRepository;
 	private final BojQueryRepository bojQueryRepository;
 	private final BojLanguageQueryRepository bojLanguageQueryRepository;
 	private final JobPostingRepository jobPostingRepository;
 	private final JobHistoryRepository jobHistoryRepository;
+	private final JobHistoryQueryRepository jobHistoryQueryRepository;
 
 	@Override
 	@Transactional
@@ -75,8 +76,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
-		userId = 3;
+	public BojRankResponse getBojByUserId(long userId, Long languageId) {
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
@@ -182,29 +182,63 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	}
 
 	/*백준 검색 - 랭킹*/
+	// TODO: 2023-05-02 넘기고 있는 파라미터가 너무 많기 때문에 클래스로 묶어서 전달하도록 변경 필요.
 	@Override
 	public List<BojRankResponse> getBojRankListByBojId(String group, Long languageId, Integer score,
-		Long rank, Long userId, Pageable pageable) {
+		Long rank, Long userId, Long jobPostingId, Pageable pageable) {
+
+		//취업공고에 해당하는 유저 정보 얻기.
+		Set<Long> jobUserId = jobPostingId == null ?
+			Collections.EMPTY_SET :
+			getJobUserId(jobPostingId);
+
+		//공고 id가 있는데,공고에 해당하는 유저를 조회했을 때 비어있으면 빈 리스트 반환.
+		if (jobPostingId != null && jobUserId.isEmpty()) {
+			return Collections.EMPTY_LIST;
+		}
 
 		//해당 언어를 사용하는 정보 조회
-		List<BaekjoonLanguage> baekjoonLanguageList = languageId == null ?
-			Collections.EMPTY_LIST :
-			bojLanguageQueryRepository.findBojLanguageByLanguage(languageId);
-
-		//조회 된 정보에서 baekjoon id만 set으로 추출
-		Set<Long> baekjoonIdSet = baekjoonLanguageList.stream()
-			.map((b) -> b.getBaekjoon().getId())
-			.collect(Collectors.toSet());
+		Set<Long> baekjoonIdSet = languageId == null ?
+			Collections.EMPTY_SET :
+			getLanguageBojId(languageId);
 
 		//조회된 값이 없으면 빈 리스트 반환
 		if (languageId != null && baekjoonIdSet.isEmpty())
 			return Collections.EMPTY_LIST;
 
-		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, group, score, languageId,
+		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
+
+		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
 			userId, pageable);
 
 		return BojRankResponse.createList(baekjoonList, rank, baekjoonIdSet);
 
+	}
+
+	private Set<Long> getLanguageBojId(Long languageId) {
+		List<BaekjoonLanguage> bojLanguageList = bojLanguageQueryRepository.findBojLanguageByLanguage(languageId);
+
+		//조회 된 정보에서 baekjoon id만 set으로 추출
+		Set<Long> baekjoonIdSet = bojLanguageList.stream()
+			.map(BaekjoonLanguage::getBaekjoon)
+			.map(Baekjoon::getId)
+			.collect(Collectors.toSet());
+		return baekjoonIdSet;
+	}
+
+	private Set<Long> getJobUserId(Long jobPostingId) {
+		//채용공고 조회
+		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+			.orElseThrow(() -> new CustomException(NOT_FOUND_JOBPOSTING));
+
+		// TODO: 2023-05-02 스트림을 이용해서 id로 변환하는 로직은 메서드로 빼는 것이 좋음
+		//채용 공고 id가 존재하면 해당하는 유저 id 조회.
+		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingIdJoinUser(jobPosting.getId());
+		Set<Long> jobUserId = jobHistoryList.stream()
+			.map(JobHistory::getUser)
+			.map(User::getId)
+			.collect(Collectors.toSet());
+		return jobUserId;
 	}
 
 	private FilteredBojIdSet getBojIdBy(Long languageId) {
