@@ -23,7 +23,7 @@ import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("랭킹 필터 서비스 테스트")
+@DisplayName("백준 유저 서비스")
 public class BojServiceImplTest {
 	@Mock
 	private BojRepository bojRepository;
@@ -58,7 +58,7 @@ public class BojServiceImplTest {
 		Baekjoon baekjoon = new Baekjoon(1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 724, 173, 700,
 			user, 0);
 		when(bojRepository.findByUser(user)).thenReturn(Optional.of(baekjoon));
-		
+
 		//when
 
 		//then

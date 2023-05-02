@@ -40,15 +40,27 @@ public class BojRankResponse {
 	}
 
 	public static BojRankResponse createBojMyRankResponseDTO(Baekjoon baekjoon, User user, int rank) {
-		return BojRankResponse.builder()
-			.userId(user.getId())
-			.nickname(user.getBojId())
-			.rank(rank)
-			.score(baekjoon.getScore())
-			.avatarUrl(user.getImage())
-			.rankUpDown(baekjoon.getPreviousRank() - rank)
-			.tierUrl(baekjoon.getTier())
-			.build();
+		if (baekjoon.getPreviousRank() == 0) {
+			return BojRankResponse.builder()
+				.userId(user.getId())
+				.nickname(user.getBojId())
+				.rank(rank)
+				.score(baekjoon.getScore())
+				.avatarUrl(user.getImage())
+				.rankUpDown(0L)
+				.tierUrl(baekjoon.getTier())
+				.build();
+		} else {
+			return BojRankResponse.builder()
+				.userId(user.getId())
+				.nickname(user.getBojId())
+				.rank(rank)
+				.score(baekjoon.getScore())
+				.avatarUrl(user.getImage())
+				.rankUpDown(baekjoon.getPreviousRank() - rank)
+				.tierUrl(baekjoon.getTier())
+				.build();
+		}
 	}
 
 	public static BojRankResponse create(Baekjoon baekjoon, int index, Long prevRank, Set<Long> baekjoonIdSet) {
