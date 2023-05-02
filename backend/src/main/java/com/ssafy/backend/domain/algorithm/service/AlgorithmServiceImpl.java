@@ -206,7 +206,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return Collections.EMPTY_LIST;
 
 		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
-
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
 			userId, pageable);
 
@@ -230,7 +229,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_JOBPOSTING));
 
-		// TODO: 2023-05-02 스트림을 이용해서 id로 변환하는 로직은 메서드로 빼는 것이 좋음
 		//채용 공고 id가 존재하면 해당하는 유저 id 조회.
 		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingIdJoinUser(jobPosting.getId());
 		Set<Long> jobUserId = jobHistoryList.stream()
