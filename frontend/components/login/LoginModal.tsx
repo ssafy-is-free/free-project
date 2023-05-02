@@ -56,11 +56,13 @@ const StyledCloseIcon = styled(CloseIcon)`
 
 const LoginModal = (props: ILoginProps) => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setLoginStart());
-  }, []);
+  // useEffect(() => {
+  // dispatch(setLoginStart());
+  // }, []);
 
   const onBtnClick = () => {
+    dispatch(setLoginStart());
+
     // 기존 로그인 모달 창 닫기
     props.onClick();
 

@@ -6,6 +6,10 @@ import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
 import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
+import FilterOption from './FilterOption';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter } from '@/redux/rankSlice';
+import { RootState } from '@/redux';
 
 const moveUp = keyframes`
  from{
@@ -124,6 +128,10 @@ const StyledCancelOk = styled(CancelOk)`
 `;
 
 const FilterModal = (props: IFilterModalProps) => {
+  const dispatch = useDispatch();
+  // 옵션
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
+
   // 옵션 이름
   // const optionNames = ['언어', '그룹'];
   const optionNames = ['언어'];
@@ -143,6 +151,37 @@ const FilterModal = (props: IFilterModalProps) => {
     }[][]
   >([]);
 
+  // 클릭한 element 접근
+  const itemRefs = useRef<any>([]);
+  const arrowRefs = useRef<any>([]);
+
+  // option창 보이기
+  const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
+    { id: 1, state: false },
+    { id: 2, state: false },
+  ]);
+
+  // TODO : 그룹 추가되면 2차원 배열로 변경
+  // 선택된 옵션
+  const [selected, setSelected] = useState<number[]>();
+  const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
+
+  // TODO : 더 좋은 방법으로 수정하기
+  useEffect(() => {
+    // if (itemRefs.current) {
+    //   // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
+    //   if (filter) {
+    //     itemRefs.current[0]?.childNodes.forEach((el: any, idx: number) => {
+    //       if (filter.name == el.childNodes[0].innerHTML.trim()) {
+    //         const style = itemRefs.current[0].childNodes[idx].style;
+    //         style.backgroundColor = '#4A58A9';
+    //         style.color = '#ffffff';
+    //       }
+    //     });
+    //   }
+    // }
+  });
+
   // filter 목록 가져오기
   useEffect(() => {
     (async () => {
@@ -161,16 +200,6 @@ const FilterModal = (props: IFilterModalProps) => {
   useEffect(() => {
     setOptionTypes([languages]);
   }, [languages]);
-
-  // option창 보이기
-  const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
-    { id: 1, state: false },
-    { id: 2, state: false },
-  ]);
-
-  // 클릭한 element 접근
-  const itemRefs = useRef<any>([]);
-  const arrowRefs = useRef<any>([]);
 
   // option 창 여닫기 함수
   const onHandleOptionBox = (el: number) => {
@@ -206,10 +235,6 @@ const FilterModal = (props: IFilterModalProps) => {
     setOpenOption(newArr);
   };
 
-  // TODO : 그룹 추가되면 2차원 배열로 변경
-  // 선택된 옵션
-  const [selected, setSelected] = useState<number[]>();
-
   useEffect(() => {
     if (selected?.length && selected?.length > 0) {
       const arr = itemRefs.current[selected[0]].childNodes;
@@ -228,8 +253,12 @@ const FilterModal = (props: IFilterModalProps) => {
   }, [selected]);
 
   // option 클릭 시
-  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number) => {
+  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number, name: string) => {
     setSelected([parentIdx, itemIdx, languageId]);
+    setSelectedItem({
+      languageId: languageId,
+      name: name,
+    });
   };
 
   // TODO : 더 좋은 방법이 없을까..?
@@ -247,13 +276,23 @@ const FilterModal = (props: IFilterModalProps) => {
 
   const onClickFilter = () => {
     if (selected && selected?.length > 0) {
+      if (selectedItem) {
+        dispatch(setFilter(selectedItem));
+      }
+
       // 필터를 선택했을 때
       if (selected) {
         props.getRankList(props.size, 1, selected[2]);
       }
+
+      props.insertFilter(selectedItem);
     } else {
       // 필터를 선택하지 않았을 때
       props.getRankList(props.size, 1);
+      dispatch(setFilter(null));
+      if (props.setSelectedOption) {
+        props.setSelectedOption(null);
+      }
     }
 
     // 모달창 닫기
@@ -280,13 +319,12 @@ const FilterModal = (props: IFilterModalProps) => {
               <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
                 {el.map((item, itemIdx) => {
                   return (
-                    <div
-                      className="option-item"
+                    <FilterOption
                       key={itemIdx}
-                      onClick={() => onClickOption(itemIdx, idx, item.languageId)}
-                    >
-                      {item.name}
-                    </div>
+                      isInFilter={true}
+                      item={item}
+                      onClick={() => onClickOption(itemIdx, idx, item.languageId, item.name)}
+                    />
                   );
                 })}
               </div>

@@ -13,7 +13,7 @@ import LoginModal from '@/components/login/LoginModal';
 import BojModal from '@/components/login/BojModal';
 import FilterModal from '@/components/rank/FilterModal';
 import { useDispatch, useSelector } from 'react-redux';
-import { SplashState, splashCheck } from '@/redux/splashSlice';
+import { splashCheck } from '@/redux/splashSlice';
 import { RootState } from '@/redux';
 import {
   getBojRanking,
@@ -26,7 +26,8 @@ import {
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
-import { login, setLoginIng, setNew } from '@/redux/authSlice';
+import { setNew } from '@/redux/authSlice';
+import FilterOption from '@/components/rank/FilterOption';
 
 import Profile from '@/components/profile/Profile';
 
@@ -43,11 +44,12 @@ const Wrapper = styled.div`
   .content-wrapper {
     /* position: relative;   */
     position: absolute;
+    /* position: sticky; */
     z-index: 1;
     bottom: 0;
     /* margin-top: 32px; */
     /* padding: 72px 32px 32px; */
-    padding: 3rem 2rem 2rem;
+    padding: 70px 2rem 2rem;
     width: 100%;
     /* height: 672px; */
     height: 83vh;
@@ -69,13 +71,15 @@ const Wrapper = styled.div`
         font-weight: bold;
         margin-bottom: 16px;
       }
-      margin-bottom: 32px;
+      margin-bottom: 16px;
+      margin-top: 16px;
     }
 
     .all-rank-label {
       font-size: 20px;
       font-weight: bold;
       margin-bottom: 16px;
+      margin-top: 16px;
     }
 
     .rank-list {
@@ -84,11 +88,29 @@ const Wrapper = styled.div`
         font-weight: bold;
         margin-bottom: 16px;
       } */
-
+      /* border: 1px solid red; */
       overflow-y: scroll;
+      height: 80%;
+      /* margin-top: 16px; */
+
+      &::-webkit-scrollbar {
+        width: 8px;
+        cursor: pointer; // 커서 포인터 왜 안돼..
+      }
+      &::-webkit-scrollbar-thumb {
+        height: 15%;
+        background-color: ${(props) => props.theme.primary};
+        border-radius: 10px;
+      }
 
       li {
         margin-bottom: 8px;
+      }
+
+      .observer-box {
+        height: 5%;
+        width: 100%;
+        background-color: white;
       }
     }
   }
@@ -100,7 +122,6 @@ const Main = () => {
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
   // 로그인 중임을 나타내는 state
-  const isLoginIng = useSelector<RootState>((selector) => selector.authChecker.isLoginIng);
   const loginStart = useSelector<RootState>((selector) => selector.authChecker.loginStart);
 
   // splash 상태관리
@@ -120,14 +141,18 @@ const Main = () => {
   const [clickedUserId, setClickedUserId] = useState<number>(0);
 
   // 무한 스크롤 구현하기
-  const [ref, inView] = useInView();
+  const [ref, inView, entry] = useInView({
+    threshold: 0,
+  });
   const [inViewFirst, setInViewFirst] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [size, setSize] = useState<number>(5);
+  const [size, setSize] = useState<number>(20);
   const [nextRank, setNextRank] = useState<number>(1);
   const [tempRank, setTempRank] = useState<number>(1);
   const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
   const [noMore, setNoMore] = useState<boolean>(false);
+  // 검색후 무한 스크롤 방지하기
+  const [noScroll, setNoScroll] = useState<boolean>(false);
 
   // TODO 이렇게 타입을 일일이 써줘야 하나..
   /**
@@ -142,17 +167,19 @@ const Main = () => {
   const [myGitRank, setMyGitRank] = useState<resultMyInformation | null>(null);
   const [myBojRank, setMyBojRank] = useState<resultMyInformation | null>(null);
 
+  // 필터 모덜에서 옵션 선택후 적용하면 필터 state에 값 셋팅
+  const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
+
   /**
-   * splash check useEffect
+   * splash check, useEffect
    */
   useEffect(() => {
-    if (loginStart) {
-      if (!isNew && isLoginIng) {
-        setOpenBoj(true);
-      }
+    if (loginStart && isNew) {
+      setOpenBoj(true);
+      dispatch(setNew());
     }
 
-    dispatch(setLoginIng());
+    // dispatch(setLoginIng());
 
     const timer = setTimeout(() => {
       dispatch(splashCheck());
@@ -202,7 +229,7 @@ const Main = () => {
   // TODO : 유저가 한 명일 떄 대응하는 걸 해야함
   // 무한 스크롤 구현하기
   useEffect(() => {
-    if (!noMore) {
+    if (!noMore && !noScroll) {
       if (inView && !inViewFirst) {
         // inView가 true 일때만 실행한다.
         setInViewFirst(true);
@@ -224,12 +251,10 @@ const Main = () => {
   }, [tempRank]);
 
   useEffect(() => {
-    console.log('isLogin', isLogin);
     setNoMore(false);
     getRankList(size, 1);
+    setSelectedOption(null);
   }, [curRank]);
-
-  useEffect(() => {}, [gitRankList]);
 
   // 랭킹 정보 가져오기
   const getRankList = (sizeParam: number, nextRankParam: number, languageIdParam?: number) => {
@@ -397,8 +422,6 @@ const Main = () => {
               data = await getMyBojRanking();
             }
 
-            console.log('boj data', data);
-
             if (data?.data?.userId != null) setMyBojRank(data?.data);
             else {
               setMyBojRank(null);
@@ -409,6 +432,11 @@ const Main = () => {
     } finally {
       // console.log('finally');
     }
+  };
+
+  // filter
+  const insertFilter = (el: any) => {
+    setSelectedOption(el);
   };
 
   // if (!splash && !splashState) {
@@ -430,11 +458,32 @@ const Main = () => {
       <>
         <Wrapper>
           <RankMenu onClick={() => setOpenSelect(true)} curRank={curRank} />
-          <SearchBar curRank={curRank} setGitRankList={setGitRankList} setBojRankList={setBojRankList} />
+
+          <SearchBar
+            setNoScroll={setNoScroll}
+            curRank={curRank}
+            setGitRankList={setGitRankList}
+            setBojRankList={setBojRankList}
+            getRankList={getRankList}
+            size={size}
+          />
+
           <div className="content-wrapper">
-            <div className="filter-box">
-              <FilterIcon onClick={() => setOpenFilter(true)} />
-            </div>
+            {!noScroll && (
+              <div className="filter-box">
+                <FilterIcon onClick={() => setOpenFilter(true)} />
+              </div>
+            )}
+
+            {selectedOption && (
+              <FilterOption
+                item={selectedOption}
+                isInMain={true}
+                getRankList={getRankList}
+                size={size}
+                setSelectedOption={setSelectedOption}
+              />
+            )}
             {myGitRank && curRank == 0 ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
@@ -480,11 +529,10 @@ const Main = () => {
                       </li>
                     );
                   })}
-
               {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
               {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
               {loading && <Spinner />}
-              <div ref={ref}></div>
+              <div ref={ref} className="observer-box"></div>
             </ul>
           </div>
         </Wrapper>
@@ -499,6 +547,8 @@ const Main = () => {
             nextRank={nextRank}
             getRankList={getRankList}
             setIsLangId={setIsLangId}
+            insertFilter={insertFilter}
+            setSelectedOption={setSelectedOption}
           />
         )}
       </>

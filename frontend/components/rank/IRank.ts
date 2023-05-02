@@ -28,6 +28,12 @@ export type resultMyInformation =
 export interface IFilterModalProps {
   /**
    *
+   * 필터 state 접근 메소드
+   */
+  insertFilter: (el: any) => void;
+
+  /**
+   *
    * 모달창 닫는 메소드
    */
   onClick: () => void;
@@ -56,6 +62,8 @@ export interface IFilterModalProps {
    * isLangId useState set 메소드
    */
   setIsLangId: React.Dispatch<React.SetStateAction<number>>;
+
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }
 
 /**
@@ -134,4 +142,46 @@ export interface IRankSearchBarProps {
    */
   setGitRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
   setBojRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
+  setNoScroll: React.Dispatch<React.SetStateAction<boolean>>;
+
+  /**
+   * api 메소드
+   */
+  getRankList: Function;
+
+  /**
+   * size
+   */
+  size: number;
+}
+
+export interface IFilterOptionProps {
+  /**
+   * 클릭 했을 때 발생할 이벤트
+   */
+  onClick?: () => void;
+
+  /**
+   * optioo 정보
+   */
+  item?: {
+    languageId: number;
+    name: string;
+  };
+
+  isInFilter?: boolean;
+
+  isInMain?: boolean;
+
+  /**
+   * api 메소드
+   */
+  getRankList?: Function;
+
+  /**
+   * size
+   */
+  size?: number;
+
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }

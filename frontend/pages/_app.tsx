@@ -7,8 +7,8 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import Footer from '@/components/common/Footer';
 import Head from 'next/head';
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useEffect } from 'react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
@@ -19,7 +19,6 @@ function App({ Component, ...rest }: AppProps) {
       setCookie('redirect-uri', 'k8b');
     }
   }, []);
-
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
