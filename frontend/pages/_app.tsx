@@ -16,7 +16,7 @@ function App({ Component, ...rest }: AppProps) {
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
-      setCookie('redirect-uri', 'dev');
+      setCookie('redirect-uri', 'k8b');
     }
   }, []);
 
