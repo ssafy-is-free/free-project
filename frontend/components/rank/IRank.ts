@@ -135,3 +135,15 @@ export interface IRankSearchBarProps {
   setGitRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
   setBojRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
 }
+
+export interface IFilterOptionProps {
+  /**
+   * 클릭 했을 때 발생할 이벤트
+   */
+  onClick: () => void;
+
+  item: {
+    languageId: number;
+    name: string;
+  };
+}

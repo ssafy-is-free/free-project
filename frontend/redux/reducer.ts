@@ -6,6 +6,7 @@ import authSlice from './authSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import storageSession from 'redux-persist/lib/storage/session';
+import rankSlice from './rankSlice';
 
 const persistConfig = {
   key: 'root',
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   counter: countSlice,
   splashChecker: splashSlice,
   authChecker: authSlice,
+  rankChecker: rankSlice,
 });
 
 const rootReducer = persistReducer(persistConfig, reducers);

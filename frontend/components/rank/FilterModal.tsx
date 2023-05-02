@@ -6,6 +6,9 @@ import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
 import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
+import FilterOption from './FilterOption';
+import { setFilter } from '@/redux/rankSlice';
+import { useDispatch } from 'react-redux';
 
 const moveUp = keyframes`
  from{
@@ -124,6 +127,8 @@ const StyledCancelOk = styled(CancelOk)`
 `;
 
 const FilterModal = (props: IFilterModalProps) => {
+  const dispatch = useDispatch();
+
   // 옵션 이름
   // const optionNames = ['언어', '그룹'];
   const optionNames = ['언어'];
@@ -209,6 +214,7 @@ const FilterModal = (props: IFilterModalProps) => {
   // TODO : 그룹 추가되면 2차원 배열로 변경
   // 선택된 옵션
   const [selected, setSelected] = useState<number[]>();
+  const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
 
   useEffect(() => {
     if (selected?.length && selected?.length > 0) {
@@ -228,8 +234,12 @@ const FilterModal = (props: IFilterModalProps) => {
   }, [selected]);
 
   // option 클릭 시
-  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number) => {
+  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number, name: string) => {
     setSelected([parentIdx, itemIdx, languageId]);
+    setSelectedItem({
+      languageId: languageId,
+      name: name,
+    });
   };
 
   // TODO : 더 좋은 방법이 없을까..?
@@ -247,6 +257,10 @@ const FilterModal = (props: IFilterModalProps) => {
 
   const onClickFilter = () => {
     if (selected && selected?.length > 0) {
+      if (selectedItem) {
+        dispatch(setFilter(selectedItem));
+      }
+
       // 필터를 선택했을 때
       if (selected) {
         props.getRankList(props.size, 1, selected[2]);
@@ -279,14 +293,16 @@ const FilterModal = (props: IFilterModalProps) => {
               </div>
               <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
                 {el.map((item, itemIdx) => {
+                  console.log(item);
                   return (
-                    <div
-                      className="option-item"
-                      key={itemIdx}
-                      onClick={() => onClickOption(itemIdx, idx, item.languageId)}
-                    >
-                      {item.name}
-                    </div>
+                    // <div
+                    //   className="option-item"
+                    //   key={itemIdx}
+                    //   onClick={() => onClickOption(itemIdx, idx, item.languageId)}
+                    // >
+                    //   {item.name}
+                    // </div>
+                    <FilterOption item={item} onClick={() => onClickOption(itemIdx, idx, item.languageId, item.name)} />
                   );
                 })}
               </div>

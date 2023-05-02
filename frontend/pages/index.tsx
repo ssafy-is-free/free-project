@@ -101,6 +101,9 @@ const Main = () => {
   const isLoginIng = useSelector<RootState>((selector) => selector.authChecker.isLoginIng);
   const loginStart = useSelector<RootState>((selector) => selector.authChecker.loginStart);
 
+  // 필터
+  // const fiteer = useSelector<RootState>((selector) => selector.rankChecker.);
+
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
   const dispatch = useDispatch();
@@ -118,7 +121,7 @@ const Main = () => {
   const [ref, inView] = useInView();
   const [inViewFirst, setInViewFirst] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [size, setSize] = useState<number>(5);
+  const [size, setSize] = useState<number>(10);
   const [nextRank, setNextRank] = useState<number>(1);
   const [tempRank, setTempRank] = useState<number>(1);
   const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
