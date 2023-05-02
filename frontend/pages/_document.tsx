@@ -29,8 +29,8 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="manifest" href="/manifest.json" />
-          <link rel="icon" sizes="16x16" href="/favicon.ico" />
-          <link rel="icon" sizes="32x32" href="/favicon.ico" />
+          <link rel="icon" sizes="16x16" href="/pwa/icon-16x16.png" />
+          <link rel="icon" sizes="32x32" href="/pwa/icon-32x32.png" />
           <link rel="icon" sizes="96x96" href="/pwa/icon-96x96.png" />
           <link rel="icon" sizes="192x192" href="/pwa/icon-192x192.png" />
           <link rel="apple-touch-icon" sizes="57x57" href="/pwa/icon-57x57.png" />
