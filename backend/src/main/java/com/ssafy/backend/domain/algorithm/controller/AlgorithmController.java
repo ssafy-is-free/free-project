@@ -46,9 +46,10 @@ public class AlgorithmController {
 
 	@GetMapping("/my-rank")
 	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
-		@RequestParam(value = "languageId", required = false) Long languageId) {
+		@RequestParam(value = "languageId", required = false) Long languageId,
+		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId) {
 		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId(), languageId,
-			null);
+			jobPostingId);
 		//백준 아이디가 없다면 비어있는 컨텐츠
 		return bojMyRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojMyRankResponse, RESPONSE_SUCCESS);
@@ -63,9 +64,8 @@ public class AlgorithmController {
 
 	@GetMapping("/user-rank/{userId}")
 	public CommonResponse getBojId(@PathVariable Long userId,
-		@RequestParam(value = "languageId", required = false) Long languageId,
-		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId) {
-		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId, jobPostingId);
+		@RequestParam(value = "languageId", required = false) Long languageId) {
+		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId, null);
 
 		return bojRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS);
