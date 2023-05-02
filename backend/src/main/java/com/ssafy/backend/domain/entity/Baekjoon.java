@@ -80,4 +80,8 @@ public class Baekjoon extends BaseTimeEntity {
 		this.failCount = CBojInfoResponse.getFailCount();
 		this.score = score;
 	}
+
+	public void updatePrevRankBaekjoon(long previousRank) {
+		this.previousRank = previousRank;
+	}
 }
