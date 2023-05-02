@@ -11,7 +11,7 @@ import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 public interface AlgorithmService {
 	void patchBojByUserId(long userId);
 
-	BojRankResponse getBojByUserId(long userId, Long languageId);
+	BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId);
 
 	List<NicknameListResponse> getBojListByBojId(String nickname);
 

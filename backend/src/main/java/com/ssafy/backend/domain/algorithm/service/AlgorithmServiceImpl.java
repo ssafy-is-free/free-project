@@ -67,7 +67,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId, Long languageId) {
+	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
@@ -92,8 +92,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return BojRankResponse.createEmpty();
 		}
 
-		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
-
 		int rank;
 		if (bojIdSet == null) {
 			rank = bojRepository.getRank(boj.getScore(), userId);
@@ -111,6 +109,10 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 				rank++;
 			}
 		}*/
+		//공고별 랭크
+		if (jobPostingId != null) {
+
+		}
 
 		return BojRankResponse.createBojMyRankResponseDTO(boj, user, rank);
 
