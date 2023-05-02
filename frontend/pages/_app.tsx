@@ -7,18 +7,11 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import Footer from '@/components/common/Footer';
 import Head from 'next/head';
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
   const [cookies, setCookie] = useCookies(['redirect-uri']);
-
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
-      setCookie('redirect-uri', 'prod');
-    }
-  }, []);
 
   return (
     <Provider store={store}>
@@ -29,7 +22,7 @@ function App({ Component, ...rest }: AppProps) {
             <title>CHPO</title>
           </Head>
           <Component {...props.pageProps} />
-          {/* <Footer /> */}
+          <Footer />
         </ThemeProvider>
       </PersistGate>
     </Provider>

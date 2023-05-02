@@ -26,7 +26,7 @@ import {
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
-import { setLoginIng, setNew } from '@/redux/authSlice';
+import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 
 const Wrapper = styled.div`
@@ -42,11 +42,12 @@ const Wrapper = styled.div`
   .content-wrapper {
     /* position: relative;   */
     position: absolute;
+    /* position: sticky; */
     z-index: 1;
     bottom: 0;
     /* margin-top: 32px; */
     /* padding: 72px 32px 32px; */
-    padding: 2rem 2rem 2rem;
+    padding: 70px 2rem 2rem;
     width: 100%;
     /* height: 672px; */
     height: 83vh;
@@ -87,7 +88,7 @@ const Wrapper = styled.div`
       } */
       /* border: 1px solid red; */
       overflow-y: scroll;
-      height: 100%;
+      height: 80%;
       /* margin-top: 16px; */
 
       &::-webkit-scrollbar {
@@ -107,7 +108,7 @@ const Wrapper = styled.div`
       .observer-box {
         height: 5%;
         width: 100%;
-        /* background-color: yellow; */
+        background-color: white;
       }
     }
   }
@@ -119,7 +120,6 @@ const Main = () => {
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
   // 로그인 중임을 나타내는 state
-  const isLoginIng = useSelector<RootState>((selector) => selector.authChecker.isLoginIng);
   const loginStart = useSelector<RootState>((selector) => selector.authChecker.loginStart);
 
   // splash 상태관리
@@ -166,7 +166,7 @@ const Main = () => {
   const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
 
   /**
-   * splash check useEffect
+   * splash check, useEffect
    */
   useEffect(() => {
     if (loginStart && isNew) {
@@ -174,7 +174,7 @@ const Main = () => {
       dispatch(setNew());
     }
 
-    dispatch(setLoginIng());
+    // dispatch(setLoginIng());
 
     const timer = setTimeout(() => {
       dispatch(splashCheck());
@@ -236,7 +236,7 @@ const Main = () => {
 
   useEffect(() => {
     setNoMore(false);
-    // getRankList(size, 1);
+    getRankList(size, 1);
     setSelectedOption(null);
   }, [curRank]);
 
@@ -250,7 +250,6 @@ const Main = () => {
           let data;
 
           if (nextRank == 1 || nextRankParam == 1) {
-            console.log('fetch 1');
             // 1등
             let data;
             if (languageIdParam) {
@@ -271,7 +270,6 @@ const Main = () => {
             }
           } else {
             // 그 이후
-            console.log('fetch 2');
             let data;
             if (languageIdParam) {
               // 필터 적용 O
@@ -420,6 +418,7 @@ const Main = () => {
     }
   };
 
+  // filter
   const insertFilter = (el: any) => {
     setSelectedOption(el);
   };
@@ -432,6 +431,7 @@ const Main = () => {
       <>
         <Wrapper>
           <RankMenu onClick={() => setOpenSelect(true)} curRank={curRank} />
+
           <SearchBar
             setNoScroll={setNoScroll}
             curRank={curRank}
@@ -440,6 +440,7 @@ const Main = () => {
             getRankList={getRankList}
             size={size}
           />
+
           <div className="content-wrapper">
             {!noScroll && (
               <div className="filter-box">
@@ -447,7 +448,15 @@ const Main = () => {
               </div>
             )}
 
-            {selectedOption && <FilterOption isInFilter={false} item={selectedOption} />}
+            {selectedOption && (
+              <FilterOption
+                item={selectedOption}
+                isInMain={true}
+                getRankList={getRankList}
+                size={size}
+                setSelectedOption={setSelectedOption}
+              />
+            )}
             {myGitRank && curRank == 0 ? (
               <div className="my-rank">
                 <p>나의 랭킹</p>
@@ -483,7 +492,6 @@ const Main = () => {
                       </li>
                     );
                   })}
-
               {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
               {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
               {loading && <Spinner />}
@@ -503,6 +511,7 @@ const Main = () => {
             getRankList={getRankList}
             setIsLangId={setIsLangId}
             insertFilter={insertFilter}
+            setSelectedOption={setSelectedOption}
           />
         )}
       </>

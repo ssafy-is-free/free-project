@@ -166,6 +166,22 @@ const FilterModal = (props: IFilterModalProps) => {
   const [selected, setSelected] = useState<number[]>();
   const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
 
+  // TODO : 더 좋은 방법으로 수정하기
+  useEffect(() => {
+    // if (itemRefs.current) {
+    //   // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
+    //   if (filter) {
+    //     itemRefs.current[0]?.childNodes.forEach((el: any, idx: number) => {
+    //       if (filter.name == el.childNodes[0].innerHTML.trim()) {
+    //         const style = itemRefs.current[0].childNodes[idx].style;
+    //         style.backgroundColor = '#4A58A9';
+    //         style.color = '#ffffff';
+    //       }
+    //     });
+    //   }
+    // }
+  });
+
   // filter 목록 가져오기
   useEffect(() => {
     (async () => {
@@ -180,20 +196,6 @@ const FilterModal = (props: IFilterModalProps) => {
       }
     })();
   }, []);
-
-  useEffect(() => {
-    console.log('????');
-
-    // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
-    if (filter) {
-      console.log('두둥', itemRefs);
-      console.log('filter', filter);
-
-      itemRefs.current[0]?.childNodes.forEach((el: any) => {
-        console.log('el', el);
-      });
-    }
-  }, [itemRefs]);
 
   useEffect(() => {
     setOptionTypes([languages]);
@@ -287,6 +289,10 @@ const FilterModal = (props: IFilterModalProps) => {
     } else {
       // 필터를 선택하지 않았을 때
       props.getRankList(props.size, 1);
+      dispatch(setFilter(null));
+      if (props.setSelectedOption) {
+        props.setSelectedOption(null);
+      }
     }
 
     // 모달창 닫기

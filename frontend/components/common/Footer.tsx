@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import Home from 'public/Icon/HomeIcon.svg';
 import Career from 'public/Icon/CareerIcon.svg';
 import Profile from 'public/Icon/ProfileIcon.svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux';
+import { useState } from 'react';
+import LoginModal from '../login/LoginModal';
 
 const FooterDiv = styled.div`
   width: 100%;
@@ -65,6 +67,9 @@ function Footer() {
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
 
+  // 로그인 모달 열기
+  const [openLogin, setOpenLogin] = useState<boolean>(false);
+
   const footerItems = [
     {
       icon: HomeIcon,
@@ -86,7 +91,8 @@ function Footer() {
 
   const goPage = (item: any) => {
     if (!isLogin && item.path == '/profile') {
-      alert('로그인 후 이용 가능합니다.');
+      // alert('로그인 후 이용 가능합니다.');
+      setOpenLogin(true);
     } else {
       if (item.path == '/') {
         window.location.href = `${item.path}`;
@@ -110,6 +116,7 @@ function Footer() {
           <span>{item.name}</span>
         </IconDiv>
       ))}
+      {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
     </FooterDiv>
   );
 }

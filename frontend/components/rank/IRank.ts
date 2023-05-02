@@ -62,6 +62,8 @@ export interface IFilterModalProps {
    * isLangId useState set 메소드
    */
   setIsLangId: React.Dispatch<React.SetStateAction<number>>;
+
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }
 
 /**
@@ -167,5 +169,19 @@ export interface IFilterOptionProps {
     name: string;
   };
 
-  isInFilter: boolean;
+  isInFilter?: boolean;
+
+  isInMain?: boolean;
+
+  /**
+   * api 메소드
+   */
+  getRankList?: Function;
+
+  /**
+   * size
+   */
+  size?: number;
+
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }

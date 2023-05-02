@@ -15,9 +15,7 @@ const rankSlice = createSlice({
   name: 'rank',
   initialState,
   reducers: {
-    setFilter(state, action: PayloadAction<{ languageId: number; name: string }>) {
-      console.log('action.payload', action.payload);
-
+    setFilter(state, action: PayloadAction<{ languageId: number; name: string } | null>) {
       state.filter = action.payload;
     },
   },
