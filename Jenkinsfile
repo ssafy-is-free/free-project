@@ -72,18 +72,18 @@ pipeline {
                 //도커 이미지 빌드
                 dir("${PROJECT_DIR_BE}"){
                     script{
-                        def image = docker.build("${IMAGE_NAME_BE}"){
-                            args "--no-cache"
-                        }
-                        //     sh "docker build -t ${IMAGE_NAME_BE} ." 
+                        // image = docker.build("${IMAGE_NAME_BE}"){
+                        //     args "--no-cache"
+                        // }
+                            sh "docker build --no-cache -t ${IMAGE_NAME_BE} ." 
                     }
                 }
                 // withCredentials([string(credentialsId: "${IMAGE_STORAGE_CREDENTIAL}")]) {
                 //도커 허브에 푸시
                 script{
                     docker.withRegistry("", "${IMAGE_STORAGE_CREDENTIAL}") {
-                        image.push("latest")
-                        //     sh "docker push ${IMAGE_NAME_BE}"
+                        // image.push("latest")
+                        sh "docker push ${IMAGE_NAME_BE}"
                     }
 
                 }
