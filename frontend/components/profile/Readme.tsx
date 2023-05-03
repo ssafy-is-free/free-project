@@ -28,6 +28,10 @@ const ReadmeDetailDiv = styled.div`
   p {
     border-bottom: 2px solid ${(props) => props.theme.secondary};
   }
+  span {
+    font-size: small;
+    color: gray;
+  }
 `;
 
 interface IReadme {
@@ -57,7 +61,10 @@ function Readme({ repository, githubId }: IReadme) {
       </ReadmeTitle>
       {open && (
         <ReadmeDetailDiv>
-          <p>README.md</p>
+          <a href={repository.link} target="_blank">
+            README.md
+            <span>(깃허브에서 보려면 눌러주세요)</span>
+          </a>
           <ReadmeDetail link={link}></ReadmeDetail>
         </ReadmeDetailDiv>
       )}
