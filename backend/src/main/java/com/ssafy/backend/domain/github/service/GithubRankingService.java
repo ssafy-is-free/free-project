@@ -42,8 +42,7 @@ public class GithubRankingService {
 	public GithubRankingResponse getGithubRank(Long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
 		Pageable pageable) {
 		//언어로 필터링 githubIds
-		Long languageId = rankingFilter.getLanguageId();
-		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdByLanguage(rankingFilter);
+		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
 
 		// 필터링된 깃허브 아이디가 없는 경우 DB 조회 X
 		if (githubIdSet != null && githubIdSet.isEmpty()) {
@@ -51,8 +50,7 @@ public class GithubRankingService {
 		}
 
 		//공고별로 필터링된 userIds
-		Long jobPostingId = rankingFilter.getJobPostingId();
-		FilteredUserIdSet userIdSet = getUserIdByJobPosting(jobPostingId);
+		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
 
 		// 필터링된 유저 아이디가 없는 경우 DB 조회 X
 		if (userIdSet != null && userIdSet.isEmpty()) {
@@ -82,8 +80,11 @@ public class GithubRankingService {
 		return FilteredUserIdSet.create(jobHistoryList);
 	}
 
-	private FilteredGithubIdSet getGithubIdByLanguage(GitHubRankingFilter rankingFilter) {
-		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(rankingFilter.getLanguageId())
+	private FilteredGithubIdSet getGithubIdByLanguage(Long languageId) {
+		if (languageId == null) {
+			return null;
+		}
+		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(languageId)
 			.stream()
 			.map(g -> g.getGithub().getId())
 			.collect(Collectors.toSet());
@@ -104,7 +105,7 @@ public class GithubRankingService {
 
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {
 		// 필터에 걸리는 유저 아이디들을 불러온다.
-		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdByLanguage(rankingFilter);
+		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
 
 		// 깃허브 불러오기
 		Github github = githubRepository.findByUserId(userId)
