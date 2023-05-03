@@ -46,6 +46,7 @@ pipeline {
 
                     //기존 이미지 삭제
                     sh "docker images ${IMAGE_NAME} -q | xargs -r docker rmi -f"
+
                 }
             }
         }
@@ -55,7 +56,7 @@ pipeline {
                 dir("${DOCKER_FILE_PATH}"){
                     script {
                         sh "pwd" 
-                        image = docker.build("${IMAGE_NAME}")
+                        sh "docker build --no-cache -t ${IMAGE_NAME} ."
                     }
                 }
                 
