@@ -5,6 +5,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.User;
 
@@ -29,7 +31,8 @@ public class BojRankResponse {
 	private Long rankUpDown;
 	private String tierUrl;
 
-	public boolean isEmpty() {
+	@JsonIgnore
+	public boolean isNull() {
 		return this.userId == null && this.nickname == null && this.rank == null &&
 			this.score == null && this.avatarUrl == null && this.rankUpDown == null &&
 			this.tierUrl == null;

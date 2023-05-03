@@ -9,7 +9,10 @@ import java.util.Set;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.algorithm.dto.FilteredBojIdSet;
 import com.ssafy.backend.domain.entity.Baekjoon;
@@ -23,6 +26,19 @@ import lombok.RequiredArgsConstructor;
 @Repository
 public class BojQueryRepository {
 	private final JPAQueryFactory queryFactory;
+
+	public Tuple findByAvg(long userId, FilteredUserIdSet userIdSet, FilteredBojIdSet bojIdSet, int score) {
+		NumberExpression<Double> extractedNumber = Expressions.numberTemplate(Double.class,
+			"CAST(REGEXP_SUBSTR({0}, 'tier\\\\/(\\\\d+)') AS DECIMAL)", baekjoon.tier);
+
+		return queryFactory.select(baekjoon.failCount.avg(), baekjoon.passCount.avg(), baekjoon.score.avg(),
+				baekjoon.submitCount.avg())
+			.from(baekjoon)
+			.innerJoin(baekjoon.user, user)
+			.where(bojIdIn(bojIdSet), userIdIn(userIdSet), user.id.ne(userId), baekjoon.score.gt(score))
+			.fetchOne();
+
+	}
 
 	public Long findRankByScore(long userId, FilteredUserIdSet userIdSet, FilteredBojIdSet bojIdSet, int score) {
 		return queryFactory.select(baekjoon.count())

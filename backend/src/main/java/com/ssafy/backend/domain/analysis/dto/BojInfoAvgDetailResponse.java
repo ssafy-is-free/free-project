@@ -1,11 +1,12 @@
-package com.ssafy.backend.domain.algorithm.dto.response;
+package com.ssafy.backend.domain.analysis.dto;
 
 import java.util.List;
 
 import net.minidev.json.annotate.JsonIgnore;
 
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
+import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
 import com.ssafy.backend.domain.entity.Baekjoon;
-import com.ssafy.backend.domain.entity.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,8 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BojInfoDetailResponse {
-	private String bojId;
+public class BojInfoAvgDetailResponse {
 	private String tierUrl;
 	private int pass;
 	private int tryFail;
@@ -29,7 +29,7 @@ public class BojInfoDetailResponse {
 
 	@JsonIgnore
 	public boolean isNull() {
-		return this.bojId == null && this.tierUrl == null && this.pass == 0 &&
+		return this.tierUrl == null && this.pass == 0 &&
 			this.tryFail == 0 && this.submit == 0 && this.fail == 0 &&
 			(this.languages == null || this.languages.isEmpty());
 	}
@@ -38,10 +38,9 @@ public class BojInfoDetailResponse {
 		return BojInfoDetailResponse.builder().build();
 	}
 
-	public static BojInfoDetailResponse create(User user, Baekjoon baekjoon,
+	public static BojInfoDetailResponse create(Baekjoon baekjoon,
 		List<BojLanguageResponse> languageDTOList) {
 		return BojInfoDetailResponse.builder()
-			.bojId(user.getBojId())
 			.tierUrl(baekjoon.getTier())
 			.pass(baekjoon.getPassCount())
 			.tryFail(baekjoon.getTryFailCount())
@@ -50,5 +49,4 @@ public class BojInfoDetailResponse {
 			.languages(languageDTOList)
 			.build();
 	}
-
 }

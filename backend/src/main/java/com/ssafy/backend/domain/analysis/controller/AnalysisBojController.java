@@ -31,7 +31,16 @@ public class AnalysisBojController {
 		@PathVariable Long userId) {
 		BojRankComparison bojRankComparison = analysisBojService.compareWithOpponent(userPrincipal.getId(), userId);
 		//백준 아이디가 없다면 비어있는 컨텐츠
-		return bojRankComparison.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		return bojRankComparison.isNull() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojRankComparison, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/postings/{jobPostingId}")
+	public DataResponse<BojRankComparison> bojbojCompareWithOther(@AuthenticationPrincipal UserPrincipal userPrincipal,
+		@PathVariable Long jobPostingId) {
+		BojRankComparison bojRankComparison = analysisBojService.compareWithOther(userPrincipal.getId(), jobPostingId);
+		//백준 아이디가 없다면 비어있는 컨텐츠
+		return bojRankComparison.isNull() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankComparison, RESPONSE_SUCCESS);
 	}
 }

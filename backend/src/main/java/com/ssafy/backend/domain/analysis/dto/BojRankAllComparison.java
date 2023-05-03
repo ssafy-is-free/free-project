@@ -13,19 +13,19 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BojRankComparison {
+public class BojRankAllComparison {
 	BojInfoDetailResponse my;
-	BojInfoDetailResponse opponent;
+	BojInfoAvgDetailResponse other;
 
-	public static BojRankComparison createEmpty() {
-		return BojRankComparison.builder().build();
+	public static BojRankAllComparison createEmpty() {
+		return BojRankAllComparison.builder().build();
 	}
 
-	public static BojRankComparison create(BojInfoDetailResponse my, BojInfoDetailResponse opponent) {
-		return BojRankComparison.builder().my(my).opponent(opponent).build();
+	public static BojRankAllComparison create(BojInfoDetailResponse my, BojInfoAvgDetailResponse other) {
+		return BojRankAllComparison.builder().my(my).other(other).build();
 	}
 
 	public boolean isNull() {
-		return this.my == null || this.opponent == null;
+		return this.my == null || this.other == null;
 	}
 }
