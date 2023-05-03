@@ -1,15 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-
 const InputDiv = styled.div`
   padding: 1rem;
-
-  .title {
-    span {
-      color: red;
-    }
+  div {
+    margin-bottom: 0.2rem;
   }
-
   .input {
     background-color: ${(props) => props.theme.lightGray};
     color: ${(props) => props.theme.fontBlack};
@@ -17,61 +12,124 @@ const InputDiv = styled.div`
     padding: 0.5rem;
     border-radius: 0.5rem;
     width: 100%;
-    margin-bottom: 1rem;
+    border: 2px solid transparent;
 
+    &:focus {
+      outline: none;
+      border-color: ${(props) => props.theme.primary};
+    }
     &::placeholder {
+      white-space: pre-wrap;
       text-align: center;
       color: ${(props) => props.theme.fontGray};
     }
   }
+`;
 
-  .textinput {
-    background-color: ${(props) => props.theme.lightGray};
-    padding: 0.2rem;
-    textarea {
-      background-color: transparent;
-      width: 100%;
-      border-radius: 0.5rem;
+interface Idata {
+  [key: string]: number | string;
+}
+const ddata = {
+  postingId: 1,
+  postingName: '뽑아요 뽑습니다',
+  companyName: '삼성전자',
+  startTime: '2023-04-14 13:00',
+  endTime: '2023-04-21 18:00',
+  objective: '백엔드 개발자',
+  status: '서류 합격',
+  dDayName: '서류 제출',
+  nextDate: '2023-05-01',
+  memo: '메모입니다~',
+  applicantCount: 10,
+};
+
+const dddata = {
+  postingId: '',
+  postingName: '',
+  companyName: '',
+  startTime: '',
+  endTime: '',
+  objective: '',
+  status: '',
+  dDayName: '',
+  nextDate: '',
+  memo: '',
+  applicantCount: '',
+};
+
+const inputList = [
+  { key: 'postingName', tag: '공고명', placeholder: '공고명을 검색 해서 입력해주세요', readonly: true },
+  { key: 'companyName', tag: '기업명', placeholder: '기업명을 검색 해서 입력해주세요', readonly: true },
+  { key: 'startTime', tag: '접수 시작', placeholder: '접수 시작일을 입력해주세요', readonly: true },
+  { key: 'endTime', tag: '접수 종료', placeholder: '접수 종료일을 입력해주세요', readonly: true },
+  { key: 'objective', tag: '지원 직무', placeholder: '지원 직무를 입력해주세요', readonly: false },
+  { key: 'status', tag: '현재 진행 상태', placeholder: '현재 진행 상태를 선택해주세요', readonly: true },
+  {
+    key: 'dDayName',
+    tag: '다음 일정 이름',
+    placeholder: '다음 일정 이름을 입력해주세요 ex) 코테 날짜',
+    readonly: false,
+  },
+  { key: 'nextDate', tag: '다음 일정', placeholder: '다음 일정을 입력해주세요', readonly: true },
+  // { key: 'memo', tag: '메모', placeholder: '메모를 입력해주세요', readonly: false },
+];
+
+const HeaderDiv = styled.div`
+  margin: 1rem;
+  margin-top: 2rem;
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+
+  img {
+    height: 70%;
+  }
+  div {
+    display: flex;
+    align-items: center;
+    h3 {
+      font-size: large;
+      color: ${(props) => props.theme.primary};
     }
   }
 `;
 
-interface IContentInput {
-  label: string;
-  content: (e: string) => void;
-}
+const NewCareer = () => {
+  const [data, setData] = useState<Idata>(dddata);
 
-const ContentInput = ({ label, content }: IContentInput) => {
-  const [text, setText] = useState<string>('');
-  const inputRef = useRef<any>();
-  const onChange = (event: any) => {
-    setText(event.target.value);
-    content(event.target.value);
+  const update = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    setData((data) => {
+      return { ...data, [key]: e.target.value };
+    });
   };
 
   return (
-    <InputDiv>
-      <div className="title">
-        {label} <span>*</span>
-      </div>
-      <input
-        type="text"
-        className="input"
-        placeholder="기업명을 입력해주세요"
-        onChange={(event) => onChange(event)}
-        ref={inputRef}
-        value={text}
-      />
-    </InputDiv>
-  );
-};
-
-const NewCareer = () => {
-  const [text, setText] = useState<string | null>(null);
-  return (
     <div>
-      <div>newcareer</div>
-      <ContentInput label={'기업명'} content={(e: string) => setText(e)}></ContentInput>
+      <HeaderDiv>
+        <div>
+          <img src="/Icon/CloseIcon.svg" alt="" />
+        </div>
+        <div>
+          <h3>등록하기</h3>
+        </div>
+      </HeaderDiv>
+      {inputList.map((item) => (
+        <InputDiv key={item.tag}>
+          <div>{item.tag}</div>
+          <input
+            type="text"
+            className="input"
+            placeholder={item.placeholder}
+            value={data[item.key]}
+            readOnly={item.readonly}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => update(item.key, e)}
+          ></input>
+        </InputDiv>
+      ))}
+      <InputDiv>
+        <div>메모</div>
+        <textarea className="input" rows={4} placeholder="메모를 입력해주세요"></textarea>
+      </InputDiv>
     </div>
   );
 };
