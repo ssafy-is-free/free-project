@@ -16,13 +16,13 @@ const Wrapper = styled.div`
     /* box-shadow: 4px 4px 10px #00000040; */
 
     background-color: ${(props) => props.theme.bgWhite};
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     justify-content: space-around;
-    margin-right: 16px;
+    /* margin-right: 16px; */
     border-radius: 8px;
     padding: 0 16px;
   }
@@ -63,7 +63,7 @@ const Wrapper = styled.div`
     width: 100%;
     padding-left: 10%;
 
-    border-top: 1px solid ${(props) => props.theme.footerGray};
+    /* border-top: 1px solid ${(props) => props.theme.footerGray}; */
     /* padding-top: 8px; */
     li {
       margin-bottom: 8px;
@@ -111,7 +111,8 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
   };
 
   // style 속성 변경 위한 검색창 ref
-  const searchBox = useRef<any>();
+  const searchBox = useRef<HTMLDivElement | null>(null);
+  const relatedWrapper = useRef<any>();
 
   useEffect(() => {
     // 검색 결과 api
@@ -138,12 +139,22 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
         })();
       }
 
-      // 스타일 속성 변경
-      const style = searchBox.current.style;
-      style.boxShadow = '4px 4px 10px #00000040';
+      if (searchBox.current) {
+        // 스타일 속성 변경
+        searchBox.current.style.boxShadow = '4px 4px 10px #00000040';
+      }
+
+      if (relatedWrapper.current) {
+        relatedWrapper.current.style.borderTop = '1px solid #00000040';
+      }
     } else {
-      const style = searchBox.current.style;
-      style.boxShadow = '';
+      if (searchBox.current) {
+        searchBox.current.style.boxShadow = '';
+      }
+
+      if (relatedWrapper.current) {
+        relatedWrapper.current.style.borderTop = '';
+      }
     }
   }, [searchKeyword]);
 
@@ -158,8 +169,10 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     props.setNoScroll(true);
     (document.querySelector('.input-box') as HTMLInputElement).value = `${nickName}`;
     setSearchResults([]);
-    const style = searchBox.current.style;
-    style.boxShadow = '';
+
+    if (searchBox.current) {
+      searchBox.current.style.boxShadow = '';
+    }
 
     if (props.curRank == 0) {
       const data = await getSearchGitResult(userId);
@@ -177,7 +190,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           <SearchIcon />
           <input type="text" className="input-box" placeholder={text} onChange={(event) => onChange(event)} />
         </div>
-        <ul className="related-wrapper">
+        <ul className="related-wrapper" ref={relatedWrapper}>
           {searchKeyword != '' &&
             searchResults?.map((el, idx) => {
               if (typeof el != 'string')
@@ -195,9 +208,9 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
             })}
         </ul>
       </div>
-      <button className="cancel" onClick={resetInput}>
+      {/* <button className="cancel" onClick={resetInput}>
         취소
-      </button>
+      </button> */}
     </Wrapper>
   );
 };
