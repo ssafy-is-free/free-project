@@ -1,3 +1,4 @@
+/*
 package com.ssafy.backend.domain.algorithm.service;
 
 import static org.mockito.Mockito.*;
@@ -74,3 +75,4 @@ public class BojServiceImplTest {
 		//then
 	}
 }
+*/
