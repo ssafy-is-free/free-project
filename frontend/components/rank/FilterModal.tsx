@@ -45,6 +45,15 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.bgWhite};
   animation: 0.4s ease-in-out 0s ${moveUp};
 
+  .close-box {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+  }
+
   .title {
     font-weight: bold;
     font-size: 20px;
@@ -110,13 +119,6 @@ const Wrapper = styled.div`
       }
     }
   }
-`;
-
-const StyledCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  cursor: pointer;
 `;
 
 const StyledFilterArrowIcon = styled(FilterArrowIcon)`
@@ -306,7 +308,9 @@ const FilterModal = (props: IFilterModalProps) => {
     <>
       <DarkBg onClick={props.onClick} />
       <Wrapper>
-        <StyledCloseIcon onClick={props.onClick} />
+        <div className="close-box">
+          <CloseIcon onClick={props.onClick} />
+        </div>
         <div className="title">검색 필터</div>
         {optionTypes.map((el, idx) => {
           return (

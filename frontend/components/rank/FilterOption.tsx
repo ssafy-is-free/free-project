@@ -7,22 +7,21 @@ import { setFilter } from '@/redux/rankSlice';
 
 const Wrapper = styled.div`
   border: 1px solid ${(props) => props.theme.primary};
-  border-radius: 50px;
   color: ${(props) => props.theme.primary};
   font-size: 0.8rem;
   text-align: center;
-  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  /* position: relative; */
 
   p {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 80%;
+    /* width: 100%; */
   }
 
   /* &:hover {
@@ -31,11 +30,13 @@ const Wrapper = styled.div`
   } */
 
   .del-btn {
-    position: relative;
-    width: 20%;
-    height: 100%;
+    /* position: absolute; */
+    /* right: 8px; */
+    width: 10px;
+    height: 10px;
     display: flex;
     align-items: center;
+    margin-left: 8px;
   }
 `;
 
@@ -43,7 +44,7 @@ const StyledCloseIcon = styled(CloseIcon)`
   /* position: absolute; */
   /* right: 8px; */
   path {
-    fill: ${(props) => props.theme.primary};
+    fill: ${(props) => props.theme.fontGray};
   }
 `;
 
@@ -57,11 +58,17 @@ const FilterOption = (props: IFilterOptionProps) => {
     if (style) {
       if (props.isInFilter) {
         style.width = '92%';
+        style.borderRadius = '50px';
+        style.height = '40px';
       } else {
-        style.width = `calc((100% - 24px)/3)`;
-        style.position = 'absolute';
-        style.top = '2rem';
-        style.left = '2rem';
+        style.width = ``;
+        style.borderRadius = '8px';
+        style.height = '32px';
+        style.backgroundColor = '#F5F5F5';
+        style.border = 'none';
+        style.color = '#B2B2B2';
+        style.display = 'inline-flex';
+        style.padding = ' 0 8px';
       }
     }
   }, []);

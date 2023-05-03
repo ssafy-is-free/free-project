@@ -64,12 +64,17 @@ export interface IRankMenuProps {
    *
    * 클릭시 발생할 이벤트
    */
-  onClick: () => void;
+  onClick?: () => void;
 
   /**
    * 현재 조회중인 rank (0 : 깃허브, 1: 백준)
    */
   curRank: number;
+
+  /**
+   * 현재 조회하는 랭킹 종류 교체하는 메소드
+   */
+  onChangeCurRank?: Function;
 }
 
 /**
