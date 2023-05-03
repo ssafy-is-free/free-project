@@ -199,6 +199,9 @@ const Main = () => {
   // 필터 모덜에서 옵션 선택후 적용하면 필터 state에 값 셋팅
   const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
 
+  // 검색 아이콘 클릭 여부
+  const [onSearchClick, setOnSearchClick] = useState<boolean>(false);
+
   /**
    * splash check, useEffect
    */
