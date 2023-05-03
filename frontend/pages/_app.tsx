@@ -1,14 +1,14 @@
 import type { AppProps } from 'next/app';
 import wrapper, { persistor } from '@/redux';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 import Footer from '@/components/common/Footer';
 import Head from 'next/head';
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
 import { PersistGate } from 'redux-persist/integration/react';
+import { useEffect } from 'react';
 
 function App({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
@@ -19,7 +19,6 @@ function App({ Component, ...rest }: AppProps) {
       setCookie('redirect-uri', 'k8b');
     }
   }, []);
-
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>

@@ -5,7 +5,9 @@ import CircleChart from './CircleChart';
 import Avatar from './Avatar';
 import BojModal from '../login/BojModal';
 
-const BojInfoDiv = styled.div``;
+const BojInfoDiv = styled.div`
+  background-color: ${(props) => props.theme.lightGray};
+`;
 const BojNoneDiv = styled.div`
   margin-top: 1rem;
   background-color: ${(props) => props.theme.secondary};
@@ -15,13 +17,25 @@ const BojNoneDiv = styled.div`
   justify-content: center;
   align-items: center;
 `;
+const ChartDiv = styled.div`
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  background-color: ${(props) => props.theme.bgWhite};
+  padding: 1rem;
+`;
 const BasicInfoDiv = styled.div`
+  margin-top: 0.5rem;
+  padding: 1rem;
+  padding-bottom: 2rem;
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.bgWhite};
   display: grid;
   grid-template-columns: 47% 47%;
   grid-template-rows: auto auto;
   grid-column-gap: 6%;
   grid-row-gap: 6%;
-  margin-bottom: 2rem;
 `;
 
 const BoxDiv = styled.div`
@@ -93,7 +107,10 @@ const BojInfo = ({ bojData, my }: IBojInfo) => {
           </BoxDiv>
         ))}
       </BasicInfoDiv>
-      <CircleChart data={bojData.languages} label={true}></CircleChart>
+      <ChartDiv>
+        <p>Language</p>
+        <CircleChart data={bojData.languages} label={true}></CircleChart>
+      </ChartDiv>
     </BojInfoDiv>
   );
 };

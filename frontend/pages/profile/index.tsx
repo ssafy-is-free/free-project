@@ -5,13 +5,12 @@ import GithubInfo from '@/components/profile/GithubInfo';
 import styled from 'styled-components';
 import { IGithubProfile, IBojProfile } from '@/components/profile/IProfile';
 import { getMyBoj, getMyGithub } from '../api/profileAxios';
-import { Spinner } from '@/components/common/Spinner';
 
 const ProfileContentDiv = styled.div`
-  margin: 1rem;
   margin-bottom: max(4rem, 10vh);
   .nav {
     height: 5vh;
+    margin: 1rem;
   }
 `;
 
