@@ -75,6 +75,8 @@ export interface IRankMenuProps {
    * 현재 조회하는 랭킹 종류 교체하는 메소드
    */
   onChangeCurRank?: Function;
+
+  setNoScroll?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**

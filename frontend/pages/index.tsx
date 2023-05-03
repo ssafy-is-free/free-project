@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
@@ -8,7 +7,6 @@ import FilterIcon from '../public/Icon/FilterIcon.svg';
 import MainUserItem from '@/components/rank/MainUserItem';
 import MainOtherItem from '@/components/rank/MainOtherItem';
 import NoAccount from '@/components/rank/NoAccount';
-import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
 import LoginModal from '@/components/login/LoginModal';
 import BojModal from '@/components/login/BojModal';
 import FilterModal from '@/components/rank/FilterModal';
@@ -28,11 +26,12 @@ import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
-// import SearchIcon from '../public/Icon/SearchIcon.svg';
+import RSearchIcon from '../public/Icon/SearchingIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
+
 import Profile from '@/components/profile/Profile';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ onSearchClick: boolean }>`
   width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
@@ -40,7 +39,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 48px 0px;
+  padding: ${(props) => (props.onSearchClick ? '0px 0px' : '48px 0px')};
 
   .content-wrapper {
     /* position: absolute; */
@@ -95,12 +94,30 @@ const Wrapper = styled.div`
       }
     }
   }
+
+  .search-content-wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 1rem 2rem;
+    width: 100%;
+    height: 100%;
+    background-color: ${(props) => props.theme.bgWhite};
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+  }
 `;
 
 const Header = styled.div`
   width: 100%;
   height: 48px;
-  background-color: #ffffff7f;
+  background-color: ${(props) => props.theme.bgWhite};
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -486,46 +503,38 @@ const Main = () => {
   } else {
     return (
       <>
-        <Header>
-          {/* 로고 */}
-          <div
-            className="logo-box"
-            onClick={() => {
-              window.location.href = '/';
-            }}
-          >
-            <LogoIcon />
-          </div>
-          {/* 아이콘 */}
-
-          <div className="header-right">
-            <div className="icon-box" onClick={() => setOnSearchClick(true)}>
-              {/* <SearchIcon /> */}
+        {!onSearchClick && (
+          <Header>
+            {/* 로고 */}
+            <div
+              className="logo-box"
+              onClick={() => {
+                window.location.href = '/';
+              }}
+            >
+              <LogoIcon />
             </div>
+            {/* 아이콘 */}
 
-            {!noScroll && (
-              <div className="filter-box">
-                <FilterIcon onClick={() => setOpenFilter(true)} />
+            <div className="header-right">
+              <div className="icon-box" onClick={() => setOnSearchClick(true)}>
+                <RSearchIcon />
               </div>
-            )}
-          </div>
-        </Header>
 
-        <Wrapper>
-          <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} />
+              {!noScroll && (
+                <div className="filter-box">
+                  <FilterIcon onClick={() => setOpenFilter(true)} />
+                </div>
+              )}
+            </div>
+          </Header>
+        )}
 
-          {/* <SearchBar
-            setNoScroll={setNoScroll}
-            curRank={curRank}
-            setGitRankList={setGitRankList}
-            setBojRankList={setBojRankList}
-            getRankList={getRankList}
-            size={size}
-          /> */}
-
-          <div className="content-wrapper">
-            {!onSearchClick ? (
-              <>
+        <Wrapper onSearchClick={onSearchClick}>
+          {!onSearchClick ? (
+            <>
+              <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
+              <div className="content-wrapper">
                 {selectedOption && (
                   <div className="option-box">
                     <FilterOption
@@ -591,11 +600,21 @@ const Main = () => {
                     <div ref={ref} className="observer-box"></div>
                   </ul>
                 </div>
-              </>
-            ) : (
-              <></>
-            )}
-          </div>
+              </div>
+            </>
+          ) : (
+            <div className="search-content-wrapper">
+              <SearchBar
+                setNoScroll={setNoScroll}
+                curRank={curRank}
+                setGitRankList={setGitRankList}
+                setBojRankList={setBojRankList}
+                getRankList={getRankList}
+                size={size}
+                setOnSearchClick={setOnSearchClick}
+              />
+            </div>
+          )}
         </Wrapper>
         {/* {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />} */}
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
