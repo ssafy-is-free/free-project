@@ -1,7 +1,13 @@
-import { chartColors } from '@/public/chartcolors';
+import CareerCard from '@/components/career/CareerCard';
 
 const Test = () => {
-  return <div>{chartColors['C'].color}</div>;
+  return (
+    <div>
+      <CareerCard></CareerCard>
+      <CareerCard></CareerCard>
+      <CareerCard></CareerCard>
+    </div>
+  );
 };
 
 export default Test;
