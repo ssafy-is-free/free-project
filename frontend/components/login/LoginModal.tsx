@@ -4,6 +4,8 @@ import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import BigBtn from '../common/BigBtn';
 import { ILoginProps } from './ILogin';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setLoginStart } from '@/redux/authSlice';
 
 const moveUp = keyframes`
  from{
@@ -53,12 +55,19 @@ const StyledCloseIcon = styled(CloseIcon)`
 `;
 
 const LoginModal = (props: ILoginProps) => {
+  const dispatch = useDispatch();
+  // useEffect(() => {
+  // dispatch(setLoginStart());
+  // }, []);
+
   const onBtnClick = () => {
+    dispatch(setLoginStart());
+
     // 기존 로그인 모달 창 닫기
     props.onClick();
 
     // 깃허브 로그인
-    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/github`;
 
     // props.setOpenBoj(true);
   };

@@ -43,6 +43,7 @@ const Wrapper = styled.div`
     padding: 8px 0px;
     font-size: 20px;
     font-weight: 500;
+    color: ${(props) => props.theme.fontBlack};
   }
 `;
 

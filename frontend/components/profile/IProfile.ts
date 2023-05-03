@@ -55,7 +55,7 @@ export interface IBojProfile {
  * bojInfo에 prop 해야할 값
  */
 export interface IBojInfo {
-  bojData: IBojProfile;
+  bojData?: IBojProfile;
   my?: boolean;
 }
 

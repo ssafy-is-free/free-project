@@ -27,11 +27,13 @@ export const postBojId = async (bojId: string) => {
     boj_id: bojId,
   };
 
-  await authApi({
+  const { data } = await authApi({
     method: 'patch',
     url: '/boj-id',
     data: body,
   });
+
+  return data?.status;
 };
 
 /**

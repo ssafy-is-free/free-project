@@ -17,9 +17,9 @@ const NoAccount = (props: INoAccountProps) => {
   return (
     <Wrapper onClick={props.onClick}>
       {props.curRank == 0 ? (
-        <>로그인을 해서 랭킹을 확인해보세요</>
+        <>로그인 하러 가기</>
       ) : props.curRank == 1 ? (
-        <>백준 계정 등록 후 랭킹을 확인해보세요</>
+        <>백준 계정 등록 하러 가기</>
       ) : (
         <>해당 유저가 존재하지 않습니다.</>
       )}

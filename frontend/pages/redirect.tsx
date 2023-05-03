@@ -15,17 +15,18 @@ const Redirect = () => {
     const isNew = queryParams.get('isNew');
 
     if (isNew == 'false') {
-      // 처음 로그인한 회원이면 깃허브 크롤링하기
-      // 로딩 페이지로 이동
-      // 완료되면 백준 모달 띄우기
+      // 기존 회원이면
+      // 바로 메인 페이지 이동(백준 모달 X)
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         dispatch(login());
         router.push('/');
       }
     } else {
-      // 기존 회원이면
-      // 바로 메인 페이지 이동(백준 모달 X)
+      // 처음 로그인한 회원이면 깃허브 크롤링하기
+      // 로딩 페이지로 이동
+      // 완료되면 백준 모달 띄우기
+
       if (accessToken) {
         localStorage.setItem('accessToken', accessToken);
         dispatch(login());

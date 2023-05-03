@@ -1,16 +1,27 @@
 import styled from 'styled-components';
+import { useState } from 'react';
 import { IBojInfo, IAvatarData } from './IProfile';
 import CircleChart from './CircleChart';
 import Avatar from './Avatar';
+import BojModal from '../login/BojModal';
 
 const BojInfoDiv = styled.div``;
+const BojNoneDiv = styled.div`
+  margin-top: 1rem;
+  background-color: ${(props) => props.theme.secondary};
+  height: 50vh;
+  border-radius: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const BasicInfoDiv = styled.div`
   display: grid;
   grid-template-columns: 47% 47%;
   grid-template-rows: auto auto;
   grid-column-gap: 6%;
   grid-row-gap: 6%;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
 `;
 
 const BoxDiv = styled.div`
@@ -27,6 +38,20 @@ const BoxDiv = styled.div`
 `;
 
 const BojInfo = ({ bojData, my }: IBojInfo) => {
+  if (bojData === undefined) {
+    const [openBoj, setOpenBoj] = useState<boolean>(false);
+    return (
+      <BojNoneDiv
+        onClick={() => {
+          setOpenBoj(true);
+        }}
+      >
+        <p>백준 아이디를 등록해주세요</p>
+        {openBoj && <BojModal onClick={() => setOpenBoj(false)} />}
+      </BojNoneDiv>
+    );
+  }
+
   const infoList = [
     {
       name: '맞은 문제',
@@ -68,6 +93,7 @@ const BojInfo = ({ bojData, my }: IBojInfo) => {
           </BoxDiv>
         ))}
       </BasicInfoDiv>
+      <p>Language</p>
       <CircleChart data={bojData.languages} label={true}></CircleChart>
     </BojInfoDiv>
   );

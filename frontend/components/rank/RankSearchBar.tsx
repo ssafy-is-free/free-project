@@ -149,10 +149,13 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
 
   const resetInput = () => {
     (document.querySelector('.input-box') as HTMLInputElement).value = '';
+    props.getRankList(props.size, 1);
+    props.setNoScroll(false);
   };
 
   // 닉네임 검색 결과
   const onSearchNick = async (userId: number, nickName: string) => {
+    props.setNoScroll(true);
     (document.querySelector('.input-box') as HTMLInputElement).value = `${nickName}`;
     setSearchResults([]);
     const style = searchBox.current.style;
@@ -160,11 +163,10 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
 
     if (props.curRank == 0) {
       const data = await getSearchGitResult(userId);
-      props.setGitRankList([data.data.githubRankingCover]);
+      props.setGitRankList((prev) => [data.data.githubRankingCover]);
     } else {
       const data = await getSearchBojResult(userId);
-      console.log('data : ', data);
-      props.setBojRankList([data.data]);
+      props.setBojRankList((prev) => [data.data]);
     }
   };
 

@@ -111,7 +111,7 @@ const BojModal = (props: IBojProps) => {
   const [bojId, setBojId] = useState<string>('');
 
   // 중복 체크
-  const [check, setCheck] = useState<number>(2);
+  const [check, setCheck] = useState<number>(4);
 
   // input창 ref
   const inputRef = useRef<any>();
@@ -123,14 +123,14 @@ const BojModal = (props: IBojProps) => {
 
     if (id == '') {
       style.border = '';
-      setCheck(3);
+      setCheck(4);
       setBojId('');
       return;
     }
 
     if (data.status == 'SUCCESS') {
       // 중복된 아이디가 아니면
-      style.border = '2px solid #41bb31';
+      style.border = '';
       setCheck(0);
       setBojId(id);
     } else if (data.status == 'FAIL') {
@@ -141,11 +141,21 @@ const BojModal = (props: IBojProps) => {
     }
   };
 
-  const onClickBojId = () => {
+  const onClickBojId = async () => {
     if (bojId != '') {
       // 등록 가능
-      postBojId(bojId);
-      router.push('/');
+      const response = await postBojId(bojId);
+
+      if (response == 'FAIL') {
+        const style = inputRef.current.style;
+        style.border = '2px solid #e93f3f';
+        (document.querySelector('.input-id') as HTMLInputElement).value = '';
+        setCheck(3);
+      } else {
+        // router.push('/');
+        window.location.href = '/';
+        props.onClick();
+      }
     } else {
       // 등록 불가능
       // 경고 메시지 띄우기
@@ -171,15 +181,23 @@ const BojModal = (props: IBojProps) => {
           ref={inputRef}
         />
         {check == 0 ? (
-          <div className="label3-true">등록 가능한 아이디 입니다.</div>
+          <div className="label3-true"></div>
         ) : check == 1 ? (
           <div className="label3-false">중복된 아이디 입니다.</div>
         ) : check == 2 ? (
           <div className="label3-false">아이디를 입력해주세요.</div>
+        ) : check == 3 ? (
+          <div className="label3-false">해당하는 백준 유저 정보가 없습니다.</div>
         ) : null}
         <BigBtn text={'등록하기'} onClick={onClickBojId} />
         <div className="btn-wrapper">
-          <button className="passBtn" onClick={() => router.push('/')}>
+          <button
+            className="passBtn"
+            onClick={() => {
+              props.onClick();
+              router.push('/');
+            }}
+          >
             건너뛰기
           </button>
         </div>

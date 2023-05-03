@@ -1,27 +1,30 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { createWrapper } from 'next-redux-wrapper';
+import { configureStore, ThunkAction, Action, EnhancedStore } from '@reduxjs/toolkit';
+import { MakeStore, createWrapper } from 'next-redux-wrapper';
 import { useDispatch } from 'react-redux';
-import rootReducer from './reducer';
-// import storage from 'redux-persist/lib/storage';
-
-// redux-persist 적용하기
-// const persistConfig = {
-//   key: 'root',
-//   storage,
-// };
-
-// npm i --save-dev @types/redux-persist
+import persistedReducer from './reducer';
+import { persistStore } from 'redux-persist';
+// import rootReducer from './reducer';
 
 const isDev = process.env.NODE_ENV === 'development';
-const makeStore = () => {
-  const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
-    devTools: isDev,
-  });
-  return store;
-};
+const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) => [...getDefaultMiddleware({ serializableCheck: false })],
+  devTools: isDev,
+});
 
+// const makeStore = () => {
+//   const store = configureStore({
+//     // reducer: rootReducer,
+//     reducer: persistedReducer,
+//     middleware: (getDefaultMiddleware) => [...getDefaultMiddleware()],
+//     devTools: isDev,
+//   });
+//   return store;
+// };
+
+// 아래 추가
+const setupStore = (context: any): EnhancedStore => store;
+const makeStore: MakeStore<any> = (context: any) => setupStore(context);
 const wrapper = createWrapper(makeStore);
 
 /*
@@ -33,5 +36,8 @@ type AppDispatch = AppStore['dispatch'];
 export type RootState = ReturnType<AppStore['getState']>;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action>;
+
+// 추가
+export const persistor = persistStore(store);
 
 export default wrapper;
