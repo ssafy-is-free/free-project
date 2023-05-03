@@ -54,10 +54,16 @@ const DetailCardDiv = styled.div`
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
-
+  gap: 0.5rem;
   button {
+    border-radius: 0.5rem;
     background-color: ${(props) => props.theme.primary};
     color: white;
+    padding: 0.5rem;
+
+    div {
+      white-space: nowrap;
+    }
   }
 
   .spreadIcon {
@@ -65,8 +71,27 @@ const DetailCardDiv = styled.div`
     position: fixed;
     height: 1rem;
   }
+  .memo {
+    padding: 0.2rem;
+    min-height: 3rem;
+    white-space: pre-wrap;
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid;
+  }
   .flexDiv {
     display: flex;
+    justify-content: space-between;
+    .upalignDiv {
+      display: flex;
+      .tag {
+        white-space: nowrap;
+      }
+    }
+  }
+  .alignDiv {
+    display: flex;
+    align-items: center;
   }
 `;
 
@@ -88,22 +113,35 @@ const DetailCard = ({ ddetail, setSpread }: IDetailCardProps) => {
     <DetailCardDiv>
       <img className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
       <div>{ddetail.postingName}</div>
-      <div>{ddetail.companyName}</div>
       <div>
-        {ddetail.startTime}~{ddetail.endTime}
+        <h2>{ddetail.companyName}</h2>
+      </div>
+      <div>
+        {ddetail.startTime} ~ {ddetail.endTime}
       </div>
       <div className="flexDiv">
         <button>다음일정: {ddetail.nextDate}</button>
         <button>{ddetail.dDayName}</button>
       </div>
-      <div>메모</div>
-      <div>{ddetail.memo}</div>
+      <div>
+        <div>메모</div>
+      </div>
+      <div>
+        <div className="memo">{ddetail.memo}</div>
+      </div>
       <div className="flexDiv">
         <div>
-          <div>지원직무: {ddetail.objective}</div>
-          <div>지원자수: {ddetail.applicantCount}</div>
+          <div className="upalignDiv">
+            <div className="tag">지원직무:&nbsp;</div>s<div>{ddetail.objective}</div>
+          </div>
+          <div>
+            <span>지원자수: {ddetail.applicantCount}</span>
+          </div>
         </div>
-        <button>지원자 정보 보러가기</button>
+        <button>
+          <div>지원자 정보</div>
+          <div>보러가기</div>
+        </button>
       </div>
     </DetailCardDiv>
   );
