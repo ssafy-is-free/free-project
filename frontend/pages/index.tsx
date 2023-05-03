@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
-import RankMenu from '@/components/common/RankMenu';
+import RankMenu2 from '@/components/common/RankMenu2';
 import SearchBar from '@/components/rank/RankSearchBar';
 import FilterIcon from '../public/Icon/FilterIcon.svg';
 import MainUserItem from '@/components/rank/MainUserItem';
@@ -28,41 +28,44 @@ import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
+import SearchIcon from '../public/Icon/SearchIcon.svg';
+import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
 
 import Profile from '@/components/profile/Profile';
 
 const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
-  /* height: calc(var(--vh, 1vh) * 100); */
-  background-color: ${(props) => props.theme.primary};
+  background-color: ${(props) => props.theme.bgWhite};
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  padding: 48px 0px;
 
   .content-wrapper {
-    /* position: relative;   */
-    position: absolute;
-    /* position: sticky; */
+    /* position: absolute; */
+    position: relative;
+    /* border: 3px solid red; */
     z-index: 1;
-    bottom: 0;
-    /* margin-top: 32px; */
-    /* padding: 72px 32px 32px; */
-    padding: 70px 2rem 2rem;
+    /* bottom: 0; */
+    padding: 1rem 2rem;
     width: 100%;
-    /* height: 672px; */
-    height: 83vh;
+    height: calc(100vh - 40px);
     background-color: ${(props) => props.theme.bgWhite};
-    border-radius: 50px 50px 0px 0px;
     display: flex;
     flex-direction: column;
 
-    .filter-box {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      cursor: pointer;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+
+    .option-box {
+      width: 100%;
+      margin-bottom: 16px;
     }
 
     .my-rank {
@@ -71,47 +74,73 @@ const Wrapper = styled.div`
         font-weight: bold;
         margin-bottom: 16px;
       }
-      margin-bottom: 16px;
-      margin-top: 16px;
+      margin-bottom: 32px;
     }
 
-    .all-rank-label {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 16px;
-      margin-top: 16px;
-    }
-
-    .rank-list {
-      /* p {
+    .all-rank {
+      p {
         font-size: 20px;
         font-weight: bold;
         margin-bottom: 16px;
-      } */
-      /* border: 1px solid red; */
-      overflow-y: scroll;
-      height: 80%;
-      /* margin-top: 16px; */
+      }
+      .rank-list {
+        li {
+          margin-bottom: 8px;
+        }
 
-      &::-webkit-scrollbar {
-        width: 8px;
-        cursor: pointer; // 커서 포인터 왜 안돼..
+        .observer-box {
+          height: 5%;
+          width: 100%;
+          background-color: white;
+        }
       }
-      &::-webkit-scrollbar-thumb {
-        height: 15%;
-        background-color: ${(props) => props.theme.primary};
-        border-radius: 10px;
-      }
+    }
+  }
+`;
 
-      li {
-        margin-bottom: 8px;
-      }
+const Header = styled.div`
+  width: 100%;
+  height: 48px;
+  background-color: #ffffff7f;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: fixed;
+  top: 0;
+  z-index: 2;
 
-      .observer-box {
-        height: 5%;
-        width: 100%;
-        background-color: white;
-      }
+  .logo-box {
+    height: 100%;
+    /* width: 40px; */
+    padding: 16px 8px 8px;
+    position: absolute;
+    left: 16px;
+    display: flex;
+    align-items: center;
+  }
+
+  .header-right {
+    display: flex;
+    position: absolute;
+    right: 16px;
+
+    .icon-box {
+      height: 100%;
+      width: 40px;
+      padding: 16px 8px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 8px;
+    }
+
+    .filter-box {
+      height: 100%;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 4px 4px;
     }
   }
 `;
@@ -455,33 +484,54 @@ const Main = () => {
   } else {
     return (
       <>
-        <Wrapper>
-          <RankMenu onClick={() => setOpenSelect(true)} curRank={curRank} />
+        <Header>
+          {/* 로고 */}
+          <div
+            className="logo-box"
+            onClick={() => {
+              window.location.href = '/';
+            }}
+          >
+            <LogoIcon />
+          </div>
+          {/* 아이콘 */}
 
-          <SearchBar
+          <div className="header-right">
+            <div className="icon-box">
+              <SearchIcon />
+            </div>
+
+            {!noScroll && (
+              <div className="filter-box">
+                <FilterIcon onClick={() => setOpenFilter(true)} />
+              </div>
+            )}
+          </div>
+        </Header>
+
+        <Wrapper>
+          <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} />
+
+          {/* <SearchBar
             setNoScroll={setNoScroll}
             curRank={curRank}
             setGitRankList={setGitRankList}
             setBojRankList={setBojRankList}
             getRankList={getRankList}
             size={size}
-          />
+          /> */}
 
           <div className="content-wrapper">
-            {!noScroll && (
-              <div className="filter-box">
-                <FilterIcon onClick={() => setOpenFilter(true)} />
-              </div>
-            )}
-
             {selectedOption && (
-              <FilterOption
-                item={selectedOption}
-                isInMain={true}
-                getRankList={getRankList}
-                size={size}
-                setSelectedOption={setSelectedOption}
-              />
+              <div className="option-box">
+                <FilterOption
+                  item={selectedOption}
+                  isInMain={true}
+                  getRankList={getRankList}
+                  size={size}
+                  setSelectedOption={setSelectedOption}
+                />
+              </div>
             )}
             {myGitRank && curRank == 0 ? (
               <div className="my-rank">
@@ -501,23 +551,14 @@ const Main = () => {
                 <NoAccount curRank={curRank} onClick={onClickNoUser} />
               </div>
             ) : null}
-            <p className="all-rank-label">전체 랭킹</p>
-            <ul className="rank-list">
-              {curRank == 0
-                ? gitRankList &&
-                  gitRankList?.map((el, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => {
-                        goProfile(el.userId);
-                      }}
-                    >
-                      <MainOtherItem curRank={curRank} item={el} />
-                    </li>
-                  ))
-                : bojRankList &&
-                  bojRankList?.map((el, idx) => {
-                    return (
+
+            {/* <p className="all-rank-label">전체 랭킹</p> */}
+            <div className="all-rank">
+              <p>전체 랭킹</p>
+              <ul className="rank-list">
+                {curRank == 0
+                  ? gitRankList &&
+                    gitRankList?.map((el, idx) => (
                       <li
                         key={idx}
                         onClick={() => {
@@ -526,17 +567,30 @@ const Main = () => {
                       >
                         <MainOtherItem curRank={curRank} item={el} />
                       </li>
-                    );
-                  })}
+                    ))
+                  : bojRankList &&
+                    bojRankList?.map((el, idx) => {
+                      return (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          <MainOtherItem curRank={curRank} item={el} />
+                        </li>
+                      );
+                    })}
 
-              {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
-              {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
-              {loading && <Spinner />}
-              <div ref={ref} className="observer-box"></div>
-            </ul>
+                {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
+                {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
+                {loading && <Spinner />}
+                <div ref={ref} className="observer-box"></div>
+              </ul>
+            </div>
           </div>
         </Wrapper>
-        {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
+        {/* {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />} */}
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
         {openFilter && (

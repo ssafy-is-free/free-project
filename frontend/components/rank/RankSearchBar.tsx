@@ -187,7 +187,6 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     <Wrapper>
       <div className="search-box" ref={searchBox}>
         <div className="input-wrapper">
-          <SearchIcon />
           <input type="text" className="input-box" placeholder={text} onChange={(event) => onChange(event)} />
         </div>
         <ul className="related-wrapper" ref={relatedWrapper}>

@@ -106,11 +106,7 @@ function Footer() {
     if (!isLogin && item.path == '/profile') {
       setOpenLogin(true);
     } else {
-      if (item.path == '/') {
-        window.location.href = `${item.path}`;
-      } else {
-        router.push(item.path);
-      }
+      router.push(item.path);
     }
   };
 
