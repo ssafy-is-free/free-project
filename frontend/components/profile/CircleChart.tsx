@@ -8,8 +8,8 @@ import styled from 'styled-components';
 const ChartDiv = styled.div`
   canvas {
     margin-inline: auto;
-    height: 40vh !important;
-    width: 40vh !important;
+    height: 80vw !important;
+    width: 80vw !important;
   }
 `;
 
