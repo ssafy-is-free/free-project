@@ -57,7 +57,9 @@ function Readme({ repository, githubId }: IReadme) {
       </ReadmeTitle>
       {open && (
         <ReadmeDetailDiv>
-          <p>README.md</p>
+          <a href={repository.link} target="_blank">
+            README.md
+          </a>
           <ReadmeDetail link={link}></ReadmeDetail>
         </ReadmeDetailDiv>
       )}
