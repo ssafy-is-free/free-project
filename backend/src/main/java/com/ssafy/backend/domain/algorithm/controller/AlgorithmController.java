@@ -36,16 +36,6 @@ public class AlgorithmController {
 	private final ResponseService responseService;
 	private final AlgorithmService algorithmService;
 
-	@GetMapping("/my-rank")
-
-	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
-		@RequestParam(value = "languageId", required = false) Long languageId) {
-		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId(), languageId);
-		//백준 아이디가 없다면 비어있는 컨텐츠
-		return bojMyRankResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
-			responseService.getDataResponse(bojMyRankResponse, RESPONSE_SUCCESS);
-	}
-
 	// TODO: 2023-04-25 12시에 한꺼번에 배치할떄 사용할 백준 크롤링
 	/*@PatchMapping("")
 	public CommonResponse bojSaveUser(@RequestParam Long userId) {
@@ -53,6 +43,18 @@ public class AlgorithmController {
 		algorithmService.patchBojByUserId(userId);
 		return responseService.getSuccessResponse();
 	}*/
+
+	@GetMapping("/my-rank")
+	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
+		@RequestParam(value = "languageId", required = false) Long languageId,
+		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId) {
+		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId(), languageId,
+			jobPostingId);
+		//백준 아이디가 없다면 비어있는 컨텐츠
+		return bojMyRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(bojMyRankResponse, RESPONSE_SUCCESS);
+	}
+
 	@GetMapping("/search")
 	public CommonResponse getBojIdList(@RequestParam String nickname) {
 		List<NicknameListResponse> bojIdList = algorithmService.getBojListByBojId(nickname);
@@ -63,8 +65,9 @@ public class AlgorithmController {
 	@GetMapping("/user-rank/{userId}")
 	public CommonResponse getBojId(@PathVariable Long userId,
 		@RequestParam(value = "languageId", required = false) Long languageId) {
-		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId);
-		return bojRankResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId, null);
+
+		return bojRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS);
 	}
 
@@ -73,7 +76,7 @@ public class AlgorithmController {
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 		userId = userId != null ? userId : userPrincipal.getId();
 		BojInfoDetailResponse bojInfoDetailResponse = algorithmService.getBojInfoDetailByUserId(userId);
-		return bojInfoDetailResponse == null ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		return bojInfoDetailResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);
 	}
 
@@ -84,16 +87,11 @@ public class AlgorithmController {
 		@RequestParam(value = "score", required = false) Integer score,
 		@RequestParam(value = "userId", required = false) Long userId,
 		@RequestParam(value = "rank", required = false) Long rank,
+		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId,
 		Pageable pageable) {
 
 		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, languageId,
-			score, rank, userId, pageable);
-
-		log.info("languageId : {}", languageId);
-		log.info("score : {}", score);
-		log.info("id : {}", userId);
-		log.info("rank : {}", rank);
-		log.info("size : {}", pageable.getPageSize());
+			score, rank, userId, jobPostingId, pageable);
 
 		return bojRankResponseList.isEmpty() ?
 			responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT) :

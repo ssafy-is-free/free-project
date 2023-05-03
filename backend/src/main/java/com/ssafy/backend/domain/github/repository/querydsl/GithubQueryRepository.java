@@ -12,6 +12,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
+import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,12 +21,13 @@ import lombok.RequiredArgsConstructor;
 public class GithubQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
-	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet, Pageable pageable) {
+	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet,
+		FilteredUserIdSet userIdSet, Pageable pageable) {
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(githubIdIn(githubIdSet), checkCursor(score, userId))
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId))
 			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -33,6 +35,10 @@ public class GithubQueryRepository {
 
 	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {
 		return githubIdSet != null ? github.id.in(githubIdSet.getGithubIds()) : null;
+	}
+
+	private BooleanExpression userIdIn(FilteredUserIdSet userIdSet) {
+		return userIdSet != null ? github.user.id.in(userIdSet.getUserIds()) : null;
 	}
 
 	private BooleanExpression checkCursor(Integer score, Long userId) {
@@ -56,6 +62,9 @@ public class GithubQueryRepository {
 	}
 
 	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long userId) {
+		if (score == null || userId == null) {
+			return null;
+		}
 		return scoreEq(score).and(userIdGt(userId));
 	}
 }

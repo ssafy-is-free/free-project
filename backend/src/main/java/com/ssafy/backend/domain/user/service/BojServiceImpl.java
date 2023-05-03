@@ -19,7 +19,6 @@ import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
-import com.ssafy.backend.domain.user.dto.BojIdRequest;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 import com.ssafy.backend.domain.util.service.BojScoreEvaluator;
@@ -44,23 +43,23 @@ public class BojServiceImpl implements BojService {
 	 * @param userId 유저의 아이디
 	 * @apiNote 백준 아이디를 저장하고 크롤링한 데이터를 저장하는 메소드
 	 * @author noobsoda
-	 * @param bojIdRequest 백준 아이디 요청 객체
+	 * @param bojId 백준 아이디 요청 객체
 	 * @throws CustomException 사용자를 찾을 수 없거나, 백준 아이디가 조회되지 않을 때 발생
 	 */
 	@Override
-	public void saveId(long userId, BojIdRequest bojIdRequest) {
+	public void saveId(long userId, String bojId) {
 
 		//유저 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
 
 		//백준 ID 저장
-		user.saveBojId(bojIdRequest.getBojId());
+		user.saveBojId(bojId);
 		userRepository.save(user);
 
 		//백준 아이디로 크롤링
 		CBojInfoResponse CBojInfoResponse = webClient.get()
-			.uri(uriBuilder -> uriBuilder.path("/data/baekjoon/{name}").build(bojIdRequest.getBojId()))
+			.uri(uriBuilder -> uriBuilder.path("/data/baekjoon/{name}").build(bojId))
 			.retrieve()
 			.bodyToMono(CBojInfoResponse.class)
 			.block();
@@ -81,7 +80,7 @@ public class BojServiceImpl implements BojService {
                     return getFallbackDto();
                 });*/
 		//백준 아이디가 조회될 때만 저장
-		if (!CBojInfoResponse.isNull()) {
+		if (!CBojInfoResponse.isEmpty()) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
 			Baekjoon baekjoon = null;
@@ -128,8 +127,6 @@ public class BojServiceImpl implements BojService {
 
 	@Override
 	public void checkDuplicateId(String bojId) {
-
-		System.out.println(bojId);
 
 		//백준 ID로 유저 조회
 		// userRepository.findUserByBojIdAndIsDeletedFalse(bojId)

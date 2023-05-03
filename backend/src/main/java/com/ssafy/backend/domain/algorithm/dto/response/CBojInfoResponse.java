@@ -30,8 +30,10 @@ public class CBojInfoResponse {
 	@JsonProperty("languages_result")
 	private List<CBojLanguageResultResponse> languagesResult;
 
-	public boolean isNull() {
-		return tier == null;
+	public boolean isEmpty() {
+		return (tier == null || tier.isEmpty()) &&
+			(languagesResult == null || languagesResult.isEmpty()) &&
+			(passCount == 0 && tryFailCount == 0 && submitCount == 0 && failCount == 0);
 	}
 
 }
