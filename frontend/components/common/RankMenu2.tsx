@@ -5,7 +5,7 @@ import { useState } from 'react';
 const Wrapper = styled.div<{ curMenu: boolean }>`
   display: flex;
   align-items: center;
-  background-color: ${(props) => props.theme.menuBg};
+  /* background-color: ${(props) => props.theme.menuBg}; */
   font-weight: bold;
   font-size: 16px;
   width: calc(100% - 64px);
@@ -35,11 +35,12 @@ const Wrapper = styled.div<{ curMenu: boolean }>`
   }
 
   .selected-menu {
-    background-color: ${(props) => props.theme.bgWhite};
+    background-color: ${(props) => props.theme.primary};
     width: calc(50% - 6px);
-    height: calc(100% - 12px);
+    /* height: calc(100% - 12px); */
+    height: 4px;
     position: absolute;
-
+    bottom: 0;
     z-index: 1;
     border-radius: 8px;
     transition: all 0.2s ease-in 0s;
@@ -62,9 +63,10 @@ const RankMenu2 = (props: IRankMenuProps) => {
       <div
         className="git-menu"
         onClick={() => {
-          if (props.onChangeCurRank) {
+          if (props.onChangeCurRank && props.setNoScroll) {
             props.onChangeCurRank(0);
             setCurMenu(true);
+            props.setNoScroll(false);
           }
         }}
       >
@@ -73,9 +75,10 @@ const RankMenu2 = (props: IRankMenuProps) => {
       <div
         className="boj-menu"
         onClick={() => {
-          if (props.onChangeCurRank) {
+          if (props.onChangeCurRank && props.setNoScroll) {
             props.onChangeCurRank(1);
             setCurMenu(false);
+            props.setNoScroll(false);
           }
         }}
       >
