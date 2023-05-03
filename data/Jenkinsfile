@@ -57,7 +57,7 @@ pipeline {
                 dir("${DOCKER_FILE_PATH}"){
                     script {
                         sh "pwd" 
-                        sh "ls -al"
+                        sh "cat main.py"
                         sh "docker build --no-cache -t ${IMAGE_NAME} ."
                     }
                 }
