@@ -71,12 +71,11 @@ class GithubRankingServiceTest {
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2));
 
 		Long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
-		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().build();
+		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(jobPostingId).build();
 		Pageable pageable = Pageable.ofSize(2);
 
 		//when
-		GithubRankingResponse response = githubRankingService.getGithubRank(null, null, null, rankingFilter,
-			jobPostingId, pageable);
+		GithubRankingResponse response = githubRankingService.getGithubRank(null, null, null, rankingFilter, pageable);
 
 		//then
 		assertThat(response.getRanks()).hasSize(2)
@@ -106,13 +105,13 @@ class GithubRankingServiceTest {
 		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2));
 
-		Long jobPostingId = 2L;
-		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().build();
+		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(2L).build();
 		Pageable pageable = Pageable.ofSize(2);
 
 		//when //then
-		assertThatThrownBy(() -> githubRankingService.getGithubRank(null, null, null, rankingFilter, jobPostingId,
-			pageable)).isInstanceOf(CustomException.class);
+		assertThatThrownBy(
+			() -> githubRankingService.getGithubRank(null, null, null, rankingFilter, pageable)).isInstanceOf(
+			CustomException.class);
 
 	}
 
