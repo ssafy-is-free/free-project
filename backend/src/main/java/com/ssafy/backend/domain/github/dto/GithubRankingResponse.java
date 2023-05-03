@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.github.dto;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,10 @@ public class GithubRankingResponse {
 			.collect(Collectors.toList());
 
 		return GithubRankingResponse.builder().ranks(githubRankingCovers).build();
+	}
+
+	public static GithubRankingResponse createEmpty() {
+		return GithubRankingResponse.builder().ranks(Collections.emptyList()).build();
 	}
 
 	public void updateRank(long rank) {

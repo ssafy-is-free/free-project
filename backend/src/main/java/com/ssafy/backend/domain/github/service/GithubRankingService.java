@@ -40,12 +40,24 @@ public class GithubRankingService {
 	private final GithubRepository githubRepository;
 
 	public GithubRankingResponse getGithubRank(Long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
-		Long jobPostingId, Pageable pageable) {
+		Pageable pageable) {
 		//언어로 필터링 githubIds
+		Long languageId = rankingFilter.getLanguageId();
 		FilteredGithubIdSet githubIdSet = rankingFilter.isNull() ? null : getGithubIdByLanguage(rankingFilter);
 
+		// 필터링된 깃허브 아이디가 없는 경우 DB 조회 X
+		if (githubIdSet != null && githubIdSet.isEmpty()) {
+			return GithubRankingResponse.createEmpty();
+		}
+
 		//공고별로 필터링된 userIds
+		Long jobPostingId = rankingFilter.getJobPostingId();
 		FilteredUserIdSet userIdSet = getUserIdByJobPosting(jobPostingId);
+
+		// 필터링된 유저 아이디가 없는 경우 DB 조회 X
+		if (userIdSet != null && userIdSet.isEmpty()) {
+			return GithubRankingResponse.createEmpty();
+		}
 
 		//페이지네이션된 깃허브 데이터
 		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, userIdSet, pageable);
@@ -70,6 +82,15 @@ public class GithubRankingService {
 		return FilteredUserIdSet.create(jobHistoryList);
 	}
 
+	private FilteredGithubIdSet getGithubIdByLanguage(GitHubRankingFilter rankingFilter) {
+		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(rankingFilter.getLanguageId())
+			.stream()
+			.map(g -> g.getGithub().getId())
+			.collect(Collectors.toSet());
+
+		return FilteredGithubIdSet.create(filterdIdSet);
+	}
+
 	private void setRankInfo(Long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
 
 		long prevRank = rank != null ? rank + 1 : 1;
@@ -79,15 +100,6 @@ public class GithubRankingService {
 		} else {
 			githubRankingResponse.updateRankAnRankUpDown(prevRank);
 		}
-	}
-
-	private FilteredGithubIdSet getGithubIdByLanguage(GitHubRankingFilter rankingFilter) {
-		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(rankingFilter.getLanguageId())
-			.stream()
-			.map(g -> g.getGithub().getId())
-			.collect(Collectors.toSet());
-
-		return FilteredGithubIdSet.create(filterdIdSet);
 	}
 
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {

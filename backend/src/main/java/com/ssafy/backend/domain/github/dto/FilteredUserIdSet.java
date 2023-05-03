@@ -27,4 +27,7 @@ public class FilteredUserIdSet {
 		return !(this.userIds.contains(userId));
 	}
 
+	public boolean isEmpty() {
+		return this.userIds.isEmpty();
+	}
 }
