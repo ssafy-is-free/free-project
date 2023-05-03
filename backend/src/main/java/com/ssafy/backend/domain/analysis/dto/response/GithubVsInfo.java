@@ -15,8 +15,8 @@ import lombok.Getter;
 public class GithubVsInfo {
 	String nickname;
 	String avatarUrl;
-	int commit;
-	int star;
+	double commit;
+	double star;
 	long repositories;
 	List<GithubDetailLanguage> languages;
 
