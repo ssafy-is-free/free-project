@@ -28,7 +28,7 @@ public class BojQueryRepository {
 		return queryFactory.select(baekjoon.count())
 			.from(baekjoon)
 			.innerJoin(baekjoon.user, user)
-			.where(bojIdIn(bojIdSet), userIdIn(userIdSet), user.id.ne(userId), baekjoon.score.lt(score))
+			.where(bojIdIn(bojIdSet), userIdIn(userIdSet), user.id.ne(userId), baekjoon.score.gt(score))
 			.fetchOne();
 
 	}
@@ -72,6 +72,7 @@ public class BojQueryRepository {
 		return baekjoon.id.in(baekjoonIdSet);
 
 	}
+
 	private BooleanExpression inJobUserId(Set<Long> jobUserId) {
 
 		if (jobUserId == null || jobUserId.isEmpty()) {
@@ -88,6 +89,5 @@ public class BojQueryRepository {
 	private BooleanExpression userIdIn(FilteredUserIdSet userIdSet) {
 		return userIdSet != null ? baekjoon.user.id.in(userIdSet.getUserIds()) : null;
 	}
-
 
 }
