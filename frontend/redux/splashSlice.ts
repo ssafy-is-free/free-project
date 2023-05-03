@@ -17,8 +17,11 @@ const splashSlice = createSlice({
     splashCheck(state) {
       state.check = true;
     },
+    splashInit(state) {
+      state.check = false;
+    },
   },
 });
 
-export const { splashCheck } = splashSlice.actions;
+export const { splashCheck, splashInit } = splashSlice.actions;
 export default splashSlice.reducer;

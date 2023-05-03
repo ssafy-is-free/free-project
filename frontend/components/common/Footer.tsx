@@ -1,26 +1,35 @@
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import Home from 'public/Icon/HomeIcon.svg';
 import Career from 'public/Icon/CareerIcon.svg';
 import Profile from 'public/Icon/ProfileIcon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import LoginModal from '../login/LoginModal';
+
+const bounce = keyframes`
+  from, to { transform: scale(1, 1); }
+  25% { transform: scale(0.9, 1.1); }
+  50% { transform: scale(1.1, 0.9); }
+  75% { transform: scale(0.95, 1.05); }
+`;
 
 const FooterDiv = styled.div`
   width: 100%;
   /* height: 10vh; */
-  height: 8vh;
+  /* height: 8vh; */
   min-height: 4rem;
   bottom: 0;
   background-color: ${(props) => props.theme.bgWhite};
   /* box-shadow: 0px -1px 3px 0px gray; */
-  box-shadow: 0px -5px 20px #8389a52d;
+  box-shadow: 0px -3px 10px #8389a52d;
   display: flex;
   align-items: center;
   position: fixed;
   z-index: 5;
+  padding: 10px 0px 24px;
+  border-radius: 24px 24px 0px 0px;
 `;
 
 const IconDiv = styled.div`
@@ -32,26 +41,30 @@ const IconDiv = styled.div`
   span {
     margin-top: 0.2rem;
     /* margin-bottom: 0.3rem; */
-    font-size: 80%;
+    font-size: 50%;
+  }
+
+  &:hover {
+    animation: 0.5s ease 0s ${bounce};
   }
 `;
 
 const HomeIcon = styled(Home)`
-  width: 33.33px;
+  width: 24px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
 `;
 
 const CareerIcon = styled(Career)`
-  width: 33.33px;
+  width: 24px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
 `;
 
 const ProfileIcon = styled(Profile)`
-  width: 33.33px;
+  width: 24px;
   path {
     fill: ${(props) => (props.active ? props.theme.primary : props.theme.footerGray)};
   }
@@ -91,7 +104,6 @@ function Footer() {
 
   const goPage = (item: any) => {
     if (!isLogin && item.path == '/profile') {
-      // alert('로그인 후 이용 가능합니다.');
       setOpenLogin(true);
     } else {
       if (item.path == '/') {

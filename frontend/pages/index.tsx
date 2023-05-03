@@ -439,7 +439,6 @@ const Main = () => {
     setSelectedOption(el);
   };
 
-  // if (!splash && !splashState) {
   if (!splashState) {
     return <Splash />;
   } else if (openProfile) {
@@ -529,6 +528,7 @@ const Main = () => {
                       </li>
                     );
                   })}
+
               {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
               {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
               {loading && <Spinner />}
