@@ -44,7 +44,7 @@ public class CrawlingScheduler {
 	}
 	// TODO: 2023-05-02 이터레이터에서 포이치로 바꾸기~
 
-	@Scheduled(cron = "0 16 10 * * *")
+	@Scheduled(cron = "0 0 2 * * *")
 	public void bojUpdate() {
 		log.info("백준 정보 업데이트 시작");
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
