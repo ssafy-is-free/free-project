@@ -30,7 +30,6 @@ import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 import SearchIcon from '../public/Icon/SearchIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
-
 import Profile from '@/components/profile/Profile';
 
 const Wrapper = styled.div`
@@ -500,7 +499,7 @@ const Main = () => {
           {/* 아이콘 */}
 
           <div className="header-right">
-            <div className="icon-box">
+            <div className="icon-box" onClick={() => setOnSearchClick(true)}>
               <SearchIcon />
             </div>
 
@@ -525,72 +524,77 @@ const Main = () => {
           /> */}
 
           <div className="content-wrapper">
-            {selectedOption && (
-              <div className="option-box">
-                <FilterOption
-                  item={selectedOption}
-                  isInMain={true}
-                  getRankList={getRankList}
-                  size={size}
-                  setSelectedOption={setSelectedOption}
-                />
-              </div>
+            {!onSearchClick ? (
+              <>
+                {selectedOption && (
+                  <div className="option-box">
+                    <FilterOption
+                      item={selectedOption}
+                      isInMain={true}
+                      getRankList={getRankList}
+                      size={size}
+                      setSelectedOption={setSelectedOption}
+                    />
+                  </div>
+                )}
+                {myGitRank && curRank == 0 ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <MainUserItem curRank={curRank} item={myGitRank} />
+                  </div>
+                ) : myBojRank && curRank == 1 ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <MainUserItem curRank={curRank} item={myBojRank} />
+                  </div>
+                ) : null}
+                {/* // || (curRank == 1 && isLogin && myBojRank == null) */}
+                {!isLogin ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                  </div>
+                ) : null}
+                {/* <p className="all-rank-label">전체 랭킹</p> */}
+                <div className="all-rank">
+                  <p>전체 랭킹</p>
+                  <ul className="rank-list">
+                    {curRank == 0
+                      ? gitRankList &&
+                        gitRankList?.map((el, idx) => (
+                          <li
+                            key={idx}
+                            onClick={() => {
+                              goProfile(el.userId);
+                            }}
+                          >
+                            <MainOtherItem curRank={curRank} item={el} />
+                          </li>
+                        ))
+                      : bojRankList &&
+                        bojRankList?.map((el, idx) => {
+                          return (
+                            <li
+                              key={idx}
+                              onClick={() => {
+                                goProfile(el.userId);
+                              }}
+                            >
+                              <MainOtherItem curRank={curRank} item={el} />
+                            </li>
+                          );
+                        })}
+
+                    {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
+                    {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
+                    {loading && <Spinner />}
+                    <div ref={ref} className="observer-box"></div>
+                  </ul>
+                </div>
+              </>
+            ) : (
+              <></>
             )}
-            {myGitRank && curRank == 0 ? (
-              <div className="my-rank">
-                <p>나의 랭킹</p>
-                <MainUserItem curRank={curRank} item={myGitRank} />
-              </div>
-            ) : myBojRank && curRank == 1 ? (
-              <div className="my-rank">
-                <p>나의 랭킹</p>
-                <MainUserItem curRank={curRank} item={myBojRank} />
-              </div>
-            ) : null}
-            {/* // || (curRank == 1 && isLogin && myBojRank == null) */}
-            {!isLogin ? (
-              <div className="my-rank">
-                <p>나의 랭킹</p>
-                <NoAccount curRank={curRank} onClick={onClickNoUser} />
-              </div>
-            ) : null}
-
-            {/* <p className="all-rank-label">전체 랭킹</p> */}
-            <div className="all-rank">
-              <p>전체 랭킹</p>
-              <ul className="rank-list">
-                {curRank == 0
-                  ? gitRankList &&
-                    gitRankList?.map((el, idx) => (
-                      <li
-                        key={idx}
-                        onClick={() => {
-                          goProfile(el.userId);
-                        }}
-                      >
-                        <MainOtherItem curRank={curRank} item={el} />
-                      </li>
-                    ))
-                  : bojRankList &&
-                    bojRankList?.map((el, idx) => {
-                      return (
-                        <li
-                          key={idx}
-                          onClick={() => {
-                            goProfile(el.userId);
-                          }}
-                        >
-                          <MainOtherItem curRank={curRank} item={el} />
-                        </li>
-                      );
-                    })}
-
-                {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
-                {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
-                {loading && <Spinner />}
-                <div ref={ref} className="observer-box"></div>
-              </ul>
-            </div>
           </div>
         </Wrapper>
         {/* {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />} */}
