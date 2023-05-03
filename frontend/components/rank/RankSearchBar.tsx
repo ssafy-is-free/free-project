@@ -202,10 +202,11 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
   }, [searchKeyword]);
 
   const resetInput = () => {
-    window.location.href = '/';
+    // window.location.href = '/';
     // (document.querySelector('.input-box') as HTMLInputElement).value = '';
-    // props.getRankList(props.size, 1);
-    // props.setNoScroll(false);
+    props.getRankList(props.size, 1);
+    props.setNoScroll(false);
+    props.setOnSearchClick(false);
   };
 
   // 닉네임 검색 결과

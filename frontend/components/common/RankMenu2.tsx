@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 import { IRankMenuProps } from './ICommon';
 import { useState } from 'react';
 
-const Wrapper = styled.div<{ curMenu: boolean }>`
+const Wrapper = styled.div<{ curMenu: number }>`
   display: flex;
   align-items: center;
   /* background-color: ${(props) => props.theme.menuBg}; */
@@ -46,7 +46,7 @@ const Wrapper = styled.div<{ curMenu: boolean }>`
     transition: all 0.2s ease-in 0s;
 
     ${(props) => {
-      if (!props.curMenu) {
+      if (props.curMenu == 1) {
         return css`
           transform: translateX(calc(100% - 6px));
         `;
@@ -56,7 +56,7 @@ const Wrapper = styled.div<{ curMenu: boolean }>`
 `;
 
 const RankMenu2 = (props: IRankMenuProps) => {
-  const [curMenu, setCurMenu] = useState<boolean>(false);
+  const [curMenu, setCurMenu] = useState<number>(props.curRank);
 
   return (
     <Wrapper curMenu={curMenu}>
@@ -65,7 +65,7 @@ const RankMenu2 = (props: IRankMenuProps) => {
         onClick={() => {
           if (props.onChangeCurRank && props.setNoScroll) {
             props.onChangeCurRank(0);
-            setCurMenu(true);
+            setCurMenu(0);
             props.setNoScroll(false);
           }
         }}
@@ -77,7 +77,7 @@ const RankMenu2 = (props: IRankMenuProps) => {
         onClick={() => {
           if (props.onChangeCurRank && props.setNoScroll) {
             props.onChangeCurRank(1);
-            setCurMenu(false);
+            setCurMenu(1);
             props.setNoScroll(false);
           }
         }}
