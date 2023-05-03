@@ -414,7 +414,7 @@ const Main = () => {
 
             if (data.length > 0) {
               setBojRankList([...data]);
-              setNextRank(data[data?.length - 1].rank);
+              setNextRank(data[data?.length - 1]?.rank);
             } else {
               setBojRankList(null);
             }
@@ -455,7 +455,7 @@ const Main = () => {
                 oldArr.push(el);
               });
 
-              setNextRank(data[data?.length - 1].rank);
+              setNextRank(data[data?.length - 1]?.rank);
               setBojRankList([...oldArr, ...newArr]);
             }
           }
