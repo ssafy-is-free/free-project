@@ -1,5 +1,7 @@
 package com.ssafy.backend.domain.analysis.dto.response;
 
+import java.util.List;
+
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.GithubDetailLanguage;
 
@@ -16,15 +18,16 @@ public class GithubVsInfo {
 	int commit;
 	int star;
 	long repositories;
-	GithubDetailLanguage languages;
+	List<GithubDetailLanguage> languages;
 
-	public static GithubVsInfo crate(Github github) {
+	public static GithubVsInfo crate(Github github, List<GithubDetailLanguage> languages) {
 		return GithubVsInfo.builder()
 			.nickname(github.getUser().getNickname())
 			.avatarUrl(github.getUser().getImage())
 			.commit(github.getCommitTotalCount())
 			.star(github.getStarTotalCount())
 			.repositories(github.countRepos())
+			.languages(languages)
 			.build();
 	}
 
