@@ -55,7 +55,7 @@ public class AnalysisGithubService {
 	private List<GithubDetailLanguage> getDetailLanguages(Github github) {
 		return githubLanguageQueryRepository.findByGithub(github)
 			.stream()
-			.sorted(Comparator.comparingInt(l -> -Integer.parseInt(l.getPercentage())))
+			.sorted(Comparator.comparingDouble(l -> -Double.parseDouble(l.getPercentage())))
 			.collect(Collectors.toList());
 
 	}
