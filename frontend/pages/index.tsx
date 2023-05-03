@@ -28,7 +28,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
-import SearchIcon from '../public/Icon/SearchIcon.svg';
+// import SearchIcon from '../public/Icon/SearchIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
 import Profile from '@/components/profile/Profile';
 
@@ -500,7 +500,7 @@ const Main = () => {
 
           <div className="header-right">
             <div className="icon-box" onClick={() => setOnSearchClick(true)}>
-              <SearchIcon />
+              {/* <SearchIcon /> */}
             </div>
 
             {!noScroll && (
