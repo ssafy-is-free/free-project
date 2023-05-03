@@ -110,7 +110,7 @@ const DetailCard = ({ ddetail, setSpread }: IDetailCardProps) => {
 };
 
 const CareerCard = () => {
-  const [spread, setSpread] = useState<boolean>(false);
+  const [spread, setSpread] = useState<boolean>(true);
   if (spread) {
     return (
       <DetailCard

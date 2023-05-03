@@ -62,7 +62,7 @@ const ProfileIcon = styled(Profile)`
  * /main, /career, /profile
  * @returns
  */
-function Footer() {
+const Footer = () => {
   const router = useRouter();
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
@@ -119,6 +119,6 @@ function Footer() {
       {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
     </FooterDiv>
   );
-}
+};
 
 export default Footer;

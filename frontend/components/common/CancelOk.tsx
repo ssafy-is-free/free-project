@@ -38,7 +38,7 @@ const OkDiv = styled.div`
   }
 `;
 
-export default function CancelOk(props: ICancelOk) {
+const CancelOk = (props: ICancelOk) => {
   return (
     <CancelOkDiv>
       <CancelDiv onClick={props.cancel}>
@@ -49,4 +49,5 @@ export default function CancelOk(props: ICancelOk) {
       </OkDiv>
     </CancelOkDiv>
   );
-}
+};
+export default CancelOk;

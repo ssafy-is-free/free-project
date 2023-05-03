@@ -35,7 +35,7 @@ interface IReadme {
   githubId: number;
 }
 
-function Readme({ repository, githubId }: IReadme) {
+const Readme = ({ repository, githubId }: IReadme) => {
   const [link, setLink] = useState<string>('');
   const [open, setOpen] = useState(false);
   const clicked = () => {
@@ -63,5 +63,5 @@ function Readme({ repository, githubId }: IReadme) {
       )}
     </ReadmeDiv>
   );
-}
+};
 export default Readme;

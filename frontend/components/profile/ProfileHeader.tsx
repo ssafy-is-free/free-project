@@ -26,7 +26,7 @@ interface IProfileHeader {
   name: string;
 }
 
-export default function ProfileHeader({ back, name }: IProfileHeader) {
+const ProfileHeader = ({ back, name }: IProfileHeader) => {
   return (
     <HeaderDiv>
       <div>
@@ -40,4 +40,5 @@ export default function ProfileHeader({ back, name }: IProfileHeader) {
       </div>
     </HeaderDiv>
   );
-}
+};
+export default ProfileHeader;

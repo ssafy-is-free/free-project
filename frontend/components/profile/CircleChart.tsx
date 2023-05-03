@@ -13,7 +13,7 @@ const ChartDiv = styled.div`
   }
 `;
 
-export default function CircleChart({ data, fontsize, label }: CircleChartProps) {
+const CircleChart = ({ data, fontsize, label }: CircleChartProps) => {
   ChartJS.register(ArcElement, Tooltip, Legend);
   const options = {
     responsive: true,
@@ -36,4 +36,5 @@ export default function CircleChart({ data, fontsize, label }: CircleChartProps)
       <Doughnut options={options} data={myChartData(data)}></Doughnut>
     </ChartDiv>
   );
-}
+};
+export default CircleChart;
