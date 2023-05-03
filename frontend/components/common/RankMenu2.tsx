@@ -13,7 +13,6 @@ const Wrapper = styled.div<{ curMenu: number }>`
   padding: 12px 8px;
   margin-top: 16px;
   position: relative;
-  color: ${(props) => props.theme.fontDarkGray};
 
   .git-menu {
     width: 50%;
@@ -23,7 +22,20 @@ const Wrapper = styled.div<{ curMenu: number }>`
     justify-content: center;
     position: relative;
     z-index: 2;
+
+    ${(props) => {
+      if (props.curMenu == 1) {
+        return css`
+          color: ${(props) => props.theme.fontGray};
+        `;
+      } else {
+        return css`
+          color: ${(props) => props.theme.fontDarkGray};
+        `;
+      }
+    }};
   }
+
   .boj-menu {
     width: 50%;
     height: 100%;
@@ -32,6 +44,18 @@ const Wrapper = styled.div<{ curMenu: number }>`
     justify-content: center;
     position: relative;
     z-index: 2;
+
+    ${(props) => {
+      if (props.curMenu == 0) {
+        return css`
+          color: ${(props) => props.theme.fontGray};
+        `;
+      } else {
+        return css`
+          color: ${(props) => props.theme.fontDarkGray};
+        `;
+      }
+    }};
   }
 
   .selected-menu {
