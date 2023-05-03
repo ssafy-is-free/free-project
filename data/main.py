@@ -5,6 +5,7 @@ from fastapi import FastAPI, Response
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 import requests
+import re
 
 app = FastAPI()
 
@@ -125,7 +126,7 @@ async def read_baekjoon(name):
                 continue
             language_result = {
                 "language": header.text,
-                "pass_percentage": columns[11].text,
+                "pass_percentage": re.sub(r'%', '', columns[11].text),
                 "pass_count": pass_count,
             }
             # 결과 배열에 language_result을 추가합니다.
@@ -246,7 +247,7 @@ def getLanguage(username: str, result: dict):
         data = dict()
         lang, percentage, = language.text.strip().split('\n')
         data['name'] = lang
-        data['percentage'] = percentage
+        data['percentage'] = re.sub(r'%', '', percentage)
         tmp.append(data)
 
     result['languages'] = tmp

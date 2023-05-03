@@ -4,7 +4,7 @@ services:
   fastapi_app:
     build:            
       dockerfile: Dockerfile
-    image: my_fastapi_app
+    image: sh80165/free-data
     ports:
       - "8000:8000"
     container_name: my_fastapi_container
