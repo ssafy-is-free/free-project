@@ -123,7 +123,7 @@ const Header = styled.div`
   justify-content: space-around;
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: 50;
 
   .logo-box {
     height: 100%;
@@ -137,7 +137,7 @@ const Header = styled.div`
 
   .header-right {
     display: flex;
-    position: absolute;
+    /* position: absolute; */
     right: 16px;
 
     .icon-box {
