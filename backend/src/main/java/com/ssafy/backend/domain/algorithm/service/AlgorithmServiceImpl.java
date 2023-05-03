@@ -28,13 +28,16 @@ import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
+import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
+import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
+import com.ssafy.backend.global.response.exception.CustomExceptionStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +55,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	private final BojQueryRepository bojQueryRepository;
 	private final BojLanguageQueryRepository bojLanguageQueryRepository;
 	private final JobPostingRepository jobPostingRepository;
+	private final JobHistoryRepository jobHistoryRepository;
 	private final JobHistoryQueryRepository jobHistoryQueryRepository;
 
 	@Override
@@ -71,7 +75,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId, Long languageId) {
+	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
 
 		//유저 아이디로 백준 아이디 조회
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
@@ -91,20 +95,14 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredBojIdSet bojIdSet = (languageId == null) ? null : getBojIdBy(languageId);
 
+		//공고별로 필터링된 userIds
+		FilteredUserIdSet userIdSet = (jobPostingId == null) ? null : getUserIdByJobPosting(jobPostingId);
+
 		// 내가 속해있는지 확인하기
-		if (bojIdSet != null && bojIdSet.isNotIn(boj.getId())) {
+		if ((bojIdSet != null && bojIdSet.isNotIn(boj.getId())) || (userIdSet != null && userIdSet.isNotIn(
+			boj.getId()))) {
 			return BojRankResponse.createEmpty();
 		}
-
-		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
-
-		int rank;
-		if (bojIdSet == null) {
-			rank = bojRepository.getRank(boj.getScore(), userId);
-		} else {
-			rank = bojRepository.getRankWithFilter(bojIdSet.getBojIds(), boj.getScore(), userId);
-		}
-		rank += 1;
 
 		// 랭크 세기
 		/*int rank = 1;
@@ -116,7 +114,17 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			}
 		}*/
 
-		return BojRankResponse.createBojMyRankResponseDTO(boj, user, rank);
+		/*int rank;
+		if (bojIdSet == null) {
+			rank = bojRepository.getRank(boj.getScore(), userId);
+		} else {
+			rank = bojRepository.getRankWithFilter(bojIdSet.getBojIds(), boj.getScore(),
+				userId);
+		}
+		rank += 1;*/
+		long rank = bojQueryRepository.findRankByScore(userId, userIdSet, bojIdSet, boj.getScore()) + 1;
+
+		return BojRankResponse.createBojMyRankResponseDTO(boj, user, (int)rank);
 
 	}
 
@@ -198,7 +206,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return Collections.EMPTY_LIST;
 
 		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
-
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
 			userId, pageable);
 
@@ -222,7 +229,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_JOBPOSTING));
 
-		// TODO: 2023-05-02 스트림을 이용해서 id로 변환하는 로직은 메서드로 빼는 것이 좋음
 		//채용 공고 id가 존재하면 해당하는 유저 id 조회.
 		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingIdJoinUser(jobPosting.getId());
 		Set<Long> jobUserId = jobHistoryList.stream()
@@ -239,6 +245,15 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			.collect(Collectors.toSet());
 
 		return FilteredBojIdSet.create(filterdIdSet);
+	}
+
+	private FilteredUserIdSet getUserIdByJobPosting(Long jobPostingId) {
+		//공고 유효성 검증
+		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
+
+		List<JobHistory> jobHistoryList = jobHistoryRepository.findByJobPosting(jobPosting);
+		return FilteredUserIdSet.create(jobHistoryList);
 	}
 
 }

@@ -50,11 +50,11 @@ public class GithubController {
 	@GetMapping("/ranks")
 	public DataResponse<GithubRankingResponse> getGithubRanks(@RequestParam(required = false) Long rank,
 		@RequestParam(required = false) Long userId, @RequestParam(required = false) Integer score,
-		@ModelAttribute GitHubRankingFilter rankingFilter, @RequestParam(required = false) Long jobPostingId,
+		@ModelAttribute GitHubRankingFilter rankingFilter,
 		@PageableDefault(sort = "score", direction = Sort.Direction.ASC) Pageable pageable) {
 
 		GithubRankingResponse githubRankingResponse = githubRankingService.getGithubRank(rank, userId, score,
-			rankingFilter, jobPostingId, pageable);
+			rankingFilter, pageable);
 
 		return responseService.getDataResponse(githubRankingResponse, CustomSuccessStatus.RESPONSE_SUCCESS);
 	}
