@@ -1,14 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-interface Idsummary {
-  jobHistoryId: number;
-  companyName: string;
-  dDayName: string;
-  nextDate: string;
-  dDay: string;
-  status: string;
-}
+import { Spinner } from '../common/Spinner';
 
 interface Iddetail {
   postingId: number;
@@ -23,16 +15,6 @@ interface Iddetail {
   objective: string;
   applicantCount: number;
 }
-
-const dsummary = {
-  jobHistoryId: 0,
-  companyName: '삼성',
-  dDayName: '코딩 테스트!',
-  nextDate: '2023-04-16',
-  dDay: '1',
-  status: '서류 합격',
-};
-
 const ddetail = {
   postingId: 1,
   postingName: '뽑아요 뽑습니다',
@@ -95,34 +77,42 @@ const DetailCardDiv = styled.div`
   }
 `;
 
-const SummaryCard = (dsummary: Idsummary) => {
-  return (
-    <div>
-      <div>summary</div>
-    </div>
-  );
-};
-
 interface IDetailCardProps {
+  cardId: number;
+}
+interface ICardHeaderProps {
   ddetail: Iddetail;
+  spread: boolean;
   setSpread: () => void;
 }
+interface ICardContentProps {
+  ddetail: Iddetail;
+}
 
-const DetailCard = ({ ddetail, setSpread }: IDetailCardProps) => {
+const CardHeader = ({ ddetail, spread, setSpread }: ICardHeaderProps) => {
   return (
-    <DetailCardDiv>
+    <div>
       <img className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
-      <div>{ddetail.postingName}</div>
+      {spread && <div>{ddetail.postingName}</div>}
       <div>
         <h2>{ddetail.companyName}</h2>
       </div>
-      <div>
-        {ddetail.startTime} ~ {ddetail.endTime}
-      </div>
+      {spread && (
+        <div>
+          {ddetail.startTime} ~ {ddetail.endTime}
+        </div>
+      )}
       <div className="flexDiv">
         <button>다음일정: {ddetail.nextDate}</button>
         <button>{ddetail.dDayName}</button>
       </div>
+    </div>
+  );
+};
+
+const CardContent = ({ ddetail }: ICardContentProps) => {
+  return (
+    <div>
       <div>
         <div>메모</div>
       </div>
@@ -132,7 +122,8 @@ const DetailCard = ({ ddetail, setSpread }: IDetailCardProps) => {
       <div className="flexDiv">
         <div>
           <div className="upalignDiv">
-            <div className="tag">지원직무:&nbsp;</div>s<div>{ddetail.objective}</div>
+            <div className="tag">지원직무:&nbsp;</div>
+            <div>{ddetail.objective}</div>
           </div>
           <div>
             <span>지원자수: {ddetail.applicantCount}</span>
@@ -143,23 +134,40 @@ const DetailCard = ({ ddetail, setSpread }: IDetailCardProps) => {
           <div>보러가기</div>
         </button>
       </div>
-    </DetailCardDiv>
+    </div>
   );
 };
 
-const CareerCard = () => {
-  const [spread, setSpread] = useState<boolean>(true);
-  if (spread) {
+const CareerCard = ({ cardId }: IDetailCardProps) => {
+  const [spread, setSpread] = useState<boolean>(false);
+  const [detail, setDetail] = useState<Iddetail | null>(null);
+
+  useEffect(() => {
+    // api
+    setTimeout(() => {
+      setDetail(ddetail);
+    }, 1000);
+  }, []);
+
+  if (!detail) {
     return (
-      <DetailCard
-        ddetail={ddetail}
-        setSpread={() => {
-          setSpread(!spread);
-        }}
-      ></DetailCard>
+      <DetailCardDiv>
+        <Spinner></Spinner>
+      </DetailCardDiv>
     );
   } else {
-    return SummaryCard(dsummary);
+    return (
+      <DetailCardDiv>
+        <CardHeader
+          ddetail={detail}
+          setSpread={() => {
+            setSpread(!spread);
+          }}
+          spread={spread}
+        />
+        {spread && <CardContent ddetail={detail} />}
+      </DetailCardDiv>
+    );
   }
 };
 
