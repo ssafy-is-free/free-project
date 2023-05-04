@@ -43,12 +43,14 @@ const Splash = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await patchCrawaling();
+      // const data = await patchCrawaling();
 
-      if (data.status == 'SUCCESS') {
-        dispatch(setNew());
-        route.push('/');
-      }
+      // if (data.status == 'SUCCESS') {
+      //   dispatch(setNew());
+      //   route.push('/');
+      // }
+      dispatch(setNew());
+      route.push('/');
     })();
   }, []);
 
