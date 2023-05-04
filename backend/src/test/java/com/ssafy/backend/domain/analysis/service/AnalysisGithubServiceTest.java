@@ -28,6 +28,7 @@ import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
+import com.ssafy.backend.global.response.exception.CustomException;
 
 @SpringBootTest
 class AnalysisGithubServiceTest {
@@ -125,9 +126,9 @@ class AnalysisGithubServiceTest {
 		long languageId1 = languageRepository.findByNameAndType("Java", LanguageType.GITHUB).get().getId();
 		long languageId2 = languageRepository.findByNameAndType("Python", LanguageType.GITHUB).get().getId();
 
-		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, "70", myGithub);
-		GithubLanguage githubLanguage1 = createGithubLanguage(languageId2, "30", myGithub);
-		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, "100", yourGithub);
+		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, 70, myGithub);
+		GithubLanguage githubLanguage1 = createGithubLanguage(languageId2, 30, myGithub);
+		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, 100, yourGithub);
 		githubLanguageRepository.saveAll(Arrays.asList(githubLanguage1, githubLanguage2, githubLanguage3));
 
 		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
@@ -137,12 +138,12 @@ class AnalysisGithubServiceTest {
 		CompareGithubResponse result = analysisGithubService.compareWithOpponent(opponentUserId, myUserId);
 
 		//then
-		assertThat(result.getMy().getLanguages()).hasSize(2)
+		assertThat(result.getMy().getLanguages().getLanguageList()).hasSize(2)
 			.extracting("name", "percentage")
-			.containsExactly(tuple("Java", "70"), tuple("Python", "30"));
-		assertThat(result.getOpponent().getLanguages()).hasSize(1)
+			.containsExactly(tuple("Java", 70.0), tuple("Python", 30.0));
+		assertThat(result.getOpponent().getLanguages().getLanguageList()).hasSize(1)
 			.extracting("name", "percentage")
-			.containsExactly(tuple("Python", "100"));
+			.containsExactly(tuple("Python", 100.0));
 
 	}
 
@@ -191,13 +192,14 @@ class AnalysisGithubServiceTest {
 
 		//then
 		//language와 repository를 제외한 데이터를 제대로 가지고 오는지
-		assertThat(result.getMy()).extracting("nickname", "avatarUrl", "commit", "star").contains("user1", "1", 100, 3);
+		assertThat(result.getMy()).extracting("nickname", "avatarUrl", "commit", "star")
+			.contains("user1", "1", 100.0, 3.0);
 
 		assertThat(result.getOpponent()).extracting("nickname", "avatarUrl", "commit", "star")
-			.contains(null, null, 1000.0, 2.0);
+			.contains(null, null, 775.0, 2.3);
 
 		//repository의 수를 제대로 가지고 오는지
-		assertThat(result.getMy().getRepositories()).isEqualTo(2);
+		assertThat(result.getMy().getRepositories()).isEqualTo(1);
 		assertThat(result.getOpponent().getRepositories()).isEqualTo(1.3);
 
 	}
@@ -205,6 +207,78 @@ class AnalysisGithubServiceTest {
 	@DisplayName("유저 비교에 사용된 언어 정보는 지원자 평균값이 퍼센트 순으로 정렬되어있다")
 	@Test
 	void compareWithAllApplicantLanguage() {
+		//given
+		//유저 데이터
+		User user1 = createUser("user1");
+		User user2 = createUser("user2");
+		User user3 = createUser("user3");
+		User user4 = createUser("user4");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3, user4));
+
+		//깃허브 데이터
+		Github myGithub = createGithub(user1, 100, 3, 800);
+		Github user1Github = createGithub(user2, 500, 2, 500);
+		Github user2Github = createGithub(user3, 1000, 2, 500);
+		Github user3Github = createGithub(user4, 1500, 2, 500);
+		githubRepository.saveAll(Arrays.asList(myGithub, user1Github, user2Github, user3Github));
+
+		//취업 공고
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		//공고 지원 이력
+		JobHistory jobHistory1 = createJobHistory(user1, jobPosting1);
+		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
+		JobHistory jobHistory3 = createJobHistory(user3, jobPosting1);
+		JobHistory jobHistory4 = createJobHistory(user4, jobPosting1);
+		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3, jobHistory4));
+
+		// 언어 종류
+		Language language1 = Language.builder().name("Java").type(LanguageType.GITHUB).build();
+		Language language2 = Language.builder().name("Python").type(LanguageType.GITHUB).build();
+		Language language3 = Language.builder().name("C++").type(LanguageType.GITHUB).build();
+		Language language4 = Language.builder().name("C").type(LanguageType.GITHUB).build();
+		Language language5 = Language.builder().name("JavaScript").type(LanguageType.GITHUB).build();
+		Language language6 = Language.builder().name("TypeScript").type(LanguageType.GITHUB).build();
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3, language4, language5, language6));
+
+		long languageId1 = languageRepository.findByNameAndType("Java", LanguageType.GITHUB).get().getId();
+		long languageId2 = languageRepository.findByNameAndType("Python", LanguageType.GITHUB).get().getId();
+		long languageId3 = languageRepository.findByNameAndType("C++", LanguageType.GITHUB).get().getId();
+		long languageId4 = languageRepository.findByNameAndType("C", LanguageType.GITHUB).get().getId();
+		long languageId5 = languageRepository.findByNameAndType("JavaScript", LanguageType.GITHUB).get().getId();
+		long languageId6 = languageRepository.findByNameAndType("TypeScript", LanguageType.GITHUB).get().getId();
+
+		//깃허브별 언어 사용
+		GithubLanguage githubLanguage1 = createGithubLanguage(languageId1, 70, myGithub);
+		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, 40, user1Github);
+		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, 60, user1Github);
+		GithubLanguage githubLanguage4 = createGithubLanguage(languageId3, 50, user2Github);
+		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, 50, user2Github);
+		GithubLanguage githubLanguage6 = createGithubLanguage(languageId5, 30, user3Github);
+		GithubLanguage githubLanguage7 = createGithubLanguage(languageId6, 20, user3Github);
+		GithubLanguage githubLanguage8 = createGithubLanguage(languageId1, 50, user3Github);
+		githubLanguageRepository.saveAll(
+			Arrays.asList(githubLanguage1, githubLanguage2, githubLanguage3, githubLanguage4, githubLanguage5,
+				githubLanguage6, githubLanguage7, githubLanguage8));
+
+		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
+
+		//when
+		CompareGithubResponse result = analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId);
+
+		//then
+		assertThat(result.getOpponent().getLanguages().getLanguageList()).hasSize(5)
+			.extracting("name", "percentage")
+			.containsExactly(tuple("Java", 40.0), tuple("Python", 15.0), tuple("C++", 12.5), tuple("C", 12.5),
+				tuple("JavaScript", 7.5));
+
+	}
+
+	@DisplayName("잘못된 공고로는 지원자 평균 비교를 할 수 없다")
+	@Test
+	void compareWithAllApplicantIncorrectPosting() {
 		//given
 		//유저 데이터
 		User user1 = createUser("user1");
@@ -239,46 +313,13 @@ class AnalysisGithubServiceTest {
 		JobHistory jobHistory4 = createJobHistory(user4, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3, jobHistory4));
 
-		// 언어 종류
-		Language language1 = Language.builder().name("Java").type(LanguageType.GITHUB).build();
-		Language language2 = Language.builder().name("Python").type(LanguageType.GITHUB).build();
-		Language language3 = Language.builder().name("C++").type(LanguageType.GITHUB).build();
-		Language language4 = Language.builder().name("C").type(LanguageType.GITHUB).build();
-		Language language5 = Language.builder().name("JavaScript").type(LanguageType.GITHUB).build();
-		Language language6 = Language.builder().name("TypeScript").type(LanguageType.GITHUB).build();
-		languageRepository.saveAll(Arrays.asList(language1, language2, language3, language4, language5, language6));
-
-		long languageId1 = languageRepository.findByNameAndType("Java", LanguageType.GITHUB).get().getId();
-		long languageId2 = languageRepository.findByNameAndType("Python", LanguageType.GITHUB).get().getId();
-		long languageId3 = languageRepository.findByNameAndType("C++", LanguageType.GITHUB).get().getId();
-		long languageId4 = languageRepository.findByNameAndType("C", LanguageType.GITHUB).get().getId();
-		long languageId5 = languageRepository.findByNameAndType("JavaScript", LanguageType.GITHUB).get().getId();
-		long languageId6 = languageRepository.findByNameAndType("TypeScript", LanguageType.GITHUB).get().getId();
-
-		//깃허브별 언어 사용
-		GithubLanguage githubLanguage1 = createGithubLanguage(languageId1, "70", myGithub);
-		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, "40", user1Github);
-		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, "60", user1Github);
-		GithubLanguage githubLanguage4 = createGithubLanguage(languageId3, "50", user2Github);
-		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, "50", user2Github);
-		GithubLanguage githubLanguage6 = createGithubLanguage(languageId5, "30", user3Github);
-		GithubLanguage githubLanguage7 = createGithubLanguage(languageId6, "20", user3Github);
-		GithubLanguage githubLanguage8 = createGithubLanguage(languageId1, "50", user3Github);
-		githubLanguageRepository.saveAll(
-			Arrays.asList(githubLanguage1, githubLanguage2, githubLanguage3, githubLanguage4, githubLanguage5,
-				githubLanguage6, githubLanguage7, githubLanguage8));
-
 		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
-		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
-
-		//when
-		CompareGithubResponse result = analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId);
+		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId() + 1;
 
 		//then
-		assertThat(result.getOpponent().getLanguages()).hasSize(5)
-			.extracting("name", "percentage")
-			.containsExactly(tuple("Java", "30"), tuple("Python", "20"), tuple("C++", "16.6"), tuple("C", "16.6"),
-				tuple("JavaScript", "10"));
+		//when //then
+		assertThatThrownBy(() -> analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId)).isInstanceOf(
+			CustomException.class);
 
 	}
 
@@ -298,7 +339,7 @@ class AnalysisGithubServiceTest {
 			.build();
 	}
 
-	private GithubLanguage createGithubLanguage(long languageId, String percentage, Github github) {
+	private GithubLanguage createGithubLanguage(long languageId, double percentage, Github github) {
 		return GithubLanguage.builder().languageId(languageId).github(github).percentage(percentage).build();
 	}
 
