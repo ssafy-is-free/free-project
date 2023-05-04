@@ -90,7 +90,7 @@ const Wrapper = styled.div`
     .img-box {
       width: 240px;
       height: 240px;
-      animation: ${bounce} 1s ease;
+      animation: ${bounce} 1.5s ease infinite;
     }
 
     .label {
@@ -206,7 +206,8 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     // (document.querySelector('.input-box') as HTMLInputElement).value = '';
     props.getRankList(props.size, 1);
     props.setNoScroll(false);
-    props.setOnSearchClick(false);
+    props.setSearchClick(false);
+    props.setSelectedOption(null);
   };
 
   // 닉네임 검색 결과
@@ -227,7 +228,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
       props.setBojRankList((prev) => [data.data]);
     }
 
-    props.setOnSearchClick(false);
+    props.setSearchClick(false);
   };
 
   return (
@@ -247,8 +248,8 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           searchResults?.map((el, idx) => {
             if (typeof el != 'string')
               return (
-                <ul className="related-wrapper" ref={relatedWrapper}>
-                  <li className="user-li" key={idx} onClick={() => onSearchNick(el.userId, el.nickname)}>
+                <ul className="related-wrapper" ref={relatedWrapper} key={idx}>
+                  <li className="user-li" onClick={() => onSearchNick(el.userId, el.nickname)}>
                     {el.nickname}
                   </li>
                 </ul>
@@ -279,29 +280,6 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           </div>
         )}
       </div>
-
-      {/* <div className="search-box" ref={searchBox}>
-        <div className="input-wrapper">
-          <input type="text" className="input-box" placeholder={text} onChange={(event) => onChange(event)} />
-        </div>
-        <ul className="related-wrapper" ref={relatedWrapper}>
-          {searchKeyword != '' &&
-            searchResults?.map((el, idx) => {
-              if (typeof el != 'string')
-                return (
-                  <li className="user-li" key={idx} onClick={() => onSearchNick(el.userId, el.nickname)}>
-                    {el.nickname}
-                  </li>
-                );
-              else
-                return (
-                  <li className="nouser-li" key={idx}>
-                    {el}
-                  </li>
-                );
-            })}
-        </ul>
-      </div> */}
     </Wrapper>
   );
 };
