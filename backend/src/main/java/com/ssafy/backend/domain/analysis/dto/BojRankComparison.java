@@ -25,7 +25,7 @@ public class BojRankComparison {
 		return BojRankComparison.builder().my(my).opponent(opponent).build();
 	}
 
-	public boolean isNull() {
+	public boolean checkForNull() {
 		return this.my == null || this.opponent == null;
 	}
 }
