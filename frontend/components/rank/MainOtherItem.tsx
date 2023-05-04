@@ -11,7 +11,7 @@ const Wrapper = styled.div<{ rankupdown: number }>`
   height: 56px;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  /* justify-content: space-around; */
   padding: 0px 14px;
   color: ${(props) => props.theme.fontBlack};
   font-weight: bold;
@@ -72,15 +72,15 @@ const Wrapper = styled.div<{ rankupdown: number }>`
         margin-left: 8px;
       }
     }
+  }
 
-    .user-score {
-      width: 20%;
-      text-align: right;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: end;
-    }
+  .user-score {
+    width: 20%;
+    text-align: right;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
   }
 `;
 
@@ -124,11 +124,11 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item?.rank}
-        {rankupdown !== 0 && (
+        {/* {rankupdown !== 0 && (
           <div className="rank-icon">
             <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
           </div>
-        )}
+        )} */}
       </div>
       <div className="center">
         <img src={props.item?.avatarUrl} className="user-photo" />
