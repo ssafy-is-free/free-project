@@ -610,7 +610,7 @@ const Main = () => {
                 ) : (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                    <NoAccount curRank={3} onClick={onClickNoUser} />
                   </div>
                 )}
                 <div className="all-rank">
@@ -641,83 +641,8 @@ const Main = () => {
                             </li>
                           );
                         })}
-                    {curRank == 0
-                      ? gitRankList &&
-                        gitRankList?.map((el, idx) => (
-                          <li
-                            key={idx}
-                            onClick={() => {
-                              goProfile(el.userId);
-                            }}
-                          >
-                            <MainOtherItem curRank={curRank} item={el} />
-                          </li>
-                        ))
-                      : bojRankList &&
-                        bojRankList?.map((el, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              onClick={() => {
-                                goProfile(el.userId);
-                              }}
-                            >
-                              <MainOtherItem curRank={curRank} item={el} />
-                            </li>
-                          );
-                        })}
-                    {curRank == 0
-                      ? gitRankList &&
-                        gitRankList?.map((el, idx) => (
-                          <li
-                            key={idx}
-                            onClick={() => {
-                              goProfile(el.userId);
-                            }}
-                          >
-                            <MainOtherItem curRank={curRank} item={el} />
-                          </li>
-                        ))
-                      : bojRankList &&
-                        bojRankList?.map((el, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              onClick={() => {
-                                goProfile(el.userId);
-                              }}
-                            >
-                              <MainOtherItem curRank={curRank} item={el} />
-                            </li>
-                          );
-                        })}
-                    {curRank == 0
-                      ? gitRankList &&
-                        gitRankList?.map((el, idx) => (
-                          <li
-                            key={idx}
-                            onClick={() => {
-                              goProfile(el.userId);
-                            }}
-                          >
-                            <MainOtherItem curRank={curRank} item={el} />
-                          </li>
-                        ))
-                      : bojRankList &&
-                        bojRankList?.map((el, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              onClick={() => {
-                                goProfile(el.userId);
-                              }}
-                            >
-                              <MainOtherItem curRank={curRank} item={el} />
-                            </li>
-                          );
-                        })}
-                    {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
-                    {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
+                    {curRank == 0 && gitRankList == null && <NoAccount curRank={2} />}
+                    {curRank == 1 && bojRankList == null && <NoAccount curRank={2} />}
                     {loading && <Spinner />}
                     <div ref={ref} className="observer-box"></div>
                   </ul>
