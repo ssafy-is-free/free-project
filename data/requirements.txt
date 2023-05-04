@@ -3,4 +3,4 @@ uvicorn
 beautifulsoup4
 httpx
 requests
-
+selenium
