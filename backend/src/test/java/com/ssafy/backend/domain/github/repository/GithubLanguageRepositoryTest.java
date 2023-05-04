@@ -132,6 +132,6 @@ class GithubLanguageRepositoryTest {
 	}
 
 	private GithubLanguage createGithubLanguage(long languageId, Github github) {
-		return GithubLanguage.builder().languageId(languageId).github(github).percentage("40").build();
+		return GithubLanguage.builder().languageId(languageId).github(github).percentage(40).build();
 	}
 }
