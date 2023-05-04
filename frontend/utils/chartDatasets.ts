@@ -53,7 +53,8 @@ export const myChartData = (data: IChartInput[]) => {
 
   const percentages = data.map((item: IChartInput) => {
     if (item.percentage) {
-      return parseFloat(item.percentage.replace('%', ''));
+      return item.percentage;
+      // return parseFloat(item.percentage.replace('%', ''));
     } else if (item.passPercentage) {
       return item.passCount;
     }
