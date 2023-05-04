@@ -28,7 +28,7 @@ public class BojInfoDetailResponse {
 	private List<BojLanguageResponse> languages;
 
 	@JsonIgnore
-	public boolean isNull() {
+	public boolean checkForNull() {
 		return this.bojId == null && this.tierUrl == null && this.pass == 0 &&
 			this.tryFail == 0 && this.submit == 0 && this.fail == 0 &&
 			(this.languages == null || this.languages.isEmpty());
