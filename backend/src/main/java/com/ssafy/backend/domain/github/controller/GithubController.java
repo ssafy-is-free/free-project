@@ -11,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -74,15 +73,16 @@ public class GithubController {
 
 	}
 
-	@PatchMapping("/crawling")
-	public CommonResponse githubCrawling(@AuthenticationPrincipal UserPrincipal userPrincipal) {
-
-		String nickname = userPrincipal.getNickname();
-		long userId = userPrincipal.getId();
-
-		crawlingService.getGithubInfo(nickname, userId);
-		return responseService.getSuccessResponse();
-	}
+	// TODO: 2023-05-04 깃허브 업데이트 스케쥴링할 때 다시 부활시키기
+	// @PatchMapping("/crawling")
+	// public CommonResponse githubCrawling(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+	//
+	// 	String nickname = userPrincipal.getNickname();
+	// 	long userId = userPrincipal.getId();
+	//
+	// 	crawlingService.getGithubInfo(nickname, userId);
+	// 	return responseService.getSuccessResponse();
+	// }
 
 	@GetMapping("/search")
 	public CommonResponse getNicknameList(@RequestParam String nickname) {
