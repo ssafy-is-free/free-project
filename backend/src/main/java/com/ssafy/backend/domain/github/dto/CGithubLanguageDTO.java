@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class CGithubLanguageDTO {
 
-    private String name;
+	private String name;
 
-    private String percentage;
+	private double percentage;
 }
