@@ -47,4 +47,15 @@ public class JobPosting extends BaseTimeEntity {
 
 	@Column(name = "is_close", nullable = false)
 	private boolean isClose;
+
+	public static JobPosting create(String companyName, String name, LocalDateTime startTime, LocalDateTime endTime,
+		boolean isClose) {
+
+		return JobPosting.builder()
+			.companyName(companyName)
+			.name(name)
+			.startTime(startTime)
+			.endTime(endTime)
+			.isClose(isClose).build();
+	}
 }
