@@ -21,7 +21,7 @@ const Wrapper = styled.div<{ curMenu: number }>`
     align-items: center;
     justify-content: center;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 
     ${(props) => {
       if (props.curMenu == 1) {
@@ -43,7 +43,7 @@ const Wrapper = styled.div<{ curMenu: number }>`
     align-items: center;
     justify-content: center;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 
     ${(props) => {
       if (props.curMenu == 0) {

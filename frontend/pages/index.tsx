@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
 import RankMenu2 from '@/components/common/RankMenu2';
@@ -27,11 +27,13 @@ import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 import RSearchIcon from '../public/Icon/SearchingIcon.svg';
+import SettingIcon from '../public/Icon/SettingIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
 
 import Profile from '@/components/profile/Profile';
+import SettingModal from '@/components/rank/SettingModal';
 
-const Wrapper = styled.div<{ onSearchClick: boolean }>`
+const Wrapper = styled.div<{ searchClick: boolean }>`
   width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
@@ -39,7 +41,14 @@ const Wrapper = styled.div<{ onSearchClick: boolean }>`
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: ${(props) => (props.onSearchClick ? '0px 0px' : '48px 0px')};
+  padding: ${(props) => (props.searchClick ? '0px 0px' : '48px 0px')};
+
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
+  }
 
   .content-wrapper {
     /* position: absolute; */
@@ -54,13 +63,6 @@ const Wrapper = styled.div<{ onSearchClick: boolean }>`
     display: flex;
     flex-direction: column;
 
-    overflow-y: scroll;
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera*/
-    }
-
     .option-box {
       width: 100%;
       margin-bottom: 16px;
@@ -72,14 +74,18 @@ const Wrapper = styled.div<{ onSearchClick: boolean }>`
         font-weight: bold;
         margin-bottom: 16px;
       }
-      margin-bottom: 32px;
+      margin-bottom: 16px;
     }
 
     .all-rank {
       p {
         font-size: 20px;
         font-weight: bold;
-        margin-bottom: 16px;
+        /* margin-bottom: 16px; */
+        padding-top: 16px;
+        padding-bottom: 16px;
+        background-color: ${(props) => props.theme.bgWhite};
+        width: 100%;
       }
       .rank-list {
         li {
@@ -123,7 +129,7 @@ const Header = styled.div`
   justify-content: space-around;
   position: fixed;
   top: 0;
-  z-index: 8;
+  z-index: 2;
 
   .logo-box {
     height: 100%;
@@ -144,11 +150,11 @@ const Header = styled.div`
     .icon-box {
       height: 100%;
       width: 40px;
-      padding: 16px 8px 8px;
+      padding: 16px 4px 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 8px;
+      margin-right: 4px;
     }
 
     .filter-box {
@@ -158,6 +164,16 @@ const Header = styled.div`
       align-items: center;
       justify-content: center;
       padding: 12px 4px 4px;
+      margin-right: 4px;
+    }
+
+    .setting-box {
+      height: 100%;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 4px 8px;
     }
   }
 `;
@@ -182,6 +198,8 @@ const Main = () => {
   const [opeBoj, setOpenBoj] = useState<boolean>(false);
   // filter 모달 열기
   const [openFilter, setOpenFilter] = useState<boolean>(false);
+  // 피드백 setting 모달 열기
+  const [openSetting, setOpenSetting] = useState<boolean>(false);
   // 상세정보 열기
   const [openProfile, setOpenProfile] = useState<boolean>(false);
   const [clickedUserId, setClickedUserId] = useState<number>(0);
@@ -217,7 +235,7 @@ const Main = () => {
   const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
 
   // 검색 아이콘 클릭 여부
-  const [onSearchClick, setOnSearchClick] = useState<boolean>(false);
+  const [searchClick, setSearchClick] = useState<boolean>(false);
 
   /**
    * splash check, useEffect
@@ -455,8 +473,11 @@ const Main = () => {
                 oldArr.push(el);
               });
 
-              setNextRank(data[data?.length - 1]?.rank);
-              setBojRankList([...oldArr, ...newArr]);
+              console.log('dataaaaa', data);
+              if (data) {
+                setNextRank(data[data?.length - 1]?.rank);
+                setBojRankList([...oldArr, ...newArr]);
+              }
             }
           }
         })();
@@ -483,9 +504,29 @@ const Main = () => {
     }
   };
 
-  // filter
-  const insertFilter = (el: any) => {
-    setSelectedOption(el);
+  // 전체 랭킹 fixed event + Scroll event
+  const allRef = useRef<any>();
+  const wrapperRef = useRef<any>();
+  const headerRef = useRef<any>();
+
+  const handleScroll = (event: any) => {
+    const el = document.querySelector('.my-rank');
+    if (el instanceof HTMLElement) {
+      const target = el?.offsetHeight + el.clientHeight;
+      const scrollPoint = event.currentTarget.scrollTop;
+
+      if (scrollPoint > target) {
+        allRef.current.style.position = 'fixed';
+        allRef.current.style.top = '48px';
+        wrapperRef.current.style.zIndex = '4';
+        headerRef.current.style.zIndex = '5';
+      } else {
+        allRef.current.style.position = '';
+        allRef.current.style.top = '';
+        wrapperRef.current.style.zIndex = '';
+        headerRef.current.style.zIndex = '2';
+      }
+    }
   };
 
   if (!splashState) {
@@ -504,8 +545,8 @@ const Main = () => {
   } else {
     return (
       <>
-        {!onSearchClick && (
-          <Header>
+        {!searchClick && (
+          <Header ref={headerRef}>
             {/* 로고 */}
             <div
               className="logo-box"
@@ -518,7 +559,7 @@ const Main = () => {
             {/* 아이콘 */}
 
             <div className="header-right">
-              <div className="icon-box" onClick={() => setOnSearchClick(true)}>
+              <div className="icon-box" onClick={() => setSearchClick(true)}>
                 <RSearchIcon />
               </div>
 
@@ -527,12 +568,15 @@ const Main = () => {
                   <FilterIcon onClick={() => setOpenFilter(true)} />
                 </div>
               )}
+
+              <div className="setting-box" onClick={() => setOpenSetting(true)}>
+                <SettingIcon />
+              </div>
             </div>
           </Header>
         )}
-
-        <Wrapper onSearchClick={onSearchClick}>
-          {!onSearchClick ? (
+        <Wrapper searchClick={searchClick} onScroll={handleScroll} ref={wrapperRef}>
+          {!searchClick ? (
             <>
               <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
               <div className="content-wrapper">
@@ -547,7 +591,13 @@ const Main = () => {
                     />
                   </div>
                 )}
-                {myGitRank && curRank == 0 ? (
+
+                {!isLogin ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                  </div>
+                ) : myGitRank && curRank == 0 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <MainUserItem curRank={curRank} item={myGitRank} />
@@ -557,17 +607,14 @@ const Main = () => {
                     <p>나의 랭킹</p>
                     <MainUserItem curRank={curRank} item={myBojRank} />
                   </div>
-                ) : null}
-                {/* // || (curRank == 1 && isLogin && myBojRank == null) */}
-                {!isLogin ? (
+                ) : (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                    <NoAccount curRank={3} onClick={onClickNoUser} />
                   </div>
-                ) : null}
-                {/* <p className="all-rank-label">전체 랭킹</p> */}
+                )}
                 <div className="all-rank">
-                  <p>전체 랭킹</p>
+                  <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
                     {curRank == 0
                       ? gitRankList &&
@@ -594,9 +641,8 @@ const Main = () => {
                             </li>
                           );
                         })}
-
-                    {curRank == 0 && gitRankList == null && <NoAccount curRank={3} />}
-                    {curRank == 1 && bojRankList == null && <NoAccount curRank={3} />}
+                    {curRank == 0 && gitRankList == null && <NoAccount curRank={2} />}
+                    {curRank == 1 && bojRankList == null && <NoAccount curRank={2} />}
                     {loading && <Spinner />}
                     <div ref={ref} className="observer-box"></div>
                   </ul>
@@ -612,7 +658,8 @@ const Main = () => {
                 setBojRankList={setBojRankList}
                 getRankList={getRankList}
                 size={size}
-                setOnSearchClick={setOnSearchClick}
+                setSearchClick={setSearchClick}
+                setSelectedOption={setSelectedOption}
               />
             </div>
           )}
@@ -628,10 +675,11 @@ const Main = () => {
             nextRank={nextRank}
             getRankList={getRankList}
             setIsLangId={setIsLangId}
-            insertFilter={insertFilter}
             setSelectedOption={setSelectedOption}
+            selectedOption={selectedOption}
           />
         )}
+        {openSetting && <SettingModal onClick={() => setOpenSetting(false)} />}
       </>
     );
   }
