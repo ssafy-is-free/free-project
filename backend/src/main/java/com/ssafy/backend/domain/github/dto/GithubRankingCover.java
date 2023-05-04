@@ -40,6 +40,6 @@ public class GithubRankingCover {
 	}
 
 	public long getRankUpDown(long rank) {
-		return this.getPrevRank() - rank;
+		return this.getPrevRank() != 0 ? this.getPrevRank() - rank : 0;
 	}
 }
