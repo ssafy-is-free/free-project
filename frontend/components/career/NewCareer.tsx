@@ -1,6 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-const InputDiv = styled.div`
+
+const NewCareerDiv = styled.div`
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  position: fixed;
+  background-color: white;
+  padding-bottom: max(10vh, 4rem);
+  z-index: 2;
+  overflow: auto;
+`;
+
+export const InputDiv = styled.div`
   padding: 1rem;
   div {
     margin-bottom: 0.2rem;
@@ -13,6 +25,7 @@ const InputDiv = styled.div`
     border-radius: 0.5rem;
     width: 100%;
     border: 2px solid transparent;
+    font-family: inherit;
 
     &:focus {
       outline: none;
@@ -58,20 +71,19 @@ const dddata = {
 };
 
 const inputList = [
-  { key: 'postingName', tag: '공고명', placeholder: '공고명을 검색 해서 입력해주세요', readonly: true },
-  { key: 'companyName', tag: '기업명', placeholder: '기업명을 검색 해서 입력해주세요', readonly: true },
-  { key: 'startTime', tag: '접수 시작', placeholder: '접수 시작일을 입력해주세요', readonly: true },
-  { key: 'endTime', tag: '접수 종료', placeholder: '접수 종료일을 입력해주세요', readonly: true },
-  { key: 'objective', tag: '지원 직무', placeholder: '지원 직무를 입력해주세요', readonly: false },
-  { key: 'status', tag: '현재 진행 상태', placeholder: '현재 진행 상태를 선택해주세요', readonly: true },
+  { key: 'postingName', tag: '공고명', placeholder: '', readonly: true },
+  { key: 'companyName', tag: '기업명', placeholder: '', readonly: true },
+  { key: 'startTime', tag: '접수 시작일', placeholder: '', readonly: true },
+  { key: 'endTime', tag: '접수 마감일', placeholder: '', readonly: true },
+  { key: 'objective', tag: '지원 직무', placeholder: '', readonly: false },
+  { key: 'status', tag: '현재 진행 상태', placeholder: '', readonly: true },
   {
     key: 'dDayName',
     tag: '다음 일정 이름',
-    placeholder: '다음 일정 이름을 입력해주세요 ex) 코테 날짜',
+    placeholder: 'ex) 1차 면접, 코딩테스트',
     readonly: false,
   },
-  { key: 'nextDate', tag: '다음 일정', placeholder: '다음 일정을 입력해주세요', readonly: true },
-  // { key: 'memo', tag: '메모', placeholder: '메모를 입력해주세요', readonly: false },
+  { key: 'nextDate', tag: '다음 일정', placeholder: '', readonly: true },
 ];
 
 const HeaderDiv = styled.div`
@@ -94,7 +106,11 @@ const HeaderDiv = styled.div`
   }
 `;
 
-const NewCareer = () => {
+interface INewCareer {
+  close: () => void;
+}
+
+const NewCareer = ({ close }: INewCareer) => {
   const [data, setData] = useState<Idata>(dddata);
 
   const update = (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -103,13 +119,17 @@ const NewCareer = () => {
     });
   };
 
+  const careerPost = () => {
+    // api
+  };
+
   return (
-    <div>
+    <NewCareerDiv>
       <HeaderDiv>
         <div>
-          <img src="/Icon/CloseIcon.svg" alt="" />
+          <img src="/Icon/CloseIcon.svg" alt="#" onClick={close} />
         </div>
-        <div>
+        <div onClick={careerPost}>
           <h3>등록하기</h3>
         </div>
       </HeaderDiv>
@@ -128,9 +148,9 @@ const NewCareer = () => {
       ))}
       <InputDiv>
         <div>메모</div>
-        <textarea className="input" rows={4} placeholder="메모를 입력해주세요"></textarea>
+        <textarea className="input" rows={4} placeholder=""></textarea>
       </InputDiv>
-    </div>
+    </NewCareerDiv>
   );
 };
 
