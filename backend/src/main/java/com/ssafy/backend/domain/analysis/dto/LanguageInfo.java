@@ -9,11 +9,11 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class LanguageDetailResponse {
+public class LanguageInfo {
 	List<GithubDetailLanguage> languageList;
 
-	public static LanguageDetailResponse create(List<GithubDetailLanguage> languages) {
-		return LanguageDetailResponse.builder().languageList(languages).build();
+	public static LanguageInfo create(List<GithubDetailLanguage> languages) {
+		return LanguageInfo.builder().languageList(languages).build();
 	}
 
 }

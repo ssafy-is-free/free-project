@@ -58,13 +58,6 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	private final JobHistoryRepository jobHistoryRepository;
 	private final JobHistoryQueryRepository jobHistoryQueryRepository;
 
-	@Override
-	@Transactional
-	// TODO: 2023-04-24 나중에 12시에 한번에 배치할 때 사용할것
-	public void patchBojByUserId(long userId) {
-		return;
-	}
-
 	/**
 	 * 이 메소드는 주어진 유저 아이디를 기반으로 해당 유저의 랭킹 정보를 반환합니다.
 	 *

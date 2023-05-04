@@ -13,16 +13,16 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BojRankComparison {
+public class BojRankComparisonResponse {
 	BojInfoDetailResponse my;
 	BojInfoDetailResponse opponent;
 
-	public static BojRankComparison createEmpty() {
-		return BojRankComparison.builder().build();
+	public static BojRankComparisonResponse createEmpty() {
+		return BojRankComparisonResponse.builder().build();
 	}
 
-	public static BojRankComparison create(BojInfoDetailResponse my, BojInfoDetailResponse opponent) {
-		return BojRankComparison.builder().my(my).opponent(opponent).build();
+	public static BojRankComparisonResponse create(BojInfoDetailResponse my, BojInfoDetailResponse opponent) {
+		return BojRankComparisonResponse.builder().my(my).opponent(opponent).build();
 	}
 
 	public boolean checkForNull() {
