@@ -133,6 +133,9 @@ dependencies {
     // H2 - 테스트용
     runtimeOnly 'com.h2database:h2'
 
+    //모니터링 관련
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 //	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
 //	implementation 'com.squareup.okhttp3:okhttp:4.9.3' //okhttp

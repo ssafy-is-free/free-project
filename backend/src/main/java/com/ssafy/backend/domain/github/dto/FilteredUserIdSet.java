@@ -31,4 +31,8 @@ public class FilteredUserIdSet {
 		return this.userIds == null;
 	}
 
+	public boolean isNotIn(long userId) {
+		return !(this.userIds.contains(userId));
+	}
+
 }

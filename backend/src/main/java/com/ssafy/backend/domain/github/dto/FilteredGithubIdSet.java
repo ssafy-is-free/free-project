@@ -16,6 +16,10 @@ public class FilteredGithubIdSet {
 		return FilteredGithubIdSet.builder().githubIds(githubIds).build();
 	}
 
+	public boolean isEmpty() {
+		return this.githubIds.isEmpty();
+	}
+
 	public boolean isNotIn(long userId) {
 		return !(this.githubIds.contains(userId));
 	}

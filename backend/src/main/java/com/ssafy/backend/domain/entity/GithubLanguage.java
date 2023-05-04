@@ -50,21 +50,24 @@ public class GithubLanguage extends BaseTimeEntity {
 		return GithubLanguage.builder().languageId(id).percentage(percentage).github(github).build();
 	}
 
-	@Override
-	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		}
-		if (this.getClass() != object.getClass()) {
-			return false;
-		}
-		GithubLanguage language = (GithubLanguage)object;
-		return this.getLanguageId() == language.getLanguageId() && this.getPercentage() == language.getPercentage();
-	}
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (this.getClass() != object.getClass()) {
+            return false;
+        }
+        GithubLanguage language = (GithubLanguage) object;
+        return this.getLanguageId() == language.getLanguageId();
+    }
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.languageId + this.percentage);
 	}
 
+    public void update(String percentage) {
+        this.percentage = percentage;
+    }
 }

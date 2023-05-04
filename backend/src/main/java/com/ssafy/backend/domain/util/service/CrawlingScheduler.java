@@ -1,6 +1,5 @@
 package com.ssafy.backend.domain.util.service;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -8,7 +7,9 @@ import org.springframework.stereotype.Component;
 
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
+import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.user.service.BojService;
@@ -23,25 +24,33 @@ public class CrawlingScheduler {
 
 	private final UserRepository userRepository;
 	private final GithubCrawlingService githubCrawlingService;
+	private final GithubRepository githubRepository;
 	private final BojService bojService;
 	private final BojRepository bojRepository;
 
 	@Scheduled(cron = "0 0 2 * * *")
 	public void githubUpdate() {
 		log.info("깃허브 정보 업데이트 시작");
-		List<User> userList = userRepository.findAll();
-		for (User user : userList) {
-			githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
+		List<Github> githubList = githubRepository.findAllByOrderByScoreDesc();
+		int rank = 1;
+		for (Github github : githubList) {
+			github.updatePrevRankGithub(rank++);
 		}
+
+		// TODO: 2023-05-04 대량 업데이트 토큰 문제 해결하면 부활시키기
+		// List<User> userList = userRepository.findAll();
+		// for (User user : userList) {
+		// 	githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
+		// }
 	}
+	// TODO: 2023-05-02 이터레이터에서 포이치로 바꾸기~
 
 	@Scheduled(cron = "0 0 2 * * *")
 	public void bojUpdate() {
 		log.info("백준 정보 업데이트 시작");
 		List<Baekjoon> baekjoonList = bojRepository.findAllByOrderByScoreDesc();
 		int rank = 1;
-		for (Iterator<Baekjoon> it = baekjoonList.iterator(); it.hasNext(); ) {
-			Baekjoon baekjoon = it.next();
+		for (Baekjoon baekjoon : baekjoonList) {
 			baekjoon.updatePrevRankBaekjoon(rank++);
 		}
 

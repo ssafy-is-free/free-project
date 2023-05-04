@@ -46,10 +46,12 @@ public class AlgorithmController {
 
 	@GetMapping("/my-rank")
 	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
-		@RequestParam(value = "languageId", required = false) Long languageId) {
-		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId(), languageId);
+		@RequestParam(value = "languageId", required = false) Long languageId,
+		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId) {
+		BojRankResponse bojMyRankResponse = algorithmService.getBojByUserId(userPrincipal.getId(), languageId,
+			jobPostingId);
 		//백준 아이디가 없다면 비어있는 컨텐츠
-		return bojMyRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		return bojMyRankResponse.checkForNull() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojMyRankResponse, RESPONSE_SUCCESS);
 	}
 
@@ -63,9 +65,9 @@ public class AlgorithmController {
 	@GetMapping("/user-rank/{userId}")
 	public CommonResponse getBojId(@PathVariable Long userId,
 		@RequestParam(value = "languageId", required = false) Long languageId) {
-		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId);
+		BojRankResponse bojRankResponse = algorithmService.getBojByUserId(userId, languageId, null);
 
-		return bojRankResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		return bojRankResponse.checkForNull() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS);
 	}
 
@@ -74,7 +76,7 @@ public class AlgorithmController {
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 		userId = userId != null ? userId : userPrincipal.getId();
 		BojInfoDetailResponse bojInfoDetailResponse = algorithmService.getBojInfoDetailByUserId(userId);
-		return bojInfoDetailResponse.isEmpty() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
+		return bojInfoDetailResponse.checkForNull() ? responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS);
 	}
 
@@ -85,16 +87,11 @@ public class AlgorithmController {
 		@RequestParam(value = "score", required = false) Integer score,
 		@RequestParam(value = "userId", required = false) Long userId,
 		@RequestParam(value = "rank", required = false) Long rank,
+		@RequestParam(value = "jobPostingId", required = false) Long jobPostingId,
 		Pageable pageable) {
 
 		List<BojRankResponse> bojRankResponseList = algorithmService.getBojRankListByBojId(group, languageId,
-			score, rank, userId, pageable);
-
-		log.info("languageId : {}", languageId);
-		log.info("score : {}", score);
-		log.info("id : {}", userId);
-		log.info("rank : {}", rank);
-		log.info("size : {}", pageable.getPageSize());
+			score, rank, userId, jobPostingId, pageable);
 
 		return bojRankResponseList.isEmpty() ?
 			responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT) :

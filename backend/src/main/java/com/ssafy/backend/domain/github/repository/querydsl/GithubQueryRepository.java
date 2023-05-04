@@ -72,6 +72,9 @@ public class GithubQueryRepository {
 	}
 
 	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long userId) {
+		if (score == null || userId == null) {
+			return null;
+		}
 		return scoreEq(score).and(userIdGt(userId));
 	}
 }
