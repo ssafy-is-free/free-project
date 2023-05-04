@@ -28,12 +28,6 @@ export type resultMyInformation =
 export interface IFilterModalProps {
   /**
    *
-   * 필터 state 접근 메소드
-   */
-  insertFilter: (el: any) => void;
-
-  /**
-   *
    * 모달창 닫는 메소드
    */
   onClick: () => void;
@@ -63,6 +57,7 @@ export interface IFilterModalProps {
    */
   setIsLangId: React.Dispatch<React.SetStateAction<number>>;
 
+  selectedOption: { languageId: number; name: string } | null;
   setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }
 
@@ -154,7 +149,8 @@ export interface IRankSearchBarProps {
    */
   size: number;
 
-  setOnSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedOption: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }
 
 export interface IFilterOptionProps {
@@ -186,4 +182,12 @@ export interface IFilterOptionProps {
   size?: number;
 
   setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+}
+
+export interface ISettingModalProps {
+  /**
+   *
+   * 모달창 닫는 메소드
+   */
+  onClick: () => void;
 }

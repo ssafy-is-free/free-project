@@ -27,7 +27,7 @@ const FooterDiv = styled.div`
   display: flex;
   align-items: center;
   position: fixed;
-  z-index: 5;
+  z-index: 3;
   padding: 10px 0px 24px;
   border-radius: 24px 24px 0px 0px;
 `;
