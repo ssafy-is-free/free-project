@@ -100,7 +100,17 @@ public class Github extends BaseTimeEntity {
 		return (int)(stars * 100 + commits + followers * 0.5 + repoSize * 0.1);
 	}
 
+
+	public long countRepos() {
+		return this.githubRepos.stream().count();
+	}
+
+	public void updateGithubRepos(Set<GithubRepo> githubRepos) {
+		this.githubRepos = githubRepos;
+
+
 	public void updatePrevRankGithub(long previousRank) {
 		this.previousRank = previousRank;
+
 	}
 }

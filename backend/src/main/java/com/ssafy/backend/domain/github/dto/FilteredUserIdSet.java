@@ -23,11 +23,16 @@ public class FilteredUserIdSet {
 		return FilteredUserIdSet.builder().userIds(userIds).build();
 	}
 
+	public boolean isEmpty() {
+		return this.userIds.isEmpty();
+	}
+
+	public boolean isNull() {
+		return this.userIds == null;
+	}
+
 	public boolean isNotIn(long userId) {
 		return !(this.userIds.contains(userId));
 	}
 
-	public boolean isEmpty() {
-		return this.userIds.isEmpty();
-	}
 }
