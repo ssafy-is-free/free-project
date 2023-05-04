@@ -607,6 +607,11 @@ const Main = () => {
                     <p>나의 랭킹</p>
                     <MainUserItem curRank={curRank} item={myBojRank} />
                   </div>
+                ) : isLogin && curRank == 1 && !selectedOption ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                  </div>
                 ) : (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
