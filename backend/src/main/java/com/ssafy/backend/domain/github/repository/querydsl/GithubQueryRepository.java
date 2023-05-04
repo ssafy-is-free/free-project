@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.backend.domain.analysis.dto.response.GithubVsInfo;
+import com.ssafy.backend.domain.analysis.dto.response.QGithubVsInfo;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
@@ -31,6 +33,14 @@ public class GithubQueryRepository {
 			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
+	}
+
+	public GithubVsInfo findAvgByApplicant(FilteredUserIdSet filteredUserIdSet) {
+		return queryFactory.select(new QGithubVsInfo(github.commitTotalCount.avg(), github.starTotalCount.avg()))
+			.from(github)
+			.where(userIdIn(filteredUserIdSet))
+			.fetchOne();
+
 	}
 
 	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {

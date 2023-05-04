@@ -19,4 +19,8 @@ public class FilteredGithubIdSet {
 	public boolean isNotIn(long userId) {
 		return !(this.githubIds.contains(userId));
 	}
+
+	public int getSize() {
+		return this.githubIds.size();
+	}
 }

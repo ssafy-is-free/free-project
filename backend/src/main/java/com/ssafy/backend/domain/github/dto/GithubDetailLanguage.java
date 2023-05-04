@@ -7,12 +7,21 @@ import lombok.Getter;
 @Getter
 public class GithubDetailLanguage {
 	String name;
-	String percentage;
+	double percentage;
 
 	@QueryProjection
-	public GithubDetailLanguage(String name, String percentage) {
+	public GithubDetailLanguage(String name, double percentage) {
 		this.name = name;
 		this.percentage = percentage;
+	}
+
+	public void toOneDecimalPercentage() {
+		this.percentage = Math.round(this.percentage * 10) / 10.0;
+
+	}
+
+	public void dividePercentage(long num) {
+		this.percentage = this.percentage / num;
 	}
 
 }

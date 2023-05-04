@@ -26,10 +26,20 @@ public class AnalysisGithubController {
 	private final AnalysisGithubService analysisGithubService;
 
 	@GetMapping("/users/{userId}")
-	public CommonResponse getNicknameList(@PathVariable("userId") long opponentUserId,
+	public CommonResponse compareWithOpponent(@PathVariable("userId") long opponentUserId,
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 		long myUserId = userPrincipal.getId();
 		CompareGithubResponse compareGithubResponse = analysisGithubService.compareWithOpponent(opponentUserId,
+			myUserId);
+
+		return responseService.getDataResponse(compareGithubResponse, RESPONSE_SUCCESS);
+	}
+
+	@GetMapping("/postings/{jobPostingId}")
+	public CommonResponse compareWithApplicant(@PathVariable("jobPostingId") long jobPostingId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		long myUserId = userPrincipal.getId();
+		CompareGithubResponse compareGithubResponse = analysisGithubService.compareWithAllApplicant(jobPostingId,
 			myUserId);
 
 		return responseService.getDataResponse(compareGithubResponse, RESPONSE_SUCCESS);
