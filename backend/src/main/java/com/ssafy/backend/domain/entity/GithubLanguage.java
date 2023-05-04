@@ -53,7 +53,7 @@ public class GithubLanguage extends BaseTimeEntity {
             return false;
         }
         GithubLanguage language = (GithubLanguage) object;
-        return this.getLanguageId() == language.getLanguageId() && this.getPercentage().equals(language.getPercentage());
+        return this.getLanguageId() == language.getLanguageId();
     }
 
     @Override
@@ -61,4 +61,7 @@ public class GithubLanguage extends BaseTimeEntity {
         return Objects.hash(this.languageId + this.percentage);
     }
 
+    public void update(String percentage) {
+        this.percentage = percentage;
+    }
 }
