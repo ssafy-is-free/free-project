@@ -54,6 +54,12 @@ const Wrapper = styled.div`
     width: 20px;
     height: 20px;
   }
+
+  .atag {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const SettingModal = (props: ISettingModalProps) => {
@@ -66,12 +72,9 @@ const SettingModal = (props: ISettingModalProps) => {
         </div>
         <LogoPrimary />
         <div className="label">CHPO 서비스 후기를 남겨주세요. </div>
-        <BigBtn
-          text={'피드백 하기'}
-          onClick={() => {
-            window.location.href = 'http://www.naver.com';
-          }}
-        />
+        <a href="https://forms.gle/dMTLyX5qSLes4v2K8" target="_blank" className="atag">
+          <BigBtn text={'피드백 하기'} onClick={() => {}} />
+        </a>
       </Wrapper>
     </>
   );
