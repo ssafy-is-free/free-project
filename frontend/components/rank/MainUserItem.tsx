@@ -133,11 +133,11 @@ const MainUserItem = (props: IMainUserItemProps) => {
       <div className="rank-num">
         {props.item.rank}
 
-        {/* {rankupdown !== 0 && (
+        {rankupdown !== 0 && (
           <div className="rank-icon">
             <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
           </div>
-        )} */}
+        )}
       </div>
       <div className="center">
         <img src={props.item.avatarUrl} className="user-photo" />
