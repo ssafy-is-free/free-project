@@ -10,6 +10,7 @@ import FilterOption from './FilterOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '@/redux/rankSlice';
 import { RootState } from '@/redux';
+import { current } from '@reduxjs/toolkit';
 
 const moveUp = keyframes`
  from{
@@ -169,23 +170,23 @@ const FilterModal = (props: IFilterModalProps) => {
   const [selected, setSelected] = useState<number[]>();
   const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
 
-  // TODO : 더 좋은 방법으로 수정하기
+  // TODO: 렌더링 이후에 ref값 불러오는 방법 더 좋은 거 찾아보기
   useEffect(() => {
-    console.log(filterName);
-    console.log(filterId);
-    // if (itemRefs.current) {
-    //   // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
-    //   if (filter) {
-    //     itemRefs.current[0]?.childNodes.forEach((el: any, idx: number) => {
-    //       if (filter.name == el.childNodes[0].innerHTML.trim()) {
-    //         const style = itemRefs.current[0].childNodes[idx].style;
-    //         style.backgroundColor = '#4A58A9';
-    //         style.color = '#ffffff';
-    //       }
-    //     });
-    //   }
-    // }
-  }, []);
+    if (itemRefs.current[0]?.childNodes) {
+      let childs = [...itemRefs.current[0]?.childNodes];
+
+      childs.forEach((child: any, idx) => {
+        if (filterName == child.childNodes[0].innerHTML.trim()) {
+          setSelected([0, idx, Number(filterId)]);
+
+          setSelectedItem({
+            languageId: Number(filterId),
+            name: String(filterName),
+          });
+        }
+      });
+    }
+  }, [openOption]);
 
   // filter 목록 가져오기
   useEffect(() => {
@@ -290,7 +291,11 @@ const FilterModal = (props: IFilterModalProps) => {
         props.getRankList(props.size, 1, selected[2]);
       }
 
-      props.insertFilter(selectedItem);
+      if (props.setSelectedOption) {
+        props.setSelectedOption(selectedItem);
+      }
+
+      // props.insertFilter(selectedItem);
     } else {
       // 필터를 선택하지 않았을 때
       props.getRankList(props.size, 1);
