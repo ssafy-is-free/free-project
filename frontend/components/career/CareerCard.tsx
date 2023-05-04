@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
+import NewCareerModal from './NewCareerModal';
 
 interface Iddetail {
   postingId: number;
@@ -22,21 +23,22 @@ const ddetail = {
   status: '서류 합격',
   startTime: '2023-04-14 13:00',
   endTime: '2023-04-21 18:00',
-  memo: '메모입니다~',
-  dDayName: '서류 제출',
+  memo: '메모입니다~메모입니다~메모입니다~메모입니다~메모입니다\n~메모입니다~\n메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~',
+  dDayName: '코딩테스트',
   nextDate: '2023-05-01',
   objective: '백엔드 개발자',
   applicantCount: 10,
 };
 
 const DetailCardDiv = styled.div`
-  margin: 1rem;
   padding: 1rem;
+  width: 100%;
   background-color: ${(props) => props.theme.lightGray};
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
   button {
     border-radius: 0.5rem;
     background-color: ${(props) => props.theme.primary};
@@ -47,11 +49,9 @@ const DetailCardDiv = styled.div`
       white-space: nowrap;
     }
   }
-
-  .spreadIcon {
-    right: 2rem;
-    position: fixed;
-    height: 1rem;
+  .title {
+    display: flex;
+    justify-content: space-between;
   }
   .memo {
     padding: 0.2rem;
@@ -62,6 +62,8 @@ const DetailCardDiv = styled.div`
     border: 1px solid;
   }
   .flexDiv {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
     .upalignDiv {
@@ -84,18 +86,19 @@ interface ICardHeaderProps {
   ddetail: Iddetail;
   spread: boolean;
   setSpread: () => void;
+  modalOpen: (tag: string) => void;
 }
 interface ICardContentProps {
   ddetail: Iddetail;
 }
 
-const CardHeader = ({ ddetail, spread, setSpread }: ICardHeaderProps) => {
+const CardHeader = ({ ddetail, spread, setSpread, modalOpen }: ICardHeaderProps) => {
   return (
     <div>
-      <img className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
       {spread && <div>{ddetail.postingName}</div>}
-      <div>
+      <div className="title">
         <h2>{ddetail.companyName}</h2>
+        <img className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
       </div>
       {spread && (
         <div>
@@ -103,8 +106,10 @@ const CardHeader = ({ ddetail, spread, setSpread }: ICardHeaderProps) => {
         </div>
       )}
       <div className="flexDiv">
-        <button>다음일정: {ddetail.nextDate}</button>
-        <button>{ddetail.dDayName}</button>
+        <button onClick={() => modalOpen('dDayName')}>
+          {ddetail.dDayName}: {ddetail.nextDate}
+        </button>
+        <button>{ddetail.status}</button>
       </div>
     </div>
   );
@@ -113,12 +118,8 @@ const CardHeader = ({ ddetail, spread, setSpread }: ICardHeaderProps) => {
 const CardContent = ({ ddetail }: ICardContentProps) => {
   return (
     <div>
-      <div>
-        <div>메모</div>
-      </div>
-      <div>
-        <div className="memo">{ddetail.memo}</div>
-      </div>
+      <div>메모</div>
+      <div className="memo">{ddetail.memo}</div>
       <div className="flexDiv">
         <div>
           <div className="upalignDiv">
@@ -142,6 +143,14 @@ const CareerCard = ({ cardId }: IDetailCardProps) => {
   const [spread, setSpread] = useState<boolean>(false);
   const [detail, setDetail] = useState<Iddetail | null>(null);
 
+  const headerClick = () => {
+    setSpread(!spread);
+  };
+
+  const modalOpen = (tag: string) => {
+    console.log(tag);
+  };
+
   useEffect(() => {
     // api
     setTimeout(() => {
@@ -158,13 +167,7 @@ const CareerCard = ({ cardId }: IDetailCardProps) => {
   } else {
     return (
       <DetailCardDiv>
-        <CardHeader
-          ddetail={detail}
-          setSpread={() => {
-            setSpread(!spread);
-          }}
-          spread={spread}
-        />
+        <CardHeader ddetail={detail} setSpread={headerClick} spread={spread} modalOpen={modalOpen} />
         {spread && <CardContent ddetail={detail} />}
       </DetailCardDiv>
     );
