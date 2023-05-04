@@ -45,13 +45,15 @@ const Wrapper = styled.div`
     color: ${(props) => props.theme.fontGray};
     margin: 16px 0px;
   }
-`;
 
-const StyledCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  cursor: pointer;
+  .close-box {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const LoginModal = (props: ILoginProps) => {
@@ -79,7 +81,9 @@ const LoginModal = (props: ILoginProps) => {
     <>
       <DarkBg onClick={props.onClick} />
       <Wrapper onClick={onHandleDrag}>
-        <StyledCloseIcon onClick={props.onClick} />
+        <div className="close-box">
+          <CloseIcon onClick={props.onClick} />
+        </div>
         <LogoPrimary />
         <div className="label">로그인 후 이용 가능합니다. </div>
         <BigBtn text={'깃허브 로그인'} onClick={onBtnClick} />

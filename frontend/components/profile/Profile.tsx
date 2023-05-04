@@ -16,7 +16,6 @@ const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
 });
 
 const ProfileInfoDiv = styled.div`
-  margin: 1rem;
   margin-bottom: max(4rem, 10vh);
 `;
 

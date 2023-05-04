@@ -153,6 +153,8 @@ export interface IRankSearchBarProps {
    * size
    */
   size: number;
+
+  setOnSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IFilterOptionProps {

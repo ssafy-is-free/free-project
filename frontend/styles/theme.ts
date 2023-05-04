@@ -22,4 +22,6 @@ export const lightTheme: DefaultTheme = {
   jobSelectCover: '#F8F8F8',
   jobSelectDefault: '#767680',
   jobSelectSelected: '#FF5B5B',
+  menuBg: '#f0f0f0',
+  fontDarkGray: '##666666',
 };

@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app';
 import wrapper, { persistor } from '@/redux';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';

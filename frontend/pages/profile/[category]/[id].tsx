@@ -21,7 +21,6 @@ interface IProfileQuery extends ParsedUrlQuery {
 }
 
 const ProfileInfoDiv = styled.div`
-  margin: 1rem;
   margin-bottom: max(4rem, 10vh);
 `;
 

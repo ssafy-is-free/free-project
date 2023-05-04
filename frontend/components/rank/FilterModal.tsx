@@ -45,6 +45,15 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.bgWhite};
   animation: 0.4s ease-in-out 0s ${moveUp};
 
+  .close-box {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+  }
+
   .title {
     font-weight: bold;
     font-size: 20px;
@@ -112,13 +121,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  cursor: pointer;
-`;
-
 const StyledFilterArrowIcon = styled(FilterArrowIcon)`
   cursor: pointer;
 `;
@@ -130,7 +132,8 @@ const StyledCancelOk = styled(CancelOk)`
 const FilterModal = (props: IFilterModalProps) => {
   const dispatch = useDispatch();
   // 옵션
-  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
+  const filterName = useSelector<RootState>((selector) => selector.rankChecker.filter?.name);
+  const filterId = useSelector<RootState>((selector) => selector.rankChecker.filter?.languageId);
 
   // 옵션 이름
   // const optionNames = ['언어', '그룹'];
@@ -168,6 +171,8 @@ const FilterModal = (props: IFilterModalProps) => {
 
   // TODO : 더 좋은 방법으로 수정하기
   useEffect(() => {
+    console.log(filterName);
+    console.log(filterId);
     // if (itemRefs.current) {
     //   // TODO : 일단 지금은 언어 필터링 만 있으니까 0으로 하드코딩
     //   if (filter) {
@@ -180,7 +185,7 @@ const FilterModal = (props: IFilterModalProps) => {
     //     });
     //   }
     // }
-  });
+  }, []);
 
   // filter 목록 가져오기
   useEffect(() => {
@@ -303,7 +308,9 @@ const FilterModal = (props: IFilterModalProps) => {
     <>
       <DarkBg onClick={props.onClick} />
       <Wrapper>
-        <StyledCloseIcon onClick={props.onClick} />
+        <div className="close-box">
+          <CloseIcon onClick={props.onClick} />
+        </div>
         <div className="title">검색 필터</div>
         {optionTypes.map((el, idx) => {
           return (
