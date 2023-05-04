@@ -33,7 +33,7 @@ public class CBojInfoResponse {
 	private List<CBojLanguageResultResponse> languagesResult;
 
 	@JsonIgnore
-	public boolean isNull() {
+	public boolean checkForNull() {
 		return (tier == null || tier.isEmpty()) &&
 			(languagesResult == null || languagesResult.isEmpty()) &&
 			(passCount == 0 && tryFailCount == 0 && submitCount == 0 && failCount == 0);

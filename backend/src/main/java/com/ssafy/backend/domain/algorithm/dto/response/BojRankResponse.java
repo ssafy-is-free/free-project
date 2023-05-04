@@ -32,7 +32,7 @@ public class BojRankResponse {
 	private String tierUrl;
 
 	@JsonIgnore
-	public boolean isNull() {
+	public boolean checkForNull() {
 		return this.userId == null && this.nickname == null && this.rank == null &&
 			this.score == null && this.avatarUrl == null && this.rankUpDown == null &&
 			this.tierUrl == null;
