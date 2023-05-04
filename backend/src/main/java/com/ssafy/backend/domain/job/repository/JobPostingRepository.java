@@ -11,4 +11,5 @@ import com.ssafy.backend.domain.entity.JobPosting;
 public interface JobPostingRepository extends JpaRepository<JobPosting, Long> {
 
 	Optional<JobPosting> findByName(String name);
+
 }

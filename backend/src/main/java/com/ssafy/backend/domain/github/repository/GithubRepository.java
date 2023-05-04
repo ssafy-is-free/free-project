@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.User;
-import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 
 import io.lettuce.core.dynamic.annotation.Param;
 
@@ -20,6 +19,8 @@ public interface GithubRepository extends JpaRepository<Github, Long> {
 	Optional<Github> findByUserId(long userId);
 
 	Optional<Github> findByUser(User user);
+
+	List<Github> findByUserIdIn(Set<Long> userId);
 
 	@Query(
 		"select count(g)"

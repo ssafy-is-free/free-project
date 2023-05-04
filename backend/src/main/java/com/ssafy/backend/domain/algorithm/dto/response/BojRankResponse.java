@@ -75,8 +75,8 @@ public class BojRankResponse {
 			0 : prevRank;
 
 		//랭크 등락 폭
-		long rankUpdate = baekjoonIdSet.isEmpty() ?
-			0 : baekjoon.getPreviousRank() - returnRank;
+		long rankUpdate = baekjoon.getPreviousRank() == 0 ?
+			0 : baekjoon.getPreviousRank() - ((int)returnRank + index);
 
 		return BojRankResponse.builder()
 			.userId(baekjoon.getUser().getId())

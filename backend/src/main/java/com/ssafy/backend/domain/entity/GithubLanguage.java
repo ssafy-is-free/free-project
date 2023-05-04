@@ -1,16 +1,26 @@
 package com.ssafy.backend.domain.entity;
 
+import static javax.persistence.GenerationType.*;
+
+import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
-
-import javax.persistence.*;
-import java.util.Objects;
-
-import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @Entity
@@ -21,47 +31,43 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "github_languages")
 public class GithubLanguage extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "id")
-    private long id;
+	@Id
+	@GeneratedValue(strategy = IDENTITY)
+	@Column(name = "id")
+	private long id;
 
-    @Column(name = "language_id", nullable = false)
-    private long languageId;
+	@Column(name = "language_id", nullable = false)
+	private long languageId;
 
-    @Column(name = "percentage", nullable = false)
-    private String percentage;
+	@Column(name = "percentage", nullable = false)
+	private double percentage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "github_id", nullable = false)
-    private Github github;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "github_id", nullable = false)
+	private Github github;
 
-    public static GithubLanguage create(long id, String percentage, Github github) {
-        return GithubLanguage.builder()
-                .languageId(id)
-                .percentage(percentage)
-                .github(github)
-                .build();
-    }
+	public static GithubLanguage create(long id, double percentage, Github github) {
+		return GithubLanguage.builder().languageId(id).percentage(percentage).github(github).build();
+	}
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (this.getClass() != object.getClass()) {
-            return false;
-        }
-        GithubLanguage language = (GithubLanguage) object;
-        return this.getLanguageId() == language.getLanguageId();
-    }
+	@Override
+	public boolean equals(Object object) {
+		if (this == object) {
+			return true;
+		}
+		if (this.getClass() != object.getClass()) {
+			return false;
+		}
+		GithubLanguage language = (GithubLanguage)object;
+		return this.getLanguageId() == language.getLanguageId();
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.languageId + this.percentage);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.languageId + this.percentage);
+	}
 
-    public void update(String percentage) {
-        this.percentage = percentage;
-    }
+	public void update(double percentage) {
+		this.percentage = percentage;
+	}
 }

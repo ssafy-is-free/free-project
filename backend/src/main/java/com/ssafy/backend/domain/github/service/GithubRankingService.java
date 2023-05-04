@@ -94,12 +94,12 @@ public class GithubRankingService {
 
 	private void setRankInfo(Long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
 
-		long prevRank = rank != null ? rank + 1 : 1;
+		long prevSearchRank = rank != null ? rank + 1 : 1;
 		//필터 검색이 아닐때만 랭킹폭 세팅
 		if (withFilter) {
-			githubRankingResponse.updateRank(prevRank);
+			githubRankingResponse.updateRank(prevSearchRank);
 		} else {
-			githubRankingResponse.updateRankAnRankUpDown(prevRank);
+			githubRankingResponse.updateRankAnRankUpDown(prevSearchRank);
 		}
 	}
 

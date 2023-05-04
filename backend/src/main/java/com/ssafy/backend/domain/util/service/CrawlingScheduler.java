@@ -37,10 +37,11 @@ public class CrawlingScheduler {
 			github.updatePrevRankGithub(rank++);
 		}
 
-		List<User> userList = userRepository.findAll();
-		for (User user : userList) {
-			githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
-		}
+		// TODO: 2023-05-04 대량 업데이트 토큰 문제 해결하면 부활시키기
+		// List<User> userList = userRepository.findAll();
+		// for (User user : userList) {
+		// 	githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
+		// }
 	}
 	// TODO: 2023-05-02 이터레이터에서 포이치로 바꾸기~
 
