@@ -254,7 +254,7 @@ class AnalysisGithubServiceTest {
 		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, 40, user1Github);
 		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, 60, user1Github);
 		GithubLanguage githubLanguage4 = createGithubLanguage(languageId3, 50, user2Github);
-		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, 50, user2Github);
+		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, 40, user2Github);
 		GithubLanguage githubLanguage6 = createGithubLanguage(languageId5, 30, user3Github);
 		GithubLanguage githubLanguage7 = createGithubLanguage(languageId6, 20, user3Github);
 		GithubLanguage githubLanguage8 = createGithubLanguage(languageId1, 50, user3Github);
@@ -271,7 +271,7 @@ class AnalysisGithubServiceTest {
 		//then
 		assertThat(result.getOpponent().getLanguages().getLanguageList()).hasSize(5)
 			.extracting("name", "percentage")
-			.containsExactly(tuple("Java", 40.0), tuple("Python", 15.0), tuple("C++", 12.5), tuple("C", 12.5),
+			.containsExactly(tuple("Java", 40.0), tuple("Python", 15.0), tuple("C++", 12.5), tuple("C", 10.0),
 				tuple("JavaScript", 7.5));
 
 	}

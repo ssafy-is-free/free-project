@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,14 @@ class GithubLanguageQueryRepositoryTest {
 	private UserRepository userRepository;
 	@Autowired
 	private GithubLanguageQueryRepository githubLanguageQueryRepository;
+
+	@AfterEach
+	public void teardown() {
+		languageRepository.deleteAllInBatch();
+		githubLanguageRepository.deleteAllInBatch();
+		githubRepository.deleteAllInBatch();
+		userRepository.deleteAllInBatch();
+	}
 
 	@DisplayName("공고에 지원한 유저의 언어별 평균을 얻을 수 있다. ")
 	@Test
@@ -82,7 +91,7 @@ class GithubLanguageQueryRepositoryTest {
 		GithubLanguage githubLanguage2 = createGithubLanguage(languageId1, 40, github2);
 		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, 60, github2);
 		GithubLanguage githubLanguage4 = createGithubLanguage(languageId3, 50, github3);
-		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, 50, github3);
+		GithubLanguage githubLanguage5 = createGithubLanguage(languageId4, 40, github3);
 		GithubLanguage githubLanguage6 = createGithubLanguage(languageId5, 30, github3);
 		GithubLanguage githubLanguage7 = createGithubLanguage(languageId6, 20, github3);
 		GithubLanguage githubLanguage8 = createGithubLanguage(languageId1, 50, github4);
@@ -100,7 +109,7 @@ class GithubLanguageQueryRepositoryTest {
 		Assertions.assertThat(result)
 			.hasSize(5)
 			.extracting("name", "percentage")
-			.containsExactly(tuple("Java", 160.0), tuple("Python", 60.0), tuple("C++", 50.0), tuple("C", 50.0),
+			.containsExactly(tuple("Java", 160.0), tuple("Python", 60.0), tuple("C++", 50.0), tuple("C", 40.0),
 				tuple("JavaScript", 30.0));
 	}
 
