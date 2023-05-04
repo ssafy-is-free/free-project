@@ -197,6 +197,7 @@ def read_github(token):
         dto = dict()
         dto['name'] = name
         dto['link'] = link
+        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
         repo_list.append(dto)
 
         # 스타 수 합치기
