@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.oauth.dto.OAuth2UserInfo;
@@ -29,10 +30,11 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	private final CustomOAuthUserInfoFactory customOAuthUserInfoFactory;
 	private final UserRepository userRepository;
+	private final GithubCrawlingService githubCrawlingService;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		log.info("oauth access token : {}", userRequest.getAccessToken().getTokenValue());
+		// log.info("oauth access token : {}", userRequest.getAccessToken().getTokenValue());
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 		try {
 
@@ -76,6 +78,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 		else {
 			user = registerUser(nickname, image);
 		}
+
+		//유저 깃허브 정보 저장
+		githubCrawlingService.getGithubInfo(oAuth2UserRequest.getAccessToken().getTokenValue(), user.getId());
 
 		return UserPrincipal.createUserDetails(user, isNew);
 	}
