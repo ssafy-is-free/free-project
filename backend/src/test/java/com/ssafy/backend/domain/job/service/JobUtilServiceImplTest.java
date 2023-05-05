@@ -9,8 +9,10 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.JobStatus;
@@ -19,6 +21,7 @@ import com.ssafy.backend.domain.job.dto.JobStatusResponse;
 import com.ssafy.backend.domain.job.repository.JobPostingQueryRepository;
 import com.ssafy.backend.domain.job.repository.JobStatusRepository;
 
+@ExtendWith(MockitoExtension.class)
 @DisplayName("취업관리에 필요한 유틸 기능 테스트")
 class JobUtilServiceImplTest {
 
