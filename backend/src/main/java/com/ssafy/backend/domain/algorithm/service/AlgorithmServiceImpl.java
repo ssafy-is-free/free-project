@@ -188,22 +188,22 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		//취업공고에 해당하는 유저 정보 얻기.
 		Set<Long> jobUserId = jobPostingId == null ?
-			Collections.EMPTY_SET :
+			Collections.emptySet() :
 			getJobUserId(jobPostingId);
 
 		//공고 id가 있는데,공고에 해당하는 유저를 조회했을 때 비어있으면 빈 리스트 반환.
 		if (jobPostingId != null && jobUserId.isEmpty()) {
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 
 		//해당 언어를 사용하는 정보 조회
 		Set<Long> baekjoonIdSet = languageId == null ?
-			Collections.EMPTY_SET :
+			Collections.emptySet() :
 			getLanguageBojId(languageId);
 
 		//조회된 값이 없으면 빈 리스트 반환
 		if (languageId != null && baekjoonIdSet.isEmpty())
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 
 		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
