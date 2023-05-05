@@ -196,6 +196,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			return Collections.emptyList();
 		}
 
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++");
 		//해당 언어를 사용하는 정보 조회
 		Set<Long> baekjoonIdSet = languageId == null ?
 			Collections.emptySet() :
