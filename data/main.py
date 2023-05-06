@@ -215,6 +215,63 @@ def read_github(token):
     return result
 
 
+@app.get("/data/github/update/{nickname}")
+def update_github(nickname):
+    token = ''
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    user_res = requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
+    user_res = user_res.json()['items'][0]
+
+    # 닉네임
+    nickname = user_res['login']
+
+    # 깃허브 링크
+    profileLink = user_res['html_url']
+
+    # 프로필 이미지
+    avatarUrl = user_res['avatar_url']
+
+    # 커밋 수
+    commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                               headers=headers)
+    commit = commits_res.json()['total_count']
+
+    # 팔로워 수
+    followers_res = requests.get(f'https://api.github.com/users/{nickname}/followers', headers=headers)
+    followers_res = followers_res.json()
+    followers = len(followers_res)
+
+    # 레포
+    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=headers)
+    repos_res = repos_res.json()
+
+    repo_list = []
+    star = 0
+    for repo in repos_res['items']:
+        # 레포 정보
+        name = repo['name']
+        link = repo['url']
+
+        dto = dict()
+        dto['name'] = name
+        dto['link'] = link
+        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+        repo_list.append(dto)
+
+        # 스타 수 합치기
+        star += repo['stargazers_count']
+
+    result = dict()
+    result['nickname'] = nickname
+    result['profileLink'] = profileLink
+    result['avatarUrl'] = avatarUrl
+    result['followers'] = followers
+    result['commit'] = commit
+    result['repositories'] = repo_list
+    result['star'] = star
+    result = getLanguage(nickname, result)
+    return result
+
 @app.get("/data/postings")
 def get_postings():
     posting_list = []
