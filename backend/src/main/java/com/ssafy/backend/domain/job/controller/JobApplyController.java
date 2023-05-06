@@ -41,11 +41,9 @@ public class JobApplyController {
 	@PostMapping
 	public CommonResponse createJob(
 		@RequestBody JobApplyRegistrationRequest jobApplyRegistrationRequest,
-		@AuthenticationPrincipal UserPrincipal userPrincipal
-	) {
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-		// long userId = userPrincipal.getId();
-		long userId = 2L;
+		long userId = userPrincipal.getId();
 
 		jobApplyService.createJobApply(userId, jobApplyRegistrationRequest);
 
