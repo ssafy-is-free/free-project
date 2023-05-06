@@ -47,16 +47,4 @@ public class JobPosting extends BaseTimeEntity {
 
 	@Column(name = "is_close", nullable = false)
 	private boolean isClose;
-
-	@Override
-	public String toString() {
-		return "JobPosting{" +
-			"id=" + id +
-			", companyName='" + companyName + '\'' +
-			", name='" + name + '\'' +
-			", startTime=" + startTime +
-			", endTime=" + endTime +
-			", isClose=" + isClose +
-			'}';
-	}
 }

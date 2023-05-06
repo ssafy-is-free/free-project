@@ -12,4 +12,6 @@ public interface JobPostingRepository extends JpaRepository<JobPosting, Long> {
 
 	Optional<JobPosting> findByName(String name);
 
+	Optional<JobPosting> findByIdAndIsClosedFalse(long jobPostingId);
+
 }
