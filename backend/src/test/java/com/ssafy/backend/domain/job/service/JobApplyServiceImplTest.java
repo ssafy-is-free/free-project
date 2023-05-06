@@ -22,6 +22,7 @@ import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.JobStatus;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.job.dto.JobApplyRegistrationRequest;
+import com.ssafy.backend.domain.job.dto.JobApplyUpdateRequest;
 import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
@@ -138,8 +139,50 @@ class JobApplyServiceImplTest {
 
 	}
 
+	@Test
+	@DisplayName("취업 지원 현황 수정")
+	void updateJobApply() {
+		//given
+		User user = createUser();
+		JobApplyUpdateRequest jobApplyUpdateRequest = updateJobApplyRequest();
+
+		List<JobStatus> jobStatusList = new ArrayList<>();
+		jobStatusList.add(createJobStatus(1L, "서류 탈락"));
+		jobStatusList.add(createJobStatus(2L, "코테 탈락"));
+		jobStatusList.add(createJobStatus(3L, "서류 통과"));
+		jobStatusList.add(createJobStatus(4L, "스킵"));
+
+		//when
+		//유저 조회
+		when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.empty()); //유저가 없는 경우
+		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(user)); //유저가 있는 경우.
+
+		when(jobHistoryRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(
+			Optional.of(creatJobHistory(user, createJobPosting(1L), "dDayName", 1L))); //공고가 있는 경우
+		when(jobHistoryRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.empty()); //공고가 없는 경우.
+
+		//then
+		//유저 예외
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.updateJobApply(1L, 1L, jobApplyUpdateRequest))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", CustomExceptionStatus.NOT_FOUND_USER);
+
+		//취업 공고 예외.
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.updateJobApply(2L, 2L, jobApplyUpdateRequest))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", CustomExceptionStatus.NOT_FOUND_JOBHISTORY);
+
+		//문제 없음
+		Assertions.assertThatCode(() -> jobApplyServiceImpl.updateJobApply(2L, 1L, jobApplyUpdateRequest))
+			.doesNotThrowAnyException();
+	}
+
 	public JobApplyRegistrationRequest createJobApplyRequest(long jobPostingId) {
 		return new JobApplyRegistrationRequest(1, jobPostingId, "백엔드 개발자", "또 탈락", "2023-04-16", "코테 마감");
+	}
+
+	public JobApplyUpdateRequest updateJobApplyRequest() {
+		return new JobApplyUpdateRequest(1L, "update test", "update dDayName", "2023-05-30", "데이터 엔지니어");
 	}
 
 	public User createUser() {
