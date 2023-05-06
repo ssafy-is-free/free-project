@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.ssafy.backend.domain.entity.JobHistory;
+import com.ssafy.backend.domain.entity.JobStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +44,11 @@ public class JobApplyResponse {
 
 	}
 
-	public static List<JobApplyResponse> createList(List<JobHistory> jobHistoryList, Map<Long, String> statusNameMap) {
+	public static List<JobApplyResponse> createList(List<JobHistory> jobHistoryList, List<JobStatus> jobStatusList) {
+
+		//Map형태로 변환
+		Map<Long, String> statusNameMap = jobStatusList.stream()
+			.collect(Collectors.toMap(JobStatus::getId, JobStatus::getName));
 
 		return jobHistoryList.stream()
 			.map((jobHistory) -> JobApplyResponse.create(jobHistory, statusNameMap))

@@ -13,7 +13,7 @@ public interface JobApplyService {
 	void createJobApply(long userId, JobApplyRegistrationRequest jobApplyRegistrationRequest);
 
 	//지원 현황 조회
-	List<JobApplyResponse> getJobApplyList(long userId);
+	List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList);
 
 	//지원 현황 수정
 	void updateJobApply(long userId, JobApplyUpdateRequest jobApplyUpdateRequest);

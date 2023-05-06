@@ -1,5 +1,7 @@
 package com.ssafy.backend.domain.job.controller;
 
+import static com.ssafy.backend.global.response.CustomSuccessStatus.*;
+
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.backend.domain.job.dto.JobApplyDetailResponse;
@@ -52,9 +55,17 @@ public class JobApplyController {
 
 	//지원 현황 조회
 	@GetMapping
-	public DataResponse<List<JobApplyResponse>> getAllJob() {
+	public DataResponse<List<JobApplyResponse>> getAllJob(
+		@RequestParam(value = "statusId", required = false) List<Long> statusIdList,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-		return null;
+		long userId = userPrincipal.getId();
+
+		List<JobApplyResponse> jobApplyResponseList = jobApplyService.getJobApplies(userId, statusIdList);
+
+		return jobApplyResponseList.isEmpty() ?
+			responseService.getDataResponse(jobApplyResponseList, RESPONSE_NO_CONTENT) :
+			responseService.getDataResponse(jobApplyResponseList, RESPONSE_SUCCESS);
 	}
 
 	//지원 현황 수정
