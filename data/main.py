@@ -334,11 +334,9 @@ def get_postings():
                 elif idx == 6:  # 경력, 학력무관
                     continue
                 elif idx == 8:  # 기간
-                    period = dict()
                     day_info = td.text.strip().split('~')
-                    period['start'] = day_info[0]
-                    period['end'] = day_info[1]
-                    posting['period'] = period
+                    posting['start'] = day_info[0]
+                    posting['end'] = day_info[1]
             else:
                 posting_list.append(posting)
                 continue
