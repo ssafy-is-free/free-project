@@ -37,7 +37,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 공고가 있는지 확인
-		JobPosting jobPosting = jobPostingRepository.findByIdAndIsClosedFalse(
+		JobPosting jobPosting = jobPostingRepository.findByIdAndIsCloseFalse(
 				jobApplyRegistrationRequest.getJobPostingId())
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
 

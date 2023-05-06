@@ -44,7 +44,8 @@ public class JobApplyController {
 		@AuthenticationPrincipal UserPrincipal userPrincipal
 	) {
 
-		long userId = userPrincipal.getId();
+		// long userId = userPrincipal.getId();
+		long userId = 2L;
 
 		jobApplyService.createJobApply(userId, jobApplyRegistrationRequest);
 

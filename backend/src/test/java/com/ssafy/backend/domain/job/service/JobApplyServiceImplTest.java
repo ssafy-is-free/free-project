@@ -52,8 +52,8 @@ class JobApplyServiceImplTest {
 		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(createUser())); //유저가 있는 경우.
 
 		//취업 공고 조회.
-		when(jobPostingRepository.findByIdAndIsClosedFalse(1L)).thenReturn(Optional.empty()); // 취업 공고가 없는 경우
-		when(jobPostingRepository.findByIdAndIsClosedFalse(2L)).thenReturn(
+		when(jobPostingRepository.findByIdAndIsCloseFalse(1L)).thenReturn(Optional.empty()); // 취업 공고가 없는 경우
+		when(jobPostingRepository.findByIdAndIsCloseFalse(2L)).thenReturn(
 			Optional.of(createJobPosting())); //취업공고가 있는 경우.
 
 		//then
