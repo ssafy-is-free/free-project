@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.job.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.backend.domain.entity.JobHistory;
 import com.ssafy.backend.domain.entity.JobPosting;
@@ -32,6 +33,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 	private final JobPostingRepository jobPostingRepository;
 	private final JobStatusRepository jobStatusRepository;
 
+	@Transactional
 	@Override
 	public void createJobApply(long userId, JobApplyRegistrationRequest jobApplyRegistrationRequest) {
 
@@ -52,6 +54,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList) {
 
@@ -69,18 +72,42 @@ public class JobApplyServiceImpl implements JobApplyService {
 		return JobApplyResponse.createList(jobHistoryList, jobStatusList);
 	}
 
+	@Transactional
 	@Override
-	public void updateJobApply(long userId, JobApplyUpdateRequest jobApplyUpdateRequest) {
+	public void updateJobApply(long userId, long jobHistoryId, JobApplyUpdateRequest jobApplyUpdateRequest) {
 
+		//유저 존재 유무 확인
+		User user = userRepository.findByIdAndIsDeletedFalse(userId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
+
+		//해당 취업 이력 확인
+		JobHistory jobHistory = jobHistoryRepository.findByIdAndIsDeletedFalse(jobHistoryId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBHISTORY));
+
+		//취업이력 업데이트
+		jobHistory.update(jobApplyUpdateRequest);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public JobApplyDetailResponse getJobApply(long userId, long jobHistoryId) {
+
+		//유저 존재 유무 확인
+
+		//해당 취업이력 조회.
+
+		//취업 상태 테이블 조회.
+
 		return null;
 	}
 
+	@Transactional
 	@Override
 	public void deleteJobApply(long userId, List<Long> jobHistoryId) {
+
+		//유저 존재 유무 확인
+
+		//해당 id 삭제처리.
 
 	}
 }

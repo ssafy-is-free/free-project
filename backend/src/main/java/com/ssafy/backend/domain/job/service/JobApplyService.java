@@ -16,7 +16,7 @@ public interface JobApplyService {
 	List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList);
 
 	//지원 현황 수정
-	void updateJobApply(long userId, JobApplyUpdateRequest jobApplyUpdateRequest);
+	void updateJobApply(long userId, long jobHistoryId, JobApplyUpdateRequest jobApplyUpdateRequest);
 
 	//지원 상세정보 조회
 	JobApplyDetailResponse getJobApply(long userId, long jobHistoryId);

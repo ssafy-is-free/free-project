@@ -1,9 +1,12 @@
 package com.ssafy.backend.domain.job.dto;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ssafy.backend.domain.entity.JobHistory;
+import com.ssafy.backend.domain.entity.JobStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,8 +35,12 @@ public class JobApplyDetailResponse {
 	private int applicantCount;
 
 	public static JobApplyDetailResponse create(JobHistory jobHistory, int applicantCount,
-		Map<Long, String> statusNameMap) {
+		List<JobStatus> jobStatusList) {
 
+		//Map형태로 변환
+		Map<Long, String> statusNameMap = jobStatusList.stream()
+			.collect(Collectors.toMap(JobStatus::getId, JobStatus::getName));
+		
 		return JobApplyDetailResponse.builder()
 			.postingId(jobHistory.getJobPosting().getId())
 			.postingName(jobHistory.getJobPosting().getName())

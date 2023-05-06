@@ -18,6 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
 import com.ssafy.backend.domain.job.dto.JobApplyRegistrationRequest;
+import com.ssafy.backend.domain.job.dto.JobApplyUpdateRequest;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -86,6 +87,26 @@ public class JobHistory extends BaseTimeEntity {
 			.user(user)
 			.jobPosting(jobPosting)
 			.build();
+	}
+
+	//TODO 좀 더 깔끔하게 짤 방법 필요.
+	public void update(JobApplyUpdateRequest jobApplyUpdateRequest) {
+
+		if (jobApplyUpdateRequest.getStatusId() != null) {
+			this.statusId = jobApplyUpdateRequest.getStatusId();
+		}
+		if (jobApplyUpdateRequest.getMemo() != null) {
+			this.memo = jobApplyUpdateRequest.getMemo();
+		}
+		if (jobApplyUpdateRequest.getDDayName() != null) {
+			this.dDayName = jobApplyUpdateRequest.getDDayName();
+		}
+		if (jobApplyUpdateRequest.getNextDate() != null) {
+			this.dDay = LocalDate.parse(jobApplyUpdateRequest.getNextDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+		}
+		if (jobApplyUpdateRequest.getObjective() != null) {
+			this.jobObjective = jobApplyUpdateRequest.getObjective();
+		}
 	}
 
 }
