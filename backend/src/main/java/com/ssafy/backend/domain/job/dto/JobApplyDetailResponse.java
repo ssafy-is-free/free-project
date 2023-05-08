@@ -32,15 +32,15 @@ public class JobApplyDetailResponse {
 	private String dDayName;
 	private String nextDate;
 	private String objective;
-	private int applicantCount;
+	private long applicantCount;
 
-	public static JobApplyDetailResponse create(JobHistory jobHistory, int applicantCount,
+	public static JobApplyDetailResponse create(JobHistory jobHistory, long applicantCount,
 		List<JobStatus> jobStatusList) {
 
 		//Map형태로 변환
 		Map<Long, String> statusNameMap = jobStatusList.stream()
 			.collect(Collectors.toMap(JobStatus::getId, JobStatus::getName));
-		
+
 		return JobApplyDetailResponse.builder()
 			.postingId(jobHistory.getJobPosting().getId())
 			.postingName(jobHistory.getJobPosting().getName())

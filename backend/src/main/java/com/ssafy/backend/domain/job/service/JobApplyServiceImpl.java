@@ -93,12 +93,22 @@ public class JobApplyServiceImpl implements JobApplyService {
 	public JobApplyDetailResponse getJobApply(long userId, long jobHistoryId) {
 
 		//유저 존재 유무 확인
+		User user = userRepository.findByIdAndIsDeletedFalse(userId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 취업이력 조회.
+		JobHistory jobHistory = jobHistoryQueryRepository.findByIdJoinPosting(userId, jobHistoryId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBHISTORY));
+
+		//해당 공고에 지원한 사람 수
+		Long applicantCount = jobHistoryQueryRepository.countUserTotalJobHistory(
+			jobHistory.getJobPosting().getId());
 
 		//취업 상태 테이블 조회.
+		List<JobStatus> jobStatusList = jobStatusRepository.findAll();
 
-		return null;
+		//dto 반환
+		return JobApplyDetailResponse.create(jobHistory, applicantCount, jobStatusList);
 	}
 
 	@Transactional

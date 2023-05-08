@@ -74,7 +74,7 @@ public class JobHistory extends BaseTimeEntity {
 
 		//값이 없으면 공고 마감일, 있으면 사용자가 등록한 값.
 		LocalDate createDDay = jobApplyRegistrationRequest.getDDay() == null ?
-			jobPosting.getEndTime().toLocalDate() :
+			jobPosting.getEndTime() :
 			LocalDate.parse(jobApplyRegistrationRequest.getDDay(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
 		return JobHistory.builder()

@@ -55,6 +55,7 @@ public class JobApplyController {
 		return responseService.getSuccessResponse();
 	}
 
+	//todo 페이징 처리 필요
 	//지원 현황 조회
 	@GetMapping
 	public DataResponse<List<JobApplyResponse>> getAllJob(
@@ -88,8 +89,15 @@ public class JobApplyController {
 
 	//지원 상세정보 조회
 	@GetMapping("/history/{jobHistoryId}")
-	public DataResponse<JobApplyDetailResponse> getJobByJobId() {
-		return null;
+	public DataResponse<JobApplyDetailResponse> getJobByJobId(
+		@PathVariable("jobHistoryId") long jobHistoryId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+		// long userId = userPrincipal.getId();
+		long userId = 2L;
+
+		return responseService.getDataResponse(jobApplyService.getJobApply(userId, jobHistoryId), RESPONSE_SUCCESS);
+
 	}
 
 	//지원 현황 선택 삭제
