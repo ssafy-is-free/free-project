@@ -21,7 +21,6 @@ interface IProfileQuery extends ParsedUrlQuery {
 }
 
 const ProfileInfoDiv = styled.div`
-  margin: 1rem;
   margin-bottom: max(4rem, 10vh);
 `;
 
@@ -31,11 +30,12 @@ const Profile = () => {
 
   const [githubData, setGithubData] = useState<IGithubProfile>();
   const [bojData, setBojData] = useState<IBojProfile>();
-
+  const [headerName, setHeaderName] = useState<string>('');
   const getGithubData = async () => {
     const res = await getGithub(id);
     if (res.data) {
       setGithubData(res.data);
+      setHeaderName('깃허브');
     } else {
       alert(res.message);
     }
@@ -44,6 +44,7 @@ const Profile = () => {
     const res = await getBoj(id);
     if (res.data) {
       setBojData(res.data);
+      setHeaderName('백준');
     } else {
       alert(res.message);
     }
@@ -63,7 +64,7 @@ const Profile = () => {
 
   return (
     <div>
-      <ProfileHeader back={back}></ProfileHeader>
+      <ProfileHeader back={back} name={headerName}></ProfileHeader>
       <ProfileInfoDiv>
         {githubData && <GithubInfo githubData={githubData}></GithubInfo>}
         {bojData && <BojInfo bojData={bojData}></BojInfo>}

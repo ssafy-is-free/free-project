@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.*;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import com.ssafy.backend.domain.github.dto.CGithubDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -57,10 +59,10 @@ public class Github extends BaseTimeEntity {
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private User user;
 
-	@OneToMany(mappedBy = "github")
+	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private Set<GithubRepo> githubRepos = new HashSet<>();
 
-	@OneToMany(mappedBy = "github")
+	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST)
 	private Set<GithubLanguage> githubLanguages = new HashSet<>();
 
 	@Column(name = "do_not_user1")
@@ -72,26 +74,43 @@ public class Github extends BaseTimeEntity {
 	@Column(name = "github_previous_rank", nullable = false)
 	private long previousRank;
 
-	public static Github create(int commits, int followers, int stars, String profileLink, User user, int score) {
+	public static Github create(CGithubDTO githubDTO, User user) {
+		int score = calcScore(githubDTO.getCommit(), githubDTO.getFollowers(), githubDTO.getStar(),
+			githubDTO.getRepositories().size());
 		return Github.builder()
-			.commitTotalCount(commits)
-			.followerTotalCount(followers)
-			.starTotalCount(stars)
-			.profileLink(profileLink)
+			.commitTotalCount(githubDTO.getCommit())
+			.followerTotalCount(githubDTO.getFollowers())
+			.starTotalCount(githubDTO.getStar())
+			.profileLink(githubDTO.getProfileLink())
 			.score(score)
 			.user(user)
 			.build();
 	}
 
-	public void update(int commit, int followers, int star, String profileLink, int score) {
-		this.commitTotalCount = commit;
-		this.followerTotalCount = followers;
-		this.starTotalCount = star;
-		this.profileLink = profileLink;
-		this.score = score;
+	public void update(CGithubDTO githubDTO) {
+		this.score = calcScore(githubDTO.getCommit(), githubDTO.getFollowers(), githubDTO.getStar(),
+			githubDTO.getRepositories().size());
+		this.commitTotalCount = githubDTO.getCommit();
+		this.profileLink = githubDTO.getProfileLink();
+		this.starTotalCount = githubDTO.getStar();
+		this.followerTotalCount = githubDTO.getFollowers();
 	}
 
 	public static int calcScore(int commits, int followers, int stars, int repoSize) {
 		return (int)(stars * 100 + commits + followers * 0.5 + repoSize * 0.1);
+	}
+
+	public long countRepos() {
+		return this.githubRepos.stream().count();
+	}
+
+	public void updateGithubRepos(Set<GithubRepo> githubRepos) {
+		this.githubRepos = githubRepos;
+
+	}
+
+	public void updatePrevRankGithub(long previousRank) {
+		this.previousRank = previousRank;
+
 	}
 }

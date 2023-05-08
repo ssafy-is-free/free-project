@@ -23,5 +23,7 @@ declare module 'styled-components' {
     jobSelectCover: string;
     jobSelectDefault: string;
     jobSelectSelected: string;
+    menuBg: string;
+    fontDarkGray: string;
   }
 }

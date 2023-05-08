@@ -1,6 +1,6 @@
 import { authApi, basicApi } from './customAxio';
 
-export const getGithub = async (userId: string) => {
+export const getGithub = async (userId: string | number) => {
   const { data } = await basicApi({
     method: 'get',
     url: `/github/users/${userId}`,
@@ -16,7 +16,7 @@ export const getMyGithub = async () => {
   return data;
 };
 
-export const getBoj = async (userId: string) => {
+export const getBoj = async (userId: string | number) => {
   const { data } = await basicApi({
     method: 'get',
     url: `/boj/users/${userId}`,

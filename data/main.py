@@ -1,10 +1,19 @@
 # 필요한 라이브러리 임포트
+import re
+import time
+
 import httpx
+import requests
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, Response
-from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-import requests
+from fastapi.responses import RedirectResponse
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver import ChromeOptions
+from datetime import datetime
+import json
 
 app = FastAPI()
 
@@ -21,6 +30,12 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/58.0.3029.110 Safari/537.3"
 }
+
+# 대용량 업데이트 시 필요한 정보
+personal_token = ""
+with open("env.json", "r", encoding='utf-8') as file:
+    data = json.load(file)
+    personal_token = data['token']
 
 
 async def get_response(url):
@@ -125,107 +140,11 @@ async def read_baekjoon(name):
                 continue
             language_result = {
                 "language": header.text,
-                "pass_percentage": columns[11].text,
+                "pass_percentage": re.sub(r'%', '', columns[11].text),
                 "pass_count": pass_count,
             }
             # 결과 배열에 language_result을 추가합니다.
             result["languages_result"].append(language_result)
-
-    return result
-
-
-def getUser(username: str, result: dict):
-    print(f'============= {username} 크롤링 =============')
-    print('유저 정보 크롤링')
-    url = f'https://github.com/{username}'
-    response = requests.get(url)
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
-
-    # 닉네임
-    nickname_tag = soup.select_one('span[class="p-nickname vcard-username d-block"]')
-    if nickname_tag is not None:
-        nickname = nickname_tag.text.strip()
-
-    # 프로필 이미지
-    img_tag = soup.select_one('img[alt="Avatar"]')
-    if img_tag is not None:
-        img = img_tag.attrs['src']
-
-    # 팔로워
-    followers_tag = soup.select_one(f'a[href="https://github.com/{username}?tab=followers"]')
-    if followers_tag is not None:
-        followers = int(followers_tag.text.strip().split()[0].replace(',', ''))
-
-    # 깃허브 링크
-    link = url
-
-    result['nickname'] = nickname
-    result['profileLink'] = link
-    result['avatarUrl'] = img
-    result['followers'] = followers
-
-    return result
-
-
-def getRepo(username: str, result: dict):
-    print('레포지토리 정보 크롤링')
-    url = f'https://github.com/{username}?tab=repositories'
-    response = requests.get(url)
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
-
-    repo_list = soup.select('a[itemprop="name codeRepository"]')
-
-    commit_total = 0
-    star_total = 0
-    repos = []
-    for repo_tag in repo_list:
-        repo = dict()
-
-        # 레포 이름
-        repo_name = repo_tag.text.strip()
-
-        # 레포 링크
-        repo_url = f'https://github.com/{username}/{repo_name}'
-
-        response = requests.get(repo_url)
-        html = response.text
-        soup = BeautifulSoup(html, 'html.parser')
-
-        # 포크된 레포는 버림
-        fork = soup.select_one('span[class="text-small lh-condensed-ultra no-wrap mt-1"]')
-        if fork is not None:
-            continue
-
-        # 커밋 수
-        commit_tag = soup.select_one('ul[class="list-style-none d-flex"]')
-        if commit_tag is not None:
-            commit = int(commit_tag.text.strip().split()[0].replace(',', ''))
-            commit_total += commit
-
-        # 스타 수
-        star_tag = soup.select_one(f'a[href="/{username}/{repo_name}/stargazers"]')
-        if star_tag is not None:
-            star = int(star_tag.text.strip().split()[0].replace(',', ''))
-            star_total += star
-
-        # 리드미
-        # readme_html = soup.select_one('article[class="markdown-body entry-content container-lg"]')
-        # if readme_html is not None:
-        #     repo['readme'] = str(readme_html)
-        # else:
-        #     repo['readme'] = ""
-        repo['readme'] = f"https://raw.githubusercontent.com/{username}/{repo_name}/main/README.md"
-
-        repo['name'] = repo_name
-        repo['link'] = repo_url
-
-        repos.append(repo)
-
-    result['commit'] = commit_total
-    result['star'] = star_total
-    result['repositories'] = repos
 
     return result
 
@@ -243,18 +162,218 @@ def getLanguage(username: str, result: dict):
         data = dict()
         lang, percentage, = language.text.strip().split('\n')
         data['name'] = lang
-        data['percentage'] = percentage
+        data['percentage'] = re.sub(r'%', '', percentage)
         tmp.append(data)
 
     result['languages'] = tmp
     return result
 
+@app.get("/data/github/{token}")
+def read_github(token):
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    user_res = requests.get("https://api.github.com/user", headers=github_headers)
+    user_res = user_res.json()
 
-@app.get("/data/github/{name}")
-def read_github(name):
+    # 닉네임
+    nickname = user_res['login']
+
+    # 깃허브 링크
+    profileLink = user_res['html_url']
+
+    # 프로필 이미지
+    avatarUrl = user_res['avatar_url']
+
+    # 팔로워 수
+    followers = user_res['followers']
+
+    # 커밋 수
+    commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                               headers=github_headers)
+    commit = commits_res.json()['total_count']
+
+    # 레포지토리 정보
+    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
+    repos_res = repos_res.json()
+
+    repo_list = []
+    star = 0
+    for repo in repos_res['items']:
+        # 레포 정보
+        name = repo['name']
+        link = repo['url']
+
+        dto = dict()
+        dto['name'] = name
+        dto['link'] = link
+        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+        repo_list.append(dto)
+
+        # 스타 수 합치기
+        star += repo['stargazers_count']
+
     result = dict()
-    result = getUser(name, result)
-    result = getRepo(name, result)
-    result = getLanguage(name, result)
-
+    result['nickname'] = nickname
+    result['profileLink'] = profileLink
+    result['avatarUrl'] = avatarUrl
+    result['followers'] = followers
+    result['commit'] = commit
+    result['repositories'] = repo_list
+    result['star'] = star
+    result = getLanguage(nickname, result)
     return result
+
+
+@app.get("/data/github/update/{nickname}")
+async def update_github(nickname):
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {personal_token}'}
+    user_res = await userAPI(github_headers, nickname)
+    user_res = user_res.json()['items'][0]
+
+    # 닉네임
+    nickname = user_res['login']
+
+    # 깃허브 링크
+    profileLink = user_res['html_url']
+
+    # 프로필 이미지
+    avatarUrl = user_res['avatar_url']
+
+    # 커밋 수
+    commits_res = await commitAPI(github_headers, nickname)
+    commit = commits_res.json()['total_count']
+
+    # 팔로워 수
+    followers_res = await followerAPI(github_headers, nickname)
+    followers_res = followers_res.json()
+    followers = len(followers_res)
+
+    # 레포
+    repos_res = await repoAPI(github_headers, nickname)
+    repos_res = repos_res.json()
+
+    repo_list = []
+    star = 0
+    for repo in repos_res['items']:
+        # 레포 정보
+        name = repo['name']
+        link = repo['url']
+
+        dto = dict()
+        dto['name'] = name
+        dto['link'] = link
+        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+        repo_list.append(dto)
+
+        # 스타 수 합치기
+        star += repo['stargazers_count']
+
+    result = dict()
+    result['nickname'] = nickname
+    result['profileLink'] = profileLink
+    result['avatarUrl'] = avatarUrl
+    result['followers'] = followers
+    result['commit'] = commit
+    result['repositories'] = repo_list
+    result['star'] = star
+    result = getLanguage(nickname, result)
+    return result
+
+
+async def repoAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
+
+
+async def followerAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/users/{nickname}/followers', headers=github_headers)
+
+
+async def commitAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                        headers=github_headers)
+
+
+async def userAPI(github_headers, nickname):
+    return requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
+
+
+@app.get("/data/postings")
+def get_postings():
+    posting_list = []
+
+    chromedriver = "/usr/bin/chrome/chromedriver"
+
+    options = ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--window-size=1920x1080')
+    options.add_argument('--disable-gpu')
+    options.add_argument("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)")
+
+    driver = webdriver.Chrome(executable_path=chromedriver, chrome_options=options)
+
+    base_url = 'https://www.catch.co.kr/NCS/RecruitCalendar/Week'
+
+    driver.get(base_url)
+    time.sleep(0.5)
+
+    # 직무 클릭
+    driver.find_element(By.XPATH, '//*[@id="Contents"]/div[2]/div/div[1]/button').click()
+    time.sleep(0.5)
+
+    # IT/인터넷 클릭
+    driver.find_element(By.XPATH, '//*[@id="Contents"]/div[2]/div/div[1]/ul/li[7]/button').click()
+    time.sleep(0.5)
+
+    # IT/인터넷 전체 클릭
+    driver.find_element(By.XPATH, '//*[@id="Contents"]/div[2]/div/div[1]/ul/li[7]/div/span[1]/label').click()
+    time.sleep(0.5)
+
+    end_flag = False
+    while True:
+        html = driver.page_source
+        soup = BeautifulSoup(html, 'html.parser')
+
+        tr_tags = soup.select('tr')
+        for tr in tr_tags:
+            posting = dict()
+            for idx, td in enumerate(tr.contents):
+                if td.name != 'td':
+                    continue
+
+                # 마감처리된 공고는 불러오지 않는다.
+                if idx == 0 and td.attrs['class'][0] == 'end':
+                    # 마감 공고 읽음 처리
+                    end_flag = True
+                    break
+
+                # 시작인 공고는 불러오지만 시작이란 단어는 데이터로 저장하지 않는다.
+                if idx == 0 and td.attrs['class'][0] == 'start':
+                    continue
+
+                if idx == 2:  # 회사명
+                    posting['companyName'] = td.text
+                elif idx == 4:  # 공고명
+                    posting['postingName'] = td.contents[0].contents[0].text
+                elif idx == 6:  # 경력, 학력무관
+                    continue
+                elif idx == 8:  # 기간
+                    day_info = td.text.strip().split('~')
+                    now = datetime.now()
+                    posting['start'] = f'{now.year}.{day_info[0]}'
+
+                    if (day_info[1].split('.')[0]).isdigit():
+                        posting['end'] = f'{now.year}.{day_info[1]}'
+                    else:
+                        posting['end'] = '1996.11.22'
+            else:
+                posting_list.append(posting)
+                continue
+            break
+
+        if end_flag:
+            driver.close()
+            return posting_list
+
+        driver.find_element(By.XPATH, '//*[@id="Contents"]/div[4]/p/a[12]').send_keys(Keys.ENTER)
+        time.sleep(0.5)

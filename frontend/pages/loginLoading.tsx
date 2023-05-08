@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { patchCrawaling } from './api/loginAxios';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { setLoginIng, setNew } from '@/redux/authSlice';
+import { setNew } from '@/redux/authSlice';
 
 const upDown = keyframes`
     from{
@@ -39,16 +39,16 @@ const StyledGithubIcon = styled(GithubIcon)`
 
 const Splash = () => {
   const route = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const data = await patchCrawaling();
+      // const data = await patchCrawaling();
 
-      if (data.status == 'SUCCESS') {
-        dispatch(setNew());
-        route.push('/');
-      }
+      // if (data.status == 'SUCCESS') {
+      //   dispatch(setNew());
+      //   route.push('/');
+      // }
+      route.push('/');
     })();
   }, []);
 

@@ -56,6 +56,9 @@ export interface IFilterModalProps {
    * isLangId useState set 메소드
    */
   setIsLangId: React.Dispatch<React.SetStateAction<number>>;
+
+  selectedOption: { languageId: number; name: string } | null;
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
 }
 
 /**
@@ -79,6 +82,8 @@ export interface IMainOtherItemProps {
     userId: number;
     tierUrl?: string;
   };
+
+  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -102,6 +107,8 @@ export interface IMainUserItemProps {
     rankUpDown: number;
     tierUrl?: string;
   };
+
+  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -134,4 +141,81 @@ export interface IRankSearchBarProps {
    */
   setGitRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
   setBojRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
+  setNoScroll: React.Dispatch<React.SetStateAction<boolean>>;
+
+  /**
+   * api 메소드
+   */
+  getRankList: Function;
+
+  /**
+   * size
+   */
+  size: number;
+
+  setSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedOption: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+}
+
+export interface IFilterOptionProps {
+  /**
+   * 클릭 했을 때 발생할 이벤트
+   */
+  onClick?: () => void;
+
+  /**
+   * optioo 정보
+   */
+  item?: {
+    languageId: number;
+    name: string;
+  };
+
+  isInFilter?: boolean;
+
+  isInMain?: boolean;
+
+  /**
+   * api 메소드
+   */
+  getRankList?: Function;
+
+  /**
+   * size
+   */
+  size?: number;
+
+  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+}
+
+export interface ISettingModalProps {
+  /**
+   *
+   * 모달창 닫는 메소드
+   */
+  onClick: () => void;
+}
+
+/**
+ * 로그인 유저의  랭킹 item(채용 정보 페이지)
+ */
+export interface IJobUserItemProps {
+  /**
+   *  현재 조회중인 랭킹 종류(0: 깃허브, 1: 백준)
+   */
+  curRank: number;
+
+  /**
+   * 조회할 item 정보
+   */
+  item?: {
+    userId: number;
+    nickname: string;
+    rank: number;
+    score: number;
+    avatarUrl: string;
+    rankUpDown: number;
+    tierUrl?: string;
+  } | null;
+  //TODO : null 지워야함
 }

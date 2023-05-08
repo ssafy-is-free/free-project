@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   justify-content: center;
   color: ${(props) => props.theme.fontWhite};
   font-weight: bold;
-  font-size: 20px;
+  font-size: 16px;
   width: 100%;
   height: 8vh;
   /* padding: 48px 0px 24px; */

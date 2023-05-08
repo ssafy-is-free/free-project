@@ -7,12 +7,14 @@ import Avatar from './Avatar';
 const GithubDiv = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  background-color: ${(props) => props.theme.lightGray};
 `;
 
 const CommitDiv = styled.div`
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.bgWhite};
+  padding: 1rem;
   display: flex;
-
   div {
     flex: 1;
     display: flex;
@@ -22,9 +24,20 @@ const CommitDiv = styled.div`
   }
 `;
 
-const LanguageDiv = styled.div``;
+const BlackDiv = styled.div`
+  height: 0.5rem;
+`;
+const LanguageDiv = styled.div`
+  border-radius: 1rem;
+  background-color: ${(props) => props.theme.bgWhite};
+  padding: 1rem;
+`;
 
 const RepoDiv = styled.div`
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  background-color: ${(props) => props.theme.bgWhite};
+  padding: 1rem;
   padding-bottom: 1rem;
   p {
     margin-bottom: 1rem;
@@ -40,15 +53,15 @@ const ReadmeDiv = styled.div`
 const GithubInfo = ({ githubData, my }: IGithubInfo) => {
   const basicInfo = [
     {
-      name: 'Commits',
+      name: '커밋',
       data: githubData.commit,
     },
     {
-      name: 'Star',
+      name: '스타',
       data: githubData.star,
     },
     {
-      name: 'Followers',
+      name: '팔로워',
       data: githubData.followers,
     },
   ];
@@ -60,6 +73,7 @@ const GithubInfo = ({ githubData, my }: IGithubInfo) => {
   return (
     <GithubDiv>
       <Avatar isCircle={true} data={avatarData} my={my}></Avatar>
+      <BlackDiv></BlackDiv>
       <CommitDiv>
         {basicInfo.map((info, idx) => (
           <div key={idx}>
@@ -68,10 +82,12 @@ const GithubInfo = ({ githubData, my }: IGithubInfo) => {
           </div>
         ))}
       </CommitDiv>
+      <BlackDiv></BlackDiv>
       <LanguageDiv>
         <p>Language</p>
         <CircleChart data={githubData.languages} label={true}></CircleChart>
       </LanguageDiv>
+      <BlackDiv></BlackDiv>
       <RepoDiv>
         <p>Repositiories</p>
         <ReadmeDiv>

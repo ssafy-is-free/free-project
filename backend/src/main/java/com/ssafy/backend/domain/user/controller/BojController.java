@@ -33,7 +33,7 @@ public class BojController {
 
 		long userId = userPrincipal.getId();
 
-		bojService.saveId(userId, bojIdRequest);
+		bojService.saveId(userId, bojIdRequest.getBojId());
 
 		return responseService.getSuccessResponse();
 	}

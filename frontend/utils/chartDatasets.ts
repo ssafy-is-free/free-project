@@ -36,6 +36,7 @@ export interface IChartInput {
   name: string;
   percentage?: string;
   passPercentage?: string;
+  passCount?: number;
 }
 
 /**
@@ -52,9 +53,10 @@ export const myChartData = (data: IChartInput[]) => {
 
   const percentages = data.map((item: IChartInput) => {
     if (item.percentage) {
-      return parseFloat(item.percentage.replace('%', ''));
+      return item.percentage;
+      // return parseFloat(item.percentage.replace('%', ''));
     } else if (item.passPercentage) {
-      return parseFloat(item.passPercentage.replace('%', ''));
+      return item.passCount;
     }
   });
 

@@ -14,11 +14,13 @@ import lombok.Setter;
 public class BojLanguageResponse {
 	private String name;
 	private String passPercentage;
+	private int passCount;
 
-	public static BojLanguageResponse create(String name, String passPercentage) {
+	public static BojLanguageResponse create(String name, String passPercentage, int passCount) {
 		return BojLanguageResponse.builder()
 			.name(name)
 			.passPercentage(passPercentage)
+			.passCount(passCount)
 			.build();
 	}
 }

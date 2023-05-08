@@ -15,6 +15,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.algorithm.dto.response.CBojInfoResponse;
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import com.ssafy.backend.domain.util.service.TierValueFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +37,7 @@ public class Baekjoon extends BaseTimeEntity {
 	private long id;
 
 	@Column(name = "tier", nullable = false)
-	private String tier;
+	private int tier;
 
 	@Column(name = "pass_count", nullable = false)
 	private int passCount;
@@ -62,7 +63,7 @@ public class Baekjoon extends BaseTimeEntity {
 
 	public static Baekjoon createBaekjoon(CBojInfoResponse CBojInfoResponse, User user, int score) {
 		return Baekjoon.builder()
-			.tier(CBojInfoResponse.getTier())
+			.tier(TierValueFormatter.reFormat(CBojInfoResponse.getTier()))
 			.passCount(CBojInfoResponse.getPassCount())
 			.tryFailCount(CBojInfoResponse.getTryFailCount())
 			.submitCount(CBojInfoResponse.getSubmitCount())
@@ -73,11 +74,15 @@ public class Baekjoon extends BaseTimeEntity {
 	}
 
 	public void updateBaekjoon(CBojInfoResponse CBojInfoResponse, int score) {
-		this.tier = CBojInfoResponse.getTier();
+		this.tier = TierValueFormatter.reFormat(CBojInfoResponse.getTier());
 		this.passCount = CBojInfoResponse.getPassCount();
 		this.tryFailCount = CBojInfoResponse.getTryFailCount();
 		this.submitCount = CBojInfoResponse.getSubmitCount();
 		this.failCount = CBojInfoResponse.getFailCount();
 		this.score = score;
+	}
+
+	public void updatePrevRankBaekjoon(long previousRank) {
+		this.previousRank = previousRank;
 	}
 }

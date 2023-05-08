@@ -2,6 +2,8 @@ package com.ssafy.backend.domain.algorithm.dto.response;
 
 import java.util.List;
 
+import net.minidev.json.annotate.JsonIgnore;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -30,8 +32,11 @@ public class CBojInfoResponse {
 	@JsonProperty("languages_result")
 	private List<CBojLanguageResultResponse> languagesResult;
 
-	public boolean isNull() {
-		return tier == null;
+	@JsonIgnore
+	public boolean checkForNull() {
+		return (tier == null || tier.isEmpty()) &&
+			(languagesResult == null || languagesResult.isEmpty()) &&
+			(passCount == 0 && tryFailCount == 0 && submitCount == 0 && failCount == 0);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.ssafy.backend.global.auth.handler;
 
 import static com.ssafy.backend.global.auth.util.HttpCookieOAuth2AuthorizationRequestRepository.*;
+import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import com.ssafy.backend.global.auth.util.CookieUtils;
 import com.ssafy.backend.global.auth.util.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.ssafy.backend.global.auth.util.TokenProvider;
 import com.ssafy.backend.global.config.properties.AuthProperties;
+import com.ssafy.backend.global.response.exception.CustomException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,15 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
 		//받은 유저 정보 객체 가져오기
 		UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
+
+		//백준 id존재 확인
+		User user = userRepository.findByIdAndIsDeletedFalse(userPrincipal.getId())
+			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+
+		//백준 아이디가 있으면 체크
+		if (user.getBojId() != null) {
+			userPrincipal.setBojStatus(true);
+		}
 
 		//로그인에 성공하면 리프레시 토큰을 생성해서 디비에 저장함.
 		String refreshToken = tokenProvider.createRefreshToken();
@@ -90,6 +101,7 @@ public class CustomOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
 		return UriComponentsBuilder.fromUriString(redirectUrl)
 			.queryParam("isNew", userPrincipal.isNew())
+			.queryParam("isBoj", userPrincipal.isBoj())
 			.queryParam("token", accessToken)
 			.build().toString();
 	}

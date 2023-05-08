@@ -45,27 +45,31 @@ const Wrapper = styled.div`
     color: ${(props) => props.theme.fontGray};
     margin: 16px 0px;
   }
-`;
 
-const StyledCloseIcon = styled(CloseIcon)`
-  position: absolute;
-  top: 32px;
-  left: 32px;
-  cursor: pointer;
+  .close-box {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+  }
 `;
 
 const LoginModal = (props: ILoginProps) => {
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setLoginStart());
-  }, []);
+  // useEffect(() => {
+  // dispatch(setLoginStart());
+  // }, []);
 
   const onBtnClick = () => {
+    dispatch(setLoginStart());
+
     // 기존 로그인 모달 창 닫기
     props.onClick();
 
     // 깃허브 로그인
-    window.location.href = 'https://k8b102.p.ssafy.io/api/oauth2/authorization/github';
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/oauth2/authorization/github`;
 
     // props.setOpenBoj(true);
   };
@@ -77,7 +81,9 @@ const LoginModal = (props: ILoginProps) => {
     <>
       <DarkBg onClick={props.onClick} />
       <Wrapper onClick={onHandleDrag}>
-        <StyledCloseIcon onClick={props.onClick} />
+        <div className="close-box">
+          <CloseIcon onClick={props.onClick} />
+        </div>
         <LogoPrimary />
         <div className="label">로그인 후 이용 가능합니다. </div>
         <BigBtn text={'깃허브 로그인'} onClick={onBtnClick} />

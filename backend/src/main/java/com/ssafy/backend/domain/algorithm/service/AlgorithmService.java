@@ -9,9 +9,7 @@ import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 
 public interface AlgorithmService {
-	void patchBojByUserId(long userId);
-
-	BojRankResponse getBojByUserId(long userId, Long languageId);
+	BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId);
 
 	List<NicknameListResponse> getBojListByBojId(String nickname);
 
@@ -21,6 +19,7 @@ public interface AlgorithmService {
 	/*백준 랭킹*/
 	List<BojRankResponse> getBojRankListByBojId(String group, Long languageId, Integer score, Long rank,
 		Long userId,
+		Long jobPostingId,
 		Pageable pageable);
 
 }

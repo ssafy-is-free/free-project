@@ -4,14 +4,14 @@ export interface LoginState {
   isLogin: boolean;
   isNew: boolean;
   loginStart: boolean;
-  isLoginIng: boolean;
+  // clickProfile: boolean;
 }
 
 const initialState: LoginState = {
   isLogin: false,
   isNew: false,
   loginStart: false,
-  isLoginIng: true,
+  // clickProfile: false,
 };
 
 const authSlice = createSlice({
@@ -27,16 +27,16 @@ const authSlice = createSlice({
       state.isLogin = false;
     },
     setNew(state) {
-      state.isNew = true;
-    },
-    setLoginIng(state) {
-      state.isLoginIng = false;
+      state.isNew = !state.isNew;
     },
     setLoginStart(state) {
       state.loginStart = true;
     },
+    // setClickProfile(state) {
+    //   state.clickProfile = !state.clickProfile;
+    // },
   },
 });
 
-export const { login, logout, setNew, setLoginIng, setLoginStart } = authSlice.actions;
+export const { login, logout, setNew, setLoginStart } = authSlice.actions;
 export default authSlice.reducer;
