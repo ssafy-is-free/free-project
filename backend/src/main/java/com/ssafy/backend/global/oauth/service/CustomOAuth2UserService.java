@@ -34,7 +34,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-		log.info("oauth access token : {}", userRequest.getAccessToken().getTokenValue());
+		// log.info("oauth access token : {}", userRequest.getAccessToken().getTokenValue());
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 		try {
 
