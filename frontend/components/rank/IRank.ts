@@ -82,6 +82,8 @@ export interface IMainOtherItemProps {
     userId: number;
     tierUrl?: string;
   };
+
+  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -105,6 +107,8 @@ export interface IMainUserItemProps {
     rankUpDown: number;
     tierUrl?: string;
   };
+
+  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -190,4 +194,28 @@ export interface ISettingModalProps {
    * 모달창 닫는 메소드
    */
   onClick: () => void;
+}
+
+/**
+ * 로그인 유저의  랭킹 item(채용 정보 페이지)
+ */
+export interface IJobUserItemProps {
+  /**
+   *  현재 조회중인 랭킹 종류(0: 깃허브, 1: 백준)
+   */
+  curRank: number;
+
+  /**
+   * 조회할 item 정보
+   */
+  item?: {
+    userId: number;
+    nickname: string;
+    rank: number;
+    score: number;
+    avatarUrl: string;
+    rankUpDown: number;
+    tierUrl?: string;
+  } | null;
+  //TODO : null 지워야함
 }

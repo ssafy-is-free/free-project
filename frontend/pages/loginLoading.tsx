@@ -39,7 +39,6 @@ const StyledGithubIcon = styled(GithubIcon)`
 
 const Splash = () => {
   const route = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -49,7 +48,6 @@ const Splash = () => {
       //   dispatch(setNew());
       //   route.push('/');
       // }
-      dispatch(setNew());
       route.push('/');
     })();
   }, []);
