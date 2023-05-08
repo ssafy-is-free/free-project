@@ -203,6 +203,7 @@ const Main = () => {
   // 상세정보 열기
   const [openProfile, setOpenProfile] = useState<boolean>(false);
   const [clickedUserId, setClickedUserId] = useState<number>(0);
+  const [clickMy, setClickMy] = useState(false);
 
   // 무한 스크롤 구현하기
   const [ref, inView, entry] = useInView({
@@ -266,6 +267,12 @@ const Main = () => {
   const goProfile = (userId: number) => {
     setClickedUserId(userId);
   };
+
+  useEffect(() => {
+    if (clickMy) {
+      setOpenProfile(true);
+    }
+  }, [clickMy]);
 
   useEffect(() => {
     if (clickedUserId !== 0) {
@@ -535,9 +542,11 @@ const Main = () => {
     return (
       <Profile
         curRank={curRank}
-        id={clickedUserId}
+        id={clickedUserId.toString()}
+        my={clickMy}
         back={() => {
           setOpenProfile(false);
+          setClickMy(false);
           setClickedUserId(0);
         }}
       ></Profile>
@@ -600,12 +609,16 @@ const Main = () => {
                 ) : myGitRank && curRank == 0 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem curRank={curRank} item={myGitRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem curRank={curRank} item={myGitRank} />
+                    </div>
                   </div>
                 ) : myBojRank && curRank == 1 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem curRank={curRank} item={myBojRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem curRank={curRank} item={myBojRank} />
+                    </div>
                   </div>
                 ) : isLogin && curRank == 1 && !selectedOption ? (
                   <div className="my-rank">

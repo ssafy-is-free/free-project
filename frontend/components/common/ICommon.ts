@@ -33,6 +33,10 @@ export interface ICustomNav {
    */
   lists: string[];
   /**
+   * 목록들
+   */
+  defaultIdx: number;
+  /**
    *
    * @param idx 선택된 요소의  idx
    * @returns

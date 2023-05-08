@@ -106,15 +106,6 @@ const StyledRankUpDownIcon = styled(RankUpDownIcon)<{ rankupdown: number }>`
 `;
 
 const MainUserItem = (props: IMainUserItemProps) => {
-  const router = useRouter();
-  const goProfile = () => {
-    if (props.curRank == 0) {
-      router.push(`/profile/github/${props.item.userId}`);
-    } else {
-      router.push(`/profile/boj/${props.item.userId}`);
-    }
-  };
-
   // -1, 0, 1
   const [rankupdown, setRankupdown] = useState<number>(0);
 
@@ -129,7 +120,7 @@ const MainUserItem = (props: IMainUserItemProps) => {
   }, [props.curRank]);
 
   return (
-    <Wrapper onClick={goProfile} rankupdown={rankupdown}>
+    <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item.rank}
 
