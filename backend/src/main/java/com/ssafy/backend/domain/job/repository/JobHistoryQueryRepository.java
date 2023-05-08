@@ -1,8 +1,11 @@
 package com.ssafy.backend.domain.job.repository;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -33,7 +36,8 @@ public class JobHistoryQueryRepository {
 
 	//해당 유저가 등록한 취업 이력 조회
 	// TODO : orderby조건에 dday와 현재시간과의 차이를 계산에서 정렬하도록 넣어야됨 - querydsl문법을 못찾았음.
-	public List<JobHistory> findByUserJoinPosting(long userId, List<Long> statusIdList) {
+	public List<JobHistory> findByUserJoinPosting(long userId, List<Long> statusIdList, String nextDate,
+		Long jobHistoryId, Pageable pageable) {
 
 		QJobHistory jobHistory = QJobHistory.jobHistory;
 		QJobPosting jobPosting = QJobPosting.jobPosting;
@@ -41,9 +45,12 @@ public class JobHistoryQueryRepository {
 		return queryFactory
 			.selectFrom(jobHistory)
 			.leftJoin(jobHistory.jobPosting, jobPosting).fetchJoin()
-			.where(jobHistory.user.id.eq(userId), jobHistory.isDeleted.eq(false), inStatusId(statusIdList))
-			.fetch();
+			.where(jobHistory.user.id.eq(userId), jobHistory.isDeleted.eq(false), inStatusId(statusIdList)
+				, cursorCondition(nextDate, jobHistoryId))
+			.orderBy(jobHistory.dDay.asc(), jobHistory.createdTime.desc())
+			.limit(pageable.getPageSize())
 
+			.fetch();
 	}
 
 	//취업 이력 상세 조회
@@ -92,6 +99,18 @@ public class JobHistoryQueryRepository {
 		}
 
 		return QJobHistory.jobHistory.statusId.in(statusIdList);
+	}
+
+	private BooleanExpression cursorCondition(String nextDate, Long jobHistoryId) {
+
+		QJobHistory jobHistory = QJobHistory.jobHistory;
+
+		if (nextDate == null || jobHistoryId == null) {
+			return null;
+		}
+
+		return jobHistory.dDay.gt(LocalDate.parse(nextDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+			.or(jobHistory.dDay.eq(LocalDate.parse(nextDate)).and(jobHistory.id.gt(jobHistoryId)));
 	}
 
 }

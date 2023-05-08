@@ -4,6 +4,7 @@ import static com.ssafy.backend.global.response.CustomSuccessStatus.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,11 +62,19 @@ public class JobApplyController {
 	@GetMapping
 	public DataResponse<List<JobApplyResponse>> getAllJob(
 		@RequestParam(value = "statusId", required = false) List<Long> statusIdList,
-		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+		@RequestParam(value = "nextDate", required = false) String nextDate,
+		@RequestParam(value = "jobHistoryId", required = false) Long jobHistoryId,
+		@AuthenticationPrincipal UserPrincipal userPrincipal,
+		Pageable pageable
+	) {
 
-		long userId = userPrincipal.getId();
+		// long userId = userPrincipal.getId();
 
-		List<JobApplyResponse> jobApplyResponseList = jobApplyService.getJobApplies(userId, statusIdList);
+		long userId = 2L;
+
+		List<JobApplyResponse> jobApplyResponseList = jobApplyService.getJobApplies(userId, statusIdList,
+			nextDate,
+			jobHistoryId, pageable);
 
 		return jobApplyResponseList.isEmpty() ?
 			responseService.getDataResponse(jobApplyResponseList, RESPONSE_NO_CONTENT) :

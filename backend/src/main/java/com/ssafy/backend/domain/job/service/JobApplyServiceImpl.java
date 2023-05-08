@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.job.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,14 +57,16 @@ public class JobApplyServiceImpl implements JobApplyService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList) {
+	public List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList, String nextDate,
+		Long jobHistoryId, Pageable pageable) {
 
 		//유저 존재 유무 확인
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//취업이력 전부 조회
-		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByUserJoinPosting(user.getId(), statusIdList);
+		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByUserJoinPosting(user.getId(), statusIdList,
+			nextDate, jobHistoryId, pageable);
 
 		//취업상태 테이블 조회
 		List<JobStatus> jobStatusList = jobStatusRepository.findAll();
