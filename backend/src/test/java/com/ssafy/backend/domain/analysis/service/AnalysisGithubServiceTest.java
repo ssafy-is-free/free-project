@@ -1,9 +1,9 @@
 package com.ssafy.backend.domain.analysis.service;
 
+import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.AfterEach;
@@ -320,6 +320,60 @@ class AnalysisGithubServiceTest {
 		//when //then
 		assertThatThrownBy(() -> analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId)).isInstanceOf(
 			CustomException.class);
+
+	}
+
+	@DisplayName("해당 공고에 지원하지 않은 유저는 정보를 볼 수 없다.")
+	@Test
+	void compareWithAllApplicantNoApplicant() {
+		//given
+		//유저 데이터
+		User user1 = createUser("user1");
+
+		userRepository.save(user1);
+
+		//깃허브 데이터
+		Github myGithub = createGithub(user1, 100, 3, 800);
+		githubRepository.save(myGithub);
+
+		//취업 공고
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
+
+		//then
+		//when //then
+		assertThatThrownBy(() -> analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId)).isInstanceOf(
+			CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus", NOT_APPLY);
+
+	}
+
+	@DisplayName("해당 공고에 지원자 정보가 없으면 잘못된 요청이다.(본인이 꼭 있으니까!)")
+	@Test
+	void compareWithAllApplicantNotFoundApplicant() {
+		//given
+		//유저 데이터
+		User user1 = createUser("user1");
+
+		userRepository.save(user1);
+
+		//깃허브 데이터
+		Github myGithub = createGithub(user1, 100, 3, 800);
+		githubRepository.save(myGithub);
+
+		//취업 공고
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
+
+		//then
+		//when //then
+		assertThatThrownBy(() -> analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId)).isInstanceOf(
+			CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_APPLICANT);
 
 	}
 
