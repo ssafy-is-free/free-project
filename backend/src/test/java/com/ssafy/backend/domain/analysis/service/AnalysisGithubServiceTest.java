@@ -363,8 +363,8 @@ class AnalysisGithubServiceTest {
 		return JobPosting.builder()
 			.companyName(companyName)
 			.name(name)
-			.startTime(LocalDateTime.now())
-			.endTime(LocalDateTime.now())
+			.startTime(LocalDate.now())
+			.endTime(LocalDate.now())
 			.isClose(false)
 			.build();
 

@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.entity;
 
 import static javax.persistence.GenerationType.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
+import com.ssafy.backend.domain.job.dto.CJobPosting;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,10 +42,10 @@ public class JobPosting extends BaseTimeEntity {
 	private String name;
 
 	@Column(name = "start_time", nullable = false)
-	private LocalDateTime startTime;
+	private LocalDate startTime;
 
 	@Column(name = "end_time", nullable = false)
-	private LocalDateTime endTime;
+	private LocalDate endTime;
 
 	@Column(name = "is_close", nullable = false)
 	private boolean isClose;
@@ -59,4 +61,14 @@ public class JobPosting extends BaseTimeEntity {
 			", isClose=" + isClose +
 			'}';
 	}
+
+	// public static JobPosting create(CJobPosting cJobPosting) {
+	// 	return JobPosting.builder()
+	// 		.companyName(cJobPosting.getCompanyName())
+	// 		.name(cJobPosting.getPostingName())
+	// 		.startTime(cJobPosting.getStart())
+	// 		.endTime(cJobPosting.getEnd())
+	// 		.isClose(false)
+	// 		.build();
+	// }
 }

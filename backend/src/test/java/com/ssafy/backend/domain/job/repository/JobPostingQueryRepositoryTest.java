@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.job.repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ class JobPostingQueryRepositoryTest {
 	@DisplayName("취업 공고 조회 테스트")
 	public void jobPostingTest() {
 		//give
-		LocalDateTime testTime = LocalDateTime.now();
+		LocalDate testTime = LocalDate.now();
 
 		JobPosting jobPosting1 = createJobPosting(testTime, "삼성전자", "삼성그룹 2023년 신입공채", false);
 		JobPosting jobPosting2 = createJobPosting(testTime, "삼성전기", "삼성그룹 2022년 신입공채", false);
@@ -74,7 +75,7 @@ class JobPostingQueryRepositoryTest {
 	public void jobPostingKeywordTest() {
 
 		//give
-		LocalDateTime testTime = LocalDateTime.now();
+		LocalDate testTime = LocalDate.now();
 
 		JobPosting jobPosting1 = createJobPosting(testTime, "삼성전자", "삼성그룹 2023년 신입공채", false);
 		JobPosting jobPosting2 = createJobPosting(testTime, "삼성전기", "삼성그룹 2022년 신입공채", false);
@@ -135,7 +136,7 @@ class JobPostingQueryRepositoryTest {
 
 	}
 
-	private JobPosting createJobPosting(LocalDateTime currentTime, String companyName,
+	private JobPosting createJobPosting(LocalDate currentTime, String companyName,
 		String name, boolean isClose) {
 
 		return JobPosting.builder()
