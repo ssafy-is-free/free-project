@@ -22,13 +22,13 @@ public class GithubVsInfo {
 	double repositories;
 	LanguageInfo languages;
 
-	public static GithubVsInfo create(Github github, List<GithubDetailLanguage> languages) {
+	public static GithubVsInfo create(Github github, List<GithubDetailLanguage> languages, long countRepo) {
 		return GithubVsInfo.builder()
 			.nickname(github.getUser().getNickname())
 			.avatarUrl(github.getUser().getImage())
 			.commit(github.getCommitTotalCount())
 			.star(github.getStarTotalCount())
-			.repositories(github.countRepos())
+			.repositories(countRepo)
 			.languages(LanguageInfo.create(languages))
 			.build();
 	}

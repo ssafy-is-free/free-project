@@ -38,7 +38,7 @@ class GithubVsInfoTest {
 		assertThat(githubVsInfo).extracting("commit", "star", "repositories").containsExactly(1.1, 1.2, 3.0);
 		Assertions.assertThat(githubVsInfo.getLanguages().getLanguageList())
 			.extracting("percentage")
-			.containsExactly(10.4, 10.1, 11.0);
+			.containsExactly(10.4, 10.12, 11.0);
 
 	}
 

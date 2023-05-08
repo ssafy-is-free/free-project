@@ -45,10 +45,10 @@ public class AnalysisGithubService {
 
 	public CompareGithubResponse compareWithOpponent(long opponentUserId, long myUserId) {
 		//나의 정보
-		GithubVsInfo myVsInfo = getGithubVsInfo(myUserId);
+		GithubVsInfo myVsInfo = getVsInfo(myUserId);
 
 		//상대방 정보
-		GithubVsInfo opponentVsInfo = getGithubVsInfo(opponentUserId);
+		GithubVsInfo opponentVsInfo = getVsInfo(opponentUserId);
 		opponentVsInfo.toOneDecimal();
 
 		return CompareGithubResponse.create(myVsInfo, opponentVsInfo);
@@ -56,52 +56,73 @@ public class AnalysisGithubService {
 
 	public CompareGithubResponse compareWithAllApplicant(long jobPostingId, long myUserId) {
 		//나의 정보
-		GithubVsInfo myVsInfo = getGithubVsInfo(myUserId);
+		GithubVsInfo myVsInfo = getVsInfo(myUserId);
 
 		log.info("지원자 평균 정보 조회");
 		//지원자 전체 정보
-
-		// 특정 공고에 지원한 유저들의 아이디를 얻는다.
-		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
-			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
-		List<JobHistory> jobHistoryList = jobHistoryRepository.findByJobPosting(jobPosting);
-
-		FilteredUserIdSet filteredUserIdSet = FilteredUserIdSet.create(jobHistoryList);
-
-		if (filteredUserIdSet.isEmpty() || filteredUserIdSet.isNull()) {
-			throw new CustomException(CustomExceptionStatus.NOT_FOUND_APPLICANT);
-		}
-
-		// 얻은 아이디를  where 조건에 넣고 깃허브 정보 평균 구하기
-		GithubVsInfo applicantVsInfo = githubQueryRepository.findAvgByApplicant(filteredUserIdSet);
-
-		// 유저 아이디를 기반으로 깃허브 아이디를 얻는다.
-		Set<Long> githubIds = githubRepository.findByUserIdIn(filteredUserIdSet.getUserIds())
-			.stream()
-			.map(Github::getId)
-			.collect(Collectors.toSet());
-		FilteredGithubIdSet filteredGithubIdSet = FilteredGithubIdSet.create(githubIds);
-
-		// 얻은 아이디를 where 조건에 넣고 깃허브레포 count 쿼리
-		long allRepoCount = githubRepoRepository.countByGithubIdIn(filteredGithubIdSet.getGithubIds());
-		double repoCountAvg = (double)allRepoCount / filteredGithubIdSet.getSize();
-		// double applicantRepoInfo = Math.round(repoCountAvg + 10) / 10.0;
-
-		// 얻은 아이디를 where 조건에 넣고 깃허브언어에서 언어 아이디로 Group By 후 percent 평균
-		long size = filteredGithubIdSet.getSize();
-		List<GithubDetailLanguage> applicantLanguageInfo = githubLanguageQueryRepository.findAvgGroupByLanguage(
-			filteredGithubIdSet).stream().peek(g -> g.dividePercentage(size)).collect(Collectors.toList());
-
-		applicantVsInfo.updateLanguages(applicantLanguageInfo);
-		applicantVsInfo.updateRepositories(repoCountAvg);
-		applicantVsInfo.toOneDecimal();
+		GithubVsInfo applicantVsInfo = getVsInfoByJobPosting(jobPostingId);
 
 		return CompareGithubResponse.create(myVsInfo, applicantVsInfo);
 
 	}
 
-	// TODO: 2023-05-04 본인 정보 조회는 토큰에서 아이디 가져오는 시점에 예외 처리함 안해도 ㄱㅊ!
-	private GithubVsInfo getGithubVsInfo(long myUserId) {
+	private GithubVsInfo getVsInfoByJobPosting(long jobPostingId) {
+		// 특정 공고에 지원한 유저들의 아이디를 얻는다.
+		FilteredUserIdSet filteredUserIdSet = getUserIdByJobPosting(jobPostingId);
+
+		if (filteredUserIdSet.isEmpty() || filteredUserIdSet.isNull()) {
+			throw new CustomException(CustomExceptionStatus.NOT_FOUND_APPLICANT);
+		}
+
+		// 깃허브 스타, 커밋 정보
+		GithubVsInfo applicantVsInfo = githubQueryRepository.findAvgByApplicant(filteredUserIdSet);
+
+		// 유저 아이디를 기반으로 깃허브 아이디를 얻는다.
+		FilteredGithubIdSet filteredGithubIdSet = getGithubIdSetByUserIdSet(filteredUserIdSet);
+
+		// 리포지토리 평균 개수
+		double repoCountAvg = getRepoCountAvg(filteredGithubIdSet);
+
+		// 언어 사용 평균
+		List<GithubDetailLanguage> applicantLanguageInfo = getLanguageInfo(
+			filteredGithubIdSet);
+
+		applicantVsInfo.updateLanguages(applicantLanguageInfo);
+		applicantVsInfo.updateRepositories(repoCountAvg);
+		applicantVsInfo.toOneDecimal();
+		return applicantVsInfo;
+	}
+
+	private List<GithubDetailLanguage> getLanguageInfo(FilteredGithubIdSet filteredGithubIdSet) {
+		// languageId 그룹별 percent 평균
+		long size = filteredGithubIdSet.getSize();
+		return githubLanguageQueryRepository.findAvgGroupByLanguage(
+			filteredGithubIdSet).stream().peek(g -> g.dividePercentage(size)).collect(Collectors.toList());
+	}
+
+	private double getRepoCountAvg(FilteredGithubIdSet filteredGithubIdSet) {
+		long allRepoCount = githubRepoRepository.countByGithubIdIn(filteredGithubIdSet.getGithubIds());
+		return (double)allRepoCount / filteredGithubIdSet.getSize();
+
+	}
+
+	private FilteredGithubIdSet getGithubIdSetByUserIdSet(FilteredUserIdSet filteredUserIdSet) {
+		Set<Long> githubIds = githubRepository.findByUserIdIn(filteredUserIdSet.getUserIds())
+			.stream()
+			.map(Github::getId)
+			.collect(Collectors.toSet());
+		return FilteredGithubIdSet.create(githubIds);
+	}
+
+	private FilteredUserIdSet getUserIdByJobPosting(long jobPostingId) {
+		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
+		List<JobHistory> jobHistoryList = jobHistoryRepository.findByJobPosting(jobPosting);
+
+		return FilteredUserIdSet.create(jobHistoryList);
+	}
+
+	private GithubVsInfo getVsInfo(long myUserId) {
 		User user = userRepository.findById(myUserId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
@@ -110,7 +131,10 @@ public class AnalysisGithubService {
 
 		//언어 정보
 		List<GithubDetailLanguage> languageList = getDetailLanguages(github);
-		return GithubVsInfo.create(github, languageList);
+
+		//레포 정보
+		long countRepo = githubRepoRepository.countByGithub(github);
+		return GithubVsInfo.create(github, languageList, countRepo);
 	}
 
 	private List<GithubDetailLanguage> getDetailLanguages(Github github) {
