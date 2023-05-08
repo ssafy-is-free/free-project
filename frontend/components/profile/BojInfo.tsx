@@ -114,7 +114,7 @@ const BojInfo = ({ userId, my }: IBojInfo) => {
     return (
       <BojNoneDiv
         onClick={() => {
-          setOpenBoj(true);
+          // setOpenBoj(true);
         }}
       >
         <p>백준 아이디를 등록해주세요</p>
