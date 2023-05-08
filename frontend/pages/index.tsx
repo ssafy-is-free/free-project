@@ -95,7 +95,7 @@ const Wrapper = styled.div<{ searchClick: boolean }>`
 
         .space {
           border-radius: 8px;
-          height: 130px;
+          height: 100px;
           padding: 0px 14px;
           width: 100%;
         }
@@ -514,8 +514,10 @@ const Main = () => {
     if (el instanceof HTMLElement) {
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
+      console.log(scrollPoint);
+      console.log(target);
 
-      if (scrollPoint > target) {
+      if (scrollPoint >= target) {
         allRef.current.style.position = 'fixed';
         allRef.current.style.top = '48px';
         // wrapperRef.current.style.zIndex = '4';
@@ -523,9 +525,13 @@ const Main = () => {
       } else {
         allRef.current.style.position = '';
         allRef.current.style.top = '';
-        // wrapperRef.current.style.zIndex = '';
-        // headerRef.current.style.zIndex = '2';
       }
+      // } else {
+      //   allRef.current.style.position = '';
+      //   allRef.current.style.top = '';
+      //   // wrapperRef.current.style.zIndex = '';
+      //   // headerRef.current.style.zIndex = '2';
+      // }
     }
   };
 
