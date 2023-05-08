@@ -1,9 +1,9 @@
 package com.ssafy.backend.domain.job.service;
 
+import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,6 @@ import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.job.repository.JobStatusRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
-import com.ssafy.backend.global.response.exception.CustomExceptionStatus;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("취업 지원 현황 관련 테스트")
@@ -70,12 +69,12 @@ class JobApplyServiceImplTest {
 		//유저 예외
 		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.createJobApply(1L, jobApplyRegistrationRequest1))
 			.isInstanceOf(CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus",
-				CustomExceptionStatus.NOT_FOUND_USER);
+				NOT_FOUND_USER);
 
 		//취업 공고 조회 예외
 		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.createJobApply(2L, jobApplyRegistrationRequest1))
 			.isInstanceOf(CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus",
-				CustomExceptionStatus.NOT_FOUND_JOBPOSTING);
+				NOT_FOUND_JOBPOSTING);
 
 		//문제 없음
 		Assertions.assertThatCode(() -> jobApplyServiceImpl.createJobApply(2L, jobApplyRegistrationRequest2))
@@ -123,7 +122,7 @@ class JobApplyServiceImplTest {
 		//유저 예외
 		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.getJobApplies(1L, statusIdList))
 			.isInstanceOf(CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus",
-				CustomExceptionStatus.NOT_FOUND_USER);
+				NOT_FOUND_USER);
 
 		//조건 2개
 		Assertions.assertThat(jobApplyServiceImpl.getJobApplies(2L, statusIdList))
@@ -165,16 +164,66 @@ class JobApplyServiceImplTest {
 		//유저 예외
 		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.updateJobApply(1L, 1L, jobApplyUpdateRequest))
 			.isInstanceOf(CustomException.class)
-			.hasFieldOrPropertyWithValue("customExceptionStatus", CustomExceptionStatus.NOT_FOUND_USER);
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_USER);
 
 		//취업 공고 예외.
 		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.updateJobApply(2L, 2L, jobApplyUpdateRequest))
 			.isInstanceOf(CustomException.class)
-			.hasFieldOrPropertyWithValue("customExceptionStatus", CustomExceptionStatus.NOT_FOUND_JOBHISTORY);
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_JOBHISTORY);
 
 		//문제 없음
 		Assertions.assertThatCode(() -> jobApplyServiceImpl.updateJobApply(2L, 1L, jobApplyUpdateRequest))
 			.doesNotThrowAnyException();
+	}
+
+	@Test
+	@DisplayName("취업 지원 상세정보 조회")
+	void getJobApplyDetailTest() {
+		//given
+		User user = createUser();
+		JobHistory jobHistory = creatJobHistory(user, createJobPosting(1L), "dDayName", 1L);
+
+		//취업 상태 테이블
+		List<JobStatus> jobStatusList = new ArrayList<>();
+		jobStatusList.add(createJobStatus(1L, "서류 탈락"));
+		jobStatusList.add(createJobStatus(2L, "코테 탈락"));
+		jobStatusList.add(createJobStatus(3L, "서류 통과"));
+		jobStatusList.add(createJobStatus(4L, "스킵"));
+
+		//when
+		//유저 조회
+		when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.empty()); //유저가 없는 경우
+		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(user)); //유저가 있는 경우.
+
+		//취업 이력 조회
+		when(jobHistoryQueryRepository.findByIdJoinPosting(2L, 1L)).thenReturn(Optional.of(jobHistory)); //값이 있는 경우
+		when(jobHistoryQueryRepository.findByIdJoinPosting(2L, 2L)).thenReturn(Optional.empty()); //값이 없는 경우
+
+		//취업 상태 테이블 조회
+		when(jobStatusRepository.findAll()).thenReturn(jobStatusList);
+
+		//지원자 수
+		when(jobHistoryQueryRepository.countUserTotalJobHistory(1L)).thenReturn(10L);
+
+		//then
+		//없는 유저일때,
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.getJobApply(1L, 1L))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_USER);
+
+		//없는 이력일때,
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.getJobApply(2L, 2L))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_JOBHISTORY);
+
+		//옳은 요청1
+		Assertions.assertThat(jobApplyServiceImpl.getJobApply(2L, 1L))
+			.isNotNull()
+			.extracting("objective").isEqualTo("소프트웨어 엔지니어");
+
+		Assertions.assertThat(jobApplyServiceImpl.getJobApply(2L, 1L))
+			.isNotNull()
+			.extracting("applicantCount").isEqualTo(10L);
 	}
 
 	public JobApplyRegistrationRequest createJobApplyRequest(long jobPostingId) {
@@ -202,8 +251,8 @@ class JobApplyServiceImplTest {
 			.id(jobPostingId)
 			.companyName("testCompany")
 			.name("testName")
-			.startTime(LocalDateTime.now())
-			.endTime(LocalDateTime.now())
+			.startTime(LocalDate.now())
+			.endTime(LocalDate.now())
 			.isClose(false)
 			.build();
 	}
@@ -213,6 +262,7 @@ class JobApplyServiceImplTest {
 		LocalDate nowDate = LocalDate.now();
 
 		return JobHistory.builder()
+			.id(1L)
 			.dDay(nowDate)
 			.dDayName(dDayName)
 			.memo("떨어졌다")
