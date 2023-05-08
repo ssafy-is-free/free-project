@@ -104,24 +104,42 @@ public class GithubRankingService {
 	}
 
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {
+		// 깃허브 불러오기
+		Github github = githubRepository.findByUserId(userId)
+				.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
+
+
 		// 필터에 걸리는 깃허브 아이디들을 불러온다.
 		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
+
+		// 필터링된 깃허브 아이디가 없는 경우 DB 조회 X
+		if (githubIdSet != null && githubIdSet.isEmpty()) {
+			return GithubRankingOneResponse.createEmpty();
+		}
+
+		//필터링된 깃허브에 해당 유저가 없는 경우
+		if (githubIdSet!=null&&githubIdSet.isNotIn(github.getId())){
+			return GithubRankingOneResponse.createEmpty();
+		}
+
 
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
 
-		// 깃허브 불러오기
-		Github github = githubRepository.findByUserId(userId)
-			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
-
-		// 내가 속해있는지 확인하기
-		if (isNotContain(githubIdSet, userIdSet, github)) {
+		// 필터링된 유저 아이디가 없는 경우 DB 조회 X
+		if (userIdSet != null && userIdSet.isEmpty()) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
+		//필터링된 유저 아이디에 해당 유저가 없는 경우
+		if (userIdSet!=null&&userIdSet.isNotIn(userId)){
+			return GithubRankingOneResponse.createEmpty();
+		}
+
+
 		// 랭킹 계산
 		Long rank;
-		if (githubIdSet == null && userIdSet == null) {
+		if (rankingFilter.isNull()) {
 			rank = githubRepository.getRank(github.getScore(), userId);
 		} else {
 			rank = githubQueryRepository.getRankWithFilter(githubIdSet, userIdSet, github.getScore(), userId);
@@ -134,7 +152,7 @@ public class GithubRankingService {
 		GithubRankingOneResponse githubRankingResponse = GithubRankingOneResponse.create(githubRankingCover);
 
 		// githubList 사이즈 --> 랭킹
-		if (githubIdSet == null && userIdSet == null) {
+		if (rankingFilter.isNull()) {
 			githubRankingResponse.setRankAndRankUpDown(rank);
 		} else {
 			githubRankingResponse.setRank(rank);
@@ -143,11 +161,6 @@ public class GithubRankingService {
 		return githubRankingResponse;
 	}
 
-	private boolean isNotContain(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet, Github github) {
-		long githubId = github.getId();
-		long userId = github.getUser().getId();
 
-		return githubIdSet != null && userIdSet != null && githubIdSet.isNotIn(githubId) && userIdSet.isNotIn(userId);
-	}
 
 }

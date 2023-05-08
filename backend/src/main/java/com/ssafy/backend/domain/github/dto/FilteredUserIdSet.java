@@ -23,6 +23,9 @@ public class FilteredUserIdSet {
 		return FilteredUserIdSet.builder().userIds(userIds).build();
 	}
 
+	public static FilteredUserIdSet create(Set<Long> userIds) {
+		return FilteredUserIdSet.builder().userIds(userIds).build();
+	}
 	public boolean isEmpty() {
 		return this.userIds.isEmpty();
 	}
