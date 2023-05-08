@@ -60,18 +60,22 @@ public class AnalysisGithubService {
 
 		log.info("지원자 평균 정보 조회");
 		//지원자 전체 정보
-		GithubVsInfo applicantVsInfo = getVsInfoByJobPosting(jobPostingId);
+		GithubVsInfo applicantVsInfo = getVsInfoByJobPosting(jobPostingId, myUserId);
 
 		return CompareGithubResponse.create(myVsInfo, applicantVsInfo);
 
 	}
 
-	private GithubVsInfo getVsInfoByJobPosting(long jobPostingId) {
+	private GithubVsInfo getVsInfoByJobPosting(long jobPostingId, long myUserId) {
 		// 특정 공고에 지원한 유저들의 아이디를 얻는다.
 		FilteredUserIdSet filteredUserIdSet = getUserIdByJobPosting(jobPostingId);
 
-		if (filteredUserIdSet.isEmpty() || filteredUserIdSet.isNull()) {
+		if (filteredUserIdSet == null) {
 			throw new CustomException(CustomExceptionStatus.NOT_FOUND_APPLICANT);
+		}
+
+		if (filteredUserIdSet.isNotIn(myUserId)) {
+			throw new CustomException(CustomExceptionStatus.NOT_APPLY);
 		}
 
 		// 깃허브 스타, 커밋 정보
@@ -84,8 +88,7 @@ public class AnalysisGithubService {
 		double repoCountAvg = getRepoCountAvg(filteredGithubIdSet);
 
 		// 언어 사용 평균
-		List<GithubDetailLanguage> applicantLanguageInfo = getLanguageInfo(
-			filteredGithubIdSet);
+		List<GithubDetailLanguage> applicantLanguageInfo = getLanguageInfo(filteredGithubIdSet);
 
 		applicantVsInfo.updateLanguages(applicantLanguageInfo);
 		applicantVsInfo.updateRepositories(repoCountAvg);
@@ -96,8 +99,10 @@ public class AnalysisGithubService {
 	private List<GithubDetailLanguage> getLanguageInfo(FilteredGithubIdSet filteredGithubIdSet) {
 		// languageId 그룹별 percent 평균
 		long size = filteredGithubIdSet.getSize();
-		return githubLanguageQueryRepository.findAvgGroupByLanguage(
-			filteredGithubIdSet).stream().peek(g -> g.dividePercentage(size)).collect(Collectors.toList());
+		return githubLanguageQueryRepository.findAvgGroupByLanguage(filteredGithubIdSet)
+			.stream()
+			.peek(g -> g.dividePercentage(size))
+			.collect(Collectors.toList());
 	}
 
 	private double getRepoCountAvg(FilteredGithubIdSet filteredGithubIdSet) {
@@ -118,6 +123,10 @@ public class AnalysisGithubService {
 		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
 		List<JobHistory> jobHistoryList = jobHistoryRepository.findByJobPosting(jobPosting);
+
+		if (jobHistoryList.isEmpty()) {
+			return null;
+		}
 
 		return FilteredUserIdSet.create(jobHistoryList);
 	}
