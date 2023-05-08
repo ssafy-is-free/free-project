@@ -2,7 +2,6 @@ package com.ssafy.backend.domain.github.service;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 
 import com.ssafy.backend.domain.entity.*;
@@ -170,28 +169,7 @@ class GithubRankOneTest {
                 .build();
     }
 
-    private JobHistory createJobHistory(User user, JobPosting jobPosting) {
-        return JobHistory.builder()
-                .dDay(LocalDate.now())
-                .dDayName("test")
-                .statusId(1)
-                .jobObjective("백엔드 개발")
-                .isDeleted(false)
-                .user(user)
-                .jobPosting(jobPosting)
-                .build();
-    }
 
-    private JobPosting createJobPosting(String companyName, String name) {
-        return JobPosting.builder()
-                .companyName(companyName)
-                .name(name)
-                .startTime(LocalDate.now())
-                .endTime(LocalDate.now())
-                .isClose(false)
-                .build();
-
-    }
 
     public Language createLanguage(String name) {
         return Language.builder().name(name).type(LanguageType.GITHUB).build();
