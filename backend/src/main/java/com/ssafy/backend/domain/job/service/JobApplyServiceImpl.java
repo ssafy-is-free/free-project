@@ -93,7 +93,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 	public JobApplyDetailResponse getJobApply(long userId, long jobHistoryId) {
 
 		//유저 존재 유무 확인
-		User user = userRepository.findByIdAndIsDeletedFalse(userId)
+		userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 취업이력 조회.
@@ -111,13 +111,16 @@ public class JobApplyServiceImpl implements JobApplyService {
 		return JobApplyDetailResponse.create(jobHistory, applicantCount, jobStatusList);
 	}
 
+	// todo 벌크 연산을 이용해서 한번에 업데이트 하고 있는데, 이렇게 하면 없는 공고를 업데이트 할때 예외를 터트릴 수 없음
 	@Transactional
 	@Override
 	public void deleteJobApply(long userId, List<Long> jobHistoryId) {
 
-		//유저 존재 유무 확인
+		//유저 존재 유무
+		userRepository.findByIdAndIsDeletedFalse(userId)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 id 삭제처리.
-
+		jobHistoryQueryRepository.deleteBulk(userId, jobHistoryId);
 	}
 }

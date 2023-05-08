@@ -64,13 +64,25 @@ public class JobHistoryQueryRepository {
 	//해당 공고 지원자 수.
 	public Long countUserTotalJobHistory(long jobPostingId) {
 		QJobHistory jobHistory = QJobHistory.jobHistory;
-		QJobPosting jobPosting = QJobPosting.jobPosting;
+
 		return queryFactory
 			.select(jobHistory.count())
 			.from(jobHistory)
 			.where(jobHistory.jobPosting.id.eq(jobPostingId),
 				jobHistory.isDeleted.eq(false))
 			.fetchFirst();
+	}
+
+	//업데이트 벌크연산 - 삭제 처리
+	public long deleteBulk(long userId, List<Long> jobHistoryIds) {
+
+		QJobHistory jobHistory = QJobHistory.jobHistory;
+
+		return queryFactory
+			.update(jobHistory)
+			.set(jobHistory.isDeleted, true)
+			.where(jobHistory.user.id.eq(userId), jobHistory.id.in(jobHistoryIds))
+			.execute();
 	}
 
 	private BooleanExpression inStatusId(List<Long> statusIdList) {

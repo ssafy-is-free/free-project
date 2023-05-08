@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.backend.domain.job.dto.JobApplyDeleteRequest;
 import com.ssafy.backend.domain.job.dto.JobApplyDetailResponse;
 import com.ssafy.backend.domain.job.dto.JobApplyRegistrationRequest;
 import com.ssafy.backend.domain.job.dto.JobApplyResponse;
@@ -100,7 +101,13 @@ public class JobApplyController {
 
 	//지원 현황 선택 삭제
 	@DeleteMapping("/history")
-	public CommonResponse deleteJob() {
+	public CommonResponse deleteJob(
+		@RequestBody JobApplyDeleteRequest jobApplyDeleteRequest,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+		long userId = userPrincipal.getId();
+
+		jobApplyService.deleteJobApply(userId, jobApplyDeleteRequest.getHistoryId());
 
 		return responseService.getSuccessResponse();
 	}
