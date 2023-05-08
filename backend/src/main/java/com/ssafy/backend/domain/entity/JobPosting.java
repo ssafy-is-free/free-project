@@ -3,7 +3,6 @@ package com.ssafy.backend.domain.entity;
 import static javax.persistence.GenerationType.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +13,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
-import com.ssafy.backend.domain.job.dto.CJobPosting;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
