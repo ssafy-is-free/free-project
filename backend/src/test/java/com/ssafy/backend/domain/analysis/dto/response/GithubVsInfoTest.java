@@ -10,7 +10,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.ssafy.backend.domain.analysis.dto.LanguageDetailResponse;
+import com.ssafy.backend.domain.analysis.dto.LanguageInfo;
 import com.ssafy.backend.domain.github.dto.GithubDetailLanguage;
 
 class GithubVsInfoTest {
@@ -28,7 +28,7 @@ class GithubVsInfoTest {
 			.commit(1.11)
 			.star(1.23)
 			.repositories(3.0)
-			.languages(LanguageDetailResponse.create(languages))
+			.languages(LanguageInfo.create(languages))
 			.build();
 
 		//when

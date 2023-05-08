@@ -16,10 +16,10 @@ import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.analysis.dto.BojAvgDetail;
-import com.ssafy.backend.domain.analysis.dto.BojInfoAvgDetailResponse;
 import com.ssafy.backend.domain.analysis.dto.BojLanguagePassCount;
-import com.ssafy.backend.domain.analysis.dto.BojRankAllComparison;
-import com.ssafy.backend.domain.analysis.dto.BojRankComparison;
+import com.ssafy.backend.domain.analysis.dto.BojRankAllComparisonResponse;
+import com.ssafy.backend.domain.analysis.dto.BojRankComparisonResponse;
+import com.ssafy.backend.domain.analysis.dto.response.BojInfoAvgDetailResponse;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.BaekjoonLanguage;
 import com.ssafy.backend.domain.entity.JobHistory;
@@ -51,7 +51,7 @@ public class AnalysisBojService {
 	private final JobPostingRepository jobPostingRepository;
 	private final JobHistoryRepository jobHistoryRepository;
 
-	public BojRankComparison compareWithOpponent(long id, Long userId) {
+	public BojRankComparisonResponse compareWithOpponent(long id, Long userId) {
 		//언어 정보를 저장할 해쉬맵
 		Map<Long, String> languageMap = getLanguageMap();
 
@@ -59,11 +59,11 @@ public class AnalysisBojService {
 		BojInfoDetailResponse my = createBojInfoDetail(id, languageMap);
 		BojInfoDetailResponse opp = createBojInfoDetail(userId, languageMap);
 
-		return BojRankComparison.create(my, opp);
+		return BojRankComparisonResponse.create(my, opp);
 
 	}
 
-	public BojRankAllComparison compareWithOther(long id, Long jobPostingId) {
+	public BojRankAllComparisonResponse compareWithOther(long id, Long jobPostingId) {
 		//언어 정보를 저장할 해쉬맵
 		Map<Long, String> languageMap = getLanguageMap();
 		//백준 디테일 정보 저장
@@ -87,7 +87,7 @@ public class AnalysisBojService {
 		//백준 전체 정보 저장
 		BojInfoAvgDetailResponse other = BojInfoAvgDetailResponse.create(bojAvgDetail, bojLanguageList);
 
-		return BojRankAllComparison.builder().my(my).other(other).build();
+		return BojRankAllComparisonResponse.builder().my(my).other(other).build();
 	}
 
 	private Map<Long, String> getLanguageMap() {

@@ -1,8 +1,9 @@
-package com.ssafy.backend.domain.analysis.dto;
+package com.ssafy.backend.domain.analysis.dto.response;
 
 import java.util.List;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojLanguageResponse;
+import com.ssafy.backend.domain.analysis.dto.BojAvgDetail;
 import com.ssafy.backend.domain.util.service.TierValueFormatter;
 
 import lombok.AllArgsConstructor;
