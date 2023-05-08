@@ -4,12 +4,11 @@ import styled from 'styled-components';
 const CareerSearchDiv = styled.div`
   width: 100vw;
   height: 100vh;
-  margin-bottom: max(4re);
-  top: 0;
   position: fixed;
+  top: 0;
+  z-index: 10;
   background-color: white;
   padding-bottom: max(10vh, 4rem);
-  z-index: 5;
   overflow: auto;
   .csheader {
     margin: 1rem;
@@ -120,11 +119,11 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
   };
   return (
     <CareerSearchDiv>
-      <div className="csheader">
+      <div className="csheader" onClick={close}>
         <img src="/Icon/CloseIcon.svg" alt="#" />
       </div>
-      <div className="csintro" onClick={close}>
-        <h2>기업명을</h2>
+      <div className="csintro">
+        <h2>기업명, 공고명을</h2>
         <h2>검색해서 추가해보세요</h2>
       </div>
       <div className="result">

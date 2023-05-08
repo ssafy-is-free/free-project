@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import CareerSearch from './CareerSearch';
 import { ISearchResult } from './CareerSearch';
+import StatusModal, { IStatus } from './StatusModal';
+import DdayModal from './DdayModal';
 
 const NewCareerDiv = styled.div`
   width: 100vw;
@@ -10,7 +12,7 @@ const NewCareerDiv = styled.div`
   position: fixed;
   background-color: white;
   padding-bottom: max(10vh, 4rem);
-  z-index: 2;
+  z-index: 5;
   overflow: auto;
 `;
 
@@ -69,7 +71,7 @@ const SearchInput = styled.div`
   position: fixed;
   background-color: white;
   padding-bottom: max(10vh, 4rem);
-  z-index: 5;
+  z-index: 10;
   overflow: auto;
 `;
 
@@ -117,34 +119,43 @@ const NewCareer = ({ close }: INewCareer) => {
   const [startTime, setStartTime] = useState<any>();
   const [endTime, setEndTime] = useState<any>();
   const [status, setStatus] = useState<any>();
-  const [nextDate, setNextDate] = useState<any>();
+  const [dDayName, setDDayName] = useState<any>();
+  const [dDay, setDDay] = useState<any>();
 
-  const inputList = [
+  const showList = [
     { key: 'postingName', label: '공고명', placeholder: '', readonly: true, value: postingName },
     { key: 'companyName', label: '기업명', placeholder: '', readonly: true, value: companyName },
     { key: 'startTime', label: '접수 시작일', placeholder: '', readonly: true, value: startTime },
     { key: 'endTime', label: '접수 마감일', placeholder: '', readonly: true, value: endTime },
-    { key: 'objective', label: '지원 직무', placeholder: '', readonly: false },
     { key: 'status', label: '현재 진행 상태', placeholder: '', readonly: true, value: status },
+  ];
+
+  const inputList = [
+    { key: 'objective', label: '지원 직무', placeholder: '', readonly: false },
     {
       key: 'dDayName',
       label: '다음 일정 이름',
       placeholder: 'ex) 1차 면접, 코딩테스트',
       readonly: false,
+      value: dDayName,
     },
-    { key: 'nextDate', label: '다음 일정', placeholder: '', readonly: true, value: nextDate },
+    { key: 'dDay', label: '다음 일정', placeholder: '', readonly: true, value: dDay },
   ];
 
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
   const [statusOpen, setStatusOpen] = useState<boolean>(false);
+  const [dDayOpen, setDDayOpen] = useState<boolean>(false);
 
   const inputClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    const { name } = e.target as HTMLInputElement;
+    const { id } = e.target as HTMLInputElement;
     // 공고명, 기업명을 누를경우 검색창 오픈
-    if (['postingName', 'companyName'].includes(name)) {
+    if (['postingName', 'companyName'].includes(id)) {
+      console.log('postingName', 'companyName');
       setSearchOpen(true);
-    } else if (name === 'status') {
+    } else if (id === 'status') {
       setStatusOpen(true);
+    } else if (['dDay', 'dDayName'].includes(id)) {
+      setDDayOpen(true);
     }
   };
 
@@ -167,26 +178,53 @@ const NewCareer = ({ close }: INewCareer) => {
     setEndTime(item.endTime);
   };
 
+  const statusReasut = (status: IStatus) => {
+    setStatusId(status.id);
+    setStatus(status.name);
+  };
+
+  const dDayResult = (res: any) => {
+    setDDayName(res.ddayName);
+    console.log(res);
+    console.log(res.date);
+    setDDay(res.date);
+  };
+
   return (
     <NewCareerDiv>
+      <HeaderDiv>
+        <div>
+          <img src="/Icon/CloseIcon.svg" alt="#" onClick={close} />
+          {/* <img src="/Icon/CloseIcon.svg" alt="#" onClick={test} /> */}
+        </div>
+        <button type="submit">
+          <h3>등록하기</h3>
+        </button>
+      </HeaderDiv>
+      {showList.map((input) => (
+        <InputDiv key={input.label}>
+          <div>{input.label}</div>
+          <input
+            id={input.key}
+            onClick={inputClick}
+            type="text"
+            className="input"
+            placeholder={input.placeholder}
+            value={input.value}
+            readOnly={input.readonly}
+          ></input>
+        </InputDiv>
+      ))}
       <form action="post" id="careerForm" onSubmit={newPost}>
-        <HeaderDiv>
-          <div>
-            {/* <img src="/Icon/CloseIcon.svg" alt="#" onClick={close} /> */}
-            <img src="/Icon/CloseIcon.svg" alt="#" onClick={test} />
-          </div>
-          <button type="submit">
-            <h3>등록하기</h3>
-          </button>
-        </HeaderDiv>
-        <input type="hidden" name="postingId" value={postingId} />
+        <input type="hidden" name="jobPostingId" value={postingId} />
         <input type="hidden" name="statusId" value={statusId} />
         {inputList.map((input) => (
           <InputDiv key={input.label}>
             <div>{input.label}</div>
             <input
-              onClick={inputClick}
+              id={input.key}
               name={input.key}
+              onClick={inputClick}
               type="text"
               className="input"
               placeholder={input.placeholder}
@@ -203,9 +241,13 @@ const NewCareer = ({ close }: INewCareer) => {
       {searchOpen && (
         <CareerSearch close={() => setSearchOpen(false)} result={(item) => searchResult(item)}></CareerSearch>
       )}
-      {/* {statusOpen && (
-        <StatusModal close={() => setStatusOpen(false)} result={(item) => setStatusId(item)}></StatusModal>
-      )} */}
+      {statusOpen && (
+        <StatusModal
+          close={() => setStatusOpen(false)}
+          result={(statusInput) => statusReasut(statusInput)}
+        ></StatusModal>
+      )}
+      {dDayOpen && <DdayModal close={() => setDDayOpen(false)} result={(res) => dDayResult(res)}></DdayModal>}
     </NewCareerDiv>
   );
 };

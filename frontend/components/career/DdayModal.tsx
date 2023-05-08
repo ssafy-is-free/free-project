@@ -29,20 +29,29 @@ const DarkBg = styled.div`
   background-color: ${(props) => props.theme.modalGray};
 `;
 
-const DdayModal = () => {
+interface IDdayModalProps {
+  close: () => void;
+  result: (res: any) => void;
+}
+
+const DdayModal = ({ close, result }: IDdayModalProps) => {
   const [ddayName, setDdayName] = useState<string>('');
   const [date, setDate] = useState<string>('');
   const updateDate = (date: string) => {
     setDate(date);
+    console.log(date);
   };
 
-  const cancel = () => {};
+  const cancel = () => {
+    close();
+  };
   const ok = () => {
-    console.log(ddayName, date);
+    result({ ddayName, date });
+    close();
   };
   return (
     <ModalDiv>
-      <DarkBg></DarkBg>
+      <DarkBg onClick={close}></DarkBg>
       <div className="modalContent">
         <div className="modalTitle">다음일정 변경하기</div>
         <InputDiv>
