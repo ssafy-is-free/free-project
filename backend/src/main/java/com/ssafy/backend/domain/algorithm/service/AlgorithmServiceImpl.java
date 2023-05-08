@@ -93,7 +93,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 
 		// 내가 속해있는지 확인하기
 		if ((bojIdSet != null && bojIdSet.isNotIn(boj.getId())) || (userIdSet != null && userIdSet.isNotIn(
-			boj.getId()))) {
+			user.getId()))) {
 			return BojRankResponse.createEmpty();
 		}
 
