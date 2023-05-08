@@ -78,9 +78,7 @@ public class JobApplyController {
 		@RequestBody JobApplyUpdateRequest jobApplyUpdateRequest,
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-		// long userId = userPrincipal.getId();
-
-		long userId = 2L;
+		long userId = userPrincipal.getId();
 
 		jobApplyService.updateJobApply(userId, jobHistoryId, jobApplyUpdateRequest);
 

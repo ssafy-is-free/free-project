@@ -226,6 +226,41 @@ class JobApplyServiceImplTest {
 			.extracting("applicantCount").isEqualTo(10L);
 	}
 
+	@Test
+	@DisplayName("취업현황 선택 삭제")
+	void deleteJobApplyTest() {
+		//given
+		User user = createUser();
+		JobHistory jobHistory = creatJobHistory(user, createJobPosting(1L), "dDayName", 1L);
+
+		List<Long> jobHistoryIds1 = Arrays.asList(1L);
+		List<Long> jobHistoryIds2 = Arrays.asList(2L);
+
+		//when
+		//유저 조회
+		when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.empty()); //유저가 없는 경우
+		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(user)); //유저가 있는 경우.
+
+		//취업 이력 조회
+		when(jobHistoryQueryRepository.findByIdJoinPosting(2L, 1L)).thenReturn(Optional.of(jobHistory)); //값이 있는 경우
+		when(jobHistoryQueryRepository.findByIdJoinPosting(2L, 2L)).thenReturn(Optional.empty()); //값이 없는 경우
+
+		//then
+		//없는 유저일때,
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.deleteJobApply(1L, jobHistoryIds1))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_USER);
+
+		//없는 이력일때,
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.deleteJobApply(2L, jobHistoryIds2))
+			.isInstanceOf(CustomException.class)
+			.hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_JOBHISTORY);
+
+		//옳은 요청
+		Assertions.assertThatCode(() -> jobApplyServiceImpl.deleteJobApply(2L, jobHistoryIds1))
+			.doesNotThrowAnyException();
+	}
+
 	public JobApplyRegistrationRequest createJobApplyRequest(long jobPostingId) {
 		return new JobApplyRegistrationRequest(1, jobPostingId, "백엔드 개발자", "또 탈락", "2023-04-16", "코테 마감");
 	}
