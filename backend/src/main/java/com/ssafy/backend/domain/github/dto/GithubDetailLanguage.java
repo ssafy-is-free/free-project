@@ -16,7 +16,7 @@ public class GithubDetailLanguage {
 	}
 
 	public void toOneDecimalPercentage() {
-		this.percentage = Math.round(this.percentage * 10) / 10.0;
+		this.percentage = Math.round(this.percentage * 100) / 100.0;
 
 	}
 
