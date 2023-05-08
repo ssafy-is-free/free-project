@@ -104,24 +104,27 @@ public class GithubRankingService {
 	}
 
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {
-		// 필터에 걸리는 유저 아이디들을 불러온다.
+		// 필터에 걸리는 깃허브 아이디들을 불러온다.
 		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
+
+		// 필터에 걸리는 유저 아이디들을 불러온다.
+		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
 
 		// 깃허브 불러오기
 		Github github = githubRepository.findByUserId(userId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
 
 		// 내가 속해있는지 확인하기
-		if (githubIdSet != null && githubIdSet.isNotIn(github.getId())) {
+		if (isNotContain(githubIdSet, userIdSet, github)) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
 		// 랭킹 계산
-		int rank;
-		if (githubIdSet == null) {
+		Long rank;
+		if (githubIdSet == null && userIdSet == null) {
 			rank = githubRepository.getRank(github.getScore(), userId);
 		} else {
-			rank = githubRepository.getRankWithFilter(githubIdSet.getGithubIds(), github.getScore(), userId);
+			rank = githubQueryRepository.getRankWithFilter(githubIdSet, userIdSet, github.getScore(), userId);
 		}
 		rank += 1;
 
@@ -131,12 +134,20 @@ public class GithubRankingService {
 		GithubRankingOneResponse githubRankingResponse = GithubRankingOneResponse.create(githubRankingCover);
 
 		// githubList 사이즈 --> 랭킹
-		if (githubIdSet != null) {
-			githubRankingResponse.setRank(rank);
-		} else {
+		if (githubIdSet == null && userIdSet == null) {
 			githubRankingResponse.setRankAndRankUpDown(rank);
+		} else {
+			githubRankingResponse.setRank(rank);
 		}
 
 		return githubRankingResponse;
 	}
+
+	private boolean isNotContain(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet, Github github) {
+		long githubId = github.getId();
+		long userId = github.getUser().getId();
+
+		return githubIdSet != null && userIdSet != null && githubIdSet.isNotIn(githubId) && userIdSet.isNotIn(userId);
+	}
+
 }

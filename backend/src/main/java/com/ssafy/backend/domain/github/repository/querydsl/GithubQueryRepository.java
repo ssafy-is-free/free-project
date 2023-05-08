@@ -16,6 +16,7 @@ import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -43,6 +44,16 @@ public class GithubQueryRepository {
 
 	}
 
+	public Long getRankWithFilter(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet,
+		@Param("score") int score,
+		@Param("userId") long userId) {
+		return queryFactory.select(github.count())
+			.from(github)
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId))
+			.fetchOne();
+
+	}
+
 	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {
 		return githubIdSet != null ? github.id.in(githubIdSet.getGithubIds()) : null;
 	}
@@ -56,11 +67,23 @@ public class GithubQueryRepository {
 			return null;
 
 		}
-		return scoreLt(score).or(scoreEqAndGithubIdGt(score, userId));
+		return scoreLt(score).or(scoreEqAndUserIdGt(score, userId));
+	}
+
+	private BooleanExpression higherRanked(Integer score, Long userId) {
+		if (score == null || userId == null) {
+			return null;
+
+		}
+		return scoreGt(score).or(scoreEqAndUserIdLt(score, userId));
 	}
 
 	private BooleanExpression scoreLt(Integer score) {
 		return score != null ? github.score.lt(score) : null;
+	}
+
+	private BooleanExpression scoreGt(Integer score) {
+		return score != null ? github.score.gt(score) : null;
 	}
 
 	private BooleanExpression scoreEq(Integer score) {
@@ -71,10 +94,21 @@ public class GithubQueryRepository {
 		return userId != null ? github.user.id.gt(userId) : null;
 	}
 
-	private BooleanExpression scoreEqAndGithubIdGt(Integer score, Long userId) {
+	private BooleanExpression userIdLt(Long userId) {
+		return userId != null ? github.user.id.lt(userId) : null;
+	}
+
+	private BooleanExpression scoreEqAndUserIdGt(Integer score, Long userId) {
 		if (score == null || userId == null) {
 			return null;
 		}
 		return scoreEq(score).and(userIdGt(userId));
+	}
+
+	private BooleanExpression scoreEqAndUserIdLt(Integer score, Long userId) {
+		if (score == null || userId == null) {
+			return null;
+		}
+		return scoreEq(score).and(userIdLt(userId));
 	}
 }

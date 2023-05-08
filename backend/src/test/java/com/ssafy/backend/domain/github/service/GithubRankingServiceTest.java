@@ -19,6 +19,7 @@ import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubRankingCover;
+import com.ssafy.backend.domain.github.dto.GithubRankingOneResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
@@ -115,6 +116,42 @@ class GithubRankingServiceTest {
 
 	}
 
+	@DisplayName("공고별로 나의 랭킹 정보를 볼 수 있다.")
+	@Test
+	void getGithubRankOneByJobPosting() {
+		//given
+		User user1 = createUser("user1");
+		User user2 = createUser("user2");
+		User user3 = createUser("user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Github github1 = createGithub(user1, 100);
+		Github github2 = createGithub(user2, 200);
+		Github github3 = createGithub(user3, 200);
+		githubRepository.saveAll(Arrays.asList(github1, github2, github3));
+
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		JobHistory jobHistory1 = createJobHistory(user1, jobPosting1);
+		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
+		JobHistory jobHistory3 = createJobHistory(user3, jobPosting1);
+		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3));
+
+		Long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
+		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(jobPostingId).build();
+
+		long userId = userRepository.findByNickname("user1").get().getId();
+
+		//when
+		GithubRankingOneResponse response = githubRankingService.getGithubRankOne(userId, rankingFilter);
+
+		//then
+		assertThat(response.getGithubRankingCover()).extracting("nickname", "score", "rank", "rankUpDown")
+			.containsExactly("user1", 100, 3L, null);
+
+	}
+
 	private User createUser(String nickname) {
 		return User.builder().nickname(nickname).image("1").isDeleted(false).build();
 	}
@@ -127,7 +164,7 @@ class GithubRankingServiceTest {
 			.starTotalCount(1)
 			.score(score)
 			.profileLink("1")
-			.previousRank(1)
+			.previousRank(0)
 			.build();
 	}
 
