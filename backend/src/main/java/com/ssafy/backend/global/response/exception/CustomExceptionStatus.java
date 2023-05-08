@@ -27,8 +27,10 @@ public enum CustomExceptionStatus {
 
 	/* 공고 관련*/
 	NOT_FOUND_JOBPOSTING(ResponseStatus.FAIL, "해당하는 공고가 존재하지 않습니다."), NOT_FOUND_APPLICANT(ResponseStatus.FAIL,
-		"해당하는 공고의 지원자를 찾을 수 없습니다.");
+		"해당하는 공고의 지원자를 찾을 수 없습니다."),
 
+	/*취업 이력 관련*/
+	NOT_FOUND_JOBHISTORY(ResponseStatus.FAIL, "해당하는 이력이 없습니다.");
 	private final ResponseStatus status;
 
 	private final String message;

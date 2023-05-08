@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
@@ -39,8 +40,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	public static final String TOKEN_EXPIRE = "expire";
 	public static final String TOKEN_UNSUPPORTED = "unsupported";
 	public static final String TOKEN_ILLEGAL = "illegal";
+	public static final String CUSTOM_EXCEPTION = "custom";
 	private final TokenProvider tokenProvider;
 	private final UserRepository userRepository;
+	private final ObjectMapper objectMapper;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -74,6 +77,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		} catch (IllegalStateException e) {
 			log.info("잘못된 토큰입니다.");
 			request.setAttribute(TOKEN_EXCEPTION_KEY, TOKEN_ILLEGAL);
+		} catch (CustomException e) {
+			log.info("커스텀 예외");
+			request.setAttribute(TOKEN_EXCEPTION_KEY, CUSTOM_EXCEPTION);
 		}
 
 		filterChain.doFilter(request, response);
