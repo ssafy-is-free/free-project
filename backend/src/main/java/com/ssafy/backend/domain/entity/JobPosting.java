@@ -21,10 +21,10 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Builder
-@AllArgsConstructor
 @DynamicUpdate
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name = "job_posting")
 public class JobPosting extends BaseTimeEntity {
 
@@ -48,14 +48,15 @@ public class JobPosting extends BaseTimeEntity {
 	@Column(name = "is_close", nullable = false)
 	private boolean isClose;
 
-	public static JobPosting create(String companyName, String name, LocalDateTime startTime, LocalDateTime endTime,
-		boolean isClose) {
-
-		return JobPosting.builder()
-			.companyName(companyName)
-			.name(name)
-			.startTime(startTime)
-			.endTime(endTime)
-			.isClose(isClose).build();
+	@Override
+	public String toString() {
+		return "JobPosting{" +
+			"id=" + id +
+			", companyName='" + companyName + '\'' +
+			", name='" + name + '\'' +
+			", startTime=" + startTime +
+			", endTime=" + endTime +
+			", isClose=" + isClose +
+			'}';
 	}
 }
