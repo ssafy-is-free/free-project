@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 
 import com.ssafy.backend.domain.entity.JobHistory;
 import com.ssafy.backend.domain.entity.JobPosting;
@@ -114,24 +115,29 @@ class JobApplyServiceImplTest {
 		when(userRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(Optional.empty()); //유저가 없는 경우
 		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(user)); //유저가 있는 경우.
 
-		when(jobHistoryQueryRepository.findByUserJoinPosting(2L, statusIdList)).thenReturn(
+		when(jobHistoryQueryRepository.findByUserJoinPosting(2L, statusIdList, "2023-05-11", 1L,
+			PageRequest.of(0, 5))).thenReturn(
 			jobHistoryListCondition); //조건
-		when(jobHistoryQueryRepository.findByUserJoinPosting(2L, null)).thenReturn(jobHistoryListAll); //전체
+		when(jobHistoryQueryRepository.findByUserJoinPosting(2L, null, "2023-05-11", 1L,
+			PageRequest.of(0, 5))).thenReturn(jobHistoryListAll); //전체
 
 		//then
 		//유저 예외
-		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.getJobApplies(1L, statusIdList))
+		Assertions.assertThatThrownBy(() -> jobApplyServiceImpl.getJobApplies(1L, statusIdList, "2023-05-11", 1L,
+				PageRequest.of(0, 5)))
 			.isInstanceOf(CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus",
 				NOT_FOUND_USER);
 
 		//조건 2개
-		Assertions.assertThat(jobApplyServiceImpl.getJobApplies(2L, statusIdList))
+		Assertions.assertThat(jobApplyServiceImpl.getJobApplies(2L, statusIdList, "2023-05-11", 1L,
+				PageRequest.of(0, 5)))
 			.isNotEmpty()
 			.hasSize(2)
 			.extracting("dDayName").contains("서류 마감", "코딩테스트");
 
 		//조건 4개
-		Assertions.assertThat(jobApplyServiceImpl.getJobApplies(2L, null))
+		Assertions.assertThat(jobApplyServiceImpl.getJobApplies(2L, null, "2023-05-11", 1L,
+				PageRequest.of(0, 5)))
 			.isNotEmpty()
 			.hasSize(4)
 			.extracting("dDayName").contains("서류 마감", "코딩테스트", "직무 면접", "최종 면접");
