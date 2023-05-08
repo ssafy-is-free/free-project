@@ -256,7 +256,7 @@ async def update_github(nickname):
     for repo in repos_res['items']:
         # 레포 정보
         name = repo['name']
-        link = repo['url']
+        link = repo['html_url']
 
         dto = dict()
         dto['name'] = name
