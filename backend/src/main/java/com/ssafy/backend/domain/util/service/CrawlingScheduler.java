@@ -43,7 +43,6 @@ public class CrawlingScheduler {
 		// 	githubCrawlingService.getGithubInfo(user.getNickname(), user.getId());
 		// }
 	}
-	// TODO: 2023-05-02 이터레이터에서 포이치로 바꾸기~
 
 	@Scheduled(cron = "0 0 2 * * *")
 	public void bojUpdate() {

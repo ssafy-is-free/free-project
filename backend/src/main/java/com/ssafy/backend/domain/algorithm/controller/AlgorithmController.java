@@ -36,14 +36,6 @@ public class AlgorithmController {
 	private final ResponseService responseService;
 	private final AlgorithmService algorithmService;
 
-	// TODO: 2023-04-25 12시에 한꺼번에 배치할떄 사용할 백준 크롤링
-	/*@PatchMapping("")
-	public CommonResponse bojSaveUser(@RequestParam Long userId) {
-
-		algorithmService.patchBojByUserId(userId);
-		return responseService.getSuccessResponse();
-	}*/
-
 	@GetMapping("/my-rank")
 	public DataResponse<BojRankResponse> bojMyRank(@AuthenticationPrincipal UserPrincipal userPrincipal,
 		@RequestParam(value = "languageId", required = false) Long languageId,
@@ -58,7 +50,7 @@ public class AlgorithmController {
 	@GetMapping("/search")
 	public CommonResponse getBojIdList(@RequestParam String nickname) {
 		List<NicknameListResponse> bojIdList = algorithmService.getBojListByBojId(nickname);
-		return bojIdList.size() == 0 ? responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
+		return bojIdList.isEmpty() ? responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(bojIdList, RESPONSE_SUCCESS);
 	}
 

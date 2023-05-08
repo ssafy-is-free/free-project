@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.analysis.dto;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
+import com.ssafy.backend.domain.analysis.dto.response.BojInfoAvgDetailResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,16 +14,16 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BojRankAllComparison {
+public class BojRankAllComparisonResponse {
 	BojInfoDetailResponse my;
 	BojInfoAvgDetailResponse other;
 
-	public static BojRankAllComparison createEmpty() {
-		return BojRankAllComparison.builder().build();
+	public static BojRankAllComparisonResponse createEmpty() {
+		return BojRankAllComparisonResponse.builder().build();
 	}
 
-	public static BojRankAllComparison create(BojInfoDetailResponse my, BojInfoAvgDetailResponse other) {
-		return BojRankAllComparison.builder().my(my).other(other).build();
+	public static BojRankAllComparisonResponse create(BojInfoDetailResponse my, BojInfoAvgDetailResponse other) {
+		return BojRankAllComparisonResponse.builder().my(my).other(other).build();
 	}
 
 	public boolean checkForNull() {
