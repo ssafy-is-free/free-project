@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.algorithm.dto.FilteredBojIdSet;
 import com.ssafy.backend.domain.analysis.dto.BojAvgDetail;
@@ -31,8 +30,7 @@ public class BojQueryRepository {
 
 		return queryFactory.select(new QBojAvgDetail(baekjoon.failCount.avg(), baekjoon.passCount.avg(),
 				baekjoon.tryFailCount.avg(),
-				baekjoon.submitCount.avg(), Expressions.numberTemplate(Double.class,
-				"CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(tier, '/', -1), '.', 1) AS double)", baekjoon.tier).avg()))
+				baekjoon.submitCount.avg(), baekjoon.tier.avg()))
 			.from(baekjoon)
 			.innerJoin(baekjoon.user, user)
 			.where(userIdIn(userIdSet))
