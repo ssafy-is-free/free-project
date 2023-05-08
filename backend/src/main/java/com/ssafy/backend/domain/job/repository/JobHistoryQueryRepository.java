@@ -52,7 +52,7 @@ public class JobHistoryQueryRepository {
 		QJobHistory jobHistory = QJobHistory.jobHistory;
 		QJobPosting jobPosting = QJobPosting.jobPosting;
 
-		return Optional.of(
+		return Optional.ofNullable(
 			queryFactory
 				.selectFrom(jobHistory)
 				.leftJoin(jobHistory.jobPosting, jobPosting).fetchJoin()

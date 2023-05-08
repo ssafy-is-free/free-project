@@ -63,7 +63,7 @@ class JobApplyServiceImplTest {
 		//취업 공고 조회.
 		when(jobPostingRepository.findByIdAndIsCloseFalse(1L)).thenReturn(Optional.empty()); // 취업 공고가 없는 경우
 		when(jobPostingRepository.findByIdAndIsCloseFalse(2L)).thenReturn(
-			Optional.of(createJobPosting(2L))); //취업공고가 있는 경우.
+			Optional.ofNullable(createJobPosting(2L))); //취업공고가 있는 경우.
 
 		//then
 		//유저 예외
@@ -157,7 +157,7 @@ class JobApplyServiceImplTest {
 		when(userRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.of(user)); //유저가 있는 경우.
 
 		when(jobHistoryRepository.findByIdAndIsDeletedFalse(1L)).thenReturn(
-			Optional.of(creatJobHistory(user, createJobPosting(1L), "dDayName", 1L))); //공고가 있는 경우
+			Optional.ofNullable(creatJobHistory(user, createJobPosting(1L), "dDayName", 1L))); //공고가 있는 경우
 		when(jobHistoryRepository.findByIdAndIsDeletedFalse(2L)).thenReturn(Optional.empty()); //공고가 없는 경우.
 
 		//then
