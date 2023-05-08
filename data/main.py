@@ -12,6 +12,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ChromeOptions
+from datetime import datetime
 
 app = FastAPI()
 
@@ -335,8 +336,13 @@ def get_postings():
                     continue
                 elif idx == 8:  # 기간
                     day_info = td.text.strip().split('~')
-                    posting['start'] = day_info[0]
-                    posting['end'] = day_info[1]
+                    now = datetime.now()
+                    posting['start'] = f'{now.year}.{day_info[0]}'
+
+                    if (day_info[1].split('.')[0]).isdigit():
+                        posting['end'] = f'{now.year}.{day_info[1]}'
+                    else:
+                        posting['end'] = '1996.11.22'
             else:
                 posting_list.append(posting)
                 continue
