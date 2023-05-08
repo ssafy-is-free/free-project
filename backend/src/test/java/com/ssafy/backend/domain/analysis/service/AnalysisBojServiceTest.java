@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +63,21 @@ public class AnalysisBojServiceTest {
 	}
 
 	@Test
+	@DisplayName("백준 1대1 Null 테스트")
+	public void compareWithOpponentNullTest() {
+		//given
+		User user1 = createUser("user1");
+		User user2 = createUser("user2");
+
+		userRepository.saveAll(Arrays.asList(user1, user2));
+
+		//when
+		BojRankComparisonResponse response = analysisBojService.compareWithOpponent(user1.getId(), user2.getId());
+		//then
+		assertThat(response.checkForNull()).isTrue();
+	}
+
+	@Test
 	@DisplayName("백준 1대1 비교 테스트")
 	public void compareWithOpponentTest() {
 		//given
@@ -97,7 +111,6 @@ public class AnalysisBojServiceTest {
 		//when
 		BojRankComparisonResponse response = analysisBojService.compareWithOpponent(user1.getId(), user2.getId());
 		//then
-		Assertions.assertNotNull(response);
 		assertThat(response.getMy().getBojId()).isEqualTo(user1.getBojId());
 		assertThat(response.getOpponent().getBojId()).isEqualTo(user2.getBojId());
 	}
