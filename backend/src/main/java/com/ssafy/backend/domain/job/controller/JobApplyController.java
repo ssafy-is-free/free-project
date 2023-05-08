@@ -65,12 +65,9 @@ public class JobApplyController {
 		@RequestParam(value = "nextDate", required = false) String nextDate,
 		@RequestParam(value = "jobHistoryId", required = false) Long jobHistoryId,
 		@AuthenticationPrincipal UserPrincipal userPrincipal,
-		Pageable pageable
-	) {
+		Pageable pageable) {
 
-		// long userId = userPrincipal.getId();
-
-		long userId = 2L;
+		long userId = userPrincipal.getId();
 
 		List<JobApplyResponse> jobApplyResponseList = jobApplyService.getJobApplies(userId, statusIdList,
 			nextDate,
@@ -101,8 +98,7 @@ public class JobApplyController {
 		@PathVariable("jobHistoryId") long jobHistoryId,
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
 
-		// long userId = userPrincipal.getId();
-		long userId = 2L;
+		long userId = userPrincipal.getId();
 
 		return responseService.getDataResponse(jobApplyService.getJobApply(userId, jobHistoryId), RESPONSE_SUCCESS);
 
