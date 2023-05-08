@@ -29,6 +29,8 @@ import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
+import com.ssafy.backend.domain.util.service.TierValueFormatter;
+import com.ssafy.backend.global.response.exception.CustomException;
 
 @SpringBootTest
 public class AnalysisBojServiceTest {
@@ -140,14 +142,82 @@ public class AnalysisBojServiceTest {
 		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
 		jobPostingRepository.save(jobPosting1);
 
-		JobHistory jobHistory1 = createJobHistory(user1, jobPosting1);
 		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
 		JobHistory jobHistory3 = createJobHistory(user3, jobPosting1);
-		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3));
+		jobHistoryRepository.saveAll(Arrays.asList(jobHistory2, jobHistory3));
 		//when
-		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user1.getId(), jobPosting1.getId());
+		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user2.getId(), jobPosting1.getId());
 		//then
-		assertThat(response.getMy().getBojId()).isEqualTo(user1.getBojId());
+		assertThat(response.getMy()).extracting("bojId", "tierUrl", "pass", "tryFail", "submit", "fail")
+			.containsExactly("user2", TierValueFormatter.format(15), 278, 5, 700, 193);
+	}
+
+	@Test
+	@DisplayName("백준 공고별 1대 전체 비교 백준 아이디가 null 일때")
+	public void compareWithOtherBojIdNullTest() {
+		//given
+		User user1 = createUser("user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when
+		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user1.getId(), null);
+		// then
+		assertThat(response.checkForNull()).isTrue();
+
+	}
+
+	@Test
+	@DisplayName("백준 공고별 1대 전체 비교 유저 아이디가 null 일때")
+	public void compareWithOtherUserIdNullTest() {
+		//given	//when //then
+		assertThatThrownBy(() -> analysisBojService.compareWithOther(-1, null)).isInstanceOf(CustomException.class);
+
+	}
+
+	@Test
+	@DisplayName("백준 공고별 1대 전체 비교 공고 아이디 없을 때 테스트")
+	public void compareWithOtherJobNullTest() {
+		//given
+
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		BaekjoonLanguage baekjoonLanguage1 = createBaekjoonLanguage(language1.getId(), "30.00", 100, boj1);
+		BaekjoonLanguage baekjoonLanguage2 = createBaekjoonLanguage(language2.getId(), "40.00", 30, boj1);
+		BaekjoonLanguage baekjoonLanguage3 = createBaekjoonLanguage(language3.getId(), "50.00", 17, boj1);
+		BaekjoonLanguage baekjoonLanguage4 = createBaekjoonLanguage(language3.getId(), "30.00", 21, boj2);
+		BaekjoonLanguage baekjoonLanguage5 = createBaekjoonLanguage(language2.getId(), "40.00", 64, boj2);
+		BaekjoonLanguage baekjoonLanguage6 = createBaekjoonLanguage(language1.getId(), "50.00", 23, boj2);
+		BaekjoonLanguage baekjoonLanguage7 = createBaekjoonLanguage(language3.getId(), "20.00", 35, boj3);
+		BaekjoonLanguage baekjoonLanguage8 = createBaekjoonLanguage(language2.getId(), "20.00", 43, boj3);
+		BaekjoonLanguage baekjoonLanguage9 = createBaekjoonLanguage(language1.getId(), "30.00", 78, boj3);
+
+		bojLanguageRepository.saveAll(
+			Arrays.asList(baekjoonLanguage1, baekjoonLanguage2, baekjoonLanguage3, baekjoonLanguage4, baekjoonLanguage5,
+				baekjoonLanguage6, baekjoonLanguage7, baekjoonLanguage8, baekjoonLanguage9));
+
+		//when
+		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user1.getId(), null);
+		//then
+		assertThat(response.getMy()).extracting("bojId", "tierUrl", "pass", "tryFail", "submit", "fail")
+			.containsExactly("user1", TierValueFormatter.format(14), 275, 9, 723, 73);
 	}
 
 	private BaekjoonLanguage createBaekjoonLanguage(long languageId, String passPercentage, int passCount,
@@ -192,6 +262,10 @@ public class AnalysisBojServiceTest {
 
 	private User createUser(String nickname, String bojId) {
 		return User.builder().nickname(nickname).bojId(bojId).image("1").isDeleted(false).build();
+	}
+
+	private User createUser(String nickname) {
+		return User.builder().nickname(nickname).image("1").isDeleted(false).build();
 	}
 
 	private Baekjoon createBaekjoon(User user, int tier, int passCount, int tryFailCount, int submitCount,

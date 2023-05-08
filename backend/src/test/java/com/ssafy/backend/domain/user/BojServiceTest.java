@@ -80,8 +80,25 @@ public class BojServiceTest {
 
 	}
 
+	@Test
+	@DisplayName("백준 ID로 유저 조회 실패")
+	public void testCheckDuplicateId() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when //then
+		assertThatThrownBy(() -> bojService.checkDuplicateId("user1")).isInstanceOf(CustomException.class);
+	}
+
 	private User createUser(String nickname) {
 		return User.builder().nickname(nickname).image("1").isDeleted(false).build();
+	}
+
+	private User createUser(String nickname, String bojId) {
+		return User.builder().nickname(nickname).bojId(bojId).image("1").isDeleted(false).build();
 	}
 
 	private Language createLanguage(String name) {
