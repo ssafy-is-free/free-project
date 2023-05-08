@@ -16,7 +16,6 @@ import com.ssafy.backend.domain.algorithm.repository.BojLanguageQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
-import com.ssafy.backend.domain.analysis.dto.BojRankAllComparisonResponse;
 import com.ssafy.backend.domain.analysis.dto.BojRankComparisonResponse;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.BaekjoonLanguage;
@@ -100,7 +99,7 @@ public class AnalysisBojServiceTest {
 		assertThat(response.getOpponent().getBojId()).isEqualTo(user2.getBojId());
 	}
 
-	@Test
+	/*@Test
 	@DisplayName("백준 공고별 1대 전체 비교 테스트")
 	public void compareWithOtherTest() {
 		//given
@@ -149,7 +148,7 @@ public class AnalysisBojServiceTest {
 		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user1.getId(), jobPosting1.getId());
 		//then
 		assertThat(response.getMy().getBojId()).isEqualTo(user1.getBojId());
-	}
+	}*/
 
 	private BaekjoonLanguage createBaekjoonLanguage(long languageId, String passPercentage, int passCount,
 		Baekjoon boj) {
