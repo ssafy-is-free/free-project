@@ -373,7 +373,7 @@ class AnalysisGithubServiceTest {
 		//then
 		//when //then
 		assertThatThrownBy(() -> analysisGithubService.compareWithAllApplicant(jobPostingId, myUserId)).isInstanceOf(
-			CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus", NOT_FOUND_APPLICANT);
+			CustomException.class).hasFieldOrPropertyWithValue("customExceptionStatus", NOT_APPLY);
 
 	}
 

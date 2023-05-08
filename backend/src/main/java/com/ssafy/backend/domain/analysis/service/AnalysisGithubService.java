@@ -70,11 +70,7 @@ public class AnalysisGithubService {
 		// 특정 공고에 지원한 유저들의 아이디를 얻는다.
 		FilteredUserIdSet filteredUserIdSet = getUserIdByJobPosting(jobPostingId);
 
-		if (filteredUserIdSet == null) {
-			throw new CustomException(CustomExceptionStatus.NOT_FOUND_APPLICANT);
-		}
-
-		if (filteredUserIdSet.isNotIn(myUserId)) {
+		if (filteredUserIdSet == null || filteredUserIdSet.isNotIn(myUserId)) {
 			throw new CustomException(CustomExceptionStatus.NOT_APPLY);
 		}
 
