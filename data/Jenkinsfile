@@ -16,6 +16,15 @@ pipeline {
             }
         }
 
+        stage("Copy Setting File") {
+            steps {
+                script {
+                    sh "pwd"
+                    sh "cp -f env.json ${PROJECT_DIR}"
+                }
+            }
+        }
+
 
         // stage("Node install & build") {
         //     steps {
