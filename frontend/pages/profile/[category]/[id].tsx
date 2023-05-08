@@ -7,8 +7,7 @@ import { useState, useEffect } from 'react';
 import { Spinner } from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
 import { ParsedUrlQuery } from 'querystring';
-import { getBoj, getGithub } from '@/pages/api/profileAxios';
-import { IBojProfile, IGithubProfile } from '@/components/profile/IProfile';
+import CustomNav from '@/components/common/CustomNav';
 
 const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), {
   ssr: false,
@@ -27,28 +26,7 @@ const ProfileInfoDiv = styled.div`
 const Profile = () => {
   const router = useRouter();
   const { category, id } = router.query as IProfileQuery;
-
-  const [githubData, setGithubData] = useState<IGithubProfile>();
-  const [bojData, setBojData] = useState<IBojProfile>();
-  const [headerName, setHeaderName] = useState<string>('');
-  const getGithubData = async () => {
-    const res = await getGithub(id);
-    if (res.data) {
-      setGithubData(res.data);
-      setHeaderName('깃허브');
-    } else {
-      alert(res.message);
-    }
-  };
-  const getBojData = async () => {
-    const res = await getBoj(id);
-    if (res.data) {
-      setBojData(res.data);
-      setHeaderName('백준');
-    } else {
-      alert(res.message);
-    }
-  };
+  const [navIdx, setNavIdx] = useState<number>(3);
 
   const back = () => {
     router.back();
@@ -56,18 +34,25 @@ const Profile = () => {
 
   useEffect(() => {
     if (category === 'github') {
-      getGithubData();
+      setNavIdx(0);
     } else if (category === 'boj') {
-      getBojData();
+      setNavIdx(1);
     }
   }, [category, id]);
 
   return (
     <div>
-      <ProfileHeader back={back} name={headerName}></ProfileHeader>
+      <ProfileHeader back={back}></ProfileHeader>
+      <CustomNav
+        lists={['깃허브', '백준']}
+        defaultIdx={navIdx}
+        selectIdx={(idx) => {
+          setNavIdx(idx);
+        }}
+      ></CustomNav>
       <ProfileInfoDiv>
-        {githubData && <GithubInfo githubData={githubData}></GithubInfo>}
-        {bojData && <BojInfo bojData={bojData}></BojInfo>}
+        {navIdx === 0 && <GithubInfo userId={id}></GithubInfo>}
+        {navIdx === 1 && <BojInfo userId={id}></BojInfo>}
       </ProfileInfoDiv>
     </div>
   );
