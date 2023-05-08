@@ -2,7 +2,7 @@ package com.ssafy.backend.domain.entity;
 
 import static javax.persistence.GenerationType.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,11 +40,12 @@ public class JobPosting extends BaseTimeEntity {
 	private String name;
 
 	@Column(name = "start_time", nullable = false)
-	private LocalDateTime startTime;
+	private LocalDate startTime;
 
 	@Column(name = "end_time", nullable = false)
-	private LocalDateTime endTime;
+	private LocalDate endTime;
 
 	@Column(name = "is_close", nullable = false)
 	private boolean isClose;
+
 }

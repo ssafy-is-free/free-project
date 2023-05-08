@@ -22,7 +22,8 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	private long id;
 
 	private String nickname;
-	private boolean isNew;
+	private boolean isNew; //신규가입자 유무
+	private boolean isBoj; //백준 등록 유무
 
 	public static UserPrincipal createUserDetails(User user) {
 
@@ -90,5 +91,9 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
 	public boolean isNew() {
 		return this.isNew;
+	}
+
+	public void setBojStatus(boolean status) {
+		this.isBoj = true;
 	}
 }
