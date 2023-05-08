@@ -10,21 +10,22 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class FilteredGithubIdSet {
-	Set<Long> githubIds;
+    Set<Long> githubIds;
 
-	public static FilteredGithubIdSet create(Set<Long> githubIds) {
-		return FilteredGithubIdSet.builder().githubIds(githubIds).build();
-	}
+    public static FilteredGithubIdSet create(Set<Long> githubIds) {
+        return FilteredGithubIdSet.builder().githubIds(githubIds).build();
+    }
 
-	public boolean isEmpty() {
-		return this.githubIds.isEmpty();
-	}
+    public boolean isEmpty() {
+        return this.githubIds.isEmpty();
+    }
 
-	public boolean isNotIn(long userId) {
-		return !(this.githubIds.contains(userId));
-	}
+    public boolean isNotIn(long userId) {
+        return !(this.githubIds.contains(userId));
+    }
 
-	public int getSize() {
-		return this.githubIds.size();
-	}
+    public int getSize() {
+        return this.githubIds.size();
+    }
+
 }

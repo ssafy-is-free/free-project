@@ -10,12 +10,12 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class GitHubRankingFilter {
-	private Long languageId;
+    private Long languageId;
 
-	private Long jobPostingId;
+    private Long jobPostingId;
 
-	public boolean isNull() {
-		return languageId == null;
-	}
+    public boolean isNull() {
+        return languageId == null && jobPostingId == null;
+    }
 
 }

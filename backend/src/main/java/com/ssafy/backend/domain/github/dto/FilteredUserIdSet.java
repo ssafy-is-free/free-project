@@ -15,24 +15,29 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class FilteredUserIdSet {
-	Set<Long> userIds;
+    Set<Long> userIds;
 
-	public static FilteredUserIdSet create(List<JobHistory> jobHistoryList) {
-		Set<Long> userIds = jobHistoryList.stream().map(j -> j.getUser().getId()).collect(Collectors.toSet());
+    public static FilteredUserIdSet create(List<JobHistory> jobHistoryList) {
+        Set<Long> userIds = jobHistoryList.stream().map(j -> j.getUser().getId()).collect(Collectors.toSet());
 
-		return FilteredUserIdSet.builder().userIds(userIds).build();
-	}
+        return FilteredUserIdSet.builder().userIds(userIds).build();
+    }
 
-	public boolean isEmpty() {
-		return this.userIds.isEmpty();
-	}
+    public static FilteredUserIdSet create(Set<Long> userIds) {
+        return FilteredUserIdSet.builder().userIds(userIds).build();
+    }
 
-	public boolean isNull() {
-		return this.userIds == null;
-	}
 
-	public boolean isNotIn(long userId) {
-		return !(this.userIds.contains(userId));
-	}
+    public boolean isEmpty() {
+        return this.userIds.isEmpty();
+    }
+
+    public boolean isNull() {
+        return this.userIds == null;
+    }
+
+    public boolean isNotIn(long userId) {
+        return !(this.userIds.contains(userId));
+    }
 
 }
