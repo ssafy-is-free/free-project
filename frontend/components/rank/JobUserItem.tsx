@@ -41,6 +41,7 @@ const Wrapper = styled.div`
       width: 50%;
       display: flex;
       align-items: center;
+      text-overflow: ellipsis;
 
       .user-tier {
         width: 24px;

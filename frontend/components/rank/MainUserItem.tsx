@@ -60,15 +60,23 @@ const Wrapper = styled.div<{ rankupdown: number }>`
       /* background-color: white; */
     }
     .user-nickname {
-      width: 50%;
+      width: 70%;
       display: flex;
       align-items: center;
 
-      .user-tier {
-        width: 24px;
-        height: 24px;
-        /* border-radius: 50%; */
-        margin-left: 8px;
+      .name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .tier {
+        .user-tier {
+          width: 24px;
+          height: 24px;
+          /* border-radius: 50%; */
+          margin-left: 8px;
+        }
       }
     }
   }
@@ -141,8 +149,12 @@ const MainUserItem = (props: IMainUserItemProps) => {
       <div className="center">
         <img src={props.item.avatarUrl} className="user-photo" />
         <div className="user-nickname">
-          {props.item.nickname}
-          {props.curRank == 1 && <img src={props.item.tierUrl} className="user-tier" />}
+          <div className="name">{props.item?.nickname} </div>
+          {props.curRank == 1 && (
+            <div className="tier">
+              <img src={props.item?.tierUrl} className="user-tier" />
+            </div>
+          )}
         </div>
       </div>
       <div className="user-score">{props.item.score}</div>
