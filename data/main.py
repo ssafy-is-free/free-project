@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ChromeOptions
 from datetime import datetime
+import json
 
 app = FastAPI()
 
@@ -29,6 +30,12 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/58.0.3029.110 Safari/537.3"
 }
+
+# 대용량 업데이트 시 필요한 정보
+personal_token = ""
+with open("env.json", "r", encoding='utf-8') as file:
+    data = json.load(file)
+    personal_token = data['token']
 
 
 async def get_response(url):
@@ -218,8 +225,7 @@ def read_github(token):
 
 @app.get("/data/github/update/{nickname}")
 def update_github(nickname):
-    token = ''
-    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {personal_token}'}
     user_res = requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
     user_res = user_res.json()['items'][0]
 
