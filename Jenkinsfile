@@ -120,6 +120,10 @@ pipeline {
         stage("DATA image build&push"){
             //이미지 빌드
             steps{
+                //설정파일 카피
+                script{
+                    sh "cp -r -f env.json ${PROJECT_DIR_DATA}"
+                }
                 dir("${PROJECT_DIR_DATA}"){
                     script {
                         // image = docker.build("${IMAGE_NAME_DATA}"){
