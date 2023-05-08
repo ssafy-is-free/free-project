@@ -6,6 +6,7 @@ import net.minidev.json.annotate.JsonIgnore;
 
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.util.service.TierValueFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +43,7 @@ public class BojInfoDetailResponse {
 		List<BojLanguageResponse> languageDTOList) {
 		return BojInfoDetailResponse.builder()
 			.bojId(user.getBojId())
-			.tierUrl(baekjoon.getTier())
+			.tierUrl(TierValueFormatter.format(baekjoon.getTier()))
 			.pass(baekjoon.getPassCount())
 			.tryFail(baekjoon.getTryFailCount())
 			.submit(baekjoon.getSubmitCount())

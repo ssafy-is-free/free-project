@@ -41,6 +41,8 @@ public class GithubCrawlingService {
 	private final LanguageRepository languageRepository;
 
 	private final GithubRepository githubRepository;
+	private final GithubLanguageRepository githubLanguageRepository;
+	private final GithubRepoRepository githubRepoRepository;
 
 	private final WebClient webClient;
 
@@ -123,6 +125,8 @@ public class GithubCrawlingService {
 			// TODO: 2023-04-24 save 횟수 및 쿼리 횟수 줄이기
 			githubCrawling.getRepositories().stream().map(
 				g -> GithubRepo.create(g.getName(), g.getReadme(), g.getLink(), github)
+			).forEach(
+				g -> githubRepoRepository.save(g)
 			);
 
 			// TODO: 2023-04-24 save 횟수 및 쿼리 횟수 줄이기
@@ -137,6 +141,8 @@ public class GithubCrawlingService {
 						);
 					return GithubLanguage.create(findLanguage.getId(), l.getPercentage(), github);
 				}
+			).forEach(
+				l -> githubLanguageRepository.save(l)
 			);
 		}
 	}

@@ -16,6 +16,7 @@ import com.ssafy.backend.domain.algorithm.repository.BojLanguageQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
+import com.ssafy.backend.domain.analysis.dto.BojRankAllComparisonResponse;
 import com.ssafy.backend.domain.analysis.dto.BojRankComparisonResponse;
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.BaekjoonLanguage;
@@ -69,9 +70,9 @@ public class AnalysisBojServiceTest {
 
 		userRepository.saveAll(Arrays.asList(user1, user2));
 
-		Baekjoon boj1 = createBaekjoon(user1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73,
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
 			100);
-		Baekjoon boj2 = createBaekjoon(user2, "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700,
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
 			193, 200);
 		bojRepository.saveAll(Arrays.asList(boj1, boj2));
 
@@ -99,10 +100,9 @@ public class AnalysisBojServiceTest {
 		assertThat(response.getOpponent().getBojId()).isEqualTo(user2.getBojId());
 	}
 
-	/*@Test
+	@Test
 	@DisplayName("백준 공고별 1대 전체 비교 테스트")
 	public void compareWithOtherTest() {
-		//given
 		//given
 
 		User user1 = createUser("user1", "user1");
@@ -110,11 +110,11 @@ public class AnalysisBojServiceTest {
 		User user3 = createUser("user3", "user3");
 		userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
-		Baekjoon boj1 = createBaekjoon(user1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73,
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
 			100);
-		Baekjoon boj2 = createBaekjoon(user2, "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700,
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
 			193, 200);
-		Baekjoon boj3 = createBaekjoon(user3, "https://d2gd6pc034wcta.cloudfront.net/tier/13.svg", 280, 12, 623,
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
 			173, 300);
 		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
 
@@ -148,7 +148,7 @@ public class AnalysisBojServiceTest {
 		BojRankAllComparisonResponse response = analysisBojService.compareWithOther(user1.getId(), jobPosting1.getId());
 		//then
 		assertThat(response.getMy().getBojId()).isEqualTo(user1.getBojId());
-	}*/
+	}
 
 	private BaekjoonLanguage createBaekjoonLanguage(long languageId, String passPercentage, int passCount,
 		Baekjoon boj) {
@@ -194,7 +194,7 @@ public class AnalysisBojServiceTest {
 		return User.builder().nickname(nickname).bojId(bojId).image("1").isDeleted(false).build();
 	}
 
-	private Baekjoon createBaekjoon(User user, String tier, int passCount, int tryFailCount, int submitCount,
+	private Baekjoon createBaekjoon(User user, int tier, int passCount, int tryFailCount, int submitCount,
 		int failCount, int score) {
 		return Baekjoon.builder()
 			.user(user)

@@ -67,11 +67,11 @@ public class AlgorithmServiceTest {
 		User user3 = createUser("user3", "user3");
 		userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
-		Baekjoon boj1 = createBaekjoon(user1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73,
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
 			100);
-		Baekjoon boj2 = createBaekjoon(user2, "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700,
+		Baekjoon boj2 = createBaekjoon(user2, 16, 278, 5, 700,
 			193, 200);
-		Baekjoon boj3 = createBaekjoon(user3, "https://d2gd6pc034wcta.cloudfront.net/tier/13.svg", 280, 12, 623,
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
 			173, 300);
 		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
 
@@ -141,11 +141,11 @@ public class AlgorithmServiceTest {
 		User user3 = createUser("user3", "user3");
 		userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
-		Baekjoon boj1 = createBaekjoon(user1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73,
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
 			100);
-		Baekjoon boj2 = createBaekjoon(user2, "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700,
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
 			193, 200);
-		Baekjoon boj3 = createBaekjoon(user3, "https://d2gd6pc034wcta.cloudfront.net/tier/13.svg", 280, 12, 623,
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
 			173, 300);
 		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
 
@@ -209,7 +209,7 @@ public class AlgorithmServiceTest {
 		return User.builder().nickname(nickname).bojId(bojId).image("1").isDeleted(false).build();
 	}
 
-	private Baekjoon createBaekjoon(User user, String tier, int passCount, int tryFailCount, int submitCount,
+	private Baekjoon createBaekjoon(User user, int tier, int passCount, int tryFailCount, int submitCount,
 		int failCount, int score) {
 		return Baekjoon.builder()
 			.user(user)

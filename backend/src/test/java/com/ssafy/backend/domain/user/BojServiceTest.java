@@ -11,7 +11,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
@@ -36,8 +35,6 @@ public class BojServiceTest {
 	private BojLanguageRepository bojLanguageRepository;
 	@Autowired
 	private BojService bojService;
-	@Autowired
-	private WebClient webClient;
 
 	@AfterEach
 	void tearDown() {
@@ -45,13 +42,13 @@ public class BojServiceTest {
 		bojLanguageRepository.deleteAllInBatch();
 		bojRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
-		webClient.delete();
 	}
 
 	@Test
 	@DisplayName("백준 아이디를 저장했을 때 크롤링하는 테스트")
 	public void testSaveBojIdSuccess() {
 		//given
+
 		User user = createUser("user1");
 		userRepository.save(user);
 		Language language1 = createLanguage("Java 11");

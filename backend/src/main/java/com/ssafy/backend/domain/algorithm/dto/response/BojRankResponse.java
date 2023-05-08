@@ -9,6 +9,7 @@ import net.minidev.json.annotate.JsonIgnore;
 
 import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.User;
+import com.ssafy.backend.domain.util.service.TierValueFormatter;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,7 +52,7 @@ public class BojRankResponse {
 				.score(baekjoon.getScore())
 				.avatarUrl(user.getImage())
 				.rankUpDown(0L)
-				.tierUrl(baekjoon.getTier())
+				.tierUrl(TierValueFormatter.format(baekjoon.getTier()))
 				.build();
 		} else {
 			return BojRankResponse.builder()
@@ -61,7 +62,7 @@ public class BojRankResponse {
 				.score(baekjoon.getScore())
 				.avatarUrl(user.getImage())
 				.rankUpDown(baekjoon.getPreviousRank() - rank)
-				.tierUrl(baekjoon.getTier())
+				.tierUrl(TierValueFormatter.format(baekjoon.getTier()))
 				.build();
 		}
 	}
@@ -85,7 +86,7 @@ public class BojRankResponse {
 			.score(returnScore)
 			.avatarUrl(baekjoon.getUser().getImage())
 			.rankUpDown(rankUpdate)
-			.tierUrl(baekjoon.getTier())
+			.tierUrl(TierValueFormatter.format(baekjoon.getTier()))
 			.build();
 	}
 
