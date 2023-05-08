@@ -6,8 +6,13 @@ import JobUserItem from '@/components/rank/JobUserItem';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import MainOtherItem from '@/components/rank/MainOtherItem';
 import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
-import { getBojRanking, getGithubRanking, getMyGitRanking, getPostingsAllUsers } from './api/jobRankAxios';
-import Chart from 'react-apexcharts';
+import {
+  getBojRanking,
+  getGithubRanking,
+  getMyBojRanking,
+  getMyGitRanking,
+  getPostingsAllUsers,
+} from './api/jobRankAxios';
 import CommitIcon from '../public/Icon/CommitIcon.svg';
 import RepoIcon from '../public/Icon/RepoIcon.svg';
 import StarIcon from '../public/Icon/StarIcon.svg';
@@ -174,6 +179,27 @@ const Wrapper = styled.div<{ info: number }>`
       font-size: 16px;
       color: ${(props) => props.theme.fontBlack};
     }
+
+    .info-box2 {
+      position: relative;
+
+      .top-language {
+        position: absolute;
+        top: 130px;
+        left: 130px;
+
+        .top-name {
+          color: #ff7f7f;
+          font-weight: bold;
+          font-size: 20px;
+        }
+
+        .top-percent {
+          color: ${(props) => props.theme.fontDarkGray};
+          font-size: 14px;
+        }
+      }
+    }
   }
 
   .btn-box {
@@ -248,16 +274,11 @@ const JobRank = () => {
   const [series, setSeries] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
   const options = {
-    chart: {
-      id: 'apexchart-example',
-      // width: '80%',
-    },
-    labels: labels,
-    legend: {
-      show: false,
-    },
-    tooltip: {
-      enabled: true,
+    plugins: {
+      legend: {
+        display: false,
+        // position: 'bottom',
+      },
     },
   };
 
@@ -298,6 +319,11 @@ const JobRank = () => {
       })();
 
       // 내 백준 정보 불러오기
+      (async () => {
+        let data = await getMyBojRanking(jobPostingIdParam);
+
+        setUserRankInfo(data);
+      })();
     }
 
     // 전체 사용자 정보 가져오기
@@ -375,8 +401,13 @@ const JobRank = () => {
                 </div>
               </div>
               <div className="label">Languages</div>
-              {/* <Chart options={options} series={series} type="donut" /> */}
-              <Doughnut data={data} />
+              <div className="info-box2">
+                <Doughnut data={data} options={options} />
+                <div className="top-language">
+                  <p className="top-name">{labels[0]}</p>
+                  <p className="top-percent">{series[0]} %</p>
+                </div>
+              </div>
             </div>
           )}
           <div className="space"></div>

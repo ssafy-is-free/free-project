@@ -98,3 +98,21 @@ export const getMyGitRanking = async (jobPostingIdParam: number) => {
 
   return data.data.githubRankingCover;
 };
+
+/**
+ * 내 백준 랭킹 조회 api
+ * @param jobPostingId 채용 공고 아이디
+ * @returns
+ */
+export const getMyBojRanking = async (jobPostingIdParam: number) => {
+  const params = {
+    jobPostingId: jobPostingIdParam,
+  };
+  const { data } = await authApi({
+    method: 'get',
+    url: '/boj/my-rank',
+    params: params,
+  });
+
+  return data.data;
+};
