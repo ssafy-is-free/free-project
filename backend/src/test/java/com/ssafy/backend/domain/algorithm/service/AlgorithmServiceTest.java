@@ -1,10 +1,10 @@
 package com.ssafy.backend.domain.algorithm.service;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
@@ -25,11 +26,12 @@ import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
+import com.ssafy.backend.domain.user.dto.NicknameListResponse;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 
 @SpringBootTest
-public class BojMyRankServiceTest {
+public class AlgorithmServiceTest {
 	@Autowired
 	private BojRepository bojRepository;
 	@Autowired
@@ -56,9 +58,10 @@ public class BojMyRankServiceTest {
 	}
 
 	@Test
-	@DisplayName("유저 아이디를 기반으로 해당 유저의 랭킹 정보를 반환하는 테스트")
+	@DisplayName("유저 아이디와 언어, 공고를 기반으로 해당 유저의 랭킹 정보를 반환하는 테스트")
 	public void testGetBojByUserId() {
 		//given
+
 		User user1 = createUser("user1", "user1");
 		User user2 = createUser("user2", "user2");
 		User user3 = createUser("user3", "user3");
@@ -72,9 +75,9 @@ public class BojMyRankServiceTest {
 			173, 300);
 		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
 
-		Language language1 = createLauguage("Java 11");
-		Language language2 = createLauguage("C++17");
-		Language language3 = createLauguage("Python3");
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
 		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
 
 		BaekjoonLanguage baekjoonLanguage = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj1);
@@ -93,7 +96,72 @@ public class BojMyRankServiceTest {
 
 		//then
 		Assertions.assertNotNull(response);
-		assertThat(response.getUserId()).isEqualTo(1);
+		assertThat(response.getUserId()).isEqualTo(user1.getId());
+
+	}
+
+	@Test
+	@DisplayName("유저 백준 닉네임 중복 확인하는 테스트")
+	public void testGetBojListByBojIdDistinct() {
+		//given
+		User user1 = createUser("user1", "백1");
+		User user2 = createUser("user2", "백2");
+		User user3 = createUser("user3", "백3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when
+		List<NicknameListResponse> response = algorithmService.getBojListByBojId("백");
+
+		//then
+		assertThat(response).hasSize(3);
+	}
+
+	@Test
+	@DisplayName("유저 백준 닉네임 중간 닉네임 테스트")
+	public void testGetBojListByBojId() {
+		//given
+		User user1 = createUser("user1", "백1");
+		User user2 = createUser("user2", "백2");
+		User user3 = createUser("user3", "백3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when
+		List<NicknameListResponse> response = algorithmService.getBojListByBojId("1");
+
+		//then
+		assertThat(response).hasSize(1).extracting(NicknameListResponse::getNickname).containsExactly("백1");
+	}
+
+	@Test
+	@DisplayName("백준 상세정보 테스트")
+	public void testGetBojInfoDetailByUserId() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, "https://d2gd6pc034wcta.cloudfront.net/tier/13.svg", 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		BaekjoonLanguage baekjoonLanguage = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj1);
+		bojLanguageRepository.save(baekjoonLanguage);
+
+		//when
+		BojInfoDetailResponse response = algorithmService.getBojInfoDetailByUserId(user1.getId());
+
+		//then
+		assertThat(response.getBojId()).isEqualTo(user1.getBojId());
 
 	}
 
@@ -123,14 +191,14 @@ public class BojMyRankServiceTest {
 		return JobPosting.builder()
 			.companyName(companyName)
 			.name(name)
-			.startTime(LocalDateTime.now())
-			.endTime(LocalDateTime.now())
+			.startTime(LocalDate.now())
+			.endTime(LocalDate.now())
 			.isClose(false)
 			.build();
 
 	}
 
-	private Language createLauguage(String name) {
+	private Language createLanguage(String name) {
 		return Language.builder()
 			.name(name)
 			.type(LanguageType.BAEKJOON)
@@ -145,12 +213,12 @@ public class BojMyRankServiceTest {
 		int failCount, int score) {
 		return Baekjoon.builder()
 			.user(user)
-			.tier("https://d2gd6pc034wcta.cloudfront.net/tier/14.svg")
-			.passCount(275)
-			.tryFailCount(9)
-			.submitCount(724)
-			.failCount(173)
-			.score(100)
+			.tier(tier)
+			.passCount(passCount)
+			.tryFailCount(tryFailCount)
+			.submitCount(submitCount)
+			.failCount(failCount)
+			.score(score)
 			.build();
 	}
 }

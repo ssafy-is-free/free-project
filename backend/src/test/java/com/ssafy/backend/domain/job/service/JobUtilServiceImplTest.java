@@ -2,6 +2,7 @@ package com.ssafy.backend.domain.job.service;
 
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +42,7 @@ class JobUtilServiceImplTest {
 	@DisplayName("취업 공고 조회")
 	public void getJobPosting() {
 
-		LocalDateTime testTime = LocalDateTime.now();
+		LocalDate testTime = LocalDate.now();
 
 		List<JobPosting> jobPostingListNull = new ArrayList<>();
 		jobPostingListNull.add(

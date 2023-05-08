@@ -3,7 +3,7 @@ package com.ssafy.backend.domain.analysis.dto.response;
 import java.util.List;
 
 import com.querydsl.core.annotations.QueryProjection;
-import com.ssafy.backend.domain.analysis.dto.LanguageDetailResponse;
+import com.ssafy.backend.domain.analysis.dto.LanguageInfo;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.GithubDetailLanguage;
 
@@ -20,16 +20,16 @@ public class GithubVsInfo {
 	double commit;
 	double star;
 	double repositories;
-	LanguageDetailResponse languages;
+	LanguageInfo languages;
 
-	public static GithubVsInfo create(Github github, List<GithubDetailLanguage> languages) {
+	public static GithubVsInfo create(Github github, List<GithubDetailLanguage> languages, long countRepo) {
 		return GithubVsInfo.builder()
 			.nickname(github.getUser().getNickname())
 			.avatarUrl(github.getUser().getImage())
 			.commit(github.getCommitTotalCount())
 			.star(github.getStarTotalCount())
-			.repositories(github.countRepos())
-			.languages(LanguageDetailResponse.create(languages))
+			.repositories(countRepo)
+			.languages(LanguageInfo.create(languages))
 			.build();
 	}
 
@@ -40,7 +40,7 @@ public class GithubVsInfo {
 	}
 
 	public void updateLanguages(List<GithubDetailLanguage> languages) {
-		this.languages = LanguageDetailResponse.create(languages);
+		this.languages = LanguageInfo.create(languages);
 	}
 
 	public void updateRepositories(double repositories) {
