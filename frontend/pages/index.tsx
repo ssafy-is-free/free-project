@@ -95,7 +95,7 @@ const Wrapper = styled.div<{ searchClick: boolean }>`
 
         .space {
           border-radius: 8px;
-          height: 100px;
+          height: 130px;
           padding: 0px 14px;
           width: 100%;
         }
