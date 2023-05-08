@@ -1,4 +1,4 @@
-import { login } from '@/redux/authSlice';
+import { login, setNew } from '@/redux/authSlice';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -10,11 +10,18 @@ const Redirect = () => {
   useEffect(() => {
     const queryParams = new URLSearchParams(document.location.search);
     const accessToken = queryParams.get('token');
+    const isBoj = queryParams.get('isBoj');
+
+    if (isBoj == 'false') {
+      // 백준 계정 X
+      dispatch(setNew());
+    }
 
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       dispatch(login());
-      router.push('/loginLoading');
+      router.push('/');
+      // router.push('/loginLoading');
     }
 
     // 첫 회원인지?
