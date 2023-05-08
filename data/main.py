@@ -224,9 +224,9 @@ def read_github(token):
 
 
 @app.get("/data/github/update/{nickname}")
-async def update_github(nickname):
+def update_github(nickname):
     github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {personal_token}'}
-    user_res = await userAPI(github_headers, nickname)
+    user_res = requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
     user_res = user_res.json()['items'][0]
 
     # 닉네임
@@ -239,16 +239,17 @@ async def update_github(nickname):
     avatarUrl = user_res['avatar_url']
 
     # 커밋 수
-    commits_res = await commitAPI(github_headers, nickname)
+    commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                        headers=github_headers)
     commit = commits_res.json()['total_count']
 
     # 팔로워 수
-    followers_res = await followerAPI(github_headers, nickname)
+    followers_res = requests.get(f'https://api.github.com/users/{nickname}/followers', headers=github_headers)
     followers_res = followers_res.json()
     followers = len(followers_res)
 
     # 레포
-    repos_res = await repoAPI(github_headers, nickname)
+    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
     repos_res = repos_res.json()
 
     repo_list = []
@@ -277,23 +278,6 @@ async def update_github(nickname):
     result['star'] = star
     result = getLanguage(nickname, result)
     return result
-
-
-async def repoAPI(github_headers, nickname):
-    return requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
-
-
-async def followerAPI(github_headers, nickname):
-    return requests.get(f'https://api.github.com/users/{nickname}/followers', headers=github_headers)
-
-
-async def commitAPI(github_headers, nickname):
-    return requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
-                        headers=github_headers)
-
-
-async def userAPI(github_headers, nickname):
-    return requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
 
 
 @app.get("/data/postings")
