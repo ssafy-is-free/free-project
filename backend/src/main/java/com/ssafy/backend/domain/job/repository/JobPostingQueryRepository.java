@@ -33,7 +33,8 @@ public class JobPostingQueryRepository {
 
 		if (!StringUtils.hasText(keyword))
 			return null;
-		
-		return QJobPosting.jobPosting.name.contains(keyword);
+
+		return QJobPosting.jobPosting.name.contains(keyword)
+			.or(QJobPosting.jobPosting.companyName.contains(keyword));
 	}
 }
