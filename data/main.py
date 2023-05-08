@@ -12,6 +12,8 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ChromeOptions
+from datetime import datetime
+import json
 
 app = FastAPI()
 
@@ -28,6 +30,12 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                   "Chrome/58.0.3029.110 Safari/537.3"
 }
+
+# 대용량 업데이트 시 필요한 정보
+personal_token = ""
+with open("env.json", "r", encoding='utf-8') as file:
+    data = json.load(file)
+    personal_token = data['token']
 
 
 async def get_response(url):
@@ -180,11 +188,11 @@ def read_github(token):
 
     # 커밋 수
     commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
-                               headers=headers)
+                               headers=github_headers)
     commit = commits_res.json()['total_count']
 
     # 레포지토리 정보
-    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=headers)
+    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
     repos_res = repos_res.json()
 
     repo_list = []
@@ -213,6 +221,79 @@ def read_github(token):
     result['star'] = star
     result = getLanguage(nickname, result)
     return result
+
+
+@app.get("/data/github/update/{nickname}")
+async def update_github(nickname):
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {personal_token}'}
+    user_res = await userAPI(github_headers, nickname)
+    user_res = user_res.json()['items'][0]
+
+    # 닉네임
+    nickname = user_res['login']
+
+    # 깃허브 링크
+    profileLink = user_res['html_url']
+
+    # 프로필 이미지
+    avatarUrl = user_res['avatar_url']
+
+    # 커밋 수
+    commits_res = await commitAPI(github_headers, nickname)
+    commit = commits_res.json()['total_count']
+
+    # 팔로워 수
+    followers_res = await followerAPI(github_headers, nickname)
+    followers_res = followers_res.json()
+    followers = len(followers_res)
+
+    # 레포
+    repos_res = await repoAPI(github_headers, nickname)
+    repos_res = repos_res.json()
+
+    repo_list = []
+    star = 0
+    for repo in repos_res['items']:
+        # 레포 정보
+        name = repo['name']
+        link = repo['url']
+
+        dto = dict()
+        dto['name'] = name
+        dto['link'] = link
+        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+        repo_list.append(dto)
+
+        # 스타 수 합치기
+        star += repo['stargazers_count']
+
+    result = dict()
+    result['nickname'] = nickname
+    result['profileLink'] = profileLink
+    result['avatarUrl'] = avatarUrl
+    result['followers'] = followers
+    result['commit'] = commit
+    result['repositories'] = repo_list
+    result['star'] = star
+    result = getLanguage(nickname, result)
+    return result
+
+
+async def repoAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
+
+
+async def followerAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/users/{nickname}/followers', headers=github_headers)
+
+
+async def commitAPI(github_headers, nickname):
+    return requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                        headers=github_headers)
+
+
+async def userAPI(github_headers, nickname):
+    return requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
 
 
 @app.get("/data/postings")
@@ -277,11 +358,14 @@ def get_postings():
                 elif idx == 6:  # 경력, 학력무관
                     continue
                 elif idx == 8:  # 기간
-                    period = dict()
                     day_info = td.text.strip().split('~')
-                    period['start'] = day_info[0]
-                    period['end'] = day_info[1]
-                    posting['period'] = period
+                    now = datetime.now()
+                    posting['start'] = f'{now.year}.{day_info[0]}'
+
+                    if (day_info[1].split('.')[0]).isdigit():
+                        posting['end'] = f'{now.year}.{day_info[1]}'
+                    else:
+                        posting['end'] = '1996.11.22'
             else:
                 posting_list.append(posting)
                 continue
