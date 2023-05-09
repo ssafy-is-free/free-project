@@ -20,7 +20,8 @@ export interface IGithubProfile {
   commit: number;
   star: number;
   followers: number;
-  repositories: IRepository[];
+  mine: boolean;
+  repositories: IRepository[] | null;
   languages: {
     name: string;
     percentage: string;
