@@ -1,6 +1,7 @@
 package com.ssafy.backend.domain.github.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.JobHistory;
 import com.ssafy.backend.domain.entity.JobPosting;
+import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
@@ -22,6 +24,7 @@ import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.github.repository.querydsl.GithubQueryRepository;
 import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
+import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
 import com.ssafy.backend.global.response.exception.CustomExceptionStatus;
 
@@ -38,6 +41,7 @@ public class GithubRankingService {
 	private final GithubQueryRepository githubQueryRepository;
 	private final GithubLanguageRepository githubLanguageRepository;
 	private final GithubRepository githubRepository;
+	private final UserRepository userRepository;
 
 	public GithubRankingResponse getGithubRank(Long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
 		Pageable pageable) {
@@ -104,10 +108,15 @@ public class GithubRankingService {
 	}
 
 	public GithubRankingOneResponse getGithubRankOne(long userId, GitHubRankingFilter rankingFilter) {
+		// 삭제된 유저인지 판단
+		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
+		if (!findUser.isPresent()) {
+			return GithubRankingOneResponse.createEmpty();
+		}
+
 		// 깃허브 불러오기
 		Github github = githubRepository.findByUserId(userId)
-				.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
-
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
 
 		// 필터에 걸리는 깃허브 아이디들을 불러온다.
 		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
@@ -118,10 +127,9 @@ public class GithubRankingService {
 		}
 
 		//필터링된 깃허브에 해당 유저가 없는 경우
-		if (githubIdSet!=null&&githubIdSet.isNotIn(github.getId())){
+		if (githubIdSet != null && githubIdSet.isNotIn(github.getId())) {
 			return GithubRankingOneResponse.createEmpty();
 		}
-
 
 		// 필터에 걸리는 유저 아이디들을 불러온다.
 		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
@@ -132,10 +140,9 @@ public class GithubRankingService {
 		}
 
 		//필터링된 유저 아이디에 해당 유저가 없는 경우
-		if (userIdSet!=null&&userIdSet.isNotIn(userId)){
+		if (userIdSet != null && userIdSet.isNotIn(userId)) {
 			return GithubRankingOneResponse.createEmpty();
 		}
-
 
 		// 랭킹 계산
 		Long rank;
