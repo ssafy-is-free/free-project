@@ -24,7 +24,6 @@ import com.ssafy.backend.domain.github.dto.GithubRankingOneResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.dto.OpenRequest;
 import com.ssafy.backend.domain.github.dto.ReadmeResponse;
-import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.github.service.GithubRankingService;
 import com.ssafy.backend.domain.github.service.GithubService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
@@ -46,7 +45,6 @@ public class GithubController {
 	private final ResponseService responseService;
 	private final GithubService githubService;
 	private final GithubRankingService githubRankingService;
-	private final GithubCrawlingService crawlingService;
 
 	//깃허브 랭킹
 	@GetMapping("/ranks")
@@ -70,8 +68,10 @@ public class GithubController {
 	@GetMapping(value = {"/users/{userId}", "/users"})
 	public DataResponse<GithubDetailResponse> getGithubDetails(@PathVariable(required = false) Long userId,
 		@AuthenticationPrincipal UserPrincipal userPrincipal) {
-		userId = userId != null ? userId : userPrincipal.getId();
-		GithubDetailResponse details = githubService.getDetails(userId);
+		long myUserId = userPrincipal != null ? userPrincipal.getId() : 0;
+		userId = userId != null ? userId : myUserId;
+
+		GithubDetailResponse details = githubService.getDetails(userId, userId == myUserId);
 		return responseService.getDataResponse(details, RESPONSE_SUCCESS);
 
 	}
