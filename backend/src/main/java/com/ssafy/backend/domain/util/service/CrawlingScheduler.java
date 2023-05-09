@@ -11,7 +11,6 @@ import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
-import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.job.service.JobCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.user.service.BojService;

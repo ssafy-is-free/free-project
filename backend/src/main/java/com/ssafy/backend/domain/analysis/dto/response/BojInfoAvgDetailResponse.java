@@ -31,10 +31,6 @@ public class BojInfoAvgDetailResponse {
 			(this.languages == null || this.languages.isEmpty());
 	}
 
-	public static BojInfoAvgDetailResponse createEmpty() {
-		return BojInfoAvgDetailResponse.builder().build();
-	}
-
 	public static BojInfoAvgDetailResponse create(BojAvgDetail bojAvgDetail,
 		List<BojLanguageResponse> languages) {
 		return BojInfoAvgDetailResponse.builder()
