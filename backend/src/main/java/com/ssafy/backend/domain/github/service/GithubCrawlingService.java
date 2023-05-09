@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.github.service;
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +57,11 @@ public class GithubCrawlingService {
 			.retrieve()
 			.bodyToMono(CGithubDTO.class)
 			.block();
+
+		// 토큰에 해당하는 깃허브 유저 정보가 없는경우
+		if (githubCrawling.getNickname().equals("")) {
+			throw new CustomException(NOT_FOUND_GITHUB);
+		}
 
 		Optional<Github> githubOptional = githubRepository.findByUserId(findUser.getId());
 		if (githubOptional.isPresent()) {   // 기존 유저
@@ -154,6 +160,11 @@ public class GithubCrawlingService {
 			.bodyToMono(CGithubDTO.class)
 			.block();
 
+		// 닉네임에 해당하는 깃허브 유저 정보가 없는경우
+		if (githubCrawling.getNickname().equals("")) {
+			throw new CustomException(NOT_FOUND_GITHUB);
+		}
+
 		Optional<Github> githubOptional = githubRepository.findByUserId(userId);
 		if (githubOptional.isPresent()) {   // 기존 유저
 			Github github = githubOptional.get();
@@ -171,9 +182,17 @@ public class GithubCrawlingService {
 				.collect(Collectors.toList());
 
 			// 새로 가져온 레포에 없는 경우 -> 레포지토리 삭제
-			github.getGithubRepos().stream()
+			List<String> removeNameList = github.getGithubRepos().stream()
 				.filter(r -> !newRepoNameList.contains(r.getName()))
-				.forEach(r -> github.getGithubRepos().remove(r));
+				.map(r -> r.getName())
+				.collect(Collectors.toList());
+
+			for (Iterator<GithubRepo> iter = github.getGithubRepos().iterator(); iter.hasNext();) {
+				GithubRepo githubRepo = iter.next();
+				if (removeNameList.contains(githubRepo.getName())) {
+					iter.remove();
+				}
+			}
 
 			// 새로운 레포지토리 추가
 			githubCrawling.getRepositories().stream()

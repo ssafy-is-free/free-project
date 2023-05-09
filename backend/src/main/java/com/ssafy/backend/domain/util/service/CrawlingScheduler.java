@@ -11,6 +11,7 @@ import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
+import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.job.service.JobCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.user.service.BojService;
@@ -25,6 +26,7 @@ public class CrawlingScheduler {
 
 	private final UserRepository userRepository;
 	private final GithubRepository githubRepository;
+	private final GithubCrawlingService githubCrawlingService;
 	private final BojService bojService;
 	private final BojRepository bojRepository;
 	private final JobCrawlingService jobCrawlingService;
@@ -37,6 +39,15 @@ public class CrawlingScheduler {
 		int rank = 1;
 		for (Github github : githubList) {
 			github.updatePrevRankGithub(rank++);
+		}
+	}
+
+	@Scheduled(cron = "0 0 2 * * *")
+	public void githubBulkUpdate() throws InterruptedException {
+		List<User> userList = userRepository.findAll();
+		for (User user : userList) {
+			Thread.sleep(5000);
+			githubCrawlingService.updateAllGithub(user.getNickname(), user.getId());
 		}
 	}
 
