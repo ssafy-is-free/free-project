@@ -70,8 +70,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	@Override
 	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
 
+		// 삭제된 유저인지 판단
+		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
+		if (!findUser.isPresent()) {
+			return BojRankResponse.createEmpty();
+		}
 		//유저 아이디로 백준 아이디 조회
-		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		User user = findUser.get();
 
 		//백준 아이디를 입력하지 않은 유저의 경우
 		if (user.getBojId() == null) {
