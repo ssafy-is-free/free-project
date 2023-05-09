@@ -2,16 +2,15 @@
 import BojInfo from '@/components/profile/BojInfo';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { Spinner } from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
-import { ParsedUrlQuery } from 'querystring';
-import { getBoj, getGithub } from '@/pages/api/profileAxios';
-import { IBojProfile, IGithubProfile } from '@/components/profile/IProfile';
 import CustomNav from '../common/CustomNav';
 
 const ProfileDiv = styled.div`
+  .headerblank {
+    height: 2.5rem;
+  }
   .profileNav {
     margin: 1rem;
   }
@@ -39,6 +38,7 @@ const TestProfile = ({ curRank, id, back, my }: IProfileProps) => {
   return (
     <ProfileDiv>
       <ProfileHeader back={back}></ProfileHeader>
+      <div className="headerblank"></div>
       <div className="profileNav">
         <CustomNav
           lists={['깃허브', '백준']}

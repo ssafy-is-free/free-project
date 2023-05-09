@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 const HeaderDiv = styled.div`
-  margin: 1rem;
-  margin-top: 2rem;
-
+  padding-left: 1rem;
+  padding-top: 1rem;
+  width: 100vw;
+  position: fixed;
+  background-color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
