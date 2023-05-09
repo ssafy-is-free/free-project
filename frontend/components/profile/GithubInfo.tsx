@@ -90,6 +90,7 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
     }
   };
   const getMyGithubData = async () => {
+    console.log('다시');
     const res = await getMyGithub();
     if (res.data) {
       setGithubData(res.data);

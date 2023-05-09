@@ -85,7 +85,7 @@ export const Toggle = ({ isOn, setIsOn, githubId, reload }: IToggle) => {
     if (res.status === 'SUCCESS') {
       setModalOpen(false);
       setIsOn(!isOn);
-      reload;
+      reload();
     } else {
       alert(res.message);
       setModalOpen(false);
