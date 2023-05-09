@@ -7,8 +7,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   color: ${(props) => props.theme.fontWhite};
-  font-weight: bold;
-  font-size: 16px;
+  font-size: 20px;
   width: 100%;
   height: 8vh;
   /* padding: 48px 0px 24px; */
@@ -22,6 +21,7 @@ const Wrapper = styled.div`
 
   p {
     margin-right: 8px;
+    font-weight: 600;
   }
 `;
 

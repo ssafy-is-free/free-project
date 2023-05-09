@@ -513,32 +513,20 @@ const Main = () => {
 
   // 전체 랭킹 fixed event + Scroll event
   const allRef = useRef<any>();
-  const wrapperRef = useRef<any>();
-  const headerRef = useRef<any>();
 
   const handleScroll = (event: any) => {
     const el = document.querySelector('.my-rank');
     if (el instanceof HTMLElement) {
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
-      console.log(scrollPoint);
-      console.log(target);
 
       if (scrollPoint >= target) {
         allRef.current.style.position = 'fixed';
         allRef.current.style.top = '48px';
-        // wrapperRef.current.style.zIndex = '4';
-        // headerRef.current.style.zIndex = '5';
       } else {
         allRef.current.style.position = '';
         allRef.current.style.top = '';
       }
-      // } else {
-      //   allRef.current.style.position = '';
-      //   allRef.current.style.top = '';
-      //   // wrapperRef.current.style.zIndex = '';
-      //   // headerRef.current.style.zIndex = '2';
-      // }
     }
   };
 
@@ -561,7 +549,7 @@ const Main = () => {
     return (
       <>
         {!searchClick && (
-          <Header ref={headerRef}>
+          <Header>
             {/* 로고 */}
             <div
               className="logo-box"
@@ -590,7 +578,7 @@ const Main = () => {
             </div>
           </Header>
         )}
-        <Wrapper searchClick={searchClick} onScroll={handleScroll} ref={wrapperRef}>
+        <Wrapper searchClick={searchClick} onScroll={handleScroll}>
           {!searchClick ? (
             <>
               <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
