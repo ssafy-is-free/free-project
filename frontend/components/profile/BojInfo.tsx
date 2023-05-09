@@ -129,26 +129,31 @@ const BojInfo = ({ userId, my }: IBojInfo) => {
       </BojNoneDiv>
     );
   } else {
+    const BOJ_URL = 'https://www.acmicpc.net/';
     const infoList = [
       {
         name: '맞은 문제',
         value: bojData.pass,
         icon: '/Icon/CorrectIcon.svg',
+        link: `${BOJ_URL}problemset?user=${bojData.bojId}&user_solved=1`,
       },
       {
         name: '틀렸습니다',
         value: bojData.fail,
         icon: '/Icon/WrongIcon.svg',
+        link: `${BOJ_URL}status?user_id=${bojData.bojId}&result_id=6`,
       },
       {
         name: '제출',
         value: bojData.submit,
         icon: '/Icon/SubmitIcon.svg',
+        link: `${BOJ_URL}status?user_id=${bojData.bojId}`,
       },
       {
         name: '시도했지만 맞지 못한 문제',
         value: bojData.tryFail,
         icon: '/Icon/CryIcon.svg',
+        link: `${BOJ_URL}problemset?user=${bojData.bojId}&user_solved=0`,
       },
     ];
     const avatarData: IBojAvatar = {
@@ -161,13 +166,13 @@ const BojInfo = ({ userId, my }: IBojInfo) => {
         <Avatar isCircle={false} data={avatarData} my={my}></Avatar>
         <BasicInfoDiv>
           {infoList.map((info, idx) => (
-            <BoxDiv key={idx}>
-              <div>
+            <a href={info.link} target="_blank">
+              <BoxDiv key={idx}>
                 <h4>{info.name}</h4>
                 <p>{info.value}</p>
-              </div>
-              <img src={info.icon} alt="IC" />
-            </BoxDiv>
+                <img src={info.icon} alt="IC" />
+              </BoxDiv>
+            </a>
           ))}
         </BasicInfoDiv>
         <ChartDiv>
