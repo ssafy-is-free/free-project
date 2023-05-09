@@ -21,8 +21,5 @@ public interface GithubRepository extends JpaRepository<Github, Long> {
 
 	List<Github> findByUserIdIn(Set<Long> userId);
 
-	@Query("select count(g) from Github g where g.score > :score or g.score = :score and g.user.id < :userId")
-	Long getRank(@Param("score") int score, @Param("userId") long userId);
-
 	List<Github> findAllByOrderByScoreDesc();
 }

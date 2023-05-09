@@ -147,7 +147,7 @@ public class GithubRankingService {
 		// 랭킹 계산
 		Long rank;
 		if (rankingFilter.isNull()) {
-			rank = githubRepository.getRank(github.getScore(), userId);
+			rank = githubQueryRepository.getRank(github.getScore(), userId);
 		} else {
 			rank = githubQueryRepository.getRankWithFilter(githubIdSet, userIdSet, github.getScore(), userId);
 		}

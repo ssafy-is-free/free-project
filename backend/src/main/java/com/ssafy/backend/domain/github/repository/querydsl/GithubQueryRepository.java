@@ -17,7 +17,6 @@ import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
 import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -40,7 +39,7 @@ public class GithubQueryRepository {
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId))
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId), user.isDeleted.eq(false))
 			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -54,14 +53,20 @@ public class GithubQueryRepository {
 
 	}
 
-	public Long getRankWithFilter(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet,
-		@Param("score") int score,
-		@Param("userId") long userId) {
-		return queryFactory.select(github.count())
+	public long getRankWithFilter(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet, int score, long userId) {
+		return queryFactory.select(github)
 			.from(github)
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId))
-			.fetchOne();
+			.join(github.user, user).fetchJoin()
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId), user.isDeleted.eq(false))
+			.fetch().size();
+	}
 
+	public long getRank(int score, long userId) {
+		return queryFactory.select(github)
+			.from(github)
+			.join(github.user, user).fetchJoin()
+			.where(higherRanked(score, userId), user.isDeleted.eq(false))
+			.fetch().size();
 	}
 
 	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {

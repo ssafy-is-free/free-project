@@ -5,6 +5,7 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -106,7 +107,13 @@ public class AnalysisBojService {
 	}
 
 	private BojInfoDetailResponse createBojInfoDetail(long userId, Map<Long, String> languageMap) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		// 삭제된 유저인지 판단
+		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
+		if (!findUser.isPresent()) {
+			throw new CustomException(NOT_FOUND_USER);
+		}
+		//유저 아이디로 백준 아이디 조회
+		User user = findUser.get();
 		//백준 아이디가 비어있다면
 		if (user.getBojId() == null) {
 			return BojInfoDetailResponse.createEmpty();
