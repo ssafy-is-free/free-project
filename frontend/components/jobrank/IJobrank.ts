@@ -14,8 +14,13 @@ export type applicantInfoType = {
  */
 export interface IChartProps {
   curRank: number;
-
   jobPostingIdParam: number;
+
+  /**
+   * 0 : 나
+   * 1 : 다른 사용자들(all)
+   */
+  target: number;
 }
 
 /**
@@ -29,6 +34,15 @@ export interface IOtherInfoProps {
 
 export interface IJobInfoProps {
   curRank: number;
+  jobPostingIdParam: number;
+}
 
+export interface ISubMenuProps {
+  submenu: number;
+  setSubmenu: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export interface ICompareBoxProps {
+  curRank: number;
   jobPostingIdParam: number;
 }

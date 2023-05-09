@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   font-size: 14px;
   width: calc(100% - 64px);
   position: absolute;
-  bottom: -28px;
+  top: -28px;
   left: 32px;
   box-shadow: 4px 4px 20px #00000026;
 

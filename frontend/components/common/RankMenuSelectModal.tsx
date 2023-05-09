@@ -53,10 +53,10 @@ const RankMenuSelectModal = (props: IRankMenuSelectProps) => {
       <DarkBg onClick={props.onClick} />
       <Wrapper>
         <button className="git" onClick={() => props.onChangeCurRank(0)}>
-          깃허브 랭킹
+          깃허브
         </button>
         <button className="boj" onClick={() => props.onChangeCurRank(1)}>
-          백준 랭킹
+          백준
         </button>
       </Wrapper>
     </>
