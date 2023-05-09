@@ -42,3 +42,14 @@ export const getReadme = async (githubId: number, repoId: number) => {
 
   return data;
 };
+
+export const patchRepoOpen = async (isOpen: boolean) => {
+  const { data } = await authApi({
+    method: 'patch',
+    url: `/github/open`,
+    data: {
+      isOpen: isOpen,
+    },
+  });
+  return data;
+};

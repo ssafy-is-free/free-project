@@ -6,6 +6,7 @@ import Readme from './Readme';
 import Avatar from './Avatar';
 import { Spinner } from '../common/Spinner';
 import { getGithub, getMyGithub } from '@/pages/api/profileAxios';
+import { Toggle } from './Toggle';
 
 const LoadingDiv = styled.div`
   min-height: 50vh;
@@ -44,8 +45,17 @@ const RepoDiv = styled.div`
   background-color: ${(props) => props.theme.bgWhite};
   padding: 1rem;
   padding-bottom: 1rem;
-  p {
-    margin-bottom: 1rem;
+  .repoheader {
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .isPublic {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
 `;
 const ReadmeDiv = styled.div`
@@ -53,9 +63,24 @@ const ReadmeDiv = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
+const dddata = {
+  githubId: 1,
+  nickname: 'hyejoo',
+  profileLink: 'https://~~',
+  avatarUrl: 'https://~~~',
+  commit: 100,
+  star: 20,
+  isMine: true,
+  followers: 5,
+  repositories: null,
+  languages: [],
+};
 
 const GithubInfo = ({ userId, my }: IGithubInfo) => {
-  const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
+  const [githubData, setGithubData] = useState<IGithubProfile | null>(dddata);
+  // const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
+  const [isShow, setIsShow] = useState<boolean>(false);
+
   const getGithubData = async () => {
     const res = await getGithub(userId);
     if (res.data) {
@@ -127,16 +152,32 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
         </LanguageDiv>
         <BlackDiv></BlackDiv>
         <RepoDiv>
-          <p>Repositiories</p>
-          <ReadmeDiv>
-            {githubData.repositories.length === 0 ? (
-              <div>레포지토리가 없어요</div>
-            ) : (
-              githubData.repositories.map((repo, idx) => (
-                <Readme key={idx} repository={repo} githubId={githubData.githubId}></Readme>
-              ))
+          <div className="repoheader">
+            <div>
+              <p>Repositiories</p>
+            </div>
+            {githubData.isMine && (
+              <div className="isPublic">
+                <div>{isShow ? '공개' : '비공개'} &nbsp;</div>
+                <Toggle isOn={isShow} setIsOn={(status) => setIsShow(status)}></Toggle>
+              </div>
             )}
-          </ReadmeDiv>
+          </div>
+          {githubData.repositories ? (
+            <ReadmeDiv>
+              {githubData.repositories.length === 0 ? (
+                <div>레포지토리가 없어요</div>
+              ) : (
+                githubData.repositories.map((repo, idx) => (
+                  <Readme key={idx} repository={repo} githubId={githubData.githubId}></Readme>
+                ))
+              )}
+            </ReadmeDiv>
+          ) : (
+            <ReadmeDiv>
+              <div>비공개된 레포지토리 에요</div>
+            </ReadmeDiv>
+          )}
         </RepoDiv>
       </GithubDiv>
     );
