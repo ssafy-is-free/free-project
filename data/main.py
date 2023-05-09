@@ -157,6 +157,10 @@ def getLanguage(username: str, result: dict):
 
     language_list = soup.select('g[class="stagger"]')
 
+    if language_list is None:   # 언어 정보가 없는 경우
+        result['language'] = []
+        return result
+    
     tmp = []
     for language in language_list:
         data = dict()
@@ -168,10 +172,13 @@ def getLanguage(username: str, result: dict):
     result['languages'] = tmp
     return result
 
+
 @app.get("/data/github/{token}")
 def read_github(token):
     github_headers = {'Content-Type': 'application/json', 'Authorization': f'token {token}'}
     user_res = requests.get("https://api.github.com/user", headers=github_headers)
+    if user_res.status_code != 200: # 유저가 없다면 잘못된 토큰 정보
+        return []
     user_res = user_res.json()
 
     # 닉네임
@@ -186,39 +193,49 @@ def read_github(token):
     # 팔로워 수
     followers = user_res['followers']
 
-    # 커밋 수
-    commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
-                               headers=github_headers)
-    commit = commits_res.json()['total_count']
-
-    # 레포지토리 정보
-    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
-    repos_res = repos_res.json()
-
-    repo_list = []
-    star = 0
-    for repo in repos_res['items']:
-        # 레포 정보
-        name = repo['name']
-        link = repo['html_url']
-
-        dto = dict()
-        dto['name'] = name
-        dto['link'] = link
-        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
-        repo_list.append(dto)
-
-        # 스타 수 합치기
-        star += repo['stargazers_count']
-
     result = dict()
     result['nickname'] = nickname
     result['profileLink'] = profileLink
     result['avatarUrl'] = avatarUrl
     result['followers'] = followers
+
+    # 커밋 수
+    commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
+                               headers=github_headers)
+    if commits_res.status_code == 200:
+        commit = commits_res.json()['total_count']
+    else:
+        commit = 0
+
     result['commit'] = commit
-    result['repositories'] = repo_list
-    result['star'] = star
+
+    # 레포지토리 정보
+    repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
+    if repos_res.status_code != 200:
+        result['repositories'] = []
+        result['star'] = 0
+    elif repos_res.status_code == 200:
+        repos_res = repos_res.json()
+
+        repo_list = []
+        star = 0
+        for repo in repos_res['items']:
+            # 레포 정보
+            name = repo['name']
+            link = repo['html_url']
+
+            dto = dict()
+            dto['name'] = name
+            dto['link'] = link
+            dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+            repo_list.append(dto)
+
+            # 스타 수 합치기
+            star += repo['stargazers_count']
+
+        result['repositories'] = repo_list
+        result['star'] = star
+
     result = getLanguage(nickname, result)
     return result
 
@@ -227,6 +244,8 @@ def read_github(token):
 def update_github(nickname):
     github_headers = {'Content-Type': 'application/json', 'Authorization': f'{personal_token}'}
     user_res = requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
+    if user_res.status_code != 200:
+        return []
     user_res = user_res.json()['items'][0]
 
     # 닉네임
@@ -238,44 +257,55 @@ def update_github(nickname):
     # 프로필 이미지
     avatarUrl = user_res['avatar_url']
 
+    result = dict()
+    result['nickname'] = nickname
+    result['profileLink'] = profileLink
+    result['avatarUrl'] = avatarUrl
+
     # 커밋 수
     commits_res = requests.get(f'https://api.github.com/search/commits?q=author%3A{nickname}%20is%3Apublic',
                         headers=github_headers)
-    commit = commits_res.json()['total_count']
+    if commits_res.status_code == 200:
+        commit = commits_res.json()['total_count']
+    else:
+        commit = 0
+
+    result['commit'] = commit
 
     # 팔로워 수
     followers_res = requests.get(f'https://api.github.com/users/{nickname}/followers', headers=github_headers)
     followers_res = followers_res.json()
     followers = len(followers_res)
 
+    result['followers'] = followers
+
     # 레포
     repos_res = requests.get(f'https://api.github.com/search/repositories?q=user%3A{nickname}', headers=github_headers)
-    repos_res = repos_res.json()
+    if repos_res.status_code != 200:
+        result['repositories'] = []
+        result['star'] = 0
+    elif repos_res.status_code == 200:
+        repos_res = repos_res.json()
 
-    repo_list = []
-    star = 0
-    for repo in repos_res['items']:
-        # 레포 정보
-        name = repo['name']
-        link = repo['html_url']
+        repo_list = []
+        star = 0
+        for repo in repos_res['items']:
+            # 레포 정보
+            name = repo['name']
+            link = repo['html_url']
 
-        dto = dict()
-        dto['name'] = name
-        dto['link'] = link
-        dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
-        repo_list.append(dto)
+            dto = dict()
+            dto['name'] = name
+            dto['link'] = link
+            dto['readme'] = f'https://raw.githubusercontent.com/{nickname}/{name}/main/README.md'
+            repo_list.append(dto)
 
-        # 스타 수 합치기
-        star += repo['stargazers_count']
+            # 스타 수 합치기
+            star += repo['stargazers_count']
 
-    result = dict()
-    result['nickname'] = nickname
-    result['profileLink'] = profileLink
-    result['avatarUrl'] = avatarUrl
-    result['followers'] = followers
-    result['commit'] = commit
-    result['repositories'] = repo_list
-    result['star'] = star
+        result['repositories'] = repo_list
+        result['star'] = star
+
     result = getLanguage(nickname, result)
     return result
 
