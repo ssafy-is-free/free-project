@@ -33,7 +33,7 @@ public class BojQueryRepository {
 				baekjoon.submitCount.avg(), baekjoon.tier.avg()))
 			.from(baekjoon)
 			.innerJoin(baekjoon.user, user)
-			.where(userIdIn(userIdSet))
+			.where(userIdIn(userIdSet), baekjoon.user.isDeleted.eq(false))
 			.fetchOne();
 
 	}
@@ -42,7 +42,8 @@ public class BojQueryRepository {
 		return queryFactory.select(baekjoon.count())
 			.from(baekjoon)
 			.innerJoin(baekjoon.user, user)
-			.where(bojIdIn(bojIdSet), userIdIn(userIdSet), user.id.ne(userId), baekjoon.score.gt(score))
+			.where(bojIdIn(bojIdSet), userIdIn(userIdSet), user.id.ne(userId), baekjoon.score.gt(score),
+				baekjoon.user.isDeleted.eq(false))
 			.fetchOne();
 
 	}
@@ -59,7 +60,8 @@ public class BojQueryRepository {
 			.leftJoin(baekjoon.user, user).fetchJoin()
 			.where(cursorCondition(score, userId),
 				inLanguageBaekjoonId(baekjoonIdSet),
-				inJobUserId(jobUserId))
+				inJobUserId(jobUserId),
+				baekjoon.user.isDeleted.eq(false))
 			.orderBy(baekjoon.score.desc(),
 				baekjoon.user.id.asc())
 			.limit(pageable.getPageSize())

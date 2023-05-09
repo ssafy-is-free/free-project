@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
@@ -65,8 +66,9 @@ public class Github extends BaseTimeEntity {
 	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST)
 	private Set<GithubLanguage> githubLanguages = new HashSet<>();
 
-	@Column(name = "do_not_user1")
-	private int doNotUse1;
+	@ColumnDefault("true")
+	@Column(name = "is_public")
+	private boolean isPublic;
 
 	@Column(name = "do_not_user2")
 	private int doNotUse2;
@@ -113,4 +115,10 @@ public class Github extends BaseTimeEntity {
 		this.previousRank = previousRank;
 
 	}
+
+	public void updatePublic(boolean status) {
+
+		this.isPublic = status;
+	}
+
 }

@@ -49,7 +49,6 @@ public class JobHistoryQueryRepository {
 				, cursorCondition(nextDate, jobHistoryId))
 			.orderBy(jobHistory.dDay.asc(), jobHistory.createdTime.desc())
 			.limit(pageable.getPageSize())
-
 			.fetch();
 	}
 
