@@ -90,6 +90,7 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
     }
   };
   const getMyGithubData = async () => {
+    console.log('다시');
     const res = await getMyGithub();
     if (res.data) {
       setGithubData(res.data);
@@ -162,7 +163,12 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
             {githubData.mine && (
               <div className="isPublic">
                 <div>{isShow ? '공개' : '비공개'} &nbsp;</div>
-                <Toggle githubId={githubData.githubId} isOn={isShow} setIsOn={(status) => setIsShow(status)}></Toggle>
+                <Toggle
+                  githubId={githubData.githubId}
+                  isOn={isShow}
+                  setIsOn={(status) => setIsShow(status)}
+                  reload={getMyGithubData}
+                ></Toggle>
               </div>
             )}
           </div>
