@@ -59,7 +59,8 @@ public class BojQueryRepository {
 			.leftJoin(baekjoon.user, user).fetchJoin()
 			.where(cursorCondition(score, userId),
 				inLanguageBaekjoonId(baekjoonIdSet),
-				inJobUserId(jobUserId))
+				inJobUserId(jobUserId),
+				baekjoon.user.isDeleted.eq(false))
 			.orderBy(baekjoon.score.desc(),
 				baekjoon.user.id.asc())
 			.limit(pageable.getPageSize())
