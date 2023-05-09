@@ -11,10 +11,10 @@ interface Iddetail {
   startTime: string;
   endTime: string;
   memo: string;
-  dDayName: string;
   nextDate: string;
   objective: string;
   applicantCount: number;
+  dDayName: string;
 }
 const ddetail = {
   postingId: 1,

@@ -36,3 +36,19 @@ export const postJob = async (formData: any) => {
   });
   return data;
 };
+
+export const getHistory = async (statusId: string[], size?: string) => {
+  const params = new URLSearchParams();
+  statusId.forEach((id: string) => {
+    params.append('statusId', id);
+  });
+  if (size) {
+    params.append('size', size);
+  }
+  const { data } = await authApi({
+    method: 'get',
+    url: `/job`,
+    params: params,
+  });
+  return data;
+};
