@@ -24,8 +24,9 @@ public class GithubDetailResponse {
 	Integer followers;
 	List<GithubDetailRepo> repositories;
 	List<GithubDetailLanguage> languages;
+	boolean isMine;
 
-	public static GithubDetailResponse create(Github github, List<GithubDetailLanguage> languages) {
+	public static GithubDetailResponse create(Github github, boolean isMine, List<GithubDetailLanguage> languages) {
 		return GithubDetailResponse.builder()
 			.githubId(github.getId())
 			.nickname(github.getUser().getNickname())
@@ -34,9 +35,14 @@ public class GithubDetailResponse {
 			.commit(github.getCommitTotalCount())
 			.star(github.getStarTotalCount())
 			.followers(github.getFollowerTotalCount())
-			.repositories(toDetailRepoDto(github.getGithubRepos()))
+			.repositories(isPublicRepo(github) ? toDetailRepoDto(github.getGithubRepos()) : null)
 			.languages(languages)
+			.isMine(isMine)
 			.build();
+	}
+
+	private static boolean isPublicRepo(Github github) {
+		return github.isPublic();
 	}
 
 	private static List<GithubDetailRepo> toDetailRepoDto(Set<GithubRepo> githubRepoSet) {
