@@ -39,16 +39,16 @@ const StyledGithubIcon = styled(GithubIcon)`
 
 const Splash = () => {
   const route = useRouter();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const data = await patchCrawaling();
+      // const data = await patchCrawaling();
 
-      if (data.status == 'SUCCESS') {
-        dispatch(setNew());
-        route.push('/');
-      }
+      // if (data.status == 'SUCCESS') {
+      //   dispatch(setNew());
+      //   route.push('/');
+      // }
+      route.push('/');
     })();
   }, []);
 

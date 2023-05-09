@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { ICustomNav } from './ICommon';
 
@@ -20,10 +20,9 @@ const NavItemDiv = styled.div<{ active: boolean }>`
   }
 `;
 
-const CustomNav = ({ lists, selectIdx }: ICustomNav) => {
-  const [selectedIdx, setSelectedIdx] = useState<number>(0);
+function CustomNav({ lists, selectIdx, defaultIdx }: ICustomNav) {
+  const [navIdx, setNavIdx] = useState<number>(defaultIdx);
   const clicked = (idx: number) => {
-    setSelectedIdx(idx);
     selectIdx(idx);
   };
 
@@ -32,9 +31,10 @@ const CustomNav = ({ lists, selectIdx }: ICustomNav) => {
       {lists.map((item, idx) => (
         <NavItemDiv
           key={idx}
-          active={idx === selectedIdx}
+          active={idx === navIdx}
           onClick={() => {
             clicked(idx);
+            setNavIdx(idx);
           }}
         >
           <p>{item}</p>
@@ -42,6 +42,6 @@ const CustomNav = ({ lists, selectIdx }: ICustomNav) => {
       ))}
     </CustomNavDiv>
   );
-};
+}
 
 export default CustomNav;

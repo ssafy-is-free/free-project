@@ -31,7 +31,8 @@ export interface IGithubProfile {
  * githubInfo에 prop 해야할 값
  */
 export interface IGithubInfo {
-  githubData: IGithubProfile;
+  userId: string;
+  // githubData: IGithubProfile;
   my?: boolean;
 }
 
@@ -55,6 +56,7 @@ export interface IBojProfile {
  * bojInfo에 prop 해야할 값
  */
 export interface IBojInfo {
+  userId: string;
   bojData?: IBojProfile;
   my?: boolean;
 }
@@ -72,6 +74,15 @@ export interface CircleChartProps {
  * 아바타 데이터
  */
 export interface IAvatarData {
+  avatarUrl: string;
+  name: string;
+  profileLink?: string;
+}
+
+/**
+ * 아바타 데이터
+ */
+export interface IBojAvatar {
   avatarUrl: string;
   name: string;
 }

@@ -86,16 +86,18 @@ const Wrapper = styled.div<{ searchClick: boolean }>`
         padding-bottom: 16px;
         background-color: ${(props) => props.theme.bgWhite};
         width: 100%;
+        z-index: 2;
       }
       .rank-list {
         li {
           margin-bottom: 8px;
         }
 
-        .observer-box {
-          height: 5%;
+        .space {
+          border-radius: 8px;
+          height: 100px;
+          padding: 0px 14px;
           width: 100%;
-          background-color: white;
         }
       }
     }
@@ -203,6 +205,7 @@ const Main = () => {
   // 상세정보 열기
   const [openProfile, setOpenProfile] = useState<boolean>(false);
   const [clickedUserId, setClickedUserId] = useState<number>(0);
+  const [clickMy, setClickMy] = useState(false);
 
   // 무한 스크롤 구현하기
   const [ref, inView, entry] = useInView({
@@ -266,6 +269,12 @@ const Main = () => {
   const goProfile = (userId: number) => {
     setClickedUserId(userId);
   };
+
+  useEffect(() => {
+    if (clickMy) {
+      setOpenProfile(true);
+    }
+  }, [clickMy]);
 
   useEffect(() => {
     if (clickedUserId !== 0) {
@@ -473,7 +482,6 @@ const Main = () => {
                 oldArr.push(el);
               });
 
-              console.log('dataaaaa', data);
               if (data) {
                 setNextRank(data[data?.length - 1]?.rank);
                 setBojRankList([...oldArr, ...newArr]);
@@ -500,7 +508,6 @@ const Main = () => {
         }
       }
     } finally {
-      // console.log('finally');
     }
   };
 
@@ -514,18 +521,24 @@ const Main = () => {
     if (el instanceof HTMLElement) {
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
+      console.log(scrollPoint);
+      console.log(target);
 
-      if (scrollPoint > target) {
+      if (scrollPoint >= target) {
         allRef.current.style.position = 'fixed';
         allRef.current.style.top = '48px';
-        wrapperRef.current.style.zIndex = '4';
-        headerRef.current.style.zIndex = '5';
+        // wrapperRef.current.style.zIndex = '4';
+        // headerRef.current.style.zIndex = '5';
       } else {
         allRef.current.style.position = '';
         allRef.current.style.top = '';
-        wrapperRef.current.style.zIndex = '';
-        headerRef.current.style.zIndex = '2';
       }
+      // } else {
+      //   allRef.current.style.position = '';
+      //   allRef.current.style.top = '';
+      //   // wrapperRef.current.style.zIndex = '';
+      //   // headerRef.current.style.zIndex = '2';
+      // }
     }
   };
 
@@ -535,9 +548,11 @@ const Main = () => {
     return (
       <Profile
         curRank={curRank}
-        id={clickedUserId}
+        id={clickedUserId.toString()}
+        my={clickMy}
         back={() => {
           setOpenProfile(false);
+          setClickMy(false);
           setClickedUserId(0);
         }}
       ></Profile>
@@ -600,12 +615,21 @@ const Main = () => {
                 ) : myGitRank && curRank == 0 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem curRank={curRank} item={myGitRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myGitRank} />
+                    </div>
                   </div>
                 ) : myBojRank && curRank == 1 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem curRank={curRank} item={myBojRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myBojRank} />
+                    </div>
+                  </div>
+                ) : isLogin && curRank == 1 && !selectedOption ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
                   </div>
                 ) : (
                   <div className="my-rank">
@@ -625,7 +649,7 @@ const Main = () => {
                               goProfile(el.userId);
                             }}
                           >
-                            <MainOtherItem curRank={curRank} item={el} />
+                            <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
                           </li>
                         ))
                       : bojRankList &&
@@ -637,14 +661,14 @@ const Main = () => {
                                 goProfile(el.userId);
                               }}
                             >
-                              <MainOtherItem curRank={curRank} item={el} />
+                              <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
                             </li>
                           );
                         })}
                     {curRank == 0 && gitRankList == null && <NoAccount curRank={2} />}
                     {curRank == 1 && bojRankList == null && <NoAccount curRank={2} />}
                     {loading && <Spinner />}
-                    <div ref={ref} className="observer-box"></div>
+                    <div className="space" ref={ref}></div>
                   </ul>
                 </div>
               </div>
