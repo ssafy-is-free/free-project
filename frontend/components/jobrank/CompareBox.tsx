@@ -88,7 +88,7 @@ const Wrapper = styled.div`
               justify-content: end;
 
               .data-bar {
-                width: 60%;
+                /* width: 60%; */
                 height: 16px;
                 background-color: ${(props) => props.theme.primary};
                 border-radius: 16px;
@@ -150,8 +150,18 @@ const CompareBox = (props: ICompareBoxProps) => {
   const [otherInfo, setOtherInfo] = useState<applicantInfoType>(null);
   const [myInfo, setMyInfo] = useState<applicantInfoType>(null);
 
-  const [myWidth, setMyWidth] = useState<number>(0);
-  const [otherWidth, setOtherWidth] = useState<number>(0);
+  const [commitWidth, setCommitWidth] = useState<{
+    myWidth: number;
+    otherWidth: number;
+  } | null>(null);
+  const [starWidth, setStarWidth] = useState<{
+    myWidth: number;
+    otherWidth: number;
+  } | null>(null);
+  const [repoWidth, setRepoWidth] = useState<{
+    myWidth: number;
+    otherWidth: number;
+  } | null>(null);
 
   const calc = (myNumber: number, otherNumber: number) => {
     let number = Math.max(myNumber, otherNumber);
@@ -162,6 +172,13 @@ const CompareBox = (props: ICompareBoxProps) => {
     }
 
     let standard = Math.max(myNumber, otherNumber) + 10 ** (digit - 1);
+
+    const data = {
+      myWidth: Math.floor((myNumber / standard) * 100),
+      otherWidth: Math.floor((otherNumber / standard) * 100),
+    };
+
+    return data;
   };
 
   useEffect(() => {
@@ -170,7 +187,9 @@ const CompareBox = (props: ICompareBoxProps) => {
       setOtherInfo(data?.opponent);
       setMyInfo(data?.my);
 
-      calc(data?.my.commit, data?.opponent.commit);
+      setCommitWidth(calc(data?.my.commit, data?.opponent.commit));
+      setStarWidth(calc(data?.my.star, data?.opponent.star));
+      setRepoWidth(calc(data?.my.repositories, data?.opponent.repositories));
     })();
   }, [props.curRank]);
 
@@ -194,13 +213,13 @@ const CompareBox = (props: ICompareBoxProps) => {
               <div className="bar-left">
                 <p className="number-label">{myInfo?.commit}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${commitWidth?.myWidth}%` }}></div>
                 </div>
               </div>
               <div className="bar-right">
                 <p className="number-label">{otherInfo?.commit}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${commitWidth?.otherWidth}%` }}></div>
                 </div>
               </div>
             </div>
@@ -209,13 +228,13 @@ const CompareBox = (props: ICompareBoxProps) => {
               <div className="bar-left">
                 <p className="number-label">{myInfo?.star}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${starWidth?.myWidth}%` }}></div>
                 </div>
               </div>
               <div className="bar-right">
                 <p className="number-label">{otherInfo?.star}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${starWidth?.otherWidth}%` }}></div>
                 </div>
               </div>
             </div>
@@ -224,13 +243,13 @@ const CompareBox = (props: ICompareBoxProps) => {
               <div className="bar-left">
                 <p className="number-label">{myInfo?.repositories}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${repoWidth?.myWidth}%` }}></div>
                 </div>
               </div>
               <div className="bar-right">
                 <p className="number-label">{otherInfo?.repositories}</p>
                 <div className="bar">
-                  <div className="data-bar"></div>
+                  <div className="data-bar" style={{ width: `${repoWidth?.otherWidth}%` }}></div>
                 </div>
               </div>
             </div>
