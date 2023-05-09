@@ -11,7 +11,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubDetailResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingOneResponse;
 import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
+import com.ssafy.backend.domain.github.dto.OpenRequest;
 import com.ssafy.backend.domain.github.dto.ReadmeResponse;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
 import com.ssafy.backend.domain.github.service.GithubRankingService;
@@ -108,6 +111,19 @@ public class GithubController {
 		return githubRankOne.getGithubRankingCover() == null ?
 			responseService.getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT) :
 			responseService.getDataResponse(githubRankOne, RESPONSE_SUCCESS);
+	}
+
+	@PatchMapping("/open")
+	public CommonResponse openGitRepository(
+		@RequestBody OpenRequest openRequest,
+		@AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+		long userId = userPrincipal.getId();
+
+		githubService.updatePublic(userId, openRequest);
+
+		return responseService.getSuccessResponse();
+
 	}
 
 }

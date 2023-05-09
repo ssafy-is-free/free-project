@@ -4,6 +4,7 @@ import static com.ssafy.backend.domain.entity.QGithub.*;
 import static com.ssafy.backend.domain.entity.QUser.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class GithubQueryRepository {
 	private final JPAQueryFactory queryFactory;
+
+	//삭제되지 않은 유저의 깃허브 조회
+	public Optional<Github> findOneByIdNotDeleted(long githubId) {
+
+		return Optional.ofNullable(queryFactory
+			.selectFrom(github)
+			.where(github.id.eq(githubId), github.user.isDeleted.eq(false))
+			.fetchOne());
+	}
 
 	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet,
 		FilteredUserIdSet userIdSet, Pageable pageable) {
