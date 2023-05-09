@@ -170,7 +170,7 @@ def getLanguage(username: str, result: dict):
 
 @app.get("/data/github/{token}")
 def read_github(token):
-    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {token}'}
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'token {token}'}
     user_res = requests.get("https://api.github.com/user", headers=github_headers)
     user_res = user_res.json()
 
