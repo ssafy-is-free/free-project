@@ -115,14 +115,7 @@ const JobRank = () => {
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
   const [otherRankInfo, setOtherRankInfo] = useState<resultInformation | null>(null);
 
-  // 나와 전체 사용자 정보
   const [myInfo, setMyInfo] = useState<applicantInfoType>(null);
-
-  const [otherInfo, setOtherInfo] = useState<applicantInfoType>(null);
-
-  // 차트
-  const [series, setSeries] = useState<number[]>([]);
-  const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
     // TODO : 취업 상세정보 조회
@@ -132,49 +125,27 @@ const JobRank = () => {
       // 깃허브 정보 불러오기
       (async () => {
         let data = await getGithubRanking(size, jobPostingIdParam);
-
         setOtherRankInfo(data);
       })();
 
       // 내 깃허브 정보 불러오기
       (async () => {
         let data = await getMyGitRanking(jobPostingIdParam);
-
         setUserRankInfo(data);
       })();
     } else if (curRank == 1) {
       // 백준 정보 불러오기
       (async () => {
         let data = await getBojRanking(size, jobPostingIdParam);
-
         setOtherRankInfo(data);
       })();
 
       // 내 백준 정보 불러오기
       (async () => {
         let data = await getMyBojRanking(jobPostingIdParam);
-
         setUserRankInfo(data);
       })();
     }
-
-    // 전체 사용자 정보 가져오기
-    (async () => {
-      let data = await getPostingsAllUsers(jobPostingIdParam);
-      setOtherInfo(data?.opponent);
-      setMyInfo(data?.my);
-
-      //TODO : 코드 더 깔끔하게 쓰는 법?
-      let arr = data?.opponent.languages.languageList;
-      let scores = new Array();
-      let labels = new Array();
-      arr?.map((el: any) => {
-        scores.push(el.percentage);
-        labels.push(el.name);
-      });
-      setSeries([...scores]);
-      setLabels([...labels]);
-    })();
   }, [curRank]);
 
   return (
@@ -182,7 +153,7 @@ const JobRank = () => {
       <Wrapper info={info}>
         <div className="job-info-box">
           <RankMenu curRank={curRank} onClick={() => setOpenSelect(true)} />
-          <JobInfo />
+          <JobInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
           <JobUserItem curRank={curRank} item={userRankInfo} />
         </div>
         <div className="all-rank">
@@ -199,9 +170,9 @@ const JobRank = () => {
             </>
           ) : (
             <div className="chart-box">
-              <OtherInfo otherInfo={otherInfo} />
+              <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
               <div className="label">Languages</div>
-              <ChartJobrank series={series} labels={labels} />
+              <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
             </div>
           )}
           <div className="space"></div>

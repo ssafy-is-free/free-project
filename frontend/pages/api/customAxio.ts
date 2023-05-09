@@ -62,14 +62,14 @@ authApi.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log('error', error);
+    // console.log('error', error);
 
     // // return error;
     const { config, response } = error;
     const originalRequest = config;
 
     if (response.status === 401) {
-      console.log('access 만료');
+      // console.log('access 만료');
       const accessToken = localStorage.getItem('accessToken');
 
       await axios
@@ -80,9 +80,9 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
-          console.log('res', res);
+          // console.log('res', res);
           if (res.status === 200) {
-            console.log('originalRequest', originalRequest);
+            // console.log('originalRequest', originalRequest);
             // const newAccessToken = res.headers.authorization;
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
