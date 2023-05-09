@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import CareerCard from './CareerCard';
+import CareerListItem from './CareerListItem';
 import { useState } from 'react';
 import CustomNav from '../common/CustomNav';
 import NewCareer from './NewCareer';
@@ -57,12 +57,12 @@ const CareerList = ({ openNew }: ICareerList) => {
         />
         <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
       </div>
-      <CustomNav lists={['진행중', '종료']} selectIdx={() => {}}></CustomNav>
+      <CustomNav lists={['진행중', '종료']} selectIdx={() => {}} defaultIdx={0}></CustomNav>
       <div className="cardlist">
         {list.map((id: number) => (
           <div className="card" key={id}>
             {delMode && CheckBox()}
-            <CareerCard cardId={id}></CareerCard>
+            <CareerListItem cardId={id}></CareerListItem>
           </div>
         ))}
       </div>

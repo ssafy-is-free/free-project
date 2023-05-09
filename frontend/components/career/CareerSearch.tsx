@@ -1,3 +1,4 @@
+import { getJobPost } from '@/pages/api/career';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -8,11 +9,14 @@ const CareerSearchDiv = styled.div`
   top: 0;
   z-index: 10;
   background-color: white;
-  padding-bottom: max(10vh, 4rem);
   overflow: auto;
   .csheader {
     margin: 1rem;
     margin-top: 2rem;
+  }
+  .cslist {
+    max-height: 70vh;
+    overflow: auto;
   }
   .csintro {
     margin: 1rem;
@@ -67,39 +71,11 @@ export interface ISearchResult {
 // dummy data
 const ddata: ISearchResult[] = [
   {
-    jobPostingId: 1,
-    companyName: '삼성전자',
-    postingName: '2023 상반기 어쩌고',
-    startTime: '2023-04-03',
-    endTime: '2023-04-06',
-  },
-  {
-    jobPostingId: 2,
-    companyName: '삼성전자',
-    postingName: '2023 상반기 어쩌고',
-    startTime: '2023-04-03',
-    endTime: '2023-04-06',
-  },
-  {
-    jobPostingId: 3,
-    companyName: '삼성전자',
-    postingName: '2023 상반기 어쩌고',
-    startTime: '2023-04-03',
-    endTime: '2023-04-06',
-  },
-  {
-    jobPostingId: 4,
-    companyName: '삼성전자',
-    postingName: '2023 상반기 어쩌고',
-    startTime: '2023-04-03',
-    endTime: '2023-04-06',
-  },
-  {
-    jobPostingId: 5,
-    companyName: '삼성전자',
-    postingName: '2023 상반기 어쩌고',
-    startTime: '2023-04-03',
-    endTime: '2023-04-06',
+    jobPostingId: 0,
+    companyName: '',
+    postingName: '',
+    startTime: '',
+    endTime: '',
   },
 ];
 
@@ -111,11 +87,15 @@ interface ICareerSearchProps {
 const CareerSearch = ({ close, result }: ICareerSearchProps) => {
   const [word, setWord] = useState<string>();
   const [data, setData] = useState<ISearchResult[]>(ddata);
-  const searching = (value: string) => {
+
+  const searching = async (value: string) => {
     // 취업 공고, 회사명 search api
     // 1996.11.22 미정인 경우 날짜가
     // searchapi(value)
-    // setData(res)
+    if (value) {
+    }
+    const res = await getJobPost(value);
+    setData(res.data);
   };
   return (
     <CareerSearchDiv>
@@ -141,22 +121,24 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
             }}
           ></input>
         </InputDiv>
-        {data.map((item) => (
-          <div
-            className="csitem"
-            key={item.jobPostingId}
-            onClick={() => {
-              result(item);
-              close();
-            }}
-          >
-            <p>회사명 : {item.companyName}</p>
-            <p>공고명 : {item.postingName}</p>
-            <p>
-              기간 : {item.startTime} ~ {item.endTime}
-            </p>
-          </div>
-        ))}
+        <div className="cslist">
+          {data.map((item) => (
+            <div
+              className="csitem"
+              key={item.jobPostingId}
+              onClick={() => {
+                result(item);
+                close();
+              }}
+            >
+              <p>회사명 : {item.companyName}</p>
+              <p>공고명 : {item.postingName}</p>
+              <p>
+                기간 : {item.startTime} ~ {item.endTime}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </CareerSearchDiv>
   );

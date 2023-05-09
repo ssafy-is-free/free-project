@@ -139,7 +139,7 @@ const CardContent = ({ ddetail }: ICardContentProps) => {
   );
 };
 
-const CareerCard = ({ cardId }: IDetailCardProps) => {
+const CareerListItem = ({ cardId }: IDetailCardProps) => {
   const [spread, setSpread] = useState<boolean>(false);
   const [detail, setDetail] = useState<Iddetail | null>(null);
 
@@ -174,4 +174,4 @@ const CareerCard = ({ cardId }: IDetailCardProps) => {
   }
 };
 
-export default CareerCard;
+export default CareerListItem;

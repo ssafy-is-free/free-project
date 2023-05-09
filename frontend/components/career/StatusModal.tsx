@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
+import { getJobStatus } from '@/pages/api/career';
 
 const DarkBg = styled.div`
   position: fixed;
@@ -20,6 +21,7 @@ const StatuModalDiv = styled.div`
     z-index: 10;
     background-color: white;
     .statusList {
+      min-height: 20rem;
       margin: 1rem;
       .statusitem {
         text-align: center;
@@ -34,53 +36,27 @@ export interface IStatus {
   name: string;
 }
 
-const ddata: IStatus[] = [
-  {
-    id: 1,
-    name: '면접 탈락',
-  },
-  {
-    id: 2,
-    name: '면접 후 대기중',
-  },
-  {
-    id: 3,
-    name: '서류 탈락',
-  },
-  {
-    id: 4,
-    name: '서류 통과',
-  },
-  {
-    id: 5,
-    name: '최종 면접 탈락',
-  },
-  {
-    id: 6,
-    name: '스킵',
-  },
-];
-
 interface IStatusModalProps {
   close: () => void;
   result: (status: IStatus) => void;
 }
 
 const StatusModal = ({ close, result }: IStatusModalProps) => {
-  const [statusData, setStatusData] = useState<IStatus[] | null>(ddata);
+  const [statusData, setStatusData] = useState<IStatus[] | null>(null);
+  const getStatus = async () => {
+    const res = await getJobStatus();
+    setStatusData(res.data);
+  };
 
-  if (!statusData) {
-    return (
-      <StatuModalDiv>
-        <DarkBg></DarkBg>
-        <Spinner></Spinner>
-      </StatuModalDiv>
-    );
-  } else {
-    return (
-      <StatuModalDiv>
-        <DarkBg onClick={close}></DarkBg>
-        <div className="statuscontent">
+  useEffect(() => {
+    getStatus();
+  }, []);
+
+  return (
+    <StatuModalDiv>
+      <DarkBg onClick={close}></DarkBg>
+      <div className="statuscontent">
+        {statusData ? (
           <div className="statusList">
             {statusData.map((status) => (
               <div
@@ -95,10 +71,12 @@ const StatusModal = ({ close, result }: IStatusModalProps) => {
               </div>
             ))}
           </div>
-        </div>
-      </StatuModalDiv>
-    );
-  }
+        ) : (
+          <div className="statusList"></div>
+        )}
+      </div>
+    </StatuModalDiv>
+  );
 };
 
 export default StatusModal;

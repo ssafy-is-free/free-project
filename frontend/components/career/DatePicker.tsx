@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WheelPicker from 'react-simple-wheel-picker';
 import styled from 'styled-components';
 
@@ -42,17 +42,18 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
   const [month, setMonth] = useState<string>('');
   const [day, setDay] = useState<string>('');
 
+  useEffect(() => {
+    updateDate(`${year}-${month}-${day}`);
+  }, [year, month, day]);
+
   const handleYear = (target: any) => {
     setYear(target.value);
-    updateDate(`${target.value}-${month}-${day}`);
   };
   const handleMonth = (target: any) => {
     setMonth(target.value);
-    updateDate(`${year}-${target.value}-${day}`);
   };
   const handleDay = (target: any) => {
     setDay(target.value);
-    updateDate(`${year}-${month}-${target.value}`);
   };
 
   return (

@@ -39,7 +39,6 @@ const DdayModal = ({ close, result }: IDdayModalProps) => {
   const [date, setDate] = useState<string>('');
   const updateDate = (date: string) => {
     setDate(date);
-    console.log(date);
   };
 
   const cancel = () => {
