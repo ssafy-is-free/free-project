@@ -111,14 +111,21 @@ const BojInfo = ({ userId, my }: IBojInfo) => {
       </LoadingDiv>
     );
   } else if (bojData.bojId === '-1') {
+    if (my) {
+      return (
+        <BojNoneDiv
+          onClick={() => {
+            setOpenBoj(true);
+          }}
+        >
+          <p>백준 아이디를 등록해주세요</p>
+          {openBoj && <BojModal onClick={() => setOpenBoj(false)} />}
+        </BojNoneDiv>
+      );
+    }
     return (
-      <BojNoneDiv
-        onClick={() => {
-          // setOpenBoj(true);
-        }}
-      >
-        <p>백준 아이디를 등록해주세요</p>
-        {openBoj && <BojModal onClick={() => setOpenBoj(false)} />}
+      <BojNoneDiv>
+        <p>백준 아이디를 등록하지 않은 유저입니다.</p>
       </BojNoneDiv>
     );
   } else {
