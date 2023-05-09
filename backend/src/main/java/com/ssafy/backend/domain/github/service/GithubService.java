@@ -81,8 +81,6 @@ public class GithubService {
 		Github github = githubQueryRepository.findOneByIdNotDeleted(openRequest.getGithubId())
 			.orElseThrow(() -> new CustomException(NOT_FOUND_GITHUB));
 
-		System.out.println(openRequest.isOpenStatus());
-
 		//공개유무 업데이트.
 		github.updatePublic(openRequest.isOpenStatus());
 	}
