@@ -49,6 +49,10 @@ public class GithubService {
 	@Transactional
 	public GithubDetailResponse getDetails(long userId, boolean isMine) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(NOT_FOUND_USER));
+		if (user.isDeleted()) {
+			throw new CustomException(IS_DELETED_USER);
+		}
+
 		Github github = githubRepository.findByUser(user).orElseThrow(() -> new CustomException(NOT_FOUND_GITHUB));
 
 		List<GithubDetailLanguage> githubLanguages = githubLanguageQueryRepository.findByGithub(github);
