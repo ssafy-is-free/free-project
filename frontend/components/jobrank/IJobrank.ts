@@ -13,22 +13,22 @@ export type applicantInfoType = {
  * chart props
  */
 export interface IChartProps {
-  /**
-   * data
-   */
-  series: number[];
+  curRank: number;
 
-  /**
-   * label
-   */
-  labels: string[];
+  jobPostingIdParam: number;
 }
 
 /**
  * 전체 사용자 정보 조회 컴포넌트 props
  */
 export interface IOtherInfoProps {
-  otherInfo: applicantInfoType;
+  curRank: number;
+
+  jobPostingIdParam: number;
 }
 
-export interface IJobInfoProps {}
+export interface IJobInfoProps {
+  curRank: number;
+
+  jobPostingIdParam: number;
+}
