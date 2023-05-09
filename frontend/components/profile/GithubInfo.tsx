@@ -70,16 +70,16 @@ const dddata = {
   avatarUrl: 'https://~~~',
   commit: 100,
   star: 20,
-  isMine: true,
+  mine: true,
   followers: 5,
   repositories: null,
   languages: [],
 };
 
 const GithubInfo = ({ userId, my }: IGithubInfo) => {
-  const [githubData, setGithubData] = useState<IGithubProfile | null>(dddata);
+  const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
   // const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
-  const [isShow, setIsShow] = useState<boolean>(false);
+  const [isShow, setIsShow] = useState<boolean>(true);
 
   const getGithubData = async () => {
     const res = await getGithub(userId);
@@ -93,6 +93,9 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
     const res = await getMyGithub();
     if (res.data) {
       setGithubData(res.data);
+      if (res.data.repositories === null) {
+        setIsShow(false);
+      }
     } else {
       alert(res.message);
     }
@@ -156,10 +159,10 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
             <div>
               <p>Repositiories</p>
             </div>
-            {githubData.isMine && (
+            {githubData.mine && (
               <div className="isPublic">
                 <div>{isShow ? '공개' : '비공개'} &nbsp;</div>
-                <Toggle isOn={isShow} setIsOn={(status) => setIsShow(status)}></Toggle>
+                <Toggle githubId={githubData.githubId} isOn={isShow} setIsOn={(status) => setIsShow(status)}></Toggle>
               </div>
             )}
           </div>

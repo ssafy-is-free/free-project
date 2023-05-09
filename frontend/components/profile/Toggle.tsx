@@ -2,6 +2,7 @@ import { patchRepoOpen } from '@/pages/api/profileAxios';
 import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { useRouter } from 'next/router';
 
 const Modal = styled.div`
   position: fixed;
@@ -73,16 +74,19 @@ const ToggleContainer = styled.div`
 interface IToggle {
   isOn: boolean;
   setIsOn: (status: boolean) => void;
+  githubId: number;
 }
 
-export const Toggle = ({ isOn, setIsOn }: IToggle) => {
+export const Toggle = ({ isOn, setIsOn, githubId }: IToggle) => {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const goApi = async () => {
-    const res = await patchRepoOpen(!isOn);
-    if (res.status === 'success') {
+    const res = await patchRepoOpen(!isOn, githubId);
+    if (res.status === 'SUCCESS') {
       setModalOpen(false);
       setIsOn(!isOn);
+      router.reload();
     } else {
       alert(res.message);
       setModalOpen(false);
