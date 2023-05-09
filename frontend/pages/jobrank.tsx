@@ -1,6 +1,6 @@
 import RankMenu from '@/components/common/RankMenu';
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import JobUserItem from '@/components/rank/JobUserItem';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import MainOtherItem from '@/components/rank/MainOtherItem';
@@ -16,8 +16,10 @@ import ChartJobrank from '@/components/jobrank/ChartJobrank';
 import { applicantInfoType } from '@/components/jobrank/IJobrank';
 import OtherInfo from '@/components/jobrank/OtherInfo';
 import JobInfo from '@/components/jobrank/JobInfo';
+import SubMenu from '@/components/jobrank/Submenu';
+import CompareBox from '@/components/jobrank/CompareBox';
 
-const Wrapper = styled.div<{ info: number }>`
+const Wrapper = styled.div<{ info: number; submenu: number }>`
   width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
@@ -58,21 +60,24 @@ const Wrapper = styled.div<{ info: number }>`
     }
   }
 
-  .chart-box {
-    width: 100%;
-    background-color: ${(props) => props.theme.bgWhite};
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 24px;
+  .content-wrapper {
+    .chart-box {
+      width: 100%;
+      background-color: ${(props) => props.theme.bgWhite};
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 24px;
 
-    .label {
-      font-weight: bold;
-      margin-bottom: 16px;
-      font-size: 20px;
-      color: ${(props) => props.theme.fontBlack};
+      .label {
+        width: 100%;
+        font-weight: bold;
+        margin-bottom: 16px;
+        font-size: 20px;
+        color: ${(props) => props.theme.fontBlack};
+      }
     }
   }
 
@@ -115,7 +120,8 @@ const JobRank = () => {
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
   const [otherRankInfo, setOtherRankInfo] = useState<resultInformation | null>(null);
 
-  const [myInfo, setMyInfo] = useState<applicantInfoType>(null);
+  // 서브메뉴
+  const [submenu, setSubmenu] = useState<number>(0);
 
   useEffect(() => {
     // TODO : 취업 상세정보 조회
@@ -150,16 +156,16 @@ const JobRank = () => {
 
   return (
     <>
-      <Wrapper info={info}>
+      <Wrapper info={info} submenu={submenu}>
         <div className="job-info-box">
           <RankMenu curRank={curRank} onClick={() => setOpenSelect(true)} />
           <JobInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-          <JobUserItem curRank={curRank} item={userRankInfo} />
         </div>
         <div className="all-rank">
           {info == 0 ? (
             <>
               <ul className="rank-list">
+                <JobUserItem curRank={curRank} item={userRankInfo} />
                 {otherRankInfo &&
                   otherRankInfo.map((el, idx) => (
                     <li key={idx}>
@@ -169,11 +175,20 @@ const JobRank = () => {
               </ul>
             </>
           ) : (
-            <div className="chart-box">
-              <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-              <div className="label">Languages</div>
-              <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-            </div>
+            <>
+              <div className="content-wrapper">
+                <SubMenu submenu={submenu} setSubmenu={setSubmenu} />
+                {submenu == 0 ? (
+                  <div className="chart-box">
+                    <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
+                    <div className="label">Languages</div>
+                    <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} target={1} />
+                  </div>
+                ) : (
+                  <CompareBox curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
+                )}
+              </div>
+            </>
           )}
           <div className="space"></div>
         </div>

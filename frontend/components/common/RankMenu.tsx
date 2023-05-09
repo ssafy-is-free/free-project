@@ -29,7 +29,7 @@ const RankMenu = (props: IRankMenuProps) => {
   return (
     <Wrapper onClick={props.onClick}>
       <div className="menu">
-        {props.curRank == 0 ? <p>깃허브 랭킹</p> : <p>백준 랭킹</p>}
+        {props.curRank == 0 ? <p>깃허브</p> : <p>백준</p>}
         <MenuArrowIcon />
       </div>
     </Wrapper>

@@ -7,21 +7,30 @@ import { getPostingsAllUsers } from '@/pages/api/jobRankAxios';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 95%;
+  display: flex;
+  justify-content: center;
 
   .top-language {
     position: absolute;
-    top: 130px;
-    left: 130px;
+    top: 0px;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .top-name {
       color: #ff7f7f;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 0.8em;
+      margin-bottom: 4px;
     }
 
     .top-percent {
       color: ${(props) => props.theme.fontDarkGray};
-      font-size: 16px;
+      font-size: 0.5em;
     }
   }
 `;
@@ -36,8 +45,7 @@ const ChartJobrank = (props: IChartProps) => {
     (async () => {
       let data = await getPostingsAllUsers(props.jobPostingIdParam);
 
-      //TODO : 코드 더 깔끔하게 쓰는 법?
-      let arr = data?.opponent.languages.languageList;
+      let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
       let scores = new Array();
       let labels = new Array();
       arr?.map((el: any) => {
@@ -55,7 +63,6 @@ const ChartJobrank = (props: IChartProps) => {
     plugins: {
       legend: {
         display: false,
-        // position: 'bottom',
       },
     },
   };

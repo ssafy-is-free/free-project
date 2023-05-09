@@ -132,7 +132,7 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item?.rank}
-        {rankupdown !== 0 && props.selectedOption == null && (
+        {props.item.rankUpDown !== 0 && props.selectedOption == null && (
           <div className="rank-icon">
             <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
           </div>

@@ -48,23 +48,15 @@ authApi.interceptors.request.use((config: any) => {
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
-
-  // console.log('request config : ', config);
-
   return config;
 });
 
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
   (response) => {
-    // console.log('response', response);
-
     return response;
   },
   async (error) => {
-    // console.log('error', error);
-
-    // // return error;
     const { config, response } = error;
     const originalRequest = config;
 
@@ -80,10 +72,7 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
-          // console.log('res', res);
           if (res.status === 200) {
-            // console.log('originalRequest', originalRequest);
-            // const newAccessToken = res.headers.authorization;
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
