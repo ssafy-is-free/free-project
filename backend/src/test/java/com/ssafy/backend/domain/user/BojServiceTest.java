@@ -22,6 +22,7 @@ import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.user.service.BojService;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
+import com.ssafy.backend.global.response.exception.CustomExceptionStatus;
 
 @SpringBootTest
 public class BojServiceTest {
@@ -45,7 +46,7 @@ public class BojServiceTest {
 	}
 
 	@Test
-	@DisplayName("백준 아이디를 저장했을 때 크롤링하는 테스트")
+	@DisplayName("백준 아이디 크롤링 정상작동 테스트")
 	public void testSaveBojIdSuccess() {
 		//given
 
@@ -65,8 +66,42 @@ public class BojServiceTest {
 	}
 
 	@Test
-	@DisplayName("없는 백준 아이디 저장했을 때 테스트")
-	public void testSaveBojIdFail() {
+	@DisplayName("백준 리턴 값 테스트")
+	public void testSaveBojIdCheckValue() {
+		//given
+		User user = createUser("user1", "test");
+		userRepository.save(user);
+		Language language1 = createLanguage("Pascal");
+		languageRepository.saveAll(Arrays.asList(language1));
+		//when
+		bojService.saveId(user.getId(), "test");
+		Baekjoon baekjoon = bojRepository.findByUser(user)
+			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_BOJ_USER));
+		// then
+		assertThat(baekjoon).extracting(Baekjoon::getTier, Baekjoon::getPassCount, Baekjoon::getTryFailCount,
+			Baekjoon::getSubmitCount, Baekjoon::getFailCount).containsExactly(0, 0, 1, 2, 1);
+
+	}
+
+	@Test
+	@DisplayName("백준 닉네임 없음 테스트")
+	public void testSaveBojIdNull() {
+		//given
+		User user = createUser("user1", "");
+		userRepository.save(user);
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		Language language4 = createLanguage("Java 8");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3, language4));
+		//when	//then
+		assertThatThrownBy(() -> bojService.saveId(user.getId(), "")).isInstanceOf(CustomException.class);
+
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 백준 닉네임 저장했을 때 테스트")
+	public void testSaveWeirdBojId() {
 		//given
 		User user = createUser("user1");
 		userRepository.save(user);

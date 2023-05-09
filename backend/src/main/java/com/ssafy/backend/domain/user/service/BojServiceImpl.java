@@ -49,6 +49,11 @@ public class BojServiceImpl implements BojService {
 	@Override
 	public void saveId(long userId, String bojId) {
 
+		//백준 ID가 비어있을 경우
+		if (bojId.isBlank()) {
+			throw new CustomException(NOT_FOUND_BOJ_USER);
+		}
+
 		//유저 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(NOT_FOUND_USER));

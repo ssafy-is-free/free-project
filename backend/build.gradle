@@ -65,7 +65,10 @@ jacocoTestCoverageVerification {
             }
 
             // 커버리지 체크를 제외할 클래스들
-            excludes = []
+            excludes = [
+                    '**/entity/*.class',
+                    'Q*.class'
+            ]
         }
     }
 }

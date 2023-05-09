@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageQueryRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojQueryRepository;
@@ -63,13 +64,52 @@ public class AnalysisBojServiceTest {
 	}
 
 	@Test
-	@DisplayName("백준 1대1 Null 테스트")
-	public void compareWithOpponentNullTest() {
+	@DisplayName("백준 1대1 존재하지 않는 유저 아이디 테스트")
+	public void compareWithOpponentWeirdBojIdTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+
+		userRepository.saveAll(Arrays.asList(user1, user2));
+		Baekjoon boj1 = createBaekjoon(user2, 14, 275, 9, 723, 73,
+			100);
+		bojRepository.save(boj1);
+
+		//when	//then
+		assertThatThrownBy(() -> analysisBojService.compareWithOpponent(user1.getId(), -1L)).isInstanceOf(
+			CustomException.class);
+
+	}
+
+	@Test
+	@DisplayName("백준 1대1 User Null 테스트")
+	public void compareWithOpponentUserNullTest() {
 		//given
 		User user1 = createUser("user1");
+		User user2 = createUser("user2", "user2");
+
+		userRepository.saveAll(Arrays.asList(user1, user2));
+		Baekjoon boj1 = createBaekjoon(user2, 14, 275, 9, 723, 73,
+			100);
+		bojRepository.save(boj1);
+
+		//when
+		BojRankComparisonResponse response = analysisBojService.compareWithOpponent(user1.getId(), user2.getId());
+		//then
+		assertThat(response.checkForNull()).isTrue();
+	}
+
+	@Test
+	@DisplayName("백준 1대1 Opponent Null 테스트")
+	public void compareWithOpponentOpponentNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
 		User user2 = createUser("user2");
 
 		userRepository.saveAll(Arrays.asList(user1, user2));
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		bojRepository.save(boj1);
 
 		//when
 		BojRankComparisonResponse response = analysisBojService.compareWithOpponent(user1.getId(), user2.getId());
@@ -113,6 +153,53 @@ public class AnalysisBojServiceTest {
 		//then
 		assertThat(response.getMy().getBojId()).isEqualTo(user1.getBojId());
 		assertThat(response.getOpponent().getBojId()).isEqualTo(user2.getBojId());
+	}
+
+	@Test
+	@DisplayName("백준 1대1 비교 결과 검증 테스트")
+	public void compareWithOpponentCheckTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+
+		userRepository.saveAll(Arrays.asList(user1, user2));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		BaekjoonLanguage baekjoonLanguage1 = createBaekjoonLanguage(language1.getId(), "30.00", 20, boj1);
+		BaekjoonLanguage baekjoonLanguage2 = createBaekjoonLanguage(language2.getId(), "40.00", 20, boj1);
+		BaekjoonLanguage baekjoonLanguage3 = createBaekjoonLanguage(language3.getId(), "50.00", 20, boj1);
+		BaekjoonLanguage baekjoonLanguage4 = createBaekjoonLanguage(language3.getId(), "30.00", 20, boj2);
+		BaekjoonLanguage baekjoonLanguage5 = createBaekjoonLanguage(language2.getId(), "40.00", 20, boj2);
+		BaekjoonLanguage baekjoonLanguage6 = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj2);
+
+		bojLanguageRepository.saveAll(
+			Arrays.asList(baekjoonLanguage1, baekjoonLanguage2, baekjoonLanguage3, baekjoonLanguage4, baekjoonLanguage5,
+				baekjoonLanguage6));
+
+		//when
+		BojRankComparisonResponse response = analysisBojService.compareWithOpponent(user1.getId(), user2.getId());
+		//then
+		//본인값
+		assertThat(response.getMy()).extracting(BojInfoDetailResponse::getBojId, BojInfoDetailResponse::getTierUrl,
+				BojInfoDetailResponse::getPass, BojInfoDetailResponse::getTryFail, BojInfoDetailResponse::getSubmit,
+				BojInfoDetailResponse::getFail)
+			.containsExactly("user1", "https://d2gd6pc034wcta.cloudfront.net/tier/14.svg", 275, 9, 723, 73);
+		//다른 유저 값
+		assertThat(response.getOpponent()).extracting(BojInfoDetailResponse::getBojId,
+				BojInfoDetailResponse::getTierUrl,
+				BojInfoDetailResponse::getPass, BojInfoDetailResponse::getTryFail, BojInfoDetailResponse::getSubmit,
+				BojInfoDetailResponse::getFail)
+			.containsExactly("user2", "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg", 278, 5, 700, 193);
 	}
 
 	@Test
