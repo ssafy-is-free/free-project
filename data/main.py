@@ -225,7 +225,7 @@ def read_github(token):
 
 @app.get("/data/github/update/{nickname}")
 def update_github(nickname):
-    github_headers = {'Content-Type': 'application/json', 'Authorization': f'Bearer {personal_token}'}
+    github_headers = {'Content-Type': 'application/json', 'Authorization': f'{personal_token}'}
     user_res = requests.get(f"https://api.github.com/search/users?q=user%3A{nickname}", headers=github_headers)
     user_res = user_res.json()['items'][0]
 
