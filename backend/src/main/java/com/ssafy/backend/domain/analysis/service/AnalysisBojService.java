@@ -59,6 +59,9 @@ public class AnalysisBojService {
 		BojInfoDetailResponse my = createBojInfoDetail(id, languageMap);
 		BojInfoDetailResponse opp = createBojInfoDetail(userId, languageMap);
 
+		if (my.checkForNull() || opp.checkForNull())
+			return BojRankComparisonResponse.createEmpty();
+
 		return BojRankComparisonResponse.create(my, opp);
 
 	}
@@ -69,6 +72,8 @@ public class AnalysisBojService {
 		//백준 디테일 정보 저장
 		BojInfoDetailResponse my = createBojInfoDetail(id, languageMap);
 
+		if (my.checkForNull())
+			return BojRankAllComparisonResponse.createEmpty();
 		//공고별로 필터링된 userIds
 		FilteredUserIdSet userIdSet = (jobPostingId == null) ? null : getUserIdByJobPosting(jobPostingId);
 

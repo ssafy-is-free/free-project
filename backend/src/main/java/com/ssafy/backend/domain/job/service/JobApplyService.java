@@ -2,6 +2,8 @@ package com.ssafy.backend.domain.job.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.ssafy.backend.domain.job.dto.JobApplyDetailResponse;
 import com.ssafy.backend.domain.job.dto.JobApplyRegistrationRequest;
 import com.ssafy.backend.domain.job.dto.JobApplyResponse;
@@ -13,7 +15,8 @@ public interface JobApplyService {
 	void createJobApply(long userId, JobApplyRegistrationRequest jobApplyRegistrationRequest);
 
 	//지원 현황 조회
-	List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList);
+	List<JobApplyResponse> getJobApplies(long userId, List<Long> statusIdList, String nextDate, Long jobHistoryId,
+		Pageable pageable);
 
 	//지원 현황 수정
 	void updateJobApply(long userId, long jobHistoryId, JobApplyUpdateRequest jobApplyUpdateRequest);
