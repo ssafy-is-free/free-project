@@ -25,7 +25,7 @@ public class UserQueryRepository {
 
 	public List<User> findByBojId(String bojId) {
 		return queryFactory.selectFrom(user)
-			.where(user.bojId.contains(bojId))
+			.where(user.bojId.contains(bojId), user.isDeleted.eq(false))
 			.fetch();
 	}
 }
