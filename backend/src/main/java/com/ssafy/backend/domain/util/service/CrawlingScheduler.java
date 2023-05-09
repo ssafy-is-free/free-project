@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
@@ -11,6 +12,7 @@ import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
+import com.ssafy.backend.domain.job.service.JobCrawlingService;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.user.service.BojService;
 
@@ -23,23 +25,19 @@ import lombok.extern.slf4j.Slf4j;
 public class CrawlingScheduler {
 
 	private final UserRepository userRepository;
-	private final GithubCrawlingService githubCrawlingService;
 	private final GithubRepository githubRepository;
 	private final BojService bojService;
 	private final BojRepository bojRepository;
+	private final JobCrawlingService jobCrawlingService;
 
 	@Scheduled(cron = "0 0 2 * * *")
+	@Transactional
 	public void githubUpdate() {
-		log.info("깃허브 정보 업데이트 시작");
+		log.info("깃허브 랭킹 정보 업데이트");
 		List<Github> githubList = githubRepository.findAllByOrderByScoreDesc();
 		int rank = 1;
 		for (Github github : githubList) {
 			github.updatePrevRankGithub(rank++);
-		}
-
-		List<User> userList = userRepository.findAll();
-		for (User user : userList) {
-			githubCrawlingService.updateAllGithub(user.getNickname(), user.getId());
 		}
 	}
 
@@ -61,5 +59,11 @@ public class CrawlingScheduler {
 				log.info("백준 아이디 이상한 유저 넘기기");
 			}
 		}
+	}
+
+	@Scheduled(cron = "0 0 23 * * *")
+	public void postingUpdate() {
+		log.info("채용 공고 업데이트");
+		jobCrawlingService.crawlingJobPostings();
 	}
 }
