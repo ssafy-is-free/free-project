@@ -65,8 +65,8 @@ public class Github extends BaseTimeEntity {
 	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST)
 	private Set<GithubLanguage> githubLanguages = new HashSet<>();
 
-	@Column(name = "do_not_user1")
-	private int doNotUse1;
+	@Column(name = "is_public")
+	private boolean isPublic;
 
 	@Column(name = "do_not_user2")
 	private int doNotUse2;
