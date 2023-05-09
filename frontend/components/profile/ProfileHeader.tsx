@@ -23,18 +23,15 @@ const HeaderDiv = styled.div`
 
 interface IProfileHeader {
   back: () => void;
-  name: string;
 }
 
-export default function ProfileHeader({ back, name }: IProfileHeader) {
+export default function ProfileHeader({ back }: IProfileHeader) {
   return (
     <HeaderDiv>
       <div>
         <img src="/Icon/VectorIcon.svg" alt="화살표" onClick={back} />
       </div>
-      <div className="title">
-        <h3>{name}</h3>
-      </div>
+      <div className="title"></div>
       <div>
         <span></span>
       </div>

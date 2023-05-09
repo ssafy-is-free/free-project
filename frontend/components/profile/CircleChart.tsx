@@ -31,6 +31,14 @@ export default function CircleChart({ data, fontsize, label }: CircleChartProps)
     },
   };
 
+  if (data.length < 1) {
+    return (
+      <div>
+        <div>&nbsp;</div>
+        <div>언어 정보가 없어요</div>
+      </div>
+    );
+  }
   return (
     <ChartDiv>
       <Doughnut options={options} data={myChartData(data)}></Doughnut>

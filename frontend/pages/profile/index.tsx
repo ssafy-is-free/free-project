@@ -1,10 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import CustomNav from '@/components/common/CustomNav';
 import BojInfo from '@/components/profile/BojInfo';
 import GithubInfo from '@/components/profile/GithubInfo';
 import styled from 'styled-components';
-import { IGithubProfile, IBojProfile } from '@/components/profile/IProfile';
-import { getMyBoj, getMyGithub } from '../api/profileAxios';
 
 const ProfileContentDiv = styled.div`
   margin-bottom: max(4rem, 10vh);
@@ -21,37 +19,14 @@ const MyProfile = () => {
     setSelectedIdx(idx);
   };
 
-  const [githubData, setGithubData] = useState<IGithubProfile>();
-  const [bojData, setBojData] = useState<IBojProfile>();
-  // const [message, setMessate] = useState<string>('');
-
-  useEffect(() => {
-    (async () => {
-      const res = await getMyGithub();
-      if (res.data) {
-        setGithubData(res.data);
-      } else {
-        console.log(res.message);
-      }
-    })();
-    (async () => {
-      const res = await getMyBoj();
-      if (res.data) {
-        setBojData(res.data);
-      } else {
-        console.log(res.message);
-      }
-    })();
-  }, []);
-
   return (
     <div>
       <ProfileContentDiv>
         <div className="nav">
-          <CustomNav lists={navList} selectIdx={selectIdx}></CustomNav>
+          <CustomNav lists={navList} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
         </div>
-        {selectedIdx === 0 && githubData && <GithubInfo githubData={githubData} my={true}></GithubInfo>}
-        {selectedIdx === 1 && <BojInfo bojData={bojData} my={true}></BojInfo>}
+        {selectedIdx === 0 && <GithubInfo userId="0" my={true}></GithubInfo>}
+        {selectedIdx === 1 && <BojInfo userId="0" my={true}></BojInfo>}
       </ProfileContentDiv>
     </div>
   );

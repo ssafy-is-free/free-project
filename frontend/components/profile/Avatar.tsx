@@ -41,6 +41,7 @@ const CompareDiv = styled.div`
 const mydata: IAvatarData = {
   avatarUrl: '/Icon/ProfileIcon',
   name: 'ssafy',
+  profileLink: '#',
 };
 
 export default function Avatar({ isCircle, data, my }: IAvatar) {
@@ -52,7 +53,7 @@ export default function Avatar({ isCircle, data, my }: IAvatar) {
     if (!my) {
       return (
         <CompareDiv onClick={toCompare}>
-          <img src="/Icon/Compare.svg" alt="" />
+          <img src="/Icon/Compare.svg" alt="/Icon/ProfileIcon.svg" />
           <p>나와 비교하기</p>
         </CompareDiv>
       );
@@ -62,9 +63,11 @@ export default function Avatar({ isCircle, data, my }: IAvatar) {
   };
   return (
     <AvatarDiv active={isCircle}>
-      <div className="avatar">
-        <img src={data ? data.avatarUrl : mydata.avatarUrl} alt="Icon/ProfileIcon.svg" />
-        <h3>{data ? data.name : mydata.name}</h3>
+      <div>
+        <a className="avatar" href={data.profileLink}>
+          <img src={data ? data.avatarUrl : mydata.avatarUrl} alt="Icon/ProfileIcon.svg" />
+          <h3>{data ? data.name : mydata.name}</h3>
+        </a>
       </div>
       {compare()}
     </AvatarDiv>

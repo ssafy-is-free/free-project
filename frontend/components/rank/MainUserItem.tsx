@@ -60,15 +60,23 @@ const Wrapper = styled.div<{ rankupdown: number }>`
       /* background-color: white; */
     }
     .user-nickname {
-      width: 50%;
+      width: 70%;
       display: flex;
       align-items: center;
 
-      .user-tier {
-        width: 24px;
-        height: 24px;
-        /* border-radius: 50%; */
-        margin-left: 8px;
+      .name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .tier {
+        .user-tier {
+          width: 24px;
+          height: 24px;
+          /* border-radius: 50%; */
+          margin-left: 8px;
+        }
       }
     }
   }
@@ -106,15 +114,6 @@ const StyledRankUpDownIcon = styled(RankUpDownIcon)<{ rankupdown: number }>`
 `;
 
 const MainUserItem = (props: IMainUserItemProps) => {
-  const router = useRouter();
-  const goProfile = () => {
-    if (props.curRank == 0) {
-      router.push(`/profile/github/${props.item.userId}`);
-    } else {
-      router.push(`/profile/boj/${props.item.userId}`);
-    }
-  };
-
   // -1, 0, 1
   const [rankupdown, setRankupdown] = useState<number>(0);
 
@@ -129,7 +128,7 @@ const MainUserItem = (props: IMainUserItemProps) => {
   }, [props.curRank]);
 
   return (
-    <Wrapper onClick={goProfile} rankupdown={rankupdown}>
+    <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item.rank}
         {rankupdown !== 0 && props.selectedOption == null && (
@@ -141,8 +140,12 @@ const MainUserItem = (props: IMainUserItemProps) => {
       <div className="center">
         <img src={props.item.avatarUrl} className="user-photo" />
         <div className="user-nickname">
-          {props.item.nickname}
-          {props.curRank == 1 && <img src={props.item.tierUrl} className="user-tier" />}
+          <div className="name">{props.item?.nickname} </div>
+          {props.curRank == 1 && (
+            <div className="tier">
+              <img src={props.item?.tierUrl} className="user-tier" />
+            </div>
+          )}
         </div>
       </div>
       <div className="user-score">{props.item.score}</div>

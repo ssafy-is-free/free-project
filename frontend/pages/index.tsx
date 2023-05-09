@@ -205,6 +205,7 @@ const Main = () => {
   // 상세정보 열기
   const [openProfile, setOpenProfile] = useState<boolean>(false);
   const [clickedUserId, setClickedUserId] = useState<number>(0);
+  const [clickMy, setClickMy] = useState(false);
 
   // 무한 스크롤 구현하기
   const [ref, inView, entry] = useInView({
@@ -268,6 +269,12 @@ const Main = () => {
   const goProfile = (userId: number) => {
     setClickedUserId(userId);
   };
+
+  useEffect(() => {
+    if (clickMy) {
+      setOpenProfile(true);
+    }
+  }, [clickMy]);
 
   useEffect(() => {
     if (clickedUserId !== 0) {
@@ -506,32 +513,20 @@ const Main = () => {
 
   // 전체 랭킹 fixed event + Scroll event
   const allRef = useRef<any>();
-  const wrapperRef = useRef<any>();
-  const headerRef = useRef<any>();
 
   const handleScroll = (event: any) => {
     const el = document.querySelector('.my-rank');
     if (el instanceof HTMLElement) {
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
-      console.log(scrollPoint);
-      console.log(target);
 
       if (scrollPoint >= target) {
         allRef.current.style.position = 'fixed';
         allRef.current.style.top = '48px';
-        // wrapperRef.current.style.zIndex = '4';
-        // headerRef.current.style.zIndex = '5';
       } else {
         allRef.current.style.position = '';
         allRef.current.style.top = '';
       }
-      // } else {
-      //   allRef.current.style.position = '';
-      //   allRef.current.style.top = '';
-      //   // wrapperRef.current.style.zIndex = '';
-      //   // headerRef.current.style.zIndex = '2';
-      // }
     }
   };
 
@@ -541,9 +536,11 @@ const Main = () => {
     return (
       <Profile
         curRank={curRank}
-        id={clickedUserId}
+        id={clickedUserId.toString()}
+        my={clickMy}
         back={() => {
           setOpenProfile(false);
+          setClickMy(false);
           setClickedUserId(0);
         }}
       ></Profile>
@@ -552,7 +549,7 @@ const Main = () => {
     return (
       <>
         {!searchClick && (
-          <Header ref={headerRef}>
+          <Header>
             {/* 로고 */}
             <div
               className="logo-box"
@@ -581,7 +578,7 @@ const Main = () => {
             </div>
           </Header>
         )}
-        <Wrapper searchClick={searchClick} onScroll={handleScroll} ref={wrapperRef}>
+        <Wrapper searchClick={searchClick} onScroll={handleScroll}>
           {!searchClick ? (
             <>
               <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
@@ -606,12 +603,16 @@ const Main = () => {
                 ) : myGitRank && curRank == 0 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myGitRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myGitRank} />
+                    </div>
                   </div>
                 ) : myBojRank && curRank == 1 ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myBojRank} />
+                    <div onClick={() => setClickMy(true)}>
+                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myBojRank} />
+                    </div>
                   </div>
                 ) : isLogin && curRank == 1 && !selectedOption ? (
                   <div className="my-rank">
