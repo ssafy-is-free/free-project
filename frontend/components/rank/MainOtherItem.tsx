@@ -126,9 +126,6 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
     } else {
       setRankupdown(0);
     }
-
-    console.log(rankupdown);
-    console.log(props.selectedOption);
   }, [props.curRank]);
 
   return (
