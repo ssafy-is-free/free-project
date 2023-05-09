@@ -29,7 +29,7 @@ public class GithubQueryRepository {
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId))
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId), user.isDeleted.eq(false))
 			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -47,7 +47,7 @@ public class GithubQueryRepository {
 		return queryFactory.select(github)
 			.from(github)
 			.join(github.user, user).fetchJoin()
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId), github.user.isDeleted.eq(false))
+			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId), user.isDeleted.eq(false))
 			.fetch().size();
 	}
 
@@ -55,7 +55,7 @@ public class GithubQueryRepository {
 		return queryFactory.select(github)
 			.from(github)
 			.join(github.user, user).fetchJoin()
-			.where(higherRanked(score, userId), github.user.isDeleted.eq(false))
+			.where(higherRanked(score, userId), user.isDeleted.eq(false))
 			.fetch().size();
 	}
 
