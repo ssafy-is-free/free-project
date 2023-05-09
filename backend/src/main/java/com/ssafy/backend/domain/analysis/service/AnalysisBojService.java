@@ -110,7 +110,7 @@ public class AnalysisBojService {
 		// 삭제된 유저인지 판단
 		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
 		if (!findUser.isPresent()) {
-			return BojInfoDetailResponse.createEmpty();
+			throw new CustomException(NOT_FOUND_USER);
 		}
 		//유저 아이디로 백준 아이디 조회
 		User user = findUser.get();
