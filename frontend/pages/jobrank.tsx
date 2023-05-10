@@ -127,7 +127,7 @@ const JobRank = () => {
   const [ref, inView, entry] = useInView({
     threshold: 0,
   });
-  const [size, setSize] = useState<number>(20);
+  const [size, setSize] = useState<number>(2);
   const [nextRank, setNextRank] = useState<number>(1);
   // 더이상 데이터가 없을 때
   const [noMore, setNoMore] = useState<boolean>(false);
@@ -150,41 +150,25 @@ const JobRank = () => {
       if (inView && inViewFirst) {
         setInViewFirst(false);
       } else if (inView && !inViewFirst) {
-        onGetRankData();
+        onGetRankData(nextRank);
       }
     }
   }, [inView]);
 
   useEffect(() => {
-    // nextRank 초기화
-    setNextRank(1);
-
-    // 내 깃허브 정보 가져오기
-    if (curRank == 0) {
-      // 내 깃허브 정보 불러오기
-      (async () => {
-        let data = await getMyGitRanking(jobPostingIdParam);
-        setUserRankInfo(data);
-      })();
-    } else {
-      // 내 백준 정보 불러오기
-      (async () => {
-        let data = await getMyBojRanking(jobPostingIdParam);
-        setUserRankInfo(data);
-      })();
-    }
-
-    onGetRankData();
+    setNoMore(false);
+    onGetRankData(1);
   }, [curRank]);
 
-  const onGetRankData = () => {
+  const onGetRankData = (nextRankParam: number) => {
     // 랭킹 정보 가져오기
     if (curRank == 0) {
       // 처음 가져올 때(nextRank가 1인 상태)
-      if (nextRank == 1) {
+      if (nextRankParam == 1) {
         // 깃허브 정보 불러오기
         (async () => {
           let data = await getGithubRanking(size, jobPostingIdParam);
+
           setOtherRankInfo(data);
           setNextRank(data[data.length - 1].rank);
         })();
@@ -206,11 +190,18 @@ const JobRank = () => {
           }
         })();
       }
+
+      // 내 깃허브 정보 불러오기
+      (async () => {
+        let data = await getMyGitRanking(jobPostingIdParam);
+        setUserRankInfo(data);
+      })();
     } else if (curRank == 1) {
       // 백준 정보 불러오기
-      if (nextRank == 1) {
+      if (nextRankParam == 1) {
         (async () => {
           let data = await getBojRanking(size, jobPostingIdParam);
+
           setOtherRankInfo(data);
           setNextRank(data[data.length - 1]?.rank);
         })();
@@ -231,6 +222,12 @@ const JobRank = () => {
           }
         })();
       }
+
+      // 내 백준 정보 불러오기
+      (async () => {
+        let data = await getMyBojRanking(jobPostingIdParam);
+        setUserRankInfo(data);
+      })();
     }
   };
 
