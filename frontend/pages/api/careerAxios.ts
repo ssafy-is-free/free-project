@@ -60,3 +60,11 @@ export const getHistoryDtail = async (historyId: number) => {
   });
   return data;
 };
+
+export const deleteHistory = async (historyId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/job/history/${historyId}`,
+  });
+  return data;
+};

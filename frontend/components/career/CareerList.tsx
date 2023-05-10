@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
 import { getHistory } from '@/pages/api/careerAxios';
-import CheckBox from './CheckBox';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -73,6 +72,10 @@ const CareerList = ({ openNew }: ICareerListProps) => {
   const selectIdx = (idx: number) => {
     setSelectedIdx(idx);
   };
+  const delapi = async () => {
+    Array.from(checkedItems);
+    setDelMode(false);
+  };
 
   useEffect(() => {
     getCareerData();
@@ -94,7 +97,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
               setCheckedItems(new Set());
             }}
           />
-          <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
+          {delMode ? <div>삭제하기</div> : <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />}
         </div>
         <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
         {selectedIdx === 0 ? (

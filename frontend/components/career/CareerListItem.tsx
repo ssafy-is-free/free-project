@@ -15,7 +15,7 @@ interface Iddetail {
   nextDate: string;
   objective: string;
   applicantCount: number;
-  dDayName: string;
+  ddayName: string;
 }
 
 const DetailCardDiv = styled.div`
@@ -110,7 +110,7 @@ const CardHeader = ({ ddetail, spread, setSpread, modalOpen }: ICardHeaderProps)
       )}
       <div className="flexDiv">
         <button onClick={() => modalOpen('dDayName')}>
-          {ddetail.dDayName}: {ddetail.nextDate}
+          {ddetail.ddayName}: {ddetail.nextDate}
         </button>
         <button>{ddetail.status}</button>
       </div>
@@ -164,7 +164,6 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
   };
 
   useEffect(() => {
-    // api
     getDetail();
   }, []);
 
