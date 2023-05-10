@@ -1,8 +1,5 @@
 import CareerList from '@/components/career/CareerList';
-import DatePicker from '@/components/career/DatePicker';
-import DdayModal from '@/components/career/DdayModal';
 import NewCareer from '@/components/career/NewCareer';
-import NewCareerModal from '@/components/career/NewCareerModal';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -22,10 +19,6 @@ const Test = () => {
     <TestDiv>
       <CareerList openNew={openNew}></CareerList>
       {newOpen && <NewCareer close={closeNew}></NewCareer>}
-
-      {/* {<NewCareerModal></NewCareerModal>} */}
-      {/* <DatePicker updateDate={updateDate}></DatePicker> */}
-      {/* <DdayModal></DdayModal> */}
     </TestDiv>
   );
 };

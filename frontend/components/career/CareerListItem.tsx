@@ -68,6 +68,8 @@ const DetailCardDiv = styled.div`
       margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
+      .statusbtn {
+      }
       .upalignDiv {
         display: flex;
         .tag {
@@ -117,7 +119,9 @@ const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICar
         <button onClick={ddayModal}>
           {ddetail.ddayName}: {ddetail.nextDate}
         </button>
-        <button onClick={statusModal}>{ddetail.status}</button>
+        <button className="statusbtn" onClick={statusModal}>
+          {ddetail.status}
+        </button>
       </div>
     </div>
   );
