@@ -127,7 +127,7 @@ const JobRank = () => {
   const [ref, inView, entry] = useInView({
     threshold: 0,
   });
-  const [size, setSize] = useState<number>(2);
+  const [size, setSize] = useState<number>(20);
   const [nextRank, setNextRank] = useState<number>(1);
   // 더이상 데이터가 없을 때
   const [noMore, setNoMore] = useState<boolean>(false);
