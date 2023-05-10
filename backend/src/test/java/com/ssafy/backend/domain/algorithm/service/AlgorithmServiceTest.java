@@ -309,11 +309,133 @@ public class AlgorithmServiceTest {
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2));
 
 		//when
-		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, null, null, null, null, null,
+		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, language1.getId(), null, null,
+			null,
+			jobPosting1.getId(),
 			Pageable.ofSize(10));
 
 		//then
+		assertThat(responses).hasSize(1);
+
+	}
+
+	@Test
+	@DisplayName("백준 전체 조회 공고 X 테스트")
+	public void getBojRankListByBojIdJobNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		BaekjoonLanguage baekjoonLanguage1 = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj1);
+		BaekjoonLanguage baekjoonLanguage2 = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj2);
+		bojLanguageRepository.saveAll(Arrays.asList(baekjoonLanguage1, baekjoonLanguage2));
+
+		//when
+		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, language1.getId(), null, null,
+			null, null, Pageable.ofSize(10));
+
+		//then
+		assertThat(responses).hasSize(2);
+
+	}
+
+	@Test
+	@DisplayName("백준 전체 조회 언어 X 공고 X 테스트")
+	public void getBojRankListByBojIdLanguageAndJobNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		//when
+		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, null, null, null,
+			null, null, Pageable.ofSize(10));
+
+		//then
 		assertThat(responses).hasSize(3);
+
+	}
+
+	@Test
+	@DisplayName("백준 전체 조회 공고id가 있는데, 공고에 해당하는 유저가 없는 경우 테스트")
+	public void getBojRankListByBojIdJobNotNullUserNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		//when
+		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, null, null, null,
+			null, jobPosting1.getId(), Pageable.ofSize(10));
+
+		//then
+		assertThat(responses).isEmpty();
+
+	}
+
+	@Test
+	@DisplayName("백준 전체 조회 언어id가 있는데, 언어에 해당하는 유저가 없는 경우 테스트")
+	public void getBojRankListByBojIdLanguageNotNullUserNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 15, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		//when
+		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, language1.getId(), null, null,
+			null, null, Pageable.ofSize(10));
+
+		//then
+		assertThat(responses).isEmpty();
 
 	}
 
