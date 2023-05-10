@@ -44,7 +44,7 @@ const mydata: IAvatarData = {
   profileLink: '#',
 };
 
-export default function Avatar({ isCircle, data, my }: IAvatar) {
+const Avatar = ({ isCircle, data, my }: IAvatar) => {
   const toCompare = () => {
     alert('업데이트 예정입니다.');
   };
@@ -72,4 +72,5 @@ export default function Avatar({ isCircle, data, my }: IAvatar) {
       {compare()}
     </AvatarDiv>
   );
-}
+};
+export default Avatar;

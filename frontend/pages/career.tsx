@@ -14,7 +14,7 @@ const CareerDiv = styled.div`
   }
 `;
 
-export default function Career() {
+const Career = () => {
   return (
     <CareerDiv>
       <img src="/Icon/WorkInProgressIcon.png" alt="" />
@@ -25,4 +25,6 @@ export default function Career() {
       </p>
     </CareerDiv>
   );
-}
+};
+
+export default Career;
