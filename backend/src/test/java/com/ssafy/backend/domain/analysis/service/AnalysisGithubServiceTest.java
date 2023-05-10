@@ -84,8 +84,8 @@ class AnalysisGithubServiceTest {
 		GithubRepo repo3 = createGithubRepo("repository3", yourGithub);
 		githubRepoRepository.saveAll(Arrays.asList(repo1, repo2, repo3));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
-		long opponentUserId = userRepository.findByNickname("user2").orElse(user2).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
+		long opponentUserId = userRepository.findByNickname("user2").getId();
 
 		//when
 		CompareGithubResponse result = analysisGithubService.compareWithOpponent(opponentUserId, myUserId);
@@ -131,8 +131,8 @@ class AnalysisGithubServiceTest {
 		GithubLanguage githubLanguage3 = createGithubLanguage(languageId2, 100, yourGithub);
 		githubLanguageRepository.saveAll(Arrays.asList(githubLanguage1, githubLanguage2, githubLanguage3));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
-		long opponentUserId = userRepository.findByNickname("user2").orElse(user2).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
+		long opponentUserId = userRepository.findByNickname("user2").getId();
 
 		//when
 		CompareGithubResponse result = analysisGithubService.compareWithOpponent(opponentUserId, myUserId);
@@ -184,7 +184,7 @@ class AnalysisGithubServiceTest {
 		JobHistory jobHistory4 = createJobHistory(user4, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3, jobHistory4));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
 		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 
 		//when
@@ -262,7 +262,7 @@ class AnalysisGithubServiceTest {
 			Arrays.asList(githubLanguage1, githubLanguage2, githubLanguage3, githubLanguage4, githubLanguage5,
 				githubLanguage6, githubLanguage7, githubLanguage8));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
 		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 
 		//when
@@ -313,7 +313,7 @@ class AnalysisGithubServiceTest {
 		JobHistory jobHistory4 = createJobHistory(user4, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3, jobHistory4));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
 		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId() + 1;
 
 		//then
@@ -345,7 +345,7 @@ class AnalysisGithubServiceTest {
 		JobHistory jobHistory = createJobHistory(user2, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory));
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
 		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 
 		//then
@@ -372,7 +372,7 @@ class AnalysisGithubServiceTest {
 		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
 		jobPostingRepository.save(jobPosting1);
 
-		long myUserId = userRepository.findByNickname("user1").orElse(user1).getId();
+		long myUserId = userRepository.findByNickname("user1").getId();
 		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 
 		//then
