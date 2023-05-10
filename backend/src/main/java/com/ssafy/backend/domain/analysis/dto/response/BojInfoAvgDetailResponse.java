@@ -25,12 +25,6 @@ public class BojInfoAvgDetailResponse {
 	private Double fail;
 	private List<BojLanguageResponse> languages;
 
-	public boolean checkForNull() {
-		return this.tierUrl == null && this.pass == 0 &&
-			this.tryFail == 0 && this.submit == 0 && this.fail == 0 &&
-			(this.languages == null || this.languages.isEmpty());
-	}
-
 	public static BojInfoAvgDetailResponse create(BojAvgDetail bojAvgDetail,
 		List<BojLanguageResponse> languages) {
 		return BojInfoAvgDetailResponse.builder()
