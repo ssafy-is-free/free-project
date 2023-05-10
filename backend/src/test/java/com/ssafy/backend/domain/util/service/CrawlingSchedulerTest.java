@@ -102,8 +102,62 @@ public class CrawlingSchedulerTest {
 			Baekjoon::getSubmitCount, Baekjoon::getFailCount).containsExactly(0, 0, 1, 2, 1);
 	}
 
+	@Test
+	@DisplayName("백준 스케줄링 랭크 정확도 테스트")
+	public void bojUpdateRankCheckTest() {
+		//given
+		User user1 = createUser("user1", "test");
+		User user2 = createUser("user2", "test2");
+		userRepository.saveAll(Arrays.asList(user1, user2));
+
+		Baekjoon boj1 = createBaekjoon(user1, 15, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 14, 275, 9, 723, 73,
+			100, 1);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++98");
+		Language language3 = createLanguage("Pascal");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+		//when
+		crawlingScheduler.bojUpdate();
+		List<Baekjoon> response = bojRepository.findAll();
+
+		//then
+		assertThat(response.get(0)).extracting(Baekjoon::getPreviousRank).isEqualTo(1L);
+		assertThat(response.get(1)).extracting(Baekjoon::getPreviousRank).isEqualTo(2L);
+	}
+
 	private User createUser(String nickname, String bojId) {
 		return User.builder().nickname(nickname).bojId(bojId).image("1").isDeleted(false).build();
+	}
+
+	private Baekjoon createBaekjoon(User user, int tier, int passCount, int tryFailCount, int submitCount,
+		int failCount, int score) {
+		return Baekjoon.builder()
+			.user(user)
+			.tier(tier)
+			.passCount(passCount)
+			.tryFailCount(tryFailCount)
+			.submitCount(submitCount)
+			.failCount(failCount)
+			.score(score)
+			.build();
+	}
+
+	private Baekjoon createBaekjoon(User user, int tier, int passCount, int tryFailCount, int submitCount,
+		int failCount, int score, int previousRank) {
+		return Baekjoon.builder()
+			.user(user)
+			.tier(tier)
+			.passCount(passCount)
+			.tryFailCount(tryFailCount)
+			.submitCount(submitCount)
+			.failCount(failCount)
+			.score(score)
+			.previousRank(previousRank)
+			.build();
 	}
 
 	private Language createLanguage(String name) {
