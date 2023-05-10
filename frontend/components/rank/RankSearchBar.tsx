@@ -19,7 +19,7 @@ const bounce = keyframes`
 const Wrapper = styled.div`
   position: relative;
   z-index: 1;
-  padding: 1rem 2rem;
+  padding: 0.2rem 0.2rem;
   width: 100%;
   height: 100%;
   background-color: ${(props) => props.theme.bgWhite};
@@ -40,11 +40,10 @@ const Wrapper = styled.div`
     align-items: start;
     position: relative;
     z-index: 5;
-    margin-top: 16px;
 
     .icon-box {
       position: absolute;
-      left: 16px;
+      left: 14px;
       width: 20px;
       height: 20px;
     }
@@ -52,12 +51,13 @@ const Wrapper = styled.div`
     .search-box {
       width: 100%;
       display: flex;
+      justify-content: space-around;
       align-items: center;
     }
 
     .input-box {
       height: 40px;
-      width: 85%;
+      width: 90%;
       border-radius: 8px;
       padding-left: 44px;
       color: ${(props) => props.theme.fontBlack};
@@ -76,6 +76,7 @@ const Wrapper = styled.div`
       font-size: 16px;
       /* font-weight: bold; */
       margin-left: 8px;
+      width: 10%;
     }
 
     .search-results {

@@ -103,24 +103,6 @@ const Wrapper = styled.div<{ searchClick: boolean }>`
       }
     }
   }
-
-  .search-content-wrapper {
-    position: relative;
-    z-index: 1;
-    padding: 1rem 2rem;
-    width: 100%;
-    height: 100%;
-    background-color: ${(props) => props.theme.bgWhite};
-    display: flex;
-    flex-direction: column;
-
-    overflow-y: scroll;
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-    &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera*/
-    }
-  }
 `;
 
 const Header = styled.div`
@@ -664,18 +646,16 @@ const Main = () => {
               </div>
             </>
           ) : (
-            <div className="search-content-wrapper">
-              <SearchBar
-                setNoScroll={setNoScroll}
-                curRank={curRank}
-                setGitRankList={setGitRankList}
-                setBojRankList={setBojRankList}
-                getRankList={getRankList}
-                size={size}
-                setSearchClick={setSearchClick}
-                setSelectedOption={setSelectedOption}
-              />
-            </div>
+            <SearchBar
+              setNoScroll={setNoScroll}
+              curRank={curRank}
+              setGitRankList={setGitRankList}
+              setBojRankList={setBojRankList}
+              getRankList={getRankList}
+              size={size}
+              setSearchClick={setSearchClick}
+              setSelectedOption={setSelectedOption}
+            />
           )}
         </Wrapper>
         {/* {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />} */}
