@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Pageable;
 
 import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
@@ -309,7 +310,7 @@ public class AlgorithmServiceTest {
 
 		//when
 		List<BojRankResponse> responses = algorithmService.getBojRankListByBojId(null, null, null, null, null, null,
-			null);
+			Pageable.ofSize(10));
 
 		//then
 		assertThat(responses).hasSize(3);
