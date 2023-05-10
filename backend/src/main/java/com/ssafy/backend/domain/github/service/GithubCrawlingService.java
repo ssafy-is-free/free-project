@@ -5,8 +5,6 @@ import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +56,7 @@ public class GithubCrawlingService {
 			.block();
 
 		// 토큰에 해당하는 깃허브 유저 정보가 없는경우
-		if (githubCrawling.getNickname().equals("")) {
+		if (githubCrawling == null || githubCrawling.getNickname().equals("")) {
 			throw new CustomException(NOT_FOUND_GITHUB);
 		}
 
@@ -122,7 +120,7 @@ public class GithubCrawlingService {
 			.block();
 
 		// 닉네임에 해당하는 깃허브 유저 정보가 없는경우
-		if (githubCrawling.getNickname().equals("")) {
+		if (githubCrawling == null || githubCrawling.getNickname().equals("")) {
 			throw new CustomException(NOT_FOUND_GITHUB);
 		}
 

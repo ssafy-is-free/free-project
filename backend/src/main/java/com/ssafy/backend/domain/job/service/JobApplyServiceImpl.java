@@ -96,7 +96,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 	public JobApplyDetailResponse getJobApply(long userId, long jobHistoryId) {
 
 		//유저 존재 유무 확인
-		userRepository.findByIdAndIsDeletedFalse(userId)
+		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 취업이력 조회.
@@ -120,7 +120,7 @@ public class JobApplyServiceImpl implements JobApplyService {
 	public void deleteJobApply(long userId, List<Long> jobHistoryId) {
 
 		//유저 존재 유무
-		userRepository.findByIdAndIsDeletedFalse(userId)
+		User user = userRepository.findByIdAndIsDeletedFalse(userId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_USER));
 
 		//해당 id 삭제처리.
