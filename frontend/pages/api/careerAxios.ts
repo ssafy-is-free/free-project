@@ -1,7 +1,7 @@
 import { authApi, basicApi } from './customAxio';
 
 export const getJobPost = async (keyword: string) => {
-  const { data } = await basicApi({
+  const { data } = await authApi({
     method: 'get',
     url: `/job/posting`,
     params: {
@@ -12,7 +12,7 @@ export const getJobPost = async (keyword: string) => {
 };
 
 export const getJobStatus = async () => {
-  const { data } = await basicApi({
+  const { data } = await authApi({
     method: 'get',
     url: `/job/status`,
   });
@@ -49,6 +49,14 @@ export const getHistory = async (statusId: string[], size?: string) => {
     method: 'get',
     url: `/job`,
     params: params,
+  });
+  return data;
+};
+
+export const getHistoryDtail = async (historyId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/job/history/${historyId}`,
   });
   return data;
 };

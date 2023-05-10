@@ -5,7 +5,7 @@ import CareerSearch from './CareerSearch';
 import { ISearchResult } from './CareerSearch';
 import StatusModal, { IStatus } from './StatusModal';
 import DdayModal from './DdayModal';
-import { postJob } from '@/pages/api/career';
+import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
 
 const NewCareerDiv = styled.div`

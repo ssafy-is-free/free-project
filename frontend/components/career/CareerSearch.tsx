@@ -1,4 +1,4 @@
-import { getJobPost } from '@/pages/api/career';
+import { getJobPost } from '@/pages/api/careerAxios';
 import { useState } from 'react';
 import styled from 'styled-components';
 
@@ -90,7 +90,7 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
 
   const searching = async (value: string) => {
     // 취업 공고, 회사명 search api
-    // 1996.11.22 미정인 경우 날짜가
+    // 1996-11-22 날짜가 미정인 경우
     // searchapi(value)
     if (value) {
     }
@@ -134,7 +134,8 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
               <p>회사명 : {item.companyName}</p>
               <p>공고명 : {item.postingName}</p>
               <p>
-                기간 : {item.startTime} ~ {item.endTime}
+                기간 : {item.startTime === '1996-11-22' ? '미정' : item.startTime} ~{' '}
+                {item.endTime === '1996-11-22' ? '미정' : item.endTime}
               </p>
             </div>
           ))}

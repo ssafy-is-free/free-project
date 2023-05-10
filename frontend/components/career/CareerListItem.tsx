@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
-import NewCareerModal from './NewCareerModal';
+import { getHistoryDtail } from '@/pages/api/careerAxios';
+import CheckBox from './CheckBox';
 
 interface Iddetail {
   postingId: number;
@@ -16,71 +17,73 @@ interface Iddetail {
   applicantCount: number;
   dDayName: string;
 }
-const ddetail = {
-  postingId: 1,
-  postingName: '뽑아요 뽑습니다',
-  companyName: '삼성전자',
-  status: '서류 합격',
-  startTime: '2023-04-14 13:00',
-  endTime: '2023-04-21 18:00',
-  memo: '메모입니다~메모입니다~메모입니다~메모입니다~메모입니다\n~메모입니다~\n메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~메모입니다~',
-  dDayName: '코딩테스트',
-  nextDate: '2023-05-01',
-  objective: '백엔드 개발자',
-  applicantCount: 10,
-};
 
 const DetailCardDiv = styled.div`
-  padding: 1rem;
   width: 100%;
-  background-color: ${(props) => props.theme.lightGray};
-  border-radius: 1rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 
-  button {
-    border-radius: 0.5rem;
-    background-color: ${(props) => props.theme.primary};
-    color: white;
-    padding: 0.5rem;
+  .checkbox {
+    width: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    div {
-      white-space: nowrap;
-    }
-  }
-  .title {
+  .item {
+    flex-grow: 1;
+    padding: 1rem;
+    background-color: ${(props) => props.theme.lightGray};
+    border-radius: 1rem;
     display: flex;
-    justify-content: space-between;
-  }
-  .memo {
-    padding: 0.2rem;
-    min-height: 3rem;
-    white-space: pre-wrap;
-    background-color: white;
-    border-radius: 0.5rem;
-    border: 1px solid;
-  }
-  .flexDiv {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    .upalignDiv {
-      display: flex;
-      .tag {
+    flex-direction: column;
+    gap: 0.5rem;
+
+    button {
+      border-radius: 0.5rem;
+      background-color: ${(props) => props.theme.primary};
+      color: white;
+      padding: 0.5rem;
+
+      div {
         white-space: nowrap;
       }
     }
-  }
-  .alignDiv {
-    display: flex;
-    align-items: center;
+    .title {
+      display: flex;
+      justify-content: space-between;
+    }
+    .memo {
+      padding: 0.2rem;
+      min-height: 3rem;
+      white-space: pre-wrap;
+      background-color: white;
+      border-radius: 0.5rem;
+      border: 1px solid;
+    }
+    .flexDiv {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      .upalignDiv {
+        display: flex;
+        .tag {
+          white-space: nowrap;
+        }
+      }
+    }
+    .alignDiv {
+      display: flex;
+      align-items: center;
+    }
   }
 `;
 
-interface IDetailCardProps {
+interface ICareerListItemProps {
   cardId: number;
+  delMode: boolean;
+  dDay: string;
+  delCheck: (isChecked: boolean) => void;
 }
 interface ICardHeaderProps {
   ddetail: Iddetail;
@@ -139,12 +142,21 @@ const CardContent = ({ ddetail }: ICardContentProps) => {
   );
 };
 
-const CareerListItem = ({ cardId }: IDetailCardProps) => {
+const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean>(false);
   const [detail, setDetail] = useState<Iddetail | null>(null);
 
   const headerClick = () => {
     setSpread(!spread);
+  };
+
+  const getDetail = async () => {
+    const res = await getHistoryDtail(cardId);
+    if (res.status == 'SUCCESS') {
+      setDetail(res.data);
+    } else {
+      console.log(res.message);
+    }
   };
 
   const modalOpen = (tag: string) => {
@@ -153,9 +165,7 @@ const CareerListItem = ({ cardId }: IDetailCardProps) => {
 
   useEffect(() => {
     // api
-    setTimeout(() => {
-      setDetail(ddetail);
-    }, 1000);
+    getDetail();
   }, []);
 
   if (!detail) {
@@ -167,8 +177,11 @@ const CareerListItem = ({ cardId }: IDetailCardProps) => {
   } else {
     return (
       <DetailCardDiv>
-        <CardHeader ddetail={detail} setSpread={headerClick} spread={spread} modalOpen={modalOpen} />
-        {spread && <CardContent ddetail={detail} />}
+        {delMode && <CheckBox handeler={(bChecked: boolean) => delCheck(bChecked)}></CheckBox>}
+        <div className="item">
+          <CardHeader ddetail={detail} setSpread={headerClick} spread={spread} modalOpen={modalOpen} />
+          {spread && <CardContent ddetail={detail} />}
+        </div>
       </DetailCardDiv>
     );
   }

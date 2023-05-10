@@ -12,21 +12,11 @@ const TestDiv = styled.div`
 
 const Test = () => {
   const [newOpen, setNewOpen] = useState<boolean>(false);
-  const [modal, setModal] = useState<boolean>(false);
   const closeNew = () => {
     setNewOpen(false);
   };
   const openNew = () => {
     setNewOpen(true);
-  };
-  const closeModal = () => {
-    setModal(false);
-  };
-  const openModal = () => {
-    setModal(true);
-  };
-  const updateDate = (date: string) => {
-    console.log(date);
   };
   return (
     <TestDiv>

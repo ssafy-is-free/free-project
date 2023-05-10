@@ -3,7 +3,8 @@ import CareerListItem from './CareerListItem';
 import { useState, useEffect } from 'react';
 import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
-import { getHistory } from '@/pages/api/career';
+import { getHistory } from '@/pages/api/careerAxios';
+import CheckBox from './CheckBox';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -27,14 +28,6 @@ const CareerListDiv = styled.div`
   }
 `;
 
-const CheckBox = () => {
-  return (
-    <div>
-      <div>check</div>
-    </div>
-  );
-};
-
 interface IHistory {
   jobHistoryId: number;
   companyName: string;
@@ -43,23 +36,36 @@ interface IHistory {
   dDay: string;
   status: string;
 }
-interface ICareerList {
-  openNew: () => void;
-}
+
 const progressStatus = ['1', '2', '4', '6'];
 const doneStatus = ['3', '5', '7', '8'];
+interface ICareerListProps {
+  openNew: () => void;
+}
 
-const CareerList = ({ openNew }: ICareerList) => {
+const CareerList = ({ openNew }: ICareerListProps) => {
   const [delMode, setDelMode] = useState<boolean>(false);
   const [progressData, setProgressData] = useState<IHistory[] | null>(null);
   const [doneData, setDoneData] = useState<IHistory[] | null>(null);
   const [selectedIdx, setSelectedIdx] = useState<number>(0);
+  const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+
+  const checkedItemHandler = (jobHistoryId: number, isChecked: boolean) => {
+    const checkeds = new Set(checkedItems);
+
+    if (isChecked) {
+      checkeds.add(jobHistoryId);
+    } else {
+      checkeds.delete(jobHistoryId);
+    }
+
+    setCheckedItems(checkeds);
+    console.log(checkeds);
+  };
 
   const getCareerData = async () => {
     const res = await getHistory(progressStatus);
     const res2 = await getHistory(doneStatus);
-    console.log(res.data);
-    console.log(res2.data);
     setProgressData(res.data);
     setDoneData(res2.data);
   };
@@ -84,8 +90,8 @@ const CareerList = ({ openNew }: ICareerList) => {
             src="/Icon/TrashIcon.svg"
             alt=""
             onClick={() => {
-              // setDelMode(!delMode);
-              // setList(idList);
+              setDelMode(!delMode);
+              setCheckedItems(new Set());
             }}
           />
           <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
@@ -95,8 +101,15 @@ const CareerList = ({ openNew }: ICareerList) => {
           <div className="cardlist">
             {progressData.map((item: IHistory) => (
               <div className="card" key={item.jobHistoryId}>
-                {delMode && CheckBox()}
-                <CareerListItem cardId={item.jobHistoryId}></CareerListItem>
+                {/* {delMode && <CheckBox></CheckBox>} */}
+                <CareerListItem
+                  cardId={item.jobHistoryId}
+                  dDay={item.dDay}
+                  delMode={delMode}
+                  delCheck={(isChecked: boolean) => {
+                    checkedItemHandler(item.jobHistoryId, isChecked);
+                  }}
+                ></CareerListItem>
               </div>
             ))}
           </div>
@@ -104,8 +117,15 @@ const CareerList = ({ openNew }: ICareerList) => {
           <div className="cardlist">
             {doneData.map((item: IHistory) => (
               <div className="card" key={item.jobHistoryId}>
-                {delMode && CheckBox()}
-                <CareerListItem cardId={item.jobHistoryId}></CareerListItem>
+                {/* {delMode && CheckBox()} */}
+                <CareerListItem
+                  cardId={item.jobHistoryId}
+                  dDay={item.dDay}
+                  delMode={delMode}
+                  delCheck={(isChecked: boolean) => {
+                    checkedItemHandler(item.jobHistoryId, isChecked);
+                  }}
+                ></CareerListItem>
               </div>
             ))}
           </div>
