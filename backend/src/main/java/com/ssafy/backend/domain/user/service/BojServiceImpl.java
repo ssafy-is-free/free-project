@@ -85,7 +85,7 @@ public class BojServiceImpl implements BojService {
                     return getFallbackDto();
                 });*/
 		//백준 아이디가 조회될 때만 저장
-		if (!CBojInfoResponse.checkForNull()) {
+		if (CBojInfoResponse != null && !CBojInfoResponse.checkForNull()) {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
 			Baekjoon baekjoon = null;
