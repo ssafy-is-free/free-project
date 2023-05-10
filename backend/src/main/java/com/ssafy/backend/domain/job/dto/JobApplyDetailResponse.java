@@ -49,7 +49,7 @@ public class JobApplyDetailResponse {
 			.startTime(jobHistory.getJobPosting().getStartTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 			.endTime(jobHistory.getJobPosting().getEndTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 			.memo(jobHistory.getMemo())
-			.dDayName(statusNameMap.get(jobHistory.getStatusId()))
+			.dDayName(jobHistory.getDDayName())
 			.nextDate(jobHistory.getDDay().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
 			.objective(jobHistory.getJobObjective())
 			.applicantCount(applicantCount)
