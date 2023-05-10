@@ -1,17 +1,14 @@
 import styled from 'styled-components';
-import { IOtherInfoProps, applicantInfoType } from './IJobrank';
+import { IOtherInfoProps, applicantBojInfoType, applicantGitInfoType } from './IJobrank';
 import CommitIcon from '../../public/Icon/CommitIcon.svg';
 import RepoIcon from '../../public/Icon/RepoIcon.svg';
 import StarIcon from '../../public/Icon/StarIcon.svg';
+import PassIcon from '../../public/Icon/PassIcon.svg';
+import FailIcon from '../../public/Icon/FailIcon.svg';
+import SendIcon from '../../public/Icon/SendIcon.svg';
+import TryfailIcon from '../../public/Icon/TryfailIcon.svg';
 import { useEffect, useState } from 'react';
-import {
-  getBojRanking,
-  getGithubRanking,
-  getMyBojRanking,
-  getMyGitRanking,
-  getPostingsAllUsers,
-} from '@/pages/api/jobRankAxios';
-import { resultInformation } from '../rank/IRank';
+import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
 
 const Wrapper = styled.div`
   display: flex;
@@ -86,57 +83,134 @@ const Wrapper = styled.div`
     align-items: center;
     justify-content: center;
   }
+
+  .boj-info-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .boj-info-top,
+    .boj-info-bottom {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+
+      > div {
+        width: 48%;
+        height: 100px;
+        background-color: ${(props) => props.theme.bgWhite};
+        border: 1px solid ${(props) => props.theme.secondary};
+        margin-bottom: 8px;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        padding: 14px 16px;
+        border-radius: 16px;
+        position: relative;
+
+        .info-label {
+          font-size: 14px;
+          color: ${(props) => props.theme.fontDarkGray};
+        }
+
+        .data {
+          font-size: 20px;
+          font-weight: bold;
+          color: ${(props) => props.theme.fontBlack};
+          margin-bottom: 4px;
+        }
+      }
+    }
+  }
 `;
 
 const OtherInfo = (props: IOtherInfoProps) => {
   // 나와 전체 사용자 정보
-  const [otherInfo, setOtherInfo] = useState<applicantInfoType>(null);
+  const [otherGitInfo, setGitOtherInfo] = useState<applicantGitInfoType>(null);
+  const [otherBojInfo, setBojOtherInfo] = useState<applicantBojInfoType>(null);
 
   useEffect(() => {
     // 전체 사용자 정보 가져오기
     (async () => {
-      let data = await getPostingsAllUsers(props.jobPostingIdParam);
-      setOtherInfo(data?.opponent);
-      // setMyInfo(data?.my);
-
-      // //TODO : 코드 더 깔끔하게 쓰는 법?
-      // let arr = data?.opponent.languages.languageList;
-      // let scores = new Array();
-      // let labels = new Array();
-      // arr?.map((el: any) => {
-      //   scores.push(el.percentage);
-      //   labels.push(el.name);
-      // });
-      // setSeries([...scores]);
-      // setLabels([...labels]);
+      if (props.curRank == 0) {
+        let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
+        setGitOtherInfo(data?.opponent);
+      } else {
+        let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
+        setBojOtherInfo(data?.other);
+      }
     })();
   }, [props.curRank]);
 
   return (
     <Wrapper>
-      <div className="commit-box">
-        {otherInfo?.commit && <span className="data">{otherInfo?.commit}</span>}
-        <span className="info-label">Commits</span>
-        <div className="icon-box" style={{ backgroundColor: '#ff8a60' }}>
-          <CommitIcon />
-        </div>
-      </div>
-      <div className="info-sub-box">
-        <div className="star-box">
-          {otherInfo?.star && <span className="data">{otherInfo?.star}</span>}
-          <span className="info-label">Stars</span>
-          <div className="icon-box" style={{ backgroundColor: '#ffdd60' }}>
-            <StarIcon />
+      {props.curRank == 0 ? (
+        <>
+          <div className="commit-box">
+            {otherGitInfo?.commit && <span className="data">{otherGitInfo?.commit}</span>}
+            <span className="info-label">커밋</span>
+            <div className="icon-box" style={{ backgroundColor: '#ff8a60' }}>
+              <CommitIcon />
+            </div>
           </div>
-        </div>
-        <div className="repo-box">
-          {otherInfo?.repositories && <span className="data">{otherInfo?.repositories}</span>}
-          <span className="info-label">Repositories</span>
-          <div className="icon-box" style={{ backgroundColor: '#60e7ff' }}>
-            <RepoIcon />
+          <div className="info-sub-box">
+            <div className="star-box">
+              {otherGitInfo?.star && <span className="data">{otherGitInfo?.star}</span>}
+              <span className="info-label">스타</span>
+              <div className="icon-box" style={{ backgroundColor: '#ffdd60' }}>
+                <StarIcon />
+              </div>
+            </div>
+            <div className="repo-box">
+              {otherGitInfo?.repositories && <span className="data">{otherGitInfo?.repositories}</span>}
+              <span className="info-label">레포지토리</span>
+              <div className="icon-box" style={{ backgroundColor: '#60e7ff' }}>
+                <RepoIcon />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      ) : (
+        <>
+          <div className="boj-info-box">
+            <div className="boj-info-top">
+              <div className="pass-box">
+                {otherBojInfo?.pass && <span className="data">{otherBojInfo?.pass}</span>}
+                <span className="info-label">맞은 문제</span>
+                <div className="icon-box" style={{ backgroundColor: '#90ff60' }}>
+                  <PassIcon />
+                </div>
+              </div>
+              <div className="fail-box">
+                {otherBojInfo?.fail && <span className="data">{otherBojInfo?.fail}</span>}
+                <span className="info-label">틀린 문제</span>
+                <div className="icon-box" style={{ backgroundColor: '#ff8a60' }}>
+                  <FailIcon />
+                </div>
+              </div>
+            </div>
+            <div className="boj-info-bottom">
+              <div className="submit-box">
+                {otherBojInfo?.submit && <span className="data">{otherBojInfo?.submit}</span>}
+                <span className="info-label">제출</span>
+                <div className="icon-box" style={{ backgroundColor: '#60e7ff' }}>
+                  <SendIcon />
+                </div>
+              </div>
+              <div className="tryfail-box">
+                {otherBojInfo?.tryFail && <span className="data">{otherBojInfo?.tryFail}</span>}
+                <span className="info-label">
+                  시도했지만 <br />
+                  맞지 못한 문제
+                </span>
+                <div className="icon-box" style={{ backgroundColor: '#ffdd60' }}>
+                  <TryfailIcon />
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </Wrapper>
   );
 };

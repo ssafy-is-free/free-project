@@ -1,4 +1,4 @@
-export type applicantInfoType = {
+export type applicantGitInfoType = {
   avatarUrl: string;
   commit: number;
   languages: {
@@ -9,12 +9,46 @@ export type applicantInfoType = {
   star: number;
 } | null;
 
+export type applicantBojInfoType = {
+  bojId?: string;
+  fail: number;
+  languages: {
+    name: string;
+    passPercentage: string;
+    passCount: number;
+  }[];
+  pass: number;
+  submit: number;
+  tierUrl: string;
+  tryFail: number;
+} | null;
+
+export type postingType = {
+  postingId: number;
+  postingName: string;
+  companyName: string;
+  status: string;
+  startTime: string;
+  endTime: string;
+  memo: string;
+  dDayName: string;
+  nextDate: string;
+  objective: string;
+  applicantCount: number;
+} | null;
+
+export type widthType = {
+  myWidth: number;
+  otherWidth: number;
+} | null;
+
 /**
  * chart props
  */
 export interface IChartProps {
   curRank: number;
-  jobPostingIdParam: number;
+  jobPostingIdParam?: number;
+  userId?: number;
 
   /**
    * 0 : 나
@@ -45,4 +79,9 @@ export interface ISubMenuProps {
 export interface ICompareBoxProps {
   curRank: number;
   jobPostingIdParam: number;
+}
+
+export interface ICompareUserBoxProps {
+  curRank: number;
+  userId: number;
 }
