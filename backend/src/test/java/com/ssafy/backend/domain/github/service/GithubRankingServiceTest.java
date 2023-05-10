@@ -3,7 +3,6 @@ package com.ssafy.backend.domain.github.service;
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.AfterEach;
@@ -141,7 +140,7 @@ class GithubRankingServiceTest {
 		Long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(jobPostingId).build();
 
-		long userId = userRepository.findByNickname("user1").get().getId();
+		long userId = userRepository.findByNickname("user1").getId();
 
 		//when
 		GithubRankingOneResponse response = githubRankingService.getGithubRankOne(userId, rankingFilter);
