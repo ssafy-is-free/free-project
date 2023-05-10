@@ -19,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.ssafy.backend.domain.entity.common.BaseTimeEntity;
@@ -72,9 +71,9 @@ public class Github extends BaseTimeEntity {
 	@Builder.Default
 	private Set<GithubLanguage> githubLanguages = new HashSet<>();
 
-	@ColumnDefault("true")
 	@Column(name = "is_public")
-	private boolean isPublic;
+	@Builder.Default
+	private boolean isPublic = true;
 
 	@Column(name = "do_not_user2")
 	private int doNotUse2;
