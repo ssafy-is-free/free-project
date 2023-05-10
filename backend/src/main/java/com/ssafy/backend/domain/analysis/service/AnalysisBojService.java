@@ -93,7 +93,7 @@ public class AnalysisBojService {
 		//백준 전체 정보 저장
 		BojInfoAvgDetailResponse other = BojInfoAvgDetailResponse.create(bojAvgDetail, bojLanguageList);
 
-		return BojRankAllComparisonResponse.builder().my(my).other(other).build();
+		return BojRankAllComparisonResponse.create(my, other);
 	}
 
 	private Map<Long, String> getLanguageMap() {
