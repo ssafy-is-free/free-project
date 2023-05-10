@@ -19,9 +19,9 @@ export const getGithubRanking = async (
   const params = {
     size: sizeParam,
     jobPostingId: jobPostingIdParam,
-    // rank: rankParam,
-    // userId: useIdParam,
-    // score: scoreParam,
+    rank: rankParam,
+    userId: useIdParam,
+    score: scoreParam,
   };
 
   const { data } = await basicApi({
@@ -51,9 +51,9 @@ export const getBojRanking = async (
   const params = {
     size: sizeParam,
     jobPostingId: jobPostingIdParam,
-    // rank: rankParam,
-    // userId: useIdParam,
-    // score: scoreParam,
+    rank: rankParam,
+    userId: useIdParam,
+    score: scoreParam,
   };
 
   const { data } = await basicApi({
@@ -66,17 +66,31 @@ export const getBojRanking = async (
 };
 
 /**
- * 공고별 전체 사용자 정보 가져오기
+ * 공고별 전체 사용자 정보 가져오기 깃허브
  * @param jobPostingId 채용 공고 아이디
  * @returns
  */
-export const getPostingsAllUsers = async (jobPostingId: number) => {
+export const getPostingsAllGitUsers = async (jobPostingId: number) => {
   const { data } = await authApi({
     method: 'get',
     url: `/analysis/github/postings/${jobPostingId}`,
   });
 
   // console.log(data.data);
+
+  return data.data;
+};
+
+/**
+ * 공고별 전체 사용자 정보 가져오기 백준
+ * @param jobPostingId 채용 공고 아이디
+ * @returns
+ */
+export const getPostingsAllBojUsers = async (jobPostingId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/analysis/boj/postings/${jobPostingId}`,
+  });
 
   return data.data;
 };
@@ -112,6 +126,43 @@ export const getMyBojRanking = async (jobPostingIdParam: number) => {
     method: 'get',
     url: '/boj/my-rank',
     params: params,
+  });
+
+  return data.data;
+};
+
+/**
+ * 유저비교 깃허브
+ * @param userId 채용 공고 아이디
+ * @returns
+ */
+export const getGitCompareUser = async (userId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/analysis/github/users/${userId}`,
+  });
+
+  return data.data;
+};
+
+/**
+ * 유저비교 백준
+ * @param userId 채용 공고 아이디
+ * @returns
+ */
+export const getBojCompareUser = async (userId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/analysis/boj/users/${userId}`,
+  });
+
+  return data.data;
+};
+
+export const getPosingInfo = async (jobHistoryId: number) => {
+  const { data } = await authApi({
+    method: 'get',
+    url: `/job/history/${jobHistoryId}`,
   });
 
   return data.data;
