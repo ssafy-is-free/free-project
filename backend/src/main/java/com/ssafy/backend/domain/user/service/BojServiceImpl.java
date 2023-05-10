@@ -85,7 +85,10 @@ public class BojServiceImpl implements BojService {
                     return getFallbackDto();
                 });*/
 		//백준 아이디가 조회될 때만 저장
-		if (!CBojInfoResponse.checkForNull()) {
+		if (CBojInfoResponse == null || CBojInfoResponse.checkForNull()) {
+			//입력한 백준아아디가 크롤링이 되지 않았거나 올바르지 않습니다.
+			throw new CustomException(NOT_FOUND_BOJ_USER);
+		} else {
 			//유저가 이미 백준 아이디를 저장했는지 확인하기
 			Optional<Baekjoon> oBaekjoon = bojRepository.findByUser(user);
 			Baekjoon baekjoon = null;
@@ -122,10 +125,6 @@ public class BojServiceImpl implements BojService {
 				}
 				bojLanguageRepository.saveAll(baekjoonLanguageList);
 			}
-		} else {
-			//입력한 백준아아디가 크롤링이 되지 않았거나 올바르지 않습니다.
-			throw new CustomException(NOT_FOUND_BOJ_USER);
-
 		}
 
 	}
