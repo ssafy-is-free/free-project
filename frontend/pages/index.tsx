@@ -32,6 +32,7 @@ import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
 
 import Profile from '@/components/profile/Profile';
 import SettingModal from '@/components/rank/SettingModal';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div<{ searchClick: boolean }>`
   width: 100vw;
@@ -185,8 +186,6 @@ const Main = () => {
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
   // isnew 상태값 가져오기
   const isNew = useSelector<RootState>((selector) => selector.authChecker.isNew);
-  // 로그인 중임을 나타내는 state
-  const loginStart = useSelector<RootState>((selector) => selector.authChecker.loginStart);
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
@@ -243,18 +242,21 @@ const Main = () => {
   /**
    * splash check, useEffect
    */
+  const router = useRouter();
   useEffect(() => {
-    if (loginStart && isNew) {
+    // TODO : 문제 => 가입후 다른 페이지 갔다가 뒤로가기 누르면 isNew가 false가아닌 true로뜬다...
+
+    if (isLogin && isNew) {
       setOpenBoj(true);
       dispatch(setNew());
     }
 
-    // dispatch(setLoginIng());
-
     const timer = setTimeout(() => {
       dispatch(splashCheck());
     }, 1500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준

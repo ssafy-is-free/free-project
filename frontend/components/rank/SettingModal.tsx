@@ -2,9 +2,6 @@ import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import BigBtn from '../common/BigBtn';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { setLoginStart } from '@/redux/authSlice';
 import { ISettingModalProps } from './IRank';
 
 const moveUp = keyframes`
