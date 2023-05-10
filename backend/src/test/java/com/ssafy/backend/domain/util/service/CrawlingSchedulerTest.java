@@ -17,6 +17,10 @@ import com.ssafy.backend.domain.entity.Baekjoon;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
+import com.ssafy.backend.domain.github.repository.GithubRepository;
+import com.ssafy.backend.domain.github.service.GithubRankingService;
+import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
+import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 
@@ -33,6 +37,14 @@ public class CrawlingSchedulerTest {
 	private BojLanguageRepository bojLanguageRepository;
 	@Autowired
 	private CrawlingScheduler crawlingScheduler;
+	@Autowired
+	private GithubRankingService githubRankingService;
+	@Autowired
+	private JobPostingRepository jobPostingRepository;
+	@Autowired
+	private JobHistoryRepository jobHistoryRepository;
+	@Autowired
+	private GithubRepository githubRepository;
 
 	@AfterEach
 	void tearDown() {
