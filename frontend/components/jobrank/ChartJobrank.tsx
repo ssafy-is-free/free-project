@@ -3,7 +3,12 @@ import { Doughnut } from 'react-chartjs-2';
 import styled from 'styled-components';
 import { IChartProps } from './IJobrank';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import { getPostingsAllUsers } from '@/pages/api/jobRankAxios';
+import {
+  getBojCompareUser,
+  getGitCompareUser,
+  getPostingsAllBojUsers,
+  getPostingsAllGitUsers,
+} from '@/pages/api/jobRankAxios';
 
 const Wrapper = styled.div`
   position: relative;
@@ -41,20 +46,72 @@ const ChartJobrank = (props: IChartProps) => {
   const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
-    // 전체 사용자 정보 가져오기
-    (async () => {
-      let data = await getPostingsAllUsers(props.jobPostingIdParam);
+    if (props.jobPostingIdParam) {
+      // 전체 사용자 정보 가져오기
+      (async () => {
+        if (props.curRank == 0) {
+          if (props.jobPostingIdParam) {
+            let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
 
-      let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
-      let scores = new Array();
-      let labels = new Array();
-      arr?.map((el: any) => {
-        scores.push(el.percentage);
-        labels.push(el.name);
-      });
-      setSeries([...scores]);
-      setLabels([...labels]);
-    })();
+            let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
+            let scores = new Array();
+            let labels = new Array();
+            arr?.map((el: any) => {
+              scores.push(el.percentage);
+              labels.push(el.name);
+            });
+            setSeries([...scores]);
+            setLabels([...labels]);
+          }
+        } else {
+          if (props.jobPostingIdParam) {
+            let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
+
+            let arr = props.target == 0 ? data?.my.languages : data?.other.languages;
+            let scores = new Array();
+            let labels = new Array();
+            arr?.map((el: any) => {
+              scores.push(el.passCount);
+              labels.push(el.name);
+            });
+            setSeries([...scores]);
+            setLabels([...labels]);
+          }
+        }
+      })();
+    } else {
+      (async () => {
+        if (props.curRank == 0) {
+          if (props.userId) {
+            let data = await getGitCompareUser(props.userId);
+
+            let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
+            let scores = new Array();
+            let labels = new Array();
+            arr?.map((el: any) => {
+              scores.push(el.percentage);
+              labels.push(el.name);
+            });
+            setSeries([...scores]);
+            setLabels([...labels]);
+          }
+        } else {
+          if (props.userId) {
+            let data = await getBojCompareUser(props.userId);
+
+            let arr = props.target == 0 ? data?.my.languages : data?.opponent.languages;
+            let scores = new Array();
+            let labels = new Array();
+            arr?.map((el: any) => {
+              scores.push(el.passCount);
+              labels.push(el.name);
+            });
+            setSeries([...scores]);
+            setLabels([...labels]);
+          }
+        }
+      })();
+    }
   }, [props.curRank]);
 
   ChartJS.register(ArcElement, Tooltip, Legend);
@@ -79,11 +136,13 @@ const ChartJobrank = (props: IChartProps) => {
 
   return (
     <Wrapper>
-      <Doughnut data={data} options={options} />
       <div className="top-language">
         <p className="top-name">{labels[0]}</p>
-        <p className="top-percent">{series[0]} %</p>
+        <p className="top-percent">
+          {series[0]} {props.curRank == 0 ? '%' : '개'}
+        </p>
       </div>
+      <Doughnut data={data} options={options} />
     </Wrapper>
   );
 };

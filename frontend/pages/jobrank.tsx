@@ -1,7 +1,7 @@
 import RankMenu from '@/components/common/RankMenu';
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import JobUserItem from '@/components/rank/JobUserItem';
+import JobUserItem from '@/components/jobrank/JobUserItem';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import MainOtherItem from '@/components/rank/MainOtherItem';
 import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
@@ -10,14 +10,16 @@ import {
   getGithubRanking,
   getMyBojRanking,
   getMyGitRanking,
-  getPostingsAllUsers,
+  getPostingsAllGitUsers,
 } from './api/jobRankAxios';
 import ChartJobrank from '@/components/jobrank/ChartJobrank';
-import { applicantInfoType } from '@/components/jobrank/IJobrank';
 import OtherInfo from '@/components/jobrank/OtherInfo';
 import JobInfo from '@/components/jobrank/JobInfo';
 import SubMenu from '@/components/jobrank/Submenu';
 import CompareBox from '@/components/jobrank/CompareBox';
+import CompareUserBox from '@/components/jobrank/CompareUserBox';
+import BackIcon from '../public/Icon/BackIcon.svg';
+import { useInView } from 'react-intersection-observer';
 
 const Wrapper = styled.div<{ info: number; submenu: number }>`
   width: 100vw;
@@ -52,6 +54,11 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
       }
     }
 
+    .back-icon {
+      position: absolute;
+      top: 32px;
+      left: 32px;
+    }
     .space {
       border-radius: 8px;
       height: 56px;
@@ -109,50 +116,128 @@ const JobRank = () => {
     setOpenSelect(false);
   };
 
-  const [info, setInfo] = useState<number>(0); // 0 : 랭킹, 1 : 통계
+  // 유저 비교 컴포넌트 보이기 여부
+  const [openCompare, setOpenCompare] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number>(0);
 
+  // 0 : 랭킹, 1 : 통계
+  const [info, setInfo] = useState<number>(0);
+
+  // 무한 스크롤 구현하기
+  const [ref, inView, entry] = useInView({
+    threshold: 0,
+  });
   const [size, setSize] = useState<number>(20);
   const [nextRank, setNextRank] = useState<number>(1);
+  // 더이상 데이터가 없을 때
+  const [noMore, setNoMore] = useState<boolean>(false);
+  // inView 처음 봤을 떄
+  const [inViewFirst, setInViewFirst] = useState<boolean>(true);
 
   // TODO : jobPostingIdParam 임시로 1처리
   const jobPostingIdParam = 1;
 
+  // 랭킹 정보
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
   const [otherRankInfo, setOtherRankInfo] = useState<resultInformation | null>(null);
 
   // 서브메뉴
   const [submenu, setSubmenu] = useState<number>(0);
 
+  // 무한 스크롤 구현하기
   useEffect(() => {
-    // TODO : 취업 상세정보 조회
+    if (!noMore) {
+      if (inView && inViewFirst) {
+        setInViewFirst(false);
+      } else if (inView && !inViewFirst) {
+        onGetRankData();
+      }
+    }
+  }, [inView]);
 
-    // 랭킹 정보 가져오기
+  useEffect(() => {
+    // nextRank 초기화
+    setNextRank(1);
+
+    // 내 깃허브 정보 가져오기
     if (curRank == 0) {
-      // 깃허브 정보 불러오기
-      (async () => {
-        let data = await getGithubRanking(size, jobPostingIdParam);
-        setOtherRankInfo(data);
-      })();
-
       // 내 깃허브 정보 불러오기
       (async () => {
         let data = await getMyGitRanking(jobPostingIdParam);
         setUserRankInfo(data);
       })();
-    } else if (curRank == 1) {
-      // 백준 정보 불러오기
-      (async () => {
-        let data = await getBojRanking(size, jobPostingIdParam);
-        setOtherRankInfo(data);
-      })();
-
+    } else {
       // 내 백준 정보 불러오기
       (async () => {
         let data = await getMyBojRanking(jobPostingIdParam);
         setUserRankInfo(data);
       })();
     }
+
+    onGetRankData();
   }, [curRank]);
+
+  const onGetRankData = () => {
+    // 랭킹 정보 가져오기
+    if (curRank == 0) {
+      // 처음 가져올 때(nextRank가 1인 상태)
+      if (nextRank == 1) {
+        // 깃허브 정보 불러오기
+        (async () => {
+          let data = await getGithubRanking(size, jobPostingIdParam);
+          setOtherRankInfo(data);
+          setNextRank(data[data.length - 1].rank);
+        })();
+      } else {
+        // 깃허브 정보 불러오기
+        (async () => {
+          if (otherRankInfo) {
+            const userId = otherRankInfo[otherRankInfo?.length - 1]?.userId;
+            const score = otherRankInfo[otherRankInfo?.length - 1]?.score;
+
+            let data = await getGithubRanking(size, jobPostingIdParam, nextRank, userId, score);
+
+            if (data.length == 0) {
+              // 더이상 조회할 데이터가 없음
+              setNoMore(true);
+            } else {
+              setOtherRankInfo([...otherRankInfo, ...data]);
+            }
+          }
+        })();
+      }
+    } else if (curRank == 1) {
+      // 백준 정보 불러오기
+      if (nextRank == 1) {
+        (async () => {
+          let data = await getBojRanking(size, jobPostingIdParam);
+          setOtherRankInfo(data);
+          setNextRank(data[data.length - 1]?.rank);
+        })();
+      } else {
+        (async () => {
+          if (otherRankInfo) {
+            const userId = otherRankInfo[otherRankInfo?.length - 1]?.userId;
+            const score = otherRankInfo[otherRankInfo?.length - 1]?.score;
+
+            let data = await getBojRanking(size, jobPostingIdParam, nextRank, userId, score);
+
+            if (data.length == 0) {
+              // 더이상 조회할 데이터가 없음
+              setNoMore(true);
+            } else {
+              setOtherRankInfo([...otherRankInfo, ...data]);
+            }
+          }
+        })();
+      }
+    }
+  };
+
+  const onUserCompare = (userId: number) => {
+    setUserId(userId);
+    setOpenCompare(true);
+  };
 
   return (
     <>
@@ -164,15 +249,36 @@ const JobRank = () => {
         <div className="all-rank">
           {info == 0 ? (
             <>
-              <ul className="rank-list">
-                <JobUserItem curRank={curRank} item={userRankInfo} />
-                {otherRankInfo &&
-                  otherRankInfo.map((el, idx) => (
-                    <li key={idx}>
-                      <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
-                    </li>
-                  ))}
-              </ul>
+              {!openCompare ? (
+                <ul className="rank-list">
+                  {userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />}
+                  {otherRankInfo &&
+                    otherRankInfo.map((el, idx) => (
+                      <li
+                        key={idx}
+                        onClick={() => {
+                          if (userRankInfo?.userId != el.userId) {
+                            onUserCompare(el.userId);
+                          }
+                        }}
+                      >
+                        <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
+                      </li>
+                    ))}
+                </ul>
+              ) : (
+                <>
+                  <div
+                    className="back-icon"
+                    onClick={() => {
+                      setOpenCompare(false);
+                    }}
+                  >
+                    <BackIcon />
+                  </div>
+                  <CompareUserBox curRank={curRank} userId={userId} />
+                </>
+              )}
             </>
           ) : (
             <>
@@ -181,7 +287,7 @@ const JobRank = () => {
                 {submenu == 0 ? (
                   <div className="chart-box">
                     <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-                    <div className="label">Languages</div>
+                    <div className="label">사용 언어</div>
                     <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} target={1} />
                   </div>
                 ) : (
@@ -190,14 +296,21 @@ const JobRank = () => {
               </div>
             </>
           )}
-          <div className="space"></div>
+          <div className="space" ref={ref}></div>
         </div>
         <div className="btn-box">
           <button
             className="average-btn"
             onClick={() => {
-              if (info == 0) setInfo(1);
-              else setInfo(0);
+              if (info == 0) {
+                setInfo(1);
+                setOpenCompare(false);
+                setSubmenu(0);
+              } else {
+                setInfo(0);
+                setOpenCompare(false);
+                setSubmenu(0);
+              }
             }}
           >
             {info == 0 ? '지원자 평균 보러가기' : '지원자 랭킹 보러가기'}

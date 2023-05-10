@@ -208,7 +208,7 @@ export interface IJobUserItemProps {
   /**
    * 조회할 item 정보
    */
-  item?: {
+  item: {
     userId: number;
     nickname: string;
     rank: number;
@@ -216,6 +216,5 @@ export interface IJobUserItemProps {
     avatarUrl: string;
     rankUpDown: number;
     tierUrl?: string;
-  } | null;
-  //TODO : null 지워야함
+  };
 }

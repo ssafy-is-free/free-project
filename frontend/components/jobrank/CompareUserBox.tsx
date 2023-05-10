@@ -1,13 +1,13 @@
 import styled, { css } from 'styled-components';
-import { ICompareBoxProps, applicantBojInfoType, applicantGitInfoType } from './IJobrank';
+import { ICompareUserBoxProps, applicantBojInfoType, applicantGitInfoType, widthType } from './IJobrank';
 import { useEffect, useState } from 'react';
 import UserDefaultIcon from '../../public/Icon/UserDefaultIcon.svg';
-import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
 import ChartJobrank from './ChartJobrank';
+import { getBojCompareUser, getGitCompareUser } from '@/pages/api/jobRankAxios';
 
 const Wrapper = styled.div`
   width: 100%;
-  margin-top: 24px;
+  background-color: ${(props) => props.theme.bgWhite};
 
   .content-wrapper {
     border-radius: 16px;
@@ -147,42 +147,21 @@ const Wrapper = styled.div`
   }
 `;
 
-const CompareBox = (props: ICompareBoxProps) => {
+const CompareUserBox = (props: ICompareUserBoxProps) => {
   // 나와 전체 사용자 정보
   const [otherGitInfo, setOtherGitInfo] = useState<applicantGitInfoType>(null);
   const [myGitInfo, setMyGitInfo] = useState<applicantGitInfoType>(null);
   const [otherBojInfo, setOtherBojInfo] = useState<applicantBojInfoType>(null);
   const [myBojInfo, setMyBojInfo] = useState<applicantBojInfoType>(null);
 
-  const [commitWidth, setCommitWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
-  const [starWidth, setStarWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
-  const [repoWidth, setRepoWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
+  const [commitWidth, setCommitWidth] = useState<widthType>(null);
+  const [starWidth, setStarWidth] = useState<widthType>(null);
+  const [repoWidth, setRepoWidth] = useState<widthType>(null);
 
-  const [passWidth, setPassWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
-  const [failWidth, setFailWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
-  const [submitWidth, setSubmitWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
-  const [tryfailWidth, setTryfailWidth] = useState<{
-    myWidth: number;
-    otherWidth: number;
-  } | null>(null);
+  const [passWidth, setPassWidth] = useState<widthType>(null);
+  const [failWidth, setFailWidth] = useState<widthType>(null);
+  const [submitWidth, setSubmitWidth] = useState<widthType>(null);
+  const [tryfailWidth, setTryfailWidth] = useState<widthType>(null);
 
   const calc = (myNumber: number, otherNumber: number) => {
     let number = Math.max(myNumber, otherNumber);
@@ -205,7 +184,7 @@ const CompareBox = (props: ICompareBoxProps) => {
   useEffect(() => {
     (async () => {
       if (props.curRank == 0) {
-        let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
+        let data = await getGitCompareUser(props.userId);
         setOtherGitInfo(data?.opponent);
         setMyGitInfo(data?.my);
 
@@ -213,14 +192,14 @@ const CompareBox = (props: ICompareBoxProps) => {
         setStarWidth(calc(data?.my.star, data?.opponent.star));
         setRepoWidth(calc(data?.my.repositories, data?.opponent.repositories));
       } else {
-        let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
-        setOtherBojInfo(data?.other);
+        let data = await getBojCompareUser(props.userId);
+        setOtherBojInfo(data?.opponent);
         setMyBojInfo(data?.my);
 
-        setPassWidth(calc(data?.my.pass, data?.other.pass));
-        setFailWidth(calc(data?.my.fail, data?.other.fail));
-        setSubmitWidth(calc(data?.my.submit, data?.other.submit));
-        setTryfailWidth(calc(data?.my.tryFail, data?.other.tryFail));
+        setPassWidth(calc(data?.my.pass, data?.opponent.pass));
+        setFailWidth(calc(data?.my.fail, data?.opponent.fail));
+        setSubmitWidth(calc(data?.my.submit, data?.opponent.submit));
+        setTryfailWidth(calc(data?.my.tryFail, data?.opponent.tryFail));
       }
     })();
   }, [props.curRank]);
@@ -236,8 +215,8 @@ const CompareBox = (props: ICompareBoxProps) => {
                 <p>{myGitInfo?.nickname}</p>
               </div>
               <div className="content-top-right">
-                <UserDefaultIcon />
-                <p>전체 사용자</p>
+                <img src={otherGitInfo?.avatarUrl} className="my-img" />
+                <p>{otherGitInfo?.nickname}</p>
               </div>
             </>
           ) : (
@@ -247,8 +226,8 @@ const CompareBox = (props: ICompareBoxProps) => {
                 <p>{myBojInfo?.bojId}</p>
               </div>
               <div className="content-top-right">
-                <UserDefaultIcon />
-                <p>전체 사용자</p>
+                <img src={otherBojInfo?.tierUrl} className="my-img" style={{ borderRadius: '0' }} />
+                <p>{otherBojInfo?.bojId}</p>
               </div>
             </>
           )}
@@ -305,10 +284,10 @@ const CompareBox = (props: ICompareBoxProps) => {
                 <span className="label">사용 언어</span>
                 <div className="chart-box">
                   <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
+                    <ChartJobrank curRank={props.curRank} userId={props.userId} target={0} />
                   </div>
                   <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
+                    <ChartJobrank curRank={props.curRank} userId={props.userId} target={1} />
                   </div>
                 </div>
               </>
@@ -377,10 +356,10 @@ const CompareBox = (props: ICompareBoxProps) => {
                 <span className="label">사용 언어</span>
                 <div className="chart-box">
                   <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
+                    <ChartJobrank curRank={props.curRank} userId={props.userId} target={0} />
                   </div>
                   <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
+                    <ChartJobrank curRank={props.curRank} userId={props.userId} target={1} />
                   </div>
                 </div>
               </>
@@ -392,4 +371,4 @@ const CompareBox = (props: ICompareBoxProps) => {
   );
 };
 
-export default CompareBox;
+export default CompareUserBox;
