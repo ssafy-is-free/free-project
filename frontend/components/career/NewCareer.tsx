@@ -129,13 +129,13 @@ const NewCareer = ({ close }: INewCareer) => {
   const inputList = [
     { key: 'objective', label: '지원 직무', placeholder: '', readonly: false },
     {
-      key: 'dDayName',
+      key: 'ddayName',
       label: '다음 일정 이름',
       placeholder: 'ex) 1차 면접, 코딩테스트',
       readonly: false,
       value: dDayName,
     },
-    { key: 'dDay', label: '다음 일정', placeholder: '', readonly: true, value: dDay },
+    { key: 'dday', label: '다음 일정', placeholder: '', readonly: true, value: dDay },
   ];
 
   const inputClick = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -146,7 +146,7 @@ const NewCareer = ({ close }: INewCareer) => {
       setSearchOpen(true);
     } else if (id === 'status') {
       setStatusOpen(true);
-    } else if (['dDay', 'dDayName'].includes(id)) {
+    } else if (['dday', 'ddayName'].includes(id)) {
       setDDayOpen(true);
     }
   };
@@ -154,11 +154,10 @@ const NewCareer = ({ close }: INewCareer) => {
   // 등록하기 버튼 클릭시
   const newPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // setLoading(true);
+
     const form = e.currentTarget;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson.jobPostingId);
     if (formJson.jobPostingId === '0') {
       alert('취업공고를 선택해주세요');
     } else if (formJson.statusId === '0') {
@@ -166,6 +165,8 @@ const NewCareer = ({ close }: INewCareer) => {
     } else if (formJson.objective === '') {
       alert('지원 직무를 입력해주세요');
     } else {
+      setLoading(true);
+      console.log(formJson);
       const res = await postJob(formJson);
       if (res.status === 'SUCCESS') {
         setLoading(false);

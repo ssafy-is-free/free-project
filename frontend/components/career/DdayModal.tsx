@@ -5,6 +5,9 @@ import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
 
 const ModalDiv = styled.div`
+  position: fixed;
+  left: 0;
+  z-index: 6;
   .modalContent {
     position: fixed;
     bottom: 0;

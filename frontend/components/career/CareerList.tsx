@@ -3,7 +3,7 @@ import CareerListItem from './CareerListItem';
 import { useState, useEffect } from 'react';
 import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
-import { getHistory } from '@/pages/api/careerAxios';
+import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -59,7 +59,6 @@ const CareerList = ({ openNew }: ICareerListProps) => {
     }
 
     setCheckedItems(checkeds);
-    console.log(checkeds);
   };
 
   const getCareerData = async () => {
@@ -72,9 +71,16 @@ const CareerList = ({ openNew }: ICareerListProps) => {
   const selectIdx = (idx: number) => {
     setSelectedIdx(idx);
   };
+
   const delapi = async () => {
-    Array.from(checkedItems);
-    setDelMode(false);
+    const res = await deleteHistory(Array.from(checkedItems));
+    if (res.status === 'SUCCESS') {
+      alert(res.message);
+      setDelMode(false);
+      getCareerData();
+    } else {
+      alert(res.message);
+    }
   };
 
   useEffect(() => {
@@ -97,7 +103,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
               setCheckedItems(new Set());
             }}
           />
-          {delMode ? <div>삭제하기</div> : <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />}
+          {delMode ? <div onClick={delapi}>삭제하기</div> : <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />}
         </div>
         <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
         {selectedIdx === 0 ? (

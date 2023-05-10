@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
-import { getHistoryDtail } from '@/pages/api/careerAxios';
+import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import CheckBox from './CheckBox';
+import StatusModal, { IStatus } from './StatusModal';
+import DdayModal from './DdayModal';
+import MemoModal from './MemoModal';
 
 interface Iddetail {
   postingId: number;
@@ -89,13 +92,15 @@ interface ICardHeaderProps {
   ddetail: Iddetail;
   spread: boolean;
   setSpread: () => void;
-  modalOpen: (tag: string) => void;
+  ddayModal: () => void;
+  statusModal: () => void;
 }
 interface ICardContentProps {
   ddetail: Iddetail;
+  memoModal: () => void;
 }
 
-const CardHeader = ({ ddetail, spread, setSpread, modalOpen }: ICardHeaderProps) => {
+const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
   return (
     <div>
       {spread && <div>{ddetail.postingName}</div>}
@@ -109,20 +114,22 @@ const CardHeader = ({ ddetail, spread, setSpread, modalOpen }: ICardHeaderProps)
         </div>
       )}
       <div className="flexDiv">
-        <button onClick={() => modalOpen('dDayName')}>
+        <button onClick={ddayModal}>
           {ddetail.ddayName}: {ddetail.nextDate}
         </button>
-        <button>{ddetail.status}</button>
+        <button onClick={statusModal}>{ddetail.status}</button>
       </div>
     </div>
   );
 };
 
-const CardContent = ({ ddetail }: ICardContentProps) => {
+const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   return (
     <div>
       <div>메모</div>
-      <div className="memo">{ddetail.memo}</div>
+      <div className="memo" onClick={memoModal}>
+        {ddetail.memo}
+      </div>
       <div className="flexDiv">
         <div>
           <div className="upalignDiv">
@@ -145,6 +152,9 @@ const CardContent = ({ ddetail }: ICardContentProps) => {
 const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean>(false);
   const [detail, setDetail] = useState<Iddetail | null>(null);
+  const [ddayModal, setDdayModal] = useState<boolean>(false);
+  const [statusModal, setStatusModal] = useState<boolean>(false);
+  const [memoModal, setMemoModal] = useState<boolean>(false);
 
   const headerClick = () => {
     setSpread(!spread);
@@ -159,8 +169,45 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
     }
   };
 
-  const modalOpen = (tag: string) => {
-    console.log(tag);
+  const modifyDday = async (dday: any) => {
+    const data = {
+      nextDate: dday.date,
+      dDayName: dday.ddayName,
+    };
+    const res = await patchHistory(cardId, data);
+
+    if (res.status === 'SUCCESS') {
+      alert(res.message);
+      getDetail();
+    } else {
+      console.log(res.message);
+    }
+  };
+  const modifyStatus = async (status: IStatus) => {
+    const data = {
+      statusId: status.id,
+    };
+    const res = await patchHistory(cardId, data);
+
+    if (res.status === 'SUCCESS') {
+      alert(res.message);
+      getDetail();
+    } else {
+      console.log(res.message);
+    }
+  };
+  const modifyMemo = async (memoValue: string) => {
+    const data = {
+      memo: memoValue,
+    };
+    const res = await patchHistory(cardId, data);
+
+    if (res.status === 'SUCCESS') {
+      alert(res.message);
+      getDetail();
+    } else {
+      console.log(res.message);
+    }
   };
 
   useEffect(() => {
@@ -178,9 +225,38 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
       <DetailCardDiv>
         {delMode && <CheckBox handeler={(bChecked: boolean) => delCheck(bChecked)}></CheckBox>}
         <div className="item">
-          <CardHeader ddetail={detail} setSpread={headerClick} spread={spread} modalOpen={modalOpen} />
-          {spread && <CardContent ddetail={detail} />}
+          <CardHeader
+            ddetail={detail}
+            setSpread={headerClick}
+            spread={spread}
+            ddayModal={() => setDdayModal(true)}
+            statusModal={() => setStatusModal(true)}
+          />
+          {spread && <CardContent ddetail={detail} memoModal={() => setMemoModal(true)} />}
         </div>
+        {ddayModal && (
+          <DdayModal
+            close={() => setDdayModal(false)}
+            result={(dday) => {
+              modifyDday(dday);
+            }}
+          ></DdayModal>
+        )}
+        {statusModal && (
+          <StatusModal
+            close={() => setStatusModal(false)}
+            result={(status) => {
+              modifyStatus(status);
+            }}
+          ></StatusModal>
+        )}
+        {memoModal && (
+          <MemoModal
+            close={() => setMemoModal(false)}
+            result={(memoValue) => modifyMemo(memoValue)}
+            defaultValue={detail.memo}
+          ></MemoModal>
+        )}
       </DetailCardDiv>
     );
   }

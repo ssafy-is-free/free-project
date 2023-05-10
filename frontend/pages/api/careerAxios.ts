@@ -25,8 +25,8 @@ export const postJob = async (formData: any) => {
     jobPostingId: parseInt(formData.jobPostingId),
     objective: formData.objective,
     memo: formData.memo,
-    dDayName: formData.dDayName,
-    dDay: formData.dDay,
+    ddayName: formData.ddayName,
+    dday: formData.dday,
   };
   console.log(form);
   const { data } = await authApi({
@@ -61,10 +61,22 @@ export const getHistoryDtail = async (historyId: number) => {
   return data;
 };
 
-export const deleteHistory = async (historyId: number) => {
+export const deleteHistory = async (historyIds: number[]) => {
   const { data } = await authApi({
-    method: 'get',
+    method: 'delete',
+    url: `/job/history`,
+    data: {
+      historyId: historyIds,
+    },
+  });
+  return data;
+};
+
+export const patchHistory = async (historyId: number, modifyValue: any) => {
+  const { data } = await authApi({
+    method: 'patch',
     url: `/job/history/${historyId}`,
+    data: modifyValue,
   });
   return data;
 };
