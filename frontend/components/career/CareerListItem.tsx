@@ -176,7 +176,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
   const modifyDday = async (dday: any) => {
     const data = {
       nextDate: dday.date,
-      dDayName: dday.ddayName,
+      ddayName: dday.ddayName,
     };
     const res = await patchHistory(cardId, data);
 
