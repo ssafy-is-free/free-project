@@ -87,7 +87,7 @@ public class AnalysisBojService {
 		List<BojLanguagePassCount> bojLanguagePassCount = bojLanguageQueryRepository.findBojLanguagePassCount();
 		List<BojLanguageResponse> bojLanguageList = bojLanguagePassCount.stream()
 			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()),
-				null, u.getTotalPassCount()))
+				null, (int)(u.getTotalPassCount())))
 			.collect(Collectors.toList());
 
 		//백준 전체 정보 저장

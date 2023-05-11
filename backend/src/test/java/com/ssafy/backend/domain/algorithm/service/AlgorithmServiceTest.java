@@ -308,6 +308,23 @@ public class AlgorithmServiceTest {
 		assertThat(response).hasSize(1).extracting(NicknameListResponse::getNickname).containsExactly("백1");
 	}
 
+	@Test
+	@DisplayName("유저 백준 닉네임 정확도 테스트")
+	public void GetBojListByBojIdCheckTest() {
+		//given
+		User user1 = createUser("user1", "백1");
+		User user2 = createUser("user2", "백2");
+		User user3 = createUser("user3", "백3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when
+		List<NicknameListResponse> response = algorithmService.getBojListByBojId("백1");
+
+		//then
+		assertThat(response.get(0)).extracting(NicknameListResponse::getNickname, NicknameListResponse::getUserId)
+			.containsExactly("백1", user1.getId());
+	}
+
 	private BaekjoonLanguage createBaekjoonLanguage(long languageId, String passPercentage, int passCount,
 		Baekjoon boj) {
 		return BaekjoonLanguage.builder()

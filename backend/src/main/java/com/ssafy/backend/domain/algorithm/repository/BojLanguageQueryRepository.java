@@ -38,10 +38,10 @@ public class BojLanguageQueryRepository {
 	public List<BojLanguagePassCount> findBojLanguagePassCount() {
 		return queryFactory
 			.select(new QBojLanguagePassCount(baekjoonLanguage.languageId,
-				baekjoonLanguage.passCount.sum()))
+				baekjoonLanguage.passCount.avg()))
 			.from(baekjoonLanguage)
 			.groupBy(baekjoonLanguage.languageId)
-			.orderBy(baekjoonLanguage.passCount.sum().desc())
+			.orderBy(baekjoonLanguage.passCount.avg().desc())
 			.limit(5)
 			.fetch();
 	}
