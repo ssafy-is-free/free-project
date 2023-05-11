@@ -92,8 +92,8 @@ const Footer = () => {
     {
       icon: CareerIcon,
       name: '취업관리',
-      // path: '/career',
-      path: '/temp',
+      path: '/career',
+      // path: '/temp',
     },
     {
       icon: ProfileIcon,
