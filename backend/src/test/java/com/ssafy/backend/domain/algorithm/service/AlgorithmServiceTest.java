@@ -60,7 +60,7 @@ public class AlgorithmServiceTest {
 
 	@Test
 	@DisplayName("유저 마이 랭킹 정보 정상 작동 테스트")
-	public void testGetBojByUserId() {
+	public void GetBojByUserIdTest() {
 		//given
 
 		User user1 = createUser("user1", "user1");
@@ -98,6 +98,73 @@ public class AlgorithmServiceTest {
 		//then
 		Assertions.assertNotNull(response);
 		assertThat(response.getUserId()).isEqualTo(user1.getId());
+
+	}
+
+	@Test
+	@DisplayName("유저 마이 랭킹 정보 언어id가 있지만 언어에 해당하는 유저 없는 경우 테스트")
+	public void GetBojByUserIdLanguageUserNullTest() {
+		//given
+
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 16, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		Language language1 = createLanguage("Java 11");
+		Language language2 = createLanguage("C++17");
+		Language language3 = createLanguage("Python3");
+		languageRepository.saveAll(Arrays.asList(language1, language2, language3));
+
+		BaekjoonLanguage baekjoonLanguage = createBaekjoonLanguage(language1.getId(), "50.00", 20, boj1);
+		bojLanguageRepository.save(baekjoonLanguage);
+
+		//when
+		BojRankResponse response = algorithmService.getBojByUserId(user1.getId(), language2.getId(), null);
+
+		//then
+		assertThat(response.checkForNull()).isTrue();
+
+	}
+
+	@Test
+	@DisplayName("유저 마이 랭킹 정보 공고id는 있지만 공고에 해당하는 유저가 없는 경우 테스트")
+	public void GetBojByUserIdJobUserNullTest() {
+		//given
+
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		Baekjoon boj1 = createBaekjoon(user1, 14, 275, 9, 723, 73,
+			100);
+		Baekjoon boj2 = createBaekjoon(user2, 16, 278, 5, 700,
+			193, 200);
+		Baekjoon boj3 = createBaekjoon(user3, 13, 280, 12, 623,
+			173, 300);
+		bojRepository.saveAll(Arrays.asList(boj1, boj2, boj3));
+
+		JobPosting jobPosting1 = createJobPosting("정승네트워크", "자바 4명~~");
+		jobPostingRepository.save(jobPosting1);
+
+		JobHistory jobHistory1 = createJobHistory(user1, jobPosting1);
+		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
+		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2));
+
+		//when
+		BojRankResponse response = algorithmService.getBojByUserId(user3.getId(), null, jobPosting1.getId());
+
+		//then
+		assertThat(response.checkForNull()).isTrue();
 
 	}
 
@@ -244,7 +311,7 @@ public class AlgorithmServiceTest {
 	}
 
 	@Test
-	@DisplayName("백준 상세정보 테스트")
+	@DisplayName("백준 상세정보 정상 작동 테스트")
 	public void GetBojInfoDetailByUserIdTest() {
 		//given
 		User user1 = createUser("user1", "user1");
@@ -273,6 +340,22 @@ public class AlgorithmServiceTest {
 
 		//then
 		assertThat(response.getBojId()).isEqualTo(user1.getBojId());
+
+	}
+
+	@Test
+	@DisplayName("백준 상세정보 유저 테이블에 백준 아이디는 있는데 백준 테이블에 정보가 없는 경우 테스트")
+	public void GetBojInfoDetailByUserIdBojNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+		//when
+		BojInfoDetailResponse response = algorithmService.getBojInfoDetailByUserId(user1.getId());
+
+		//then
+		assertThat(response.checkForNull()).isTrue();
 
 	}
 
