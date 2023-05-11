@@ -67,7 +67,8 @@ public class GithubRankingService {
 		}
 
 		//페이지네이션된 깃허브 데이터
-		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, pageable);
+		List<Github> githubList = githubQueryRepository.findAll(userId, score,
+			githubIdSet.isEmpty() ? null : githubIdSet, pageable);
 		GithubRankingResponse githubRankingResponse = GithubRankingResponse.create(githubList);
 
 		//랭킹 정보 설정
