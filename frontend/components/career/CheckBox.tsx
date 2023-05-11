@@ -1,8 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { ICheckBoxProps } from './ICareer';
 
-interface ICheckBoxProps {
-  handeler: (bChecked: boolean) => void;
-}
+const CheckBoxDiv = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+`;
 
 const CheckBox = ({ handeler }: ICheckBoxProps) => {
   const [bChecked, setChecked] = useState(false);
@@ -13,9 +18,9 @@ const CheckBox = ({ handeler }: ICheckBoxProps) => {
   };
 
   return (
-    <div>
+    <CheckBoxDiv>
       <input type="checkbox" checked={bChecked} onChange={checkHandler} />
-    </div>
+    </CheckBoxDiv>
   );
 };
 

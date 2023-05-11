@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
 import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
+import { IHistory, ICareerListProps } from './ICareer';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -14,6 +15,17 @@ const CareerListDiv = styled.div`
     margin-bottom: 2rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    img {
+      height: 2.5rem;
+    }
+
+    .deleteBtn {
+      color: ${(props) => props.theme.primary};
+      font-size: larger;
+      font-weight: bold;
+    }
   }
   .cardlist {
     margin-top: 1rem;
@@ -27,20 +39,8 @@ const CareerListDiv = styled.div`
   }
 `;
 
-interface IHistory {
-  jobHistoryId: number;
-  companyName: string;
-  dDayName: string;
-  nextDate: string;
-  dDay: string;
-  status: string;
-}
-
-const progressStatus = ['1', '2', '4', '6'];
-const doneStatus = ['3', '5', '7', '8'];
-interface ICareerListProps {
-  openNew: () => void;
-}
+const progressStatus = ['1', '2', '4', '6', '8', '10'];
+const doneStatus = ['3', '5', '7', '9', '11', '12'];
 
 const CareerList = ({ openNew }: ICareerListProps) => {
   const [delMode, setDelMode] = useState<boolean>(false);
@@ -103,14 +103,19 @@ const CareerList = ({ openNew }: ICareerListProps) => {
               setCheckedItems(new Set());
             }}
           />
-          {delMode ? <div onClick={delapi}>삭제하기</div> : <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />}
+          {delMode ? (
+            <div className="deleteBtn" onClick={delapi}>
+              삭제하기
+            </div>
+          ) : (
+            <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
+          )}
         </div>
         <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
         {selectedIdx === 0 ? (
           <div className="cardlist">
             {progressData.map((item: IHistory) => (
               <div className="card" key={item.jobHistoryId}>
-                {/* {delMode && <CheckBox></CheckBox>} */}
                 <CareerListItem
                   cardId={item.jobHistoryId}
                   dDay={item.dDay}
@@ -118,6 +123,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}
@@ -134,6 +140,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}

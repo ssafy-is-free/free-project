@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import WheelPicker from 'react-simple-wheel-picker';
 import styled from 'styled-components';
+import { IDatePickerProps } from './ICareer';
 
 const yearList = new Array();
 for (let i = 2020; i < 2030; i++) {
@@ -33,10 +34,6 @@ const DatePickerdiv = styled.div`
   }
 `;
 
-interface IDatePickerProps {
-  updateDate: (date: string) => void;
-}
-
 const DatePicker = ({ updateDate }: IDatePickerProps) => {
   const [year, setYear] = useState<string>('');
   const [month, setMonth] = useState<string>('');
@@ -50,7 +47,11 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
     setYear(target.value);
   };
   const handleMonth = (target: any) => {
-    setMonth(target.value);
+    if (target.value.length < 2) {
+      setMonth('0' + target.value);
+    } else {
+      setMonth(target.value);
+    }
   };
   const handleDay = (target: any) => {
     if (target.value.length < 2) {

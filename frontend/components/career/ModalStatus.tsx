@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Spinner } from '../common/Spinner';
 import { getJobStatus } from '@/pages/api/careerAxios';
+import { ICareerStatus, IStatusModalProps, DarkBg } from './ICareer';
 
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
-`;
 const StatuModalDiv = styled.div`
+  .modalTitle {
+    margin: 1rem;
+    border-bottom: 2px solid ${(props) => props.theme.primary};
+    text-align: center;
+    font-size: large;
+  }
   .statuscontent {
     width: 100vw;
     bottom: 0;
@@ -21,7 +18,8 @@ const StatuModalDiv = styled.div`
     z-index: 10;
     background-color: white;
     .statusList {
-      min-height: 20rem;
+      height: 20rem;
+      overflow: auto;
       margin: 1rem;
       .statusitem {
         text-align: center;
@@ -31,18 +29,8 @@ const StatuModalDiv = styled.div`
   }
 `;
 
-export interface IStatus {
-  id: number;
-  name: string;
-}
-
-interface IStatusModalProps {
-  close: () => void;
-  result: (status: IStatus) => void;
-}
-
 const StatusModal = ({ close, result }: IStatusModalProps) => {
-  const [statusData, setStatusData] = useState<IStatus[] | null>(null);
+  const [statusData, setStatusData] = useState<ICareerStatus[] | null>(null);
   const getStatus = async () => {
     const res = await getJobStatus();
     setStatusData(res.data);
@@ -56,6 +44,7 @@ const StatusModal = ({ close, result }: IStatusModalProps) => {
     <StatuModalDiv>
       <DarkBg onClick={close}></DarkBg>
       <div className="statuscontent">
+        <div className="modalTitle">현재 상태 변경하기</div>
         {statusData ? (
           <div className="statusList">
             {statusData.map((status) => (

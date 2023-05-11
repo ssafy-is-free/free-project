@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { IMemoModalProps, DarkBg } from './ICareer';
 
 const InputDiv = styled.div`
   padding: 1rem;
@@ -28,15 +29,6 @@ const InputDiv = styled.div`
     }
   }
 `;
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
-`;
 const StatuModalDiv = styled.div`
   .memocontent {
     width: 100vw;
@@ -45,14 +37,14 @@ const StatuModalDiv = styled.div`
     position: fixed;
     z-index: 10;
     background-color: white;
+    .modalTitle {
+      margin: 1rem;
+      border-bottom: 2px solid ${(props) => props.theme.primary};
+      text-align: center;
+      font-size: large;
+    }
   }
 `;
-
-interface IMemoModalProps {
-  close: () => void;
-  result: (memo: string) => void;
-  defaultValue: string;
-}
 
 const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
   const [memoValue, setMemoValue] = useState<string>(defaultValue);
@@ -69,8 +61,8 @@ const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
     <StatuModalDiv>
       <DarkBg onClick={close}></DarkBg>
       <div className="memocontent">
+        <div className="modalTitle">메모 변경하기</div>
         <InputDiv>
-          <div>메모</div>
           <textarea
             className="input"
             value={memoValue}
