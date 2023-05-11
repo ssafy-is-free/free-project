@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.github.repository;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ public interface GithubRepoRepository extends JpaRepository<GithubRepo, Long> {
 	long countByGithubIdIn(Set<Long> githubId);
 
 	long countByGithub(Github github);
+
+	List<GithubRepo> findByGithub(Github github);
 }
