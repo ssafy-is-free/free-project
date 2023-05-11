@@ -20,15 +20,24 @@ export const getJobStatus = async () => {
 };
 
 export const postJob = async (formData: any) => {
-  const form = {
-    statusId: parseInt(formData.statusId),
-    jobPostingId: parseInt(formData.jobPostingId),
-    objective: formData.objective,
-    memo: formData.memo,
-    ddayName: formData.ddayName,
-    dday: formData.dday,
-  };
-  console.log(form);
+  let form;
+  if (formData.ddayName === '') {
+    form = {
+      statusId: parseInt(formData.statusId),
+      jobPostingId: parseInt(formData.jobPostingId),
+      objective: formData.objective,
+      memo: formData.memo,
+    };
+  } else {
+    form = {
+      statusId: parseInt(formData.statusId),
+      jobPostingId: parseInt(formData.jobPostingId),
+      objective: formData.objective,
+      memo: formData.memo,
+      ddayName: formData.ddayName,
+      dday: formData.dday,
+    };
+  }
   const { data } = await authApi({
     method: 'post',
     url: `/job`,
