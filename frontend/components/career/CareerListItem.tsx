@@ -6,23 +6,8 @@ import CheckBox from './CheckBox';
 import StatusModal, { IStatus } from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
+import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps } from './ICareer';
 
-interface Iddetail {
-  postingId: number;
-  postingName: string;
-  companyName: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  memo: string;
-  nextDate: string;
-  objective: string;
-  applicantCount: number;
-  ddayName: string;
-}
-interface IStatusBtnProps {
-  colorProp: string;
-}
 const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
@@ -87,6 +72,9 @@ const DetailCardDiv = styled.div`
   }
 `;
 
+interface IStatusBtnProps {
+  colorProp: string;
+}
 const StatusButton = styled.button<IStatusBtnProps>`
   background-color: ${(props) =>
     props.colorProp === 'green'
@@ -101,24 +89,6 @@ const StatusButton = styled.button<IStatusBtnProps>`
       ? props.theme.stateRedFont
       : props.theme.stateIngFont} !important;
 `;
-
-interface ICareerListItemProps {
-  cardId: number;
-  delMode: boolean;
-  dDay: string;
-  delCheck: (isChecked: boolean) => void;
-}
-interface ICardHeaderProps {
-  ddetail: Iddetail;
-  spread: boolean;
-  setSpread: () => void;
-  ddayModal: () => void;
-  statusModal: () => void;
-}
-interface ICardContentProps {
-  ddetail: Iddetail;
-  memoModal: () => void;
-}
 
 const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
   const statusColor = () => {
@@ -188,7 +158,7 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
 
 const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean>(false);
-  const [detail, setDetail] = useState<Iddetail | null>(null);
+  const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [memoModal, setMemoModal] = useState<boolean>(false);

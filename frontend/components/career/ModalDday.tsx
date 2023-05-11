@@ -3,6 +3,7 @@ import { InputDiv } from './NewCareer';
 import DatePicker from './DatePicker';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { IDdayModalProps } from './ICareer';
 
 const ModalDiv = styled.div`
   position: fixed;
@@ -31,11 +32,6 @@ const DarkBg = styled.div`
   height: 100%;
   background-color: ${(props) => props.theme.modalGray};
 `;
-
-interface IDdayModalProps {
-  close: () => void;
-  result: (res: any) => void;
-}
 
 const DdayModal = ({ close, result }: IDdayModalProps) => {
   const [ddayName, setDdayName] = useState<string>('');

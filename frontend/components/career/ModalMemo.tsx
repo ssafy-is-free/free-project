@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { IMemoModalProps } from './ICareer';
 
 const InputDiv = styled.div`
   padding: 1rem;
@@ -53,12 +54,6 @@ const StatuModalDiv = styled.div`
     }
   }
 `;
-
-interface IMemoModalProps {
-  close: () => void;
-  result: (memo: string) => void;
-  defaultValue: string;
-}
 
 const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
   const [memoValue, setMemoValue] = useState<string>(defaultValue);

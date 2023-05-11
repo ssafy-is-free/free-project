@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import CareerSearch from './NewCareerSearch';
-import { ISearchResult } from './NewCareerSearch';
-import StatusModal, { IStatus } from './ModalStatus';
+import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
+import { ICareerStatus, INewCareerProps, ISearchResult } from './ICareer';
 
 const NewCareerDiv = styled.div`
   width: 100vw;
@@ -73,11 +73,7 @@ export const InputDiv = styled.div`
   }
 `;
 
-interface INewCareer {
-  close: () => void;
-}
-
-const NewCareer = ({ close }: INewCareer) => {
+const NewCareer = ({ close }: INewCareerProps) => {
   const router = useRouter();
   const [postingId, setPostingId] = useState<number>(0);
   const [statusId, setStatusId] = useState<number>(0);
@@ -171,7 +167,7 @@ const NewCareer = ({ close }: INewCareer) => {
     }
   };
 
-  const statusReasut = (status: IStatus) => {
+  const statusReasut = (status: ICareerStatus) => {
     setStatusId(status.id);
     setStatus(status.name);
   };
