@@ -116,8 +116,8 @@ public class BojServiceTest {
 	}
 
 	@Test
-	@DisplayName("백준 ID로 유저 조회 실패")
-	public void testCheckDuplicateId() {
+	@DisplayName("백준 ID로 유저 조회 정상 테스트")
+	public void CheckDuplicateIdTest() {
 		//given
 		User user1 = createUser("user1", "user1");
 		User user2 = createUser("user2", "user2");
@@ -126,6 +126,20 @@ public class BojServiceTest {
 
 		//when //then
 		assertThatThrownBy(() -> bojService.checkDuplicateId("user1")).isInstanceOf(CustomException.class);
+	}
+
+	@Test
+	@DisplayName("백준 ID로 유저가 없는 경우 조회 테스트")
+	public void CheckDuplicateIdUserNullTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		User user3 = createUser("user3", "user3");
+		userRepository.saveAll(Arrays.asList(user1, user2, user3));
+
+		//when
+		bojService.checkDuplicateId("Test");
+		// then
 	}
 
 	private User createUser(String nickname) {
