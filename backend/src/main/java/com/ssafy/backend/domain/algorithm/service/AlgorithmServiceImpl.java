@@ -184,9 +184,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		Long rank, Long userId, Long jobPostingId, Pageable pageable) {
 
 		//취업공고에 해당하는 유저 정보 얻기.
-		Set<Long> jobUserId = jobPostingId == null ?
-			Collections.emptySet() :
-			getJobUserId(jobPostingId);
+		Set<Long> jobUserId = jobPostingId == null ? null : getJobUserId(jobPostingId);
 
 		//공고 id가 있는데,공고에 해당하는 유저를 조회했을 때 비어있으면 빈 리스트 반환.
 		if (jobPostingId != null && jobUserId.isEmpty()) {
@@ -194,9 +192,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		//해당 언어를 사용하는 정보 조회
-		Set<Long> baekjoonIdSet = languageId == null ?
-			Collections.emptySet() :
-			getLanguageBojId(languageId);
+		Set<Long> baekjoonIdSet = languageId == null ? null : getLanguageBojId(languageId);
 
 		//조회된 값이 없으면 빈 리스트 반환
 		if (languageId != null && baekjoonIdSet.isEmpty())

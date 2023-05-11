@@ -1,5 +1,9 @@
 package com.ssafy.backend.domain.github.service;
 
+import static com.ssafy.backend.domain.github.dto.FilteredGithubIdSet.*;
+
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -10,11 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.backend.domain.entity.Github;
-import com.ssafy.backend.domain.entity.JobHistory;
 import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.dto.FilteredGithubIdSet;
-import com.ssafy.backend.domain.github.dto.FilteredUserIdSet;
 import com.ssafy.backend.domain.github.dto.GitHubRankingFilter;
 import com.ssafy.backend.domain.github.dto.GithubRankingCover;
 import com.ssafy.backend.domain.github.dto.GithubRankingOneResponse;
@@ -22,7 +24,7 @@ import com.ssafy.backend.domain.github.dto.GithubRankingResponse;
 import com.ssafy.backend.domain.github.repository.GithubLanguageRepository;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
 import com.ssafy.backend.domain.github.repository.querydsl.GithubQueryRepository;
-import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
+import com.ssafy.backend.domain.job.repository.JobHistoryQueryRepository;
 import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.response.exception.CustomException;
@@ -36,33 +38,36 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GithubRankingService {
-	private final JobHistoryRepository jobHistoryRepository;
 	private final JobPostingRepository jobPostingRepository;
 	private final GithubQueryRepository githubQueryRepository;
 	private final GithubLanguageRepository githubLanguageRepository;
-	private final GithubRepository githubRepository;
+	private final JobHistoryQueryRepository jobHistoryQueryRepository;
 	private final UserRepository userRepository;
+	private final GithubRepository githubRepository;
 
 	public GithubRankingResponse getGithubRank(Long rank, Long userId, Integer score, GitHubRankingFilter rankingFilter,
 		Pageable pageable) {
+
+		FilteredGithubIdSet githubIdSet = create();
+
 		//언어로 필터링 githubIds
-		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
+		githubIdSet.addIds(getGithubIdByLanguage(rankingFilter.getLanguageId()));
 
 		// 필터링된 깃허브 아이디가 없는 경우 DB 조회 X
-		if (githubIdSet != null && githubIdSet.isEmpty()) {
+		if (rankingFilter.getLanguageId() != null && githubIdSet.isEmpty()) {
 			return GithubRankingResponse.createEmpty();
 		}
 
 		//공고별로 필터링된 userIds
-		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
+		githubIdSet.addIds(getUserIdByJobPosting(rankingFilter.getJobPostingId()));
 
 		// 필터링된 유저 아이디가 없는 경우 DB 조회 X
-		if (userIdSet != null && userIdSet.isEmpty()) {
+		if (rankingFilter.getJobPostingId() != null && githubIdSet.isEmpty()) {
 			return GithubRankingResponse.createEmpty();
 		}
 
 		//페이지네이션된 깃허브 데이터
-		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, userIdSet, pageable);
+		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, pageable);
 		GithubRankingResponse githubRankingResponse = GithubRankingResponse.create(githubList);
 
 		//랭킹 정보 설정
@@ -72,28 +77,25 @@ public class GithubRankingService {
 		return githubRankingResponse;
 	}
 
-	private FilteredUserIdSet getUserIdByJobPosting(Long jobPostingId) {
+	private Set<Long> getUserIdByJobPosting(Long jobPostingId) {
 		if (jobPostingId == null) {
-			return null;
+			return Collections.emptySet();
 		}
 		//공고 유효성 검증
 		JobPosting jobPosting = jobPostingRepository.findById(jobPostingId)
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_JOBPOSTING));
 
-		List<JobHistory> jobHistoryList = jobHistoryRepository.findByJobPosting(jobPosting);
-		return FilteredUserIdSet.create(jobHistoryList);
+		return new HashSet<>(jobHistoryQueryRepository.findByPostingJonGithub(jobPosting));
 	}
 
-	private FilteredGithubIdSet getGithubIdByLanguage(Long languageId) {
+	private Set<Long> getGithubIdByLanguage(Long languageId) {
 		if (languageId == null) {
-			return null;
+			return Collections.emptySet();
 		}
-		Set<Long> filterdIdSet = githubLanguageRepository.findByLanguageId(languageId)
+		return githubLanguageRepository.findByLanguageId(languageId)
 			.stream()
 			.map(g -> g.getGithub().getId())
 			.collect(Collectors.toSet());
-
-		return FilteredGithubIdSet.create(filterdIdSet);
 	}
 
 	private void setRankInfo(Long rank, boolean withFilter, GithubRankingResponse githubRankingResponse) {
@@ -119,37 +121,39 @@ public class GithubRankingService {
 			.orElseThrow(() -> new CustomException(CustomExceptionStatus.NOT_FOUND_GITHUB));
 
 		// 필터에 걸리는 깃허브 아이디들을 불러온다.
-		FilteredGithubIdSet githubIdSet = getGithubIdByLanguage(rankingFilter.getLanguageId());
+		FilteredGithubIdSet githubIdSet = FilteredGithubIdSet.create();
+
+		githubIdSet.addIds(getGithubIdByLanguage(rankingFilter.getLanguageId()));
 
 		// 필터링된 깃허브 아이디가 없는 경우 DB 조회 X
-		if (githubIdSet != null && githubIdSet.isEmpty()) {
+		if (rankingFilter.getLanguageId() != null && githubIdSet.isEmpty()) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
 		//필터링된 깃허브에 해당 유저가 없는 경우
-		if (githubIdSet != null && githubIdSet.isNotIn(github.getId())) {
+		if (rankingFilter.getLanguageId() != null && githubIdSet.isNotIn(github.getId())) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
 		// 필터에 걸리는 유저 아이디들을 불러온다.
-		FilteredUserIdSet userIdSet = getUserIdByJobPosting(rankingFilter.getJobPostingId());
+		githubIdSet.addIds(getUserIdByJobPosting(rankingFilter.getJobPostingId()));
 
 		// 필터링된 유저 아이디가 없는 경우 DB 조회 X
-		if (userIdSet != null && userIdSet.isEmpty()) {
+		if (rankingFilter.getJobPostingId() != null && githubIdSet.isEmpty()) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
 		//필터링된 유저 아이디에 해당 유저가 없는 경우
-		if (userIdSet != null && userIdSet.isNotIn(userId)) {
+		if (rankingFilter.getJobPostingId() != null && githubIdSet.isNotIn(userId)) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
 		// 랭킹 계산
-		Long rank;
+		long rank;
 		if (rankingFilter.isNull()) {
 			rank = githubQueryRepository.getRank(github.getScore(), userId);
 		} else {
-			rank = githubQueryRepository.getRankWithFilter(githubIdSet, userIdSet, github.getScore(), userId);
+			rank = githubQueryRepository.getRankWithFilter(githubIdSet, github.getScore(), userId);
 		}
 		rank += 1;
 
@@ -167,7 +171,5 @@ public class GithubRankingService {
 
 		return githubRankingResponse;
 	}
-
-
 
 }

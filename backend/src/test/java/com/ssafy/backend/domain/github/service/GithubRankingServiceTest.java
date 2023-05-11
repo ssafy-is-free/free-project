@@ -105,7 +105,7 @@ class GithubRankingServiceTest {
 		JobHistory jobHistory2 = createJobHistory(user2, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2));
 
-		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(2L).build();
+		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(0L).build();
 		Pageable pageable = Pageable.ofSize(2);
 
 		//when //then
@@ -137,7 +137,7 @@ class GithubRankingServiceTest {
 		JobHistory jobHistory3 = createJobHistory(user3, jobPosting1);
 		jobHistoryRepository.saveAll(Arrays.asList(jobHistory1, jobHistory2, jobHistory3));
 
-		Long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
+		long jobPostingId = jobPostingRepository.findByName("자바 4명~~").get().getId();
 		GitHubRankingFilter rankingFilter = GitHubRankingFilter.builder().jobPostingId(jobPostingId).build();
 
 		long userId = userRepository.findByNickname("user1").getId();
