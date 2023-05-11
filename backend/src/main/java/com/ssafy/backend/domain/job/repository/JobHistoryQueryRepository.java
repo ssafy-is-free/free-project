@@ -35,7 +35,6 @@ public class JobHistoryQueryRepository {
 	}
 
 	//해당 유저가 등록한 취업 이력 조회
-	// TODO : orderby조건에 dday와 현재시간과의 차이를 계산에서 정렬하도록 넣어야됨 - querydsl문법을 못찾았음.
 	public List<JobHistory> findByUserJoinPosting(long userId, List<Long> statusIdList, String nextDate,
 		Long jobHistoryId, Pageable pageable) {
 
