@@ -1,5 +1,7 @@
 package com.ssafy.backend.domain.job.repository;
 
+import static com.ssafy.backend.domain.entity.QGithub.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.entity.JobHistory;
+import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.QJobHistory;
 import com.ssafy.backend.domain.entity.QJobPosting;
 
@@ -30,6 +33,19 @@ public class JobHistoryQueryRepository {
 		return queryFactory
 			.selectFrom(jobHistory)
 			.where(jobHistory.jobPosting.id.eq(jobPostingId))
+			.fetch();
+
+	}
+
+	public List<Long> findByPostingJonGithub(JobPosting jobPosting) {
+
+		QJobHistory jobHistory = QJobHistory.jobHistory;
+
+		return queryFactory
+			.select(github.id)
+			.from(jobHistory)
+			.where(jobHistory.jobPosting.eq(jobPosting))
+			.leftJoin(github).on(jobHistory.user.id.eq(github.user.id))
 			.fetch();
 
 	}
