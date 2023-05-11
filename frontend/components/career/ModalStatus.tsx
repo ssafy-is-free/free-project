@@ -13,6 +13,12 @@ const DarkBg = styled.div`
   background-color: ${(props) => props.theme.modalGray};
 `;
 const StatuModalDiv = styled.div`
+  .modalTitle {
+    margin: 1rem;
+    border-bottom: 2px solid ${(props) => props.theme.primary};
+    text-align: center;
+    font-size: large;
+  }
   .statuscontent {
     width: 100vw;
     bottom: 0;
@@ -21,7 +27,8 @@ const StatuModalDiv = styled.div`
     z-index: 10;
     background-color: white;
     .statusList {
-      min-height: 20rem;
+      height: 20rem;
+      overflow: auto;
       margin: 1rem;
       .statusitem {
         text-align: center;
@@ -56,6 +63,7 @@ const StatusModal = ({ close, result }: IStatusModalProps) => {
     <StatuModalDiv>
       <DarkBg onClick={close}></DarkBg>
       <div className="statuscontent">
+        <div className="modalTitle">현재 상태 변경하기</div>
         {statusData ? (
           <div className="statusList">
             {statusData.map((status) => (

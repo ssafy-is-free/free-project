@@ -14,6 +14,17 @@ const CareerListDiv = styled.div`
     margin-bottom: 2rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+
+    img {
+      height: 2.5rem;
+    }
+
+    .deleteBtn {
+      color: ${(props) => props.theme.primary};
+      font-size: larger;
+      font-weight: bold;
+    }
   }
   .cardlist {
     margin-top: 1rem;
@@ -36,8 +47,9 @@ interface IHistory {
   status: string;
 }
 
-const progressStatus = ['1', '2', '4', '6'];
-const doneStatus = ['3', '5', '7', '8'];
+const progressStatus = ['1', '2', '4', '6', '8', '10'];
+const doneStatus = ['3', '5', '7', '9', '11', '12'];
+
 interface ICareerListProps {
   openNew: () => void;
 }
@@ -103,14 +115,19 @@ const CareerList = ({ openNew }: ICareerListProps) => {
               setCheckedItems(new Set());
             }}
           />
-          {delMode ? <div onClick={delapi}>삭제하기</div> : <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />}
+          {delMode ? (
+            <div className="deleteBtn" onClick={delapi}>
+              삭제하기
+            </div>
+          ) : (
+            <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
+          )}
         </div>
         <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
         {selectedIdx === 0 ? (
           <div className="cardlist">
             {progressData.map((item: IHistory) => (
               <div className="card" key={item.jobHistoryId}>
-                {/* {delMode && <CheckBox></CheckBox>} */}
                 <CareerListItem
                   cardId={item.jobHistoryId}
                   dDay={item.dDay}

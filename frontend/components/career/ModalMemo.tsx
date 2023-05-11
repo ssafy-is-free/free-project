@@ -45,6 +45,12 @@ const StatuModalDiv = styled.div`
     position: fixed;
     z-index: 10;
     background-color: white;
+    .modalTitle {
+      margin: 1rem;
+      border-bottom: 2px solid ${(props) => props.theme.primary};
+      text-align: center;
+      font-size: large;
+    }
   }
 `;
 
@@ -69,8 +75,8 @@ const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
     <StatuModalDiv>
       <DarkBg onClick={close}></DarkBg>
       <div className="memocontent">
+        <div className="modalTitle">메모 변경하기</div>
         <InputDiv>
-          <div>메모</div>
           <textarea
             className="input"
             value={memoValue}
