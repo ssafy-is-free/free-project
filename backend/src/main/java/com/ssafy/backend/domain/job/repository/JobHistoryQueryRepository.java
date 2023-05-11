@@ -23,7 +23,7 @@ public class JobHistoryQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	//해당 취업공고에 지원한 취업이력정보 조회
-	public List<JobHistory> findByPostingIdJoinUser(long jobPostingId) {
+	public List<JobHistory> findByPostingId(long jobPostingId) {
 
 		QJobHistory jobHistory = QJobHistory.jobHistory;
 
