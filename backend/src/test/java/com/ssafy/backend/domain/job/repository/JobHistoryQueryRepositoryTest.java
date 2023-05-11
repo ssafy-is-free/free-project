@@ -15,12 +15,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.backend.TestConfig;
 import com.ssafy.backend.domain.entity.JobHistory;
 import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.User;
@@ -28,26 +27,28 @@ import com.ssafy.backend.domain.user.repository.UserRepository;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Import(TestConfig.class)
 class JobHistoryQueryRepositoryTest {
 
 	private JobHistoryQueryRepository jobHistoryQueryRepository;
 
 	@Autowired
 	private JobHistoryRepository jobHistoryRepository;
-	//todo : history 테스트인데, 테스트 디비 저장을 위해, posting, user 레포지토리도 가져와야됨 - 이게 맞나
 	@Autowired
 	private JobPostingRepository jobPostingRepository;
 	@Autowired
 	private UserRepository userRepository;
-	@Autowired
+	// @Autowired
 	private JPAQueryFactory queryFactory;
 
 	@Autowired
+	private TestEntityManager testEntityManager;
 	private EntityManager entityManager;
 
 	@BeforeEach
 	void setup() {
+
+		entityManager = testEntityManager.getEntityManager();
+		queryFactory = new JPAQueryFactory(entityManager);
 
 		jobHistoryQueryRepository = new JobHistoryQueryRepository(queryFactory);
 
