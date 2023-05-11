@@ -62,9 +62,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 * 이 메소드는 주어진 유저 아이디를 기반으로 해당 유저의 랭킹 정보를 반환합니다.
 	 *
 	 * @param userId 조회하려는 유저의 아이디 (정수 형태)
-	 * @author noobsoda
 	 * @return BojMyRankResponseDTO 해당 유저의 랭킹 정보를 담고 있는 DTO 객체
 	 * @throws CustomException 유저 아이디가 잘못된 경우 발생하는 예외
+	 * @author noobsoda
 	 */
 
 	@Override
@@ -131,8 +131,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 * 각 사용자에 대한 BojIdListResponseDTO 객체를 생성하여 이들을 리스트로 반환하는 메소드입니다.
 	 *
 	 * @param nickname 조회할 사용자의 백준 ID
-	 * @author noobsoda
 	 * @return NicknameListResponseDTO 객체 목록
+	 * @author noobsoda
 	 */
 	public List<NicknameListResponse> getBojListByBojId(String nickname) {
 		List<User> userList = userQueryRepository.findByBojId(nickname);
@@ -142,10 +142,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	}
 
 	/**
-	 *
-	 @param userId 유저의 아이디
-	 @author noobsoda
-	 @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
+	 * @param userId 유저의 아이디
+	 * @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
+	 * @author noobsoda
 	 */
 	@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 	@Override
@@ -228,7 +227,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			.orElseThrow(() -> new CustomException(NOT_FOUND_JOBPOSTING));
 
 		//채용 공고 id가 존재하면 해당하는 유저 id 조회.
-		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingIdJoinUser(jobPosting.getId());
+		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingId(jobPosting.getId());
 		Set<Long> jobUserId = jobHistoryList.stream()
 			.map(JobHistory::getUser)
 			.map(User::getId)
