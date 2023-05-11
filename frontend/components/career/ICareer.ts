@@ -1,4 +1,7 @@
-interface IHistory {
+/**
+ * 취업지원현황조회 data
+ */
+export interface IHistory {
   jobHistoryId: number;
   companyName: string;
   dDayName: string;
@@ -7,9 +10,16 @@ interface IHistory {
   status: string;
 }
 
-/** CareerListProps
- * openNew: 새로운
+// Props //
+// Props //
+// Props //
+
+/**
+ * openNew(fn)
  */
-interface ICareerListProps {
+export interface ICareerListProps {
+  /**
+   * openNew(fn): 추가하기 버튼클릭시 실행
+   */
   openNew: () => void;
 }
