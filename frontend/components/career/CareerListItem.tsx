@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import CheckBox from './CheckBox';
-import StatusModal, { IStatus } from './ModalStatus';
+import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
-import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps } from './ICareer';
+import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
 
 const DetailCardDiv = styled.div`
   width: 100%;
@@ -191,7 +191,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
     }
   };
 
-  const modifyStatus = async (status: IStatus) => {
+  const modifyStatus = async (status: ICareerStatus) => {
     const data = {
       statusId: status.id,
     };
