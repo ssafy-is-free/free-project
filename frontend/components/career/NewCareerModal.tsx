@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { Spinner } from '../common/Spinner';
 
 const moveUp = keyframes`
  from{

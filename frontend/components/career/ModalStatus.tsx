@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Spinner } from '../common/Spinner';
 import { getJobStatus } from '@/pages/api/careerAxios';
 
 const DarkBg = styled.div`
