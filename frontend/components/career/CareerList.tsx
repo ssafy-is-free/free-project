@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
 import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
+import { IHistory, ICareerListProps } from './ICareer';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -38,21 +39,8 @@ const CareerListDiv = styled.div`
   }
 `;
 
-interface IHistory {
-  jobHistoryId: number;
-  companyName: string;
-  dDayName: string;
-  nextDate: string;
-  dDay: string;
-  status: string;
-}
-
 const progressStatus = ['1', '2', '4', '6', '8', '10'];
 const doneStatus = ['3', '5', '7', '9', '11', '12'];
-
-interface ICareerListProps {
-  openNew: () => void;
-}
 
 const CareerList = ({ openNew }: ICareerListProps) => {
   const [delMode, setDelMode] = useState<boolean>(false);
@@ -135,6 +123,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}
@@ -151,6 +140,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}

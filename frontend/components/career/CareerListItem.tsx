@@ -1,28 +1,13 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
-import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import CheckBox from './CheckBox';
-import StatusModal, { IStatus } from './ModalStatus';
+import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
+import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
+import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
 
-interface Iddetail {
-  postingId: number;
-  postingName: string;
-  companyName: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  memo: string;
-  nextDate: string;
-  objective: string;
-  applicantCount: number;
-  ddayName: string;
-}
-interface IStatusBtnProps {
-  colorProp: string;
-}
 const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
@@ -87,6 +72,9 @@ const DetailCardDiv = styled.div`
   }
 `;
 
+interface IStatusBtnProps {
+  colorProp: string;
+}
 const StatusButton = styled.button<IStatusBtnProps>`
   background-color: ${(props) =>
     props.colorProp === 'green'
@@ -101,24 +89,6 @@ const StatusButton = styled.button<IStatusBtnProps>`
       ? props.theme.stateRedFont
       : props.theme.stateIngFont} !important;
 `;
-
-interface ICareerListItemProps {
-  cardId: number;
-  delMode: boolean;
-  dDay: string;
-  delCheck: (isChecked: boolean) => void;
-}
-interface ICardHeaderProps {
-  ddetail: Iddetail;
-  spread: boolean;
-  setSpread: () => void;
-  ddayModal: () => void;
-  statusModal: () => void;
-}
-interface ICardContentProps {
-  ddetail: Iddetail;
-  memoModal: () => void;
-}
 
 const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
   const statusColor = () => {
@@ -186,16 +156,12 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   );
 };
 
-const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProps) => {
+const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean>(false);
-  const [detail, setDetail] = useState<Iddetail | null>(null);
+  const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [memoModal, setMemoModal] = useState<boolean>(false);
-
-  const headerClick = () => {
-    setSpread(!spread);
-  };
 
   const getDetail = async () => {
     const res = await getHistoryDtail(cardId);
@@ -221,7 +187,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
     }
   };
 
-  const modifyStatus = async (status: IStatus) => {
+  const modifyStatus = async (status: ICareerStatus) => {
     const data = {
       statusId: status.id,
     };
@@ -229,7 +195,8 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
 
     if (res.status === 'SUCCESS') {
       alert(res.message);
-      getDetail();
+      updateList();
+      // getDetail();
     } else {
       console.log(res.message);
     }
@@ -256,7 +223,9 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
   if (!detail) {
     return (
       <DetailCardDiv>
-        <Spinner></Spinner>
+        <div className="item">
+          <Spinner></Spinner>
+        </div>
       </DetailCardDiv>
     );
   } else {
@@ -266,7 +235,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
         <div className="item">
           <CardHeader
             ddetail={detail}
-            setSpread={headerClick}
+            setSpread={() => setSpread(!spread)}
             spread={spread}
             ddayModal={() => setDdayModal(true)}
             statusModal={() => setStatusModal(true)}

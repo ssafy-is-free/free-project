@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { IMemoModalProps, DarkBg } from './ICareer';
 
 const InputDiv = styled.div`
   padding: 1rem;
@@ -28,15 +29,6 @@ const InputDiv = styled.div`
     }
   }
 `;
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
-`;
 const StatuModalDiv = styled.div`
   .memocontent {
     width: 100vw;
@@ -53,12 +45,6 @@ const StatuModalDiv = styled.div`
     }
   }
 `;
-
-interface IMemoModalProps {
-  close: () => void;
-  result: (memo: string) => void;
-  defaultValue: string;
-}
 
 const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
   const [memoValue, setMemoValue] = useState<string>(defaultValue);

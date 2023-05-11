@@ -1,17 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Spinner } from '../common/Spinner';
 import { getJobStatus } from '@/pages/api/careerAxios';
+import { ICareerStatus, IStatusModalProps, DarkBg } from './ICareer';
 
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
-`;
 const StatuModalDiv = styled.div`
   .modalTitle {
     margin: 1rem;
@@ -38,18 +29,8 @@ const StatuModalDiv = styled.div`
   }
 `;
 
-export interface IStatus {
-  id: number;
-  name: string;
-}
-
-interface IStatusModalProps {
-  close: () => void;
-  result: (status: IStatus) => void;
-}
-
 const StatusModal = ({ close, result }: IStatusModalProps) => {
-  const [statusData, setStatusData] = useState<IStatus[] | null>(null);
+  const [statusData, setStatusData] = useState<ICareerStatus[] | null>(null);
   const getStatus = async () => {
     const res = await getJobStatus();
     setStatusData(res.data);
