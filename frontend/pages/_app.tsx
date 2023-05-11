@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app';
 import wrapper, { RootState, persistor } from '@/redux';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
 import Footer from '@/components/common/Footer';
@@ -11,6 +11,12 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useEffect } from 'react';
 import * as gtag from '@/utils/gtag';
 import Script from 'next/script';
+import { isBrowser } from 'react-device-detect';
+import WebGuide from '@/components/common/WebGuide';
+
+const SSS = styled.div`
+  width: 400px;
+`;
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
@@ -25,6 +31,10 @@ function App({ Component, ...rest }: AppProps) {
       setCookie('redirect-uri', 'k8b');
     }
   }, []);
+
+  if (isBrowser) {
+    return <WebGuide></WebGuide>;
+  }
 
   return (
     <>
