@@ -516,19 +516,6 @@ const Main = () => {
 
   if (!splashState) {
     return <Splash />;
-  } else if (openProfile) {
-    return (
-      <Profile
-        curRank={curRank}
-        id={clickedUserId.toString()}
-        my={clickMy}
-        back={() => {
-          setOpenProfile(false);
-          setClickMy(false);
-          setClickedUserId(0);
-        }}
-      ></Profile>
-    );
   } else {
     return (
       <>
@@ -674,6 +661,18 @@ const Main = () => {
           />
         )}
         {openSetting && <SettingModal onClick={() => setOpenSetting(false)} />}
+        {openProfile && (
+          <Profile
+            curRank={curRank}
+            id={clickedUserId.toString()}
+            my={clickMy}
+            back={() => {
+              setOpenProfile(false);
+              setClickMy(false);
+              setClickedUserId(0);
+            }}
+          ></Profile>
+        )}
       </>
     );
   }

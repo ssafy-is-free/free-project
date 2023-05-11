@@ -16,9 +16,12 @@ const NewCareerDiv = styled.div`
   background-color: white;
   padding-bottom: max(10vh, 4rem);
   z-index: 5;
-  overflow: auto;
-  ::-webkit-scrollbar {
-    display: none;
+
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera*/
   }
 `;
 

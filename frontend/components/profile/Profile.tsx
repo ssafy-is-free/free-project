@@ -8,6 +8,13 @@ import dynamic from 'next/dynamic';
 import CustomNav from '../common/CustomNav';
 
 const ProfileDiv = styled.div`
+  background-color: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 3;
   .headerblank {
     height: 2.5rem;
   }
