@@ -196,7 +196,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     if (res.status === 'SUCCESS') {
       alert(res.message);
       updateList();
-      // getDetail();
+      getDetail();
     } else {
       console.log(res.message);
     }
