@@ -50,7 +50,11 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
     setYear(target.value);
   };
   const handleMonth = (target: any) => {
-    setMonth(target.value);
+    if (target.value.length < 2) {
+      setMonth('0' + target.value);
+    } else {
+      setMonth(target.value);
+    }
   };
   const handleDay = (target: any) => {
     if (target.value.length < 2) {
