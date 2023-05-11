@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
-import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import CheckBox from './CheckBox';
 import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
+import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
 
 const DetailCardDiv = styled.div`
@@ -156,16 +156,12 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   );
 };
 
-const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProps) => {
+const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean>(false);
   const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [memoModal, setMemoModal] = useState<boolean>(false);
-
-  const headerClick = () => {
-    setSpread(!spread);
-  };
 
   const getDetail = async () => {
     const res = await getHistoryDtail(cardId);
@@ -199,7 +195,8 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
 
     if (res.status === 'SUCCESS') {
       alert(res.message);
-      getDetail();
+      updateList();
+      // getDetail();
     } else {
       console.log(res.message);
     }
@@ -226,7 +223,9 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
   if (!detail) {
     return (
       <DetailCardDiv>
-        <Spinner></Spinner>
+        <div className="item">
+          <Spinner></Spinner>
+        </div>
       </DetailCardDiv>
     );
   } else {
@@ -236,7 +235,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
         <div className="item">
           <CardHeader
             ddetail={detail}
-            setSpread={headerClick}
+            setSpread={() => setSpread(!spread)}
             spread={spread}
             ddayModal={() => setDdayModal(true)}
             statusModal={() => setStatusModal(true)}

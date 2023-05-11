@@ -7,8 +7,6 @@ const CheckBoxDiv = styled.div`
   align-items: center;
   justify-content: center;
   width: 2rem;
-  input {
-  }
 `;
 
 const CheckBox = ({ handeler }: ICheckBoxProps) => {

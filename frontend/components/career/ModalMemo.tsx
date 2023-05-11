@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
-import { IMemoModalProps } from './ICareer';
+import { IMemoModalProps, DarkBg } from './ICareer';
 
 const InputDiv = styled.div`
   padding: 1rem;
@@ -28,15 +28,6 @@ const InputDiv = styled.div`
       color: ${(props) => props.theme.fontGray};
     }
   }
-`;
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 5;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
 `;
 const StatuModalDiv = styled.div`
   .memocontent {

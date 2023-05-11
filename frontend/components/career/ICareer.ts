@@ -1,3 +1,15 @@
+import styled from 'styled-components';
+
+export const DarkBg = styled.div`
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: ${(props) => props.theme.modalGray};
+`;
+
 /**
  * 취업지원현황조회 data
  */
@@ -64,6 +76,7 @@ export interface ICareerListItemProps {
    * @returns
    */
   delCheck: (isChecked: boolean) => void;
+  updateList: () => void;
 }
 
 export interface ICardHeaderProps {

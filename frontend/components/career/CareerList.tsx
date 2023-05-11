@@ -123,6 +123,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}
@@ -139,6 +140,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                   delCheck={(isChecked: boolean) => {
                     checkedItemHandler(item.jobHistoryId, isChecked);
                   }}
+                  updateList={getCareerData}
                 ></CareerListItem>
               </div>
             ))}

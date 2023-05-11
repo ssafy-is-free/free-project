@@ -3,7 +3,7 @@ import { InputDiv } from './NewCareer';
 import DatePicker from './DatePicker';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
-import { IDdayModalProps } from './ICareer';
+import { IDdayModalProps, DarkBg } from './ICareer';
 
 const ModalDiv = styled.div`
   position: fixed;
@@ -24,15 +24,6 @@ const ModalDiv = styled.div`
   }
 `;
 
-const DarkBg = styled.div`
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => props.theme.modalGray};
-`;
-
 const DdayModal = ({ close, result }: IDdayModalProps) => {
   const [ddayName, setDdayName] = useState<string>('');
   const [date, setDate] = useState<string>('');
@@ -40,13 +31,11 @@ const DdayModal = ({ close, result }: IDdayModalProps) => {
     setDate(date);
   };
 
-  const cancel = () => {
-    close();
-  };
   const ok = () => {
     result({ ddayName, date });
     close();
   };
+
   return (
     <ModalDiv>
       <DarkBg onClick={close}></DarkBg>
@@ -63,7 +52,7 @@ const DdayModal = ({ close, result }: IDdayModalProps) => {
           ></input>
         </InputDiv>
         <DatePicker updateDate={updateDate}></DatePicker>
-        <CancelOk cancel={cancel} ok={ok}></CancelOk>
+        <CancelOk cancel={close} ok={ok}></CancelOk>
       </div>
     </ModalDiv>
   );
