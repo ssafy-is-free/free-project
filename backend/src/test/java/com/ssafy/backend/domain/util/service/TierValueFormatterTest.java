@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 public class TierValueFormatterTest {
 	@Test
-	@DisplayName("숫자 -> 티어 변환 테스트")
+	@DisplayName("숫자 -> 티어 변환 정상 작동 테스트")
 	public void formatTest() {
 		//given
 		int tier = 15;
@@ -19,7 +19,7 @@ public class TierValueFormatterTest {
 	}
 
 	@Test
-	@DisplayName("티어 -> 숫자 변환 테스트")
+	@DisplayName("티어 -> 숫자 변환 정상 작동 테스트")
 	public void reFormatTest() {
 		//given
 		String tier = "https://d2gd6pc034wcta.cloudfront.net/tier/15.svg";
@@ -28,6 +28,18 @@ public class TierValueFormatterTest {
 
 		//then
 		assertThat(reFormatTier).isEqualTo(15);
+	}
+
+	@Test
+	@DisplayName("티어 -> 숫자 변환 실패 테스트")
+	public void reFormatFailTest() {
+		//given
+		String tier = "https://d2gd6pc034wcta.cloudfront.net/tier/.svg";
+		//when
+		int reFormatTier = TierValueFormatter.reFormat(tier);
+
+		//then
+		assertThat(reFormatTier).isEqualTo(0);
 	}
 
 	@Test
