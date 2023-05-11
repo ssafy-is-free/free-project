@@ -56,7 +56,7 @@ public class GithubCrawlingServiceTest {
 
 		//when
 		githubCrawlingService.updateAllGithub("test", user.getId());
-		List<GithubRepo> githubRepos = githubRepoRepository.findAll();
+		List<GithubRepo> githubRepos = githubRepoRepository.findByGithub(github);
 
 		//then
 		assertThat(githubRepos).hasSize(4);
