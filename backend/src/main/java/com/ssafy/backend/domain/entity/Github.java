@@ -63,11 +63,11 @@ public class Github extends BaseTimeEntity {
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private User user;
 
-	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "github", orphanRemoval = true)
 	@Builder.Default
 	private Set<GithubRepo> githubRepos = new HashSet<>();
 
-	@OneToMany(mappedBy = "github", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "github")
 	@Builder.Default
 	private Set<GithubLanguage> githubLanguages = new HashSet<>();
 
