@@ -1,17 +1,11 @@
 import RankMenu from '@/components/common/RankMenu';
 import { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import JobUserItem from '@/components/jobrank/JobUserItem';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import MainOtherItem from '@/components/rank/MainOtherItem';
 import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
-import {
-  getBojRanking,
-  getGithubRanking,
-  getMyBojRanking,
-  getMyGitRanking,
-  getPostingsAllGitUsers,
-} from './api/jobRankAxios';
+import { getBojRanking, getGithubRanking, getMyBojRanking, getMyGitRanking } from './api/jobRankAxios';
 import ChartJobrank from '@/components/jobrank/ChartJobrank';
 import OtherInfo from '@/components/jobrank/OtherInfo';
 import JobInfo from '@/components/jobrank/JobInfo';
@@ -20,6 +14,7 @@ import CompareBox from '@/components/jobrank/CompareBox';
 import CompareUserBox from '@/components/jobrank/CompareUserBox';
 import BackIcon from '../public/Icon/BackIcon.svg';
 import { useInView } from 'react-intersection-observer';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled.div<{ info: number; submenu: number }>`
   width: 100vw;
@@ -112,6 +107,7 @@ const JobRank = () => {
   const [curRank, setCurRank] = useState<number>(0);
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const onChangeCurRank = (el: number) => {
+    setNextRank(1);
     setCurRank(el);
     setOpenSelect(false);
   };
@@ -134,8 +130,8 @@ const JobRank = () => {
   // inView 처음 봤을 떄
   const [inViewFirst, setInViewFirst] = useState<boolean>(true);
 
-  // TODO : jobPostingIdParam 임시로 1처리
-  const jobPostingIdParam = 1;
+  const router = useRouter();
+  const [jobPostingIdParam, setJobPostingIdParam] = useState<number>(Number(router.query.postingId));
 
   // 랭킹 정보
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
@@ -170,7 +166,7 @@ const JobRank = () => {
           let data = await getGithubRanking(size, jobPostingIdParam);
 
           setOtherRankInfo(data);
-          setNextRank(data[data.length - 1].rank);
+          setNextRank(data[data?.length - 1].rank);
         })();
       } else {
         // 깃허브 정보 불러오기
@@ -203,7 +199,7 @@ const JobRank = () => {
           let data = await getBojRanking(size, jobPostingIdParam);
 
           setOtherRankInfo(data);
-          setNextRank(data[data.length - 1]?.rank);
+          setNextRank(data[data?.length - 1]?.rank);
         })();
       } else {
         (async () => {
@@ -241,7 +237,13 @@ const JobRank = () => {
       <Wrapper info={info} submenu={submenu}>
         <div className="job-info-box">
           <RankMenu curRank={curRank} onClick={() => setOpenSelect(true)} />
-          <JobInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
+          <JobInfo
+            curRank={curRank}
+            companyName={String(router.query.companyName)}
+            postingName={String(router.query.postingName)}
+            startTime={String(router.query.startTime)}
+            endTime={String(router.query.endTime)}
+          />
         </div>
         <div className="all-rank">
           {info == 0 ? (

@@ -7,6 +7,21 @@ import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
+import { useRouter } from 'next/router';
+
+interface Iddetail {
+  postingId: number;
+  postingName: string;
+  companyName: string;
+  status: string;
+  startTime: string;
+  endTime: string;
+  memo: string;
+  nextDate: string;
+  objective: string;
+  applicantCount: number;
+  ddayName: string;
+}
 
 const DetailCardDiv = styled.div`
   width: 100%;
@@ -131,6 +146,8 @@ const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICar
 };
 
 const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
+  const router = useRouter();
+
   return (
     <div>
       <div>메모</div>
@@ -147,7 +164,23 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
             <span>지원자수: {ddetail.applicantCount}</span>
           </div>
         </div>
-        <button>
+        <button
+          onClick={() => {
+            router.push(
+              {
+                pathname: '/jobrank',
+                query: {
+                  postingId: ddetail.postingId,
+                  companyName: ddetail.companyName,
+                  postingName: ddetail.postingName,
+                  startTime: ddetail.startTime,
+                  endTime: ddetail.endTime,
+                },
+              },
+              '/jobrank'
+            );
+          }}
+        >
           <div>지원자 정보</div>
           <div>보러가기</div>
         </button>

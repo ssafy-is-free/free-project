@@ -14,24 +14,15 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  /* position: relative; */
 
   p {
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* width: 100%; */
   }
 
-  /* &:hover {
-    background-color: ${(props) => props.theme.primary};
-    color: ${(props) => props.theme.fontWhite};
-  } */
-
   .del-btn {
-    /* position: absolute; */
-    /* right: 8px; */
     width: 10px;
     height: 10px;
     display: flex;
@@ -41,8 +32,6 @@ const Wrapper = styled.div`
 `;
 
 const StyledCloseIcon = styled(CloseIcon)`
-  /* position: absolute; */
-  /* right: 8px; */
   path {
     fill: ${(props) => props.theme.fontGray};
   }
@@ -57,10 +46,12 @@ const FilterOption = (props: IFilterOptionProps) => {
     const style = ref.current?.style;
     if (style) {
       if (props.isInFilter) {
+        // 필터 모달창 안에 있는 옵션인 경우
         style.width = '92%';
         style.borderRadius = '50px';
         style.height = '40px';
       } else {
+        // 랭킹 메인 페이지에 보여지는 옵션인 경우
         style.width = ``;
         style.borderRadius = '8px';
         style.height = '32px';
@@ -74,9 +65,9 @@ const FilterOption = (props: IFilterOptionProps) => {
   }, []);
 
   const onDelete = () => {
-    if (props.getRankList && props.setSelectedOption) {
-      props.setSelectedOption(null);
-      props.getRankList(props.size, 1);
+    if (props.getRankList && props.setNoMore) {
+      props.getRankList(0);
+      props.setNoMore(false);
       dispatch(setFilter(null));
     }
   };
