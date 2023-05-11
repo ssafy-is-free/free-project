@@ -27,19 +27,16 @@ public class GithubQueryRepository {
 	//삭제되지 않은 유저의 깃허브 조회
 	public Optional<Github> findOneByIdNotDeleted(long githubId) {
 
-		return Optional.ofNullable(queryFactory
-			.selectFrom(github)
-			.where(github.id.eq(githubId), github.user.isDeleted.eq(false))
-			.fetchOne());
+		return Optional.ofNullable(
+			queryFactory.selectFrom(github).where(github.id.eq(githubId), github.user.isDeleted.eq(false)).fetchOne());
 	}
 
-	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet,
-		FilteredUserIdSet userIdSet, Pageable pageable) {
+	public List<Github> findAll(Long userId, Integer score, FilteredGithubIdSet githubIdSet, Pageable pageable) {
 		return queryFactory.select(github)
 			.from(github)
 			.innerJoin(github.user, user)
 			.fetchJoin()
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), checkCursor(score, userId), user.isDeleted.eq(false))
+			.where(githubIdIn(githubIdSet), checkCursor(score, userId), user.isDeleted.eq(false))
 			.orderBy(github.score.desc(), github.user.id.asc())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -53,20 +50,24 @@ public class GithubQueryRepository {
 
 	}
 
-	public long getRankWithFilter(FilteredGithubIdSet githubIdSet, FilteredUserIdSet userIdSet, int score, long userId) {
+	public long getRankWithFilter(FilteredGithubIdSet githubIdSet, int score, long userId) {
 		return queryFactory.select(github)
 			.from(github)
-			.join(github.user, user).fetchJoin()
-			.where(githubIdIn(githubIdSet), userIdIn(userIdSet), higherRanked(score, userId), user.isDeleted.eq(false))
-			.fetch().size();
+			.join(github.user, user)
+			.fetchJoin()
+			.where(githubIdIn(githubIdSet), higherRanked(score, userId), user.isDeleted.eq(false))
+			.fetch()
+			.size();
 	}
 
 	public long getRank(int score, long userId) {
 		return queryFactory.select(github)
 			.from(github)
-			.join(github.user, user).fetchJoin()
+			.join(github.user, user)
+			.fetchJoin()
 			.where(higherRanked(score, userId), user.isDeleted.eq(false))
-			.fetch().size();
+			.fetch()
+			.size();
 	}
 
 	private BooleanExpression githubIdIn(FilteredGithubIdSet githubIdSet) {
