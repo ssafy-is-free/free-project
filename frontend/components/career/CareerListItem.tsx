@@ -3,9 +3,9 @@ import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import CheckBox from './CheckBox';
-import StatusModal, { IStatus } from './StatusModal';
-import DdayModal from './DdayModal';
-import MemoModal from './MemoModal';
+import StatusModal, { IStatus } from './ModalStatus';
+import DdayModal from './ModalDday';
+import MemoModal from './ModalMemo';
 
 interface Iddetail {
   postingId: number;
@@ -20,7 +20,9 @@ interface Iddetail {
   applicantCount: number;
   ddayName: string;
 }
-
+interface IStatusBtnProps {
+  colorProp: string;
+}
 const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
@@ -68,6 +70,7 @@ const DetailCardDiv = styled.div`
       margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       .statusbtn {
       }
       .upalignDiv {
@@ -82,6 +85,21 @@ const DetailCardDiv = styled.div`
       align-items: center;
     }
   }
+`;
+
+const StatusButton = styled.button<IStatusBtnProps>`
+  background-color: ${(props) =>
+    props.colorProp === 'green'
+      ? props.theme.stateGreen
+      : props.colorProp === 'red'
+      ? props.theme.stateRed
+      : props.theme.stateIng} !important;
+  color: ${(props) =>
+    props.colorProp === 'green'
+      ? props.theme.stateGreenFont
+      : props.colorProp === 'red'
+      ? props.theme.stateRedFont
+      : props.theme.stateIngFont} !important;
 `;
 
 interface ICareerListItemProps {
@@ -103,6 +121,21 @@ interface ICardContentProps {
 }
 
 const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
+  const statusColor = () => {
+    const word = ddetail.status.slice(-2);
+    if (ddetail.status === '최종 합격') {
+      return 'green';
+    } else if (word === '접수') {
+      return 'yellow';
+    } else if (word === '탈락') {
+      return 'red';
+    } else {
+      return 'green';
+    }
+  };
+
+  const status = statusColor();
+
   return (
     <div>
       {spread && <div>{ddetail.postingName}</div>}
@@ -119,9 +152,9 @@ const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICar
         <button onClick={ddayModal}>
           {ddetail.ddayName}: {ddetail.nextDate}
         </button>
-        <button className="statusbtn" onClick={statusModal}>
+        <StatusButton className="statusbtn" colorProp={status} onClick={statusModal}>
           {ddetail.status}
-        </button>
+        </StatusButton>
       </div>
     </div>
   );
@@ -187,6 +220,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
       console.log(res.message);
     }
   };
+
   const modifyStatus = async (status: IStatus) => {
     const data = {
       statusId: status.id,
@@ -200,6 +234,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck }: ICareerListItemProp
       console.log(res.message);
     }
   };
+
   const modifyMemo = async (memoValue: string) => {
     const data = {
       memo: memoValue,

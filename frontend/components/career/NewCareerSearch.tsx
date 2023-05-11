@@ -26,7 +26,11 @@ const CareerSearchDiv = styled.div`
   .result {
     margin: 1rem;
     .csitem {
-      border: 1px solid;
+      border-bottom: 1px solid;
+      margin-bottom: 0.5rem;
+      .company {
+        margin-bottom: 0.2rem;
+      }
     }
   }
 `;
@@ -87,6 +91,7 @@ interface ICareerSearchProps {
 const CareerSearch = ({ close, result }: ICareerSearchProps) => {
   const [word, setWord] = useState<string>();
   const [data, setData] = useState<ISearchResult[]>(ddata);
+  const [notFocus, setNotFocus] = useState<boolean>(true);
 
   const searching = async (value: string) => {
     // 취업 공고, 회사명 search api
@@ -102,10 +107,12 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
       <div className="csheader" onClick={close}>
         <img src="/Icon/CloseIcon.svg" alt="#" />
       </div>
-      <div className="csintro">
-        <h2>기업명, 공고명을</h2>
-        <h2>검색해서 추가해보세요</h2>
-      </div>
+      {notFocus && (
+        <div className="csintro">
+          <h2>기업명, 공고명을</h2>
+          <h2>검색해서 추가해보세요</h2>
+        </div>
+      )}
       <div className="result">
         <InputDiv>
           <img src="Icon/SearchingIcon.svg" alt="#" />
@@ -115,6 +122,8 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
             className="csinput"
             value={word}
             placeholder={'search...'}
+            autoComplete="off"
+            onFocus={() => setNotFocus(false)}
             onChange={(e) => {
               setWord(e.target.value);
               searching(e.target.value);
@@ -122,23 +131,25 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
           ></input>
         </InputDiv>
         <div className="cslist">
-          {data.map((item) => (
-            <div
-              className="csitem"
-              key={item.jobPostingId}
-              onClick={() => {
-                result(item);
-                close();
-              }}
-            >
-              <p>회사명 : {item.companyName}</p>
-              <p>공고명 : {item.postingName}</p>
-              <p>
-                기간 : {item.startTime === '1996-11-22' ? '미정' : item.startTime} ~{' '}
-                {item.endTime === '1996-11-22' ? '미정' : item.endTime}
-              </p>
-            </div>
-          ))}
+          {data.map((item) => {
+            return (
+              <div
+                className="csitem"
+                key={item.jobPostingId}
+                onClick={() => {
+                  result(item);
+                  close();
+                }}
+              >
+                <h2 className="company">{item.companyName}</h2>
+                <p>{item.postingName}</p>
+                <p>
+                  접수기간 : {item.startTime === '1996-11-22' ? '미정' : item.startTime} ~{' '}
+                  {item.endTime === '1996-11-22' ? '미정' : item.endTime}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </CareerSearchDiv>

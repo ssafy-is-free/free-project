@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-import CareerSearch from './CareerSearch';
-import { ISearchResult } from './CareerSearch';
-import StatusModal, { IStatus } from './StatusModal';
-import DdayModal from './DdayModal';
+import CareerSearch from './NewCareerSearch';
+import { ISearchResult } from './NewCareerSearch';
+import StatusModal, { IStatus } from './ModalStatus';
+import DdayModal from './ModalDday';
 import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
 
@@ -17,6 +17,9 @@ const NewCareerDiv = styled.div`
   padding-bottom: max(10vh, 4rem);
   z-index: 5;
   overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const HeaderDiv = styled.div`
@@ -67,38 +70,9 @@ export const InputDiv = styled.div`
   }
 `;
 
-const SearchInput = styled.div`
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  position: fixed;
-  background-color: white;
-  padding-bottom: max(10vh, 4rem);
-  z-index: 10;
-  overflow: auto;
-`;
-
-interface Idata {
-  [key: string]: number | string;
-}
-
 interface INewCareer {
   close: () => void;
 }
-
-const ddata = {
-  postingId: 1,
-  postingName: '뽑아요 뽑습니다',
-  companyName: '삼성전자',
-  startTime: '2023-04-14 13:00',
-  endTime: '2023-04-21 18:00',
-  objective: '백엔드 개발자',
-  status: '서류 합격',
-  dDayName: '서류 제출',
-  nextDate: '2023-05-01',
-  memo: '메모입니다~',
-  applicantCount: 10,
-};
 
 const NewCareer = ({ close }: INewCareer) => {
   const router = useRouter();
@@ -142,7 +116,6 @@ const NewCareer = ({ close }: INewCareer) => {
     const { id } = e.target as HTMLInputElement;
     // 공고명, 기업명을 누를경우 검색창 오픈
     if (['postingName', 'companyName'].includes(id)) {
-      console.log('postingName', 'companyName');
       setSearchOpen(true);
     } else if (id === 'status') {
       setStatusOpen(true);
@@ -158,6 +131,7 @@ const NewCareer = ({ close }: INewCareer) => {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
     if (formJson.jobPostingId === '0') {
       alert('취업공고를 선택해주세요');
     } else if (formJson.statusId === '0') {
@@ -166,7 +140,6 @@ const NewCareer = ({ close }: INewCareer) => {
       alert('지원 직무를 입력해주세요');
     } else {
       setLoading(true);
-      console.log(formJson);
       const res = await postJob(formJson);
       if (res.status === 'SUCCESS') {
         setLoading(false);
@@ -183,8 +156,16 @@ const NewCareer = ({ close }: INewCareer) => {
     setPostingId(item.jobPostingId);
     setPostingName(item.postingName);
     setCompanyName(item.companyName);
-    setStartTime(item.startTime);
-    setEndTime(item.endTime);
+    if (item.startTime === '1996-11-22') {
+      setStartTime('미정');
+    } else {
+      setStartTime(item.startTime);
+    }
+    if (item.endTime === '1996-11-22') {
+      setEndTime('미정');
+    } else {
+      setEndTime(item.endTime);
+    }
   };
 
   const statusReasut = (status: IStatus) => {
@@ -194,8 +175,6 @@ const NewCareer = ({ close }: INewCareer) => {
 
   const dDayResult = (res: any) => {
     setDDayName(res.ddayName);
-    console.log(res);
-    console.log(res.date);
     setDDay(res.date);
   };
 
