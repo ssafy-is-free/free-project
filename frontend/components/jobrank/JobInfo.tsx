@@ -1,8 +1,6 @@
 import styled from 'styled-components';
-import { IJobInfoProps, postingType } from './IJobrank';
+import { IJobInfoProps } from './IJobrank';
 import TimeIcon from '../../public/Icon/TimeIcon.svg';
-import { useEffect, useState } from 'react';
-import { getPosingInfo } from '@/pages/api/jobRankAxios';
 
 const Wrapper = styled.div`
   display: flex;
@@ -34,27 +32,15 @@ const Wrapper = styled.div`
 `;
 
 const JobInfo = (props: IJobInfoProps) => {
-  const [postingInfo, setPostingInfo] = useState<postingType>(null);
-
-  useEffect(() => {
-    (async () => {
-      let data = await getPosingInfo(props.jobPostingIdParam);
-      setPostingInfo(data);
-    })();
-  }, []);
-
   return (
     <Wrapper>
-      <div className="posting-name">2023 상반기 신입/Junior 공개 채용 </div>
-      {/* <div className="posting-name">{postingInfo?.postingName} </div> */}
-      <div className="enterprise-name">안랩</div>
-      {/* <div className="enterprise-name">{postingInfo?.companyName}</div> */}
+      <div className="posting-name">{props.postingName} </div>
+      <div className="enterprise-name">{props.companyName}</div>
       <div className="period">
         <TimeIcon />
-        <p> 2023.03.31 14:00 ~ 2023.04.16 23:59</p>
-        {/* <p>
-          {postingInfo?.startTime} ~ {postingInfo?.endTime}
-        </p> */}
+        <p>
+          {props.startTime} ~ {props.endTime}
+        </p>
       </div>
     </Wrapper>
   );

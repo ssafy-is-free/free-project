@@ -122,14 +122,6 @@ const Wrapper = styled.div`
 const RankSearchBar = (props: IRankSearchBarProps) => {
   const [text, setText] = useState<string>('깃허브');
 
-  useEffect(() => {
-    if (props.curRank == 0) {
-      setText('깃허브 아이디를 검색해보세요.');
-    } else {
-      setText('백준 아이디를 검색해보세요.');
-    }
-  }, [props.curRank]);
-
   // 검색어
   const [searchKeyword, setSearchKeyword] = useState<string | undefined>();
 
@@ -142,14 +134,22 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
       }[]
   >();
 
+  // style 속성 변경 위한 검색창 ref
+  const searchBox = useRef<HTMLDivElement | null>(null);
+  const relatedWrapper = useRef<HTMLUListElement | null>(null);
+
+  useEffect(() => {
+    if (props.curRank == 0) {
+      setText('깃허브 아이디를 검색해보세요.');
+    } else {
+      setText('백준 아이디를 검색해보세요.');
+    }
+  }, [props.curRank]);
+
   // 검색창 검색할 떄마다 호출
   const onChange = (event: any) => {
     setSearchKeyword(event.target.value);
   };
-
-  // style 속성 변경 위한 검색창 ref
-  const searchBox = useRef<HTMLDivElement | null>(null);
-  const relatedWrapper = useRef<any>();
 
   useEffect(() => {
     if (searchKeyword) {
@@ -179,15 +179,19 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
   }, [searchKeyword]);
 
   const resetInput = () => {
-    props.getRankList(props.size, 1);
+    props.getRankList(0);
     props.setNoScroll(false);
+    props.setInViewFirst(false);
+    props.setNoMore(false);
+
+    // 검색창 닫기
     props.setSearchClick(false);
-    props.setSelectedOption(null);
   };
 
   // 닉네임 검색 결과
   const onSearchNick = async (userId: number, nickName: string) => {
     props.setNoScroll(true);
+
     (document.querySelector('.input-box') as HTMLInputElement).value = `${nickName}`;
     setSearchResults([]);
 
@@ -197,12 +201,13 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
 
     if (props.curRank == 0) {
       const data = await getSearchGitResult(userId);
-      props.setGitRankList((prev) => [data.data.githubRankingCover]);
+      props.setRankInfo((prev) => [data.data.githubRankingCover]);
     } else {
       const data = await getSearchBojResult(userId);
-      props.setBojRankList((prev) => [data.data]);
+      props.setRankInfo((prev) => [data.data]);
     }
 
+    // 검색창 닫기
     props.setSearchClick(false);
   };
 

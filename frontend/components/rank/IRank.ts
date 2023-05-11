@@ -9,18 +9,16 @@ export type resultInformation =
       userId: number;
       tierUrl?: string;
     }[]
-  | undefined;
-export type resultMyInformation =
-  | {
-      avatarUrl: string;
-      nickname: string;
-      rank: number;
-      rankUpDown: number;
-      score: number;
-      userId: number;
-      tierUrl?: string;
-    }
-  | undefined;
+  | null;
+export type resultMyInformation = {
+  avatarUrl: string;
+  nickname: string;
+  rank: number;
+  rankUpDown: number;
+  score: number;
+  userId: number;
+  tierUrl?: string;
+} | null;
 
 /**
  * 필터 모달 props
@@ -38,27 +36,11 @@ export interface IFilterModalProps {
   curRank: number;
 
   /**
-   * size
-   */
-  size: number;
-
-  /**
-   * nextRank
-   */
-  nextRank: number;
-
-  /**
    * api 메소드
    */
   getRankList: Function;
 
-  /**
-   * isLangId useState set 메소드
-   */
-  setIsLangId: React.Dispatch<React.SetStateAction<number>>;
-
-  selectedOption: { languageId: number; name: string } | null;
-  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+  setNoMore: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -106,7 +88,7 @@ export interface IMainUserItemProps {
     avatarUrl: string;
     rankUpDown: number;
     tierUrl?: string;
-  };
+  } | null;
 
   selectedOption: { languageId: number; name: string } | null;
 }
@@ -136,11 +118,9 @@ export interface IRankSearchBarProps {
    */
   curRank: number;
 
-  /**
-   * 자식에서 부모컴포넌트로 data 받기()
-   */
-  setGitRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
-  setBojRankList: React.Dispatch<React.SetStateAction<resultInformation | null>>;
+  setRankInfo: React.Dispatch<React.SetStateAction<resultInformation | null>>;
+
+  // 스크롤 막기
   setNoScroll: React.Dispatch<React.SetStateAction<boolean>>;
 
   /**
@@ -148,13 +128,11 @@ export interface IRankSearchBarProps {
    */
   getRankList: Function;
 
-  /**
-   * size
-   */
-  size: number;
+  setInViewFirst: React.Dispatch<React.SetStateAction<boolean>>;
 
   setSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedOption: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+
+  setNoMore: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IFilterOptionProps {
@@ -180,12 +158,7 @@ export interface IFilterOptionProps {
    */
   getRankList?: Function;
 
-  /**
-   * size
-   */
-  size?: number;
-
-  setSelectedOption?: React.Dispatch<React.SetStateAction<{ languageId: number; name: string } | null>>;
+  setNoMore?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface ISettingModalProps {
