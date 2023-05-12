@@ -69,7 +69,7 @@ const DdayModal = ({ close, result, defaultDate }: IDdayModalProps) => {
 
   return (
     <ModalDiv>
-      <div className="darkBg" onClick={close}>
+      <div className="darkBg" onClick={close}></div>
         <div className="modalContent">
           <div className="modalTitle">다음일정 변경하기</div>
           <InputDiv>
@@ -85,7 +85,7 @@ const DdayModal = ({ close, result, defaultDate }: IDdayModalProps) => {
           <DatePicker updateDate={updateDate} defaultDate={defaultDate}></DatePicker>
           <CancelOk cancel={close} ok={ok}></CancelOk>
         </div>
-      </div>
+      
     </ModalDiv>
   );
 };
