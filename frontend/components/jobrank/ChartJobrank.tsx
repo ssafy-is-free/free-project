@@ -9,6 +9,7 @@ import {
   getPostingsAllBojUsers,
   getPostingsAllGitUsers,
 } from '@/pages/api/jobRankAxios';
+import ChartJobrankLoading from './ChartJobrankLoading';
 
 const Wrapper = styled.div`
   position: relative;
@@ -45,7 +46,12 @@ const ChartJobrank = (props: IChartProps) => {
   const [series, setSeries] = useState<number[]>([]);
   const [labels, setLabels] = useState<string[]>([]);
 
+  // 로딩
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
+    setLoading(true);
+
     if (props.jobPostingIdParam) {
       // 전체 사용자 정보 가져오기
       (async () => {
@@ -53,29 +59,40 @@ const ChartJobrank = (props: IChartProps) => {
           if (props.jobPostingIdParam) {
             let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
 
-            let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
-            let scores = new Array();
-            let labels = new Array();
-            arr?.map((el: any) => {
-              scores.push(el.percentage);
-              labels.push(el.name);
-            });
-            setSeries([...scores]);
-            setLabels([...labels]);
+            if (data.status === 'SUCCESS') {
+              let arr =
+                props.target == 0 ? data.data?.my.languages.languageList : data.data?.opponent.languages.languageList;
+              let scores = new Array();
+              let labels = new Array();
+              arr?.map((el: any) => {
+                scores.push(el.percentage);
+                labels.push(el.name);
+              });
+              setSeries([...scores]);
+              setLabels([...labels]);
+              setLoading(false);
+            } else {
+              alert(data.message);
+            }
           }
         } else {
           if (props.jobPostingIdParam) {
             let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
 
-            let arr = props.target == 0 ? data?.my.languages : data?.other.languages;
-            let scores = new Array();
-            let labels = new Array();
-            arr?.map((el: any) => {
-              scores.push(el.passCount);
-              labels.push(el.name);
-            });
-            setSeries([...scores]);
-            setLabels([...labels]);
+            if (data.status === 'SUCCESS') {
+              let arr = props.target == 0 ? data.data?.my.languages : data.data?.other.languages;
+              let scores = new Array();
+              let labels = new Array();
+              arr?.map((el: any) => {
+                scores.push(el.passCount);
+                labels.push(el.name);
+              });
+              setSeries([...scores]);
+              setLabels([...labels]);
+              setLoading(false);
+            } else {
+              alert(data.message);
+            }
           }
         }
       })();
@@ -85,29 +102,40 @@ const ChartJobrank = (props: IChartProps) => {
           if (props.userId) {
             let data = await getGitCompareUser(props.userId);
 
-            let arr = props.target == 0 ? data?.my.languages.languageList : data?.opponent.languages.languageList;
-            let scores = new Array();
-            let labels = new Array();
-            arr?.map((el: any) => {
-              scores.push(el.percentage);
-              labels.push(el.name);
-            });
-            setSeries([...scores]);
-            setLabels([...labels]);
+            if (data.status === 'SUCCESS') {
+              let arr =
+                props.target == 0 ? data.data?.my.languages.languageList : data.data?.opponent.languages.languageList;
+              let scores = new Array();
+              let labels = new Array();
+              arr?.map((el: any) => {
+                scores.push(el.percentage);
+                labels.push(el.name);
+              });
+              setSeries([...scores]);
+              setLabels([...labels]);
+              setLoading(false);
+            } else {
+              alert(data.message);
+            }
           }
         } else {
           if (props.userId) {
             let data = await getBojCompareUser(props.userId);
 
-            let arr = props.target == 0 ? data?.my.languages : data?.opponent.languages;
-            let scores = new Array();
-            let labels = new Array();
-            arr?.map((el: any) => {
-              scores.push(el.passCount);
-              labels.push(el.name);
-            });
-            setSeries([...scores]);
-            setLabels([...labels]);
+            if (data.status === 'SUCCESS') {
+              let arr = props.target == 0 ? data.data?.my.languages : data.data?.opponent.languages;
+              let scores = new Array();
+              let labels = new Array();
+              arr?.map((el: any) => {
+                scores.push(el.passCount);
+                labels.push(el.name);
+              });
+              setSeries([...scores]);
+              setLabels([...labels]);
+              setLoading(false);
+            } else {
+              alert(data.message);
+            }
           }
         }
       })();
@@ -135,15 +163,21 @@ const ChartJobrank = (props: IChartProps) => {
   };
 
   return (
-    <Wrapper>
-      <div className="top-language">
-        <p className="top-name">{labels[0]}</p>
-        <p className="top-percent">
-          {series[0]} {props.curRank == 0 ? '%' : '개'}
-        </p>
-      </div>
-      <Doughnut data={data} options={options} />
-    </Wrapper>
+    <>
+      {loading ? (
+        <ChartJobrankLoading />
+      ) : (
+        <Wrapper>
+          <div className="top-language">
+            <p className="top-name">{labels[0]}</p>
+            <p className="top-percent">
+              {series[0]} {props.curRank == 0 ? '%' : '개'}
+            </p>
+          </div>
+          <Doughnut data={data} options={options} />
+        </Wrapper>
+      )}
+    </>
   );
 };
 
