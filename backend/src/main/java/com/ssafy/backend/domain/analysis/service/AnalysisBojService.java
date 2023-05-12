@@ -91,7 +91,7 @@ public class AnalysisBojService {
 		//언어별 pass 최상위 5가지
 		List<BojLanguagePassCount> bojLanguagePassCount = bojLanguageQueryRepository.findBojLanguagePassCount();
 		// 총합 계산
-		double sum = 0;
+		double sum = 1;
 		for (BojLanguagePassCount value : bojLanguagePassCount) {
 			sum += value.getTotalPassCount();
 		}
@@ -140,7 +140,7 @@ public class AnalysisBojService {
 
 		List<BaekjoonLanguage> bojList = bojLanguageRepository.findAllByBaekjoonId(baekjoon.getId());
 		// 총합 계산
-		double sum = 0;
+		double sum = 1;
 		for (BaekjoonLanguage value : bojList) {
 			sum += value.getPassCount();
 		}
