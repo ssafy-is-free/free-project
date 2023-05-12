@@ -33,6 +33,7 @@
     "react-simple-wheel-picker": "^1.2.0",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.3.9",
+    "sweetalert2": "^11.4.8",
     "typescript": "5.0.4"
   },
   "devDependencies": {

@@ -7,6 +7,7 @@ import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
 import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
+import Swal from 'sweetalert2';
 
 const RotateUp = keyframes`
   0% {
@@ -215,10 +216,17 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '다음일정 변경완료',
+        icon: 'success',
+      });
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
@@ -229,11 +237,18 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '상태 변경완료',
+        icon: 'success',
+      });
       updateList();
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
@@ -244,10 +259,17 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '메모 수정완료',
+        icon: 'success',
+      });
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
