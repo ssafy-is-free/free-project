@@ -75,9 +75,8 @@ authApi.interceptors.response.use(
         .then((res) => {
           console.log('재발급 res', res);
           if (res.status === 200) {
-            const newAccessToken = res.data['access-token'];
+            const newAccessToken = res.data.data['access-token'];
             console.log(newAccessToken);
-
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             document.cookie = `refresh-token=${newAccessToken}`;
