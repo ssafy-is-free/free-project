@@ -79,6 +79,7 @@ const Footer = () => {
   const router = useRouter();
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+  console.log(isLogin);
 
   // 로그인 모달 열기
   const [openLogin, setOpenLogin] = useState<boolean>(false);
@@ -103,7 +104,7 @@ const Footer = () => {
   ];
 
   const goPage = (item: any) => {
-    if (!isLogin && item.path in ['/profile', '/career']) {
+    if (!isLogin && ['/profile', '/career'].includes(item.path)) {
       setOpenLogin(true);
     } else if (item.path === router.pathname) {
       router.reload();
