@@ -15,23 +15,26 @@ const ModalDiv = styled.div`
   z-index: 11;
 
   .darkBg {
+    position: fixed;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 100%;
     background-color: ${(props) => props.theme.modalGray};
+  }
 
-    display: flex;
-    align-items: end;
+  .modalContent {
+    width: 100vw;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    background-color: white;
 
-    .modalContent {
-      width: 100%;
-      background-color: white;
-
-      .modalTitle {
-        margin: 1rem;
-        border-bottom: 2px solid ${(props) => props.theme.primary};
-        text-align: center;
-        font-size: large;
-      }
+    .modalTitle {
+      margin: 1rem;
+      border-bottom: 2px solid ${(props) => props.theme.primary};
+      text-align: center;
+      font-size: large;
     }
   }
 `;
