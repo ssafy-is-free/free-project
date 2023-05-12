@@ -31,18 +31,33 @@ const InputDiv = styled.div`
   }
 `;
 const StatuModalDiv = styled.div`
-  .memocontent {
-    width: 100vw;
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    z-index: 10;
-    background-color: white;
-    .modalTitle {
-      margin: 1rem;
-      border-bottom: 2px solid ${(props) => props.theme.primary};
-      text-align: center;
-      font-size: large;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 11;
+  .darkBg {
+    height: 100%;
+    width: 100%;
+    background-color: ${(props) => props.theme.modalGray};
+
+    display: flex;
+    align-items: end;
+
+    .memocontent {
+      width: 100vw;
+      bottom: 0;
+      left: 0;
+      position: fixed;
+      z-index: 10;
+      background-color: white;
+      .modalTitle {
+        margin: 1rem;
+        border-bottom: 2px solid ${(props) => props.theme.primary};
+        text-align: center;
+        font-size: large;
+      }
     }
   }
 `;
@@ -60,19 +75,20 @@ const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
 
   return (
     <StatuModalDiv>
-      <DarkBg onClick={close}></DarkBg>
-      <div className="memocontent">
-        <div className="modalTitle">메모 변경하기</div>
-        <InputDiv>
-          <textarea
-            className="input"
-            value={memoValue}
-            onChange={handleMemoChange}
-            rows={4}
-            placeholder="memo"
-          ></textarea>
-        </InputDiv>
-        <CancelOk ok={ok} cancel={close}></CancelOk>
+      <div className="darkBg" onClick={close}>
+        <div className="memocontent">
+          <div className="modalTitle">메모 변경하기</div>
+          <InputDiv>
+            <textarea
+              className="input"
+              value={memoValue}
+              onChange={handleMemoChange}
+              rows={4}
+              placeholder="memo"
+            ></textarea>
+          </InputDiv>
+          <CancelOk ok={ok} cancel={close}></CancelOk>
+        </div>
       </div>
     </StatuModalDiv>
   );
