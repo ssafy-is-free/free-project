@@ -548,7 +548,7 @@ const Main = () => {
                 {!isLogin ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    {loading ? <RankLoading /> : <NoAccount curRank={curRank} onClick={onClickNoUser} />}
+                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
                   </div>
                 ) : myRankInfo ? (
                   <div className="my-rank">
@@ -575,9 +575,7 @@ const Main = () => {
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
-                    {loading ? (
-                      <RankLoading />
-                    ) : rankInfo ? (
+                    {rankInfo ? (
                       rankInfo?.map((el, idx) => (
                         <li
                           key={idx}
