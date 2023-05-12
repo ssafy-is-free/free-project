@@ -45,8 +45,8 @@ public class AnalysisBojController {
 		BojRankAllComparisonResponse bojRankAllComparisonResponse = analysisBojService.compareWithOther(
 			userPrincipal.getId(), jobPostingId);
 		//백준 아이디가 없다면 비어있는 컨텐츠
-		return bojRankAllComparisonResponse.checkForNull() ?
-			responseService.getDataResponse(null, RESPONSE_NO_CONTENT) :
-			responseService.getDataResponse(bojRankAllComparisonResponse, RESPONSE_SUCCESS);
+		return bojRankAllComparisonResponse.checkForNull()
+			? responseService.getDataResponse(null, RESPONSE_NO_CONTENT)
+			: responseService.getDataResponse(bojRankAllComparisonResponse, RESPONSE_SUCCESS);
 	}
 }

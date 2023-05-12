@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 public class BojLanguagePassCount {
 	private Long languageId;
-	private double totalPassCount;
+	private Integer totalPassCount;
 
 	@QueryProjection
-	public BojLanguagePassCount(Long languageId, Double totalPassCount) {
+	public BojLanguagePassCount(Long languageId, Integer totalPassCount) {
 		this.languageId = languageId;
 		this.totalPassCount = totalPassCount;
 	}
