@@ -30,7 +30,7 @@ export const getGithubRanking = async (
     params: params,
   });
 
-  return data.data.ranks;
+  return data.data?.ranks;
 };
 
 /**
@@ -110,7 +110,7 @@ export const getMyGitRanking = async (jobPostingIdParam: number) => {
     params: params,
   });
 
-  return data.data.githubRankingCover;
+  return data.data?.githubRankingCover;
 };
 
 /**
@@ -154,15 +154,6 @@ export const getBojCompareUser = async (userId: number) => {
   const { data } = await authApi({
     method: 'get',
     url: `/analysis/boj/users/${userId}`,
-  });
-
-  return data.data;
-};
-
-export const getPosingInfo = async (jobHistoryId: number) => {
-  const { data } = await authApi({
-    method: 'get',
-    url: `/job/history/${jobHistoryId}`,
   });
 
   return data.data;

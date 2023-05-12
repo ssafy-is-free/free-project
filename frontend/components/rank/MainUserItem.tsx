@@ -118,9 +118,9 @@ const MainUserItem = (props: IMainUserItemProps) => {
   const [rankupdown, setRankupdown] = useState<number>(0);
 
   useEffect(() => {
-    if (props.item.rankUpDown < 0) {
+    if (props.item && props.item.rankUpDown < 0) {
       setRankupdown(-1);
-    } else if (props.item.rankUpDown > 0) {
+    } else if (props.item && props.item.rankUpDown > 0) {
       setRankupdown(1);
     } else {
       setRankupdown(0);
@@ -130,15 +130,15 @@ const MainUserItem = (props: IMainUserItemProps) => {
   return (
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
-        {props.item.rank}
-        {props.item.rankUpDown !== 0 && props.selectedOption == null && (
+        {props.item && props.item.rank}
+        {props.item && props.item.rankUpDown !== 0 && props.selectedOption == null && (
           <div className="rank-icon">
-            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
+            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item && props.item.rankUpDown}
           </div>
         )}
       </div>
       <div className="center">
-        <img src={props.item.avatarUrl} className="user-photo" />
+        <img src={props.item?.avatarUrl} className="user-photo" />
         <div className="user-nickname">
           <div className="name">{props.item?.nickname} </div>
           {props.curRank == 1 && (
@@ -148,7 +148,7 @@ const MainUserItem = (props: IMainUserItemProps) => {
           )}
         </div>
       </div>
-      <div className="user-score">{props.item.score}</div>
+      <div className="user-score">{props.item && props.item.score}</div>
     </Wrapper>
   );
 };

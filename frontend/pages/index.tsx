@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
 import RankMenu2 from '@/components/common/RankMenu2';
@@ -22,17 +22,17 @@ import {
   getMyGitRanking,
 } from './api/rankAxios';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
-import { Spinner } from '@/components/common/Spinner';
 import { useInView } from 'react-intersection-observer';
 import { setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 import RSearchIcon from '../public/Icon/SearchingIcon.svg';
 import SettingIcon from '../public/Icon/SettingIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
+import TopIcon from '../public/Icon/TopIcon.svg';
 
 import Profile from '@/components/profile/Profile';
 import SettingModal from '@/components/rank/SettingModal';
-import { useRouter } from 'next/router';
+import { setFilter } from '@/redux/rankSlice';
 
 const Wrapper = styled.div<{ searchClick: boolean }>`
   width: 100vw;
@@ -163,7 +163,24 @@ const Header = styled.div`
   }
 `;
 
+const TopBtn = styled.div`
+  width: 32px;
+  height: 32px;
+  background-color: ${(props) => props.theme.lightGray};
+  border-radius: 50%;
+  position: fixed;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  right: 32px;
+  bottom: 100px;
+  box-shadow: 0px 0px 10px #00000026;
+`;
+
 const Main = () => {
+  const dispatch = useDispatch();
+
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
   // isnew 상태값 가져오기
@@ -171,10 +188,13 @@ const Main = () => {
 
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
-  const dispatch = useDispatch();
 
-  // 랭크 menu select 모달 열기
-  const [openSelect, setOpenSelect] = useState<boolean>(false);
+  // 옵션
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
+  // TODO : 이렇게 따로따로 접근 가능한건가?
+  const filterName = useSelector<RootState>((selector) => selector.rankChecker.filter?.name);
+  const filterId = useSelector<RootState>((selector) => selector.rankChecker.filter?.languageId);
+
   // 로그인 모달 열기
   const [openLogin, setOpenLogin] = useState<boolean>(false);
   // 백준 모달 열기
@@ -189,31 +209,26 @@ const Main = () => {
   const [clickMy, setClickMy] = useState(false);
 
   // 무한 스크롤 구현하기
-  const [ref, inView, entry] = useInView({
+  const [ref, inView] = useInView({
     threshold: 0,
   });
-  const [inViewFirst, setInViewFirst] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const [size, setSize] = useState<number>(20);
-  const [nextRank, setNextRank] = useState<number>(1);
-  const [tempRank, setTempRank] = useState<number>(1);
-  const [isLangId, setIsLangId] = useState<number>(0); // 필터링 적용한 경우 무한스크롤 분기위해 추가
+  const [nextRank, setNextRank] = useState<number>(0);
+  const [inViewFirst, setInViewFirst] = useState<boolean>(false);
   const [noMore, setNoMore] = useState<boolean>(false);
+
   // 검색후 무한 스크롤 방지하기
   const [noScroll, setNoScroll] = useState<boolean>(false);
 
-  // TODO 이렇게 타입을 일일이 써줘야 하나..
   /**
    * 깃허브 랭크 리스트, 백준 랭크 리스트
    */
-  const [gitRankList, setGitRankList] = useState<resultInformation | null>(null);
-  const [bojRankList, setBojRankList] = useState<resultInformation | null>(null);
+  const [rankInfo, setRankInfo] = useState<resultInformation>(null);
 
   /**
    *  나의 깃허브 랭킹, 나의 백준 랭킹
    */
-  const [myGitRank, setMyGitRank] = useState<resultMyInformation | null>(null);
-  const [myBojRank, setMyBojRank] = useState<resultMyInformation | null>(null);
+  const [myRankInfo, setMyRankInfo] = useState<resultMyInformation>(null);
 
   // 필터 모덜에서 옵션 선택후 적용하면 필터 state에 값 셋팅
   const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
@@ -221,10 +236,6 @@ const Main = () => {
   // 검색 아이콘 클릭 여부
   const [searchClick, setSearchClick] = useState<boolean>(false);
 
-  /**
-   * splash check, useEffect
-   */
-  const router = useRouter();
   useEffect(() => {
     // TODO : 문제 => 가입후 다른 페이지 갔다가 뒤로가기 누르면 isNew가 false가아닌 true로뜬다...
 
@@ -238,18 +249,20 @@ const Main = () => {
     }, 1500);
     return () => {
       clearTimeout(timer);
+      // 언마운트 시 filter null로 초기화
+      dispatch(setFilter(null));
     };
   }, []);
 
   // 깃허브인지 백준인지 상태값 0: 깃허브, 1: 백준
   const [curRank, setCurRank] = useState<number>(0);
   const onChangeCurRank = (el: number) => {
-    setNextRank(1);
-    setCurRank(el);
-    setOpenSelect(false);
+    setNextRank(1); // 등수 초기화
+    setCurRank(el); // curRank 갱신
+    dispatch(setFilter(null)); // filter null값으로
   };
 
-  // 상세정보 열기
+  // 상세정보 열기 ===================================================
   const goProfile = (userId: number) => {
     setClickedUserId(userId);
   };
@@ -265,6 +278,7 @@ const Main = () => {
       setOpenProfile(true);
     }
   }, [clickedUserId]);
+  // ================================================================
 
   // nouserItem 클릭시
   const onClickNoUser = () => {
@@ -286,7 +300,6 @@ const Main = () => {
     }
   };
 
-  // TODO : 유저가 한 명일 떄 대응하는 걸 해야함
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore && !noScroll) {
@@ -297,221 +310,149 @@ const Main = () => {
 
       if (inView && inViewFirst) {
         // inView가 true 일때만 실행한다.
-        setTempRank(nextRank);
+        if (filter) {
+          // 필터 걸린게 있다면?
+          getRankList(nextRank, Number(filterId));
+        } else {
+          getRankList(nextRank);
+        }
       }
     }
   }, [inView]);
 
   useEffect(() => {
-    if (isLangId > 0) {
-      getRankList(size, nextRank, isLangId);
-    } else {
-      getRankList(size, nextRank);
-    }
-  }, [tempRank]);
-
-  useEffect(() => {
     setNoMore(false);
-    getRankList(size, 1);
-    setSelectedOption(null);
+    getRankList(0);
   }, [curRank]);
 
   // 랭킹 정보 가져오기
-  const getRankList = (sizeParam: number, nextRankParam: number, languageIdParam?: number) => {
-    try {
-      if (curRank == 0) {
-        // 깃허브 랭크 가져오기 => rank 갱신할 때마다 rank값 수정해서 보내기
-
+  const getRankList = (nextRankParam: number, languageIdParam?: number) => {
+    if (curRank == 0) {
+      // 깃허브 정보 가져오기
+      if (nextRankParam == 0) {
+        // 처음 정보 불러올 때
         (async () => {
-          let data;
+          let data = languageIdParam
+            ? await getGithubRankingFilter(size, languageIdParam)
+            : await getGithubRanking(size);
 
-          if (nextRank == 1 || nextRankParam == 1) {
-            // 1등
-            let data;
-            if (languageIdParam) {
-              // 필터 적용 O
-              setIsLangId(languageIdParam);
-              data = await getGithubRankingFilter(sizeParam, languageIdParam);
-            } else {
-              // 필터 적용 X
-              setIsLangId(0);
-              data = await getGithubRanking(sizeParam);
-            }
-
-            if (data.length > 0) {
-              setGitRankList([...data]);
-              setNextRank(data[data?.length - 1]?.rank);
-            } else {
-              setGitRankList(null);
-            }
+          if (data.length !== 0) {
+            setRankInfo(data);
+            setNextRank(data[data?.length - 1]?.rank);
           } else {
-            // 그 이후
-            let data;
-            if (languageIdParam) {
-              // 필터 적용 O
-              if (gitRankList) {
-                setIsLangId(languageIdParam);
-
-                const userId = gitRankList[gitRankList?.length - 1]?.userId;
-                const score = gitRankList[gitRankList?.length - 1]?.score;
-
-                data = await getGithubRankingFilter(sizeParam, languageIdParam, nextRankParam, userId, score);
-              }
-            } else {
-              // 필터 적용 X
-              if (gitRankList) {
-                setIsLangId(0);
-
-                const userId = gitRankList[gitRankList?.length - 1]?.userId;
-                const score = gitRankList[gitRankList?.length - 1]?.score;
-
-                data = await getGithubRanking(sizeParam, nextRankParam, userId, score);
-              }
-            }
-
-            if (data?.length == 0) {
-              // 더이상 조회할 데이터 X
-              setNoMore(true);
-            } else {
-              // 새로 추가될 배열
-              let newArr = new Array();
-              data?.map((el: any) => {
-                newArr.push(el);
-              });
-
-              // 이전 배열
-              let oldArr = new Array();
-              gitRankList?.map((el) => {
-                oldArr.push(el);
-              });
-
-              setNextRank(data[data?.length - 1]?.rank);
-              setGitRankList([...oldArr, ...newArr]);
-            }
+            setRankInfo(null);
           }
         })();
-
-        // 나의 깃허브 랭킹 가져오기
-        if (isLogin) {
-          (async () => {
-            let data;
-            if (languageIdParam) {
-              // 필터 적용 O
-              data = await getMyGitRanking(languageIdParam);
-            } else {
-              // 필터 적용 X
-              data = await getMyGitRanking();
-            }
-
-            if (data.data?.githubRankingCover) setMyGitRank(data.data?.githubRankingCover);
-            else setMyGitRank(null);
-          })();
-        }
       } else {
-        // 백준 랭크 가져오기
+        // 그 이후 정보 불러올 때
+
         (async () => {
-          let data;
+          if (rankInfo) {
+            const userId = rankInfo[rankInfo?.length - 1]?.userId;
+            const score = rankInfo[rankInfo?.length - 1]?.score;
 
-          if (nextRank == 1 || nextRankParam == 1) {
-            // 1등
-            let data;
-            if (languageIdParam) {
-              // 필터 적용 O
-              data = await getBojRankingFilter(sizeParam, languageIdParam);
-            } else {
-              // 필터 적용 X
-              data = await getBojRanking(sizeParam);
-            }
+            let data = languageIdParam
+              ? await getGithubRankingFilter(size, languageIdParam, nextRank, userId, score)
+              : await getGithubRanking(size, nextRank, userId, score);
 
-            if (data.length > 0) {
-              setBojRankList([...data]);
-              setNextRank(data[data?.length - 1]?.rank);
-            } else {
-              setBojRankList(null);
-            }
-          } else {
-            // 그 이후
-            let data;
-            if (languageIdParam) {
-              // 필터 적용 O
-              if (bojRankList) {
-                const userId = bojRankList[bojRankList?.length - 1]?.userId;
-                const score = bojRankList[bojRankList?.length - 1]?.score;
-
-                data = await getBojRankingFilter(sizeParam, languageIdParam, nextRankParam, userId, score);
-              }
-            } else {
-              // 필터 적용 X
-              if (bojRankList) {
-                const userId = bojRankList[bojRankList?.length - 1]?.userId;
-                const score = bojRankList[bojRankList?.length - 1]?.score;
-
-                data = await getBojRanking(sizeParam, nextRankParam, userId, score);
-              }
-            }
-
-            if (data?.length == 0) {
-              // 더이상 조회할 데이터 X
+            if (data.length == 0) {
+              // 더이상 조회할 데이터가 없음
               setNoMore(true);
             } else {
-              // 새로 추가될 배열
-              let newArr = new Array();
-              data?.map((el: any) => {
-                newArr.push(el);
-              });
-
-              // 이전 배열
-              let oldArr = new Array();
-              bojRankList?.map((el) => {
-                oldArr.push(el);
-              });
-
-              if (data) {
-                setNextRank(data[data?.length - 1]?.rank);
-                setBojRankList([...oldArr, ...newArr]);
-              }
+              setRankInfo([...rankInfo, ...data]);
+              setNextRank(data[data?.length - 1]?.rank);
             }
           }
         })();
-
-        // 나의 백준 랭킹 가져오기
-        if (isLogin) {
-          (async () => {
-            let data;
-            if (languageIdParam) {
-              data = await getMyBojRanking(languageIdParam);
-            } else {
-              data = await getMyBojRanking();
-            }
-
-            if (data?.data?.userId != null) setMyBojRank(data?.data);
-            else {
-              setMyBojRank(null);
-            }
-          })();
-        }
       }
-    } finally {
+
+      // 내 깃허브 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = languageIdParam ? await getMyGitRanking(languageIdParam) : await getMyGitRanking();
+
+          if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
+          else setMyRankInfo(null);
+        })();
+      }
+    } else {
+      // 백준 정보 가져오기
+      if (nextRankParam == 0) {
+        // 처음 정보 불러올 때
+        (async () => {
+          let data = languageIdParam ? await getBojRankingFilter(size, languageIdParam) : await getBojRanking(size);
+
+          if (data.length !== 0) {
+            setRankInfo(data);
+            setNextRank(data[data?.length - 1]?.rank);
+          } else {
+            setRankInfo(null);
+          }
+        })();
+      } else {
+        // 그 이후 정보 불러올 때
+        (async () => {
+          if (rankInfo) {
+            const userId = rankInfo[rankInfo?.length - 1]?.userId;
+            const score = rankInfo[rankInfo?.length - 1]?.score;
+
+            let data = languageIdParam
+              ? await getBojRankingFilter(size, languageIdParam, nextRank, userId, score)
+              : await getBojRanking(size, nextRank, userId, score);
+
+            if (data.length == 0) {
+              // 더이상 조회할 데이터가 없음
+              setNoMore(true);
+            } else {
+              setRankInfo([...rankInfo, ...data]);
+              setNextRank(data[data?.length - 1]?.rank);
+            }
+          }
+        })();
+      }
+
+      // 내 백준 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = languageIdParam ? await getMyBojRanking(languageIdParam) : await getMyBojRanking();
+
+          if (data?.data?.userId != null) setMyRankInfo(data?.data);
+          else setMyRankInfo(null);
+        })();
+      }
     }
   };
 
   // 전체 랭킹 fixed event + Scroll event
-  const allRef = useRef<any>();
+  const allRef = useRef<HTMLDivElement | null>(null);
+  const topRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = (event: any) => {
     const el = document.querySelector('.my-rank');
-    if (el instanceof HTMLElement) {
+    if (el instanceof HTMLElement && allRef.current && topRef.current) {
+      // console.log(el?.offsetHeight);
+
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
 
       if (scrollPoint >= target) {
         allRef.current.style.position = 'fixed';
         allRef.current.style.top = '48px';
+        topRef.current.style.display = 'flex';
       } else {
         allRef.current.style.position = '';
         allRef.current.style.top = '';
+        topRef.current.style.display = 'none';
       }
     }
+  };
+
+  const scrollToTop = () => {
+    console.log('????');
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
   };
 
   if (!splashState) {
@@ -533,7 +474,13 @@ const Main = () => {
             {/* 아이콘 */}
 
             <div className="header-right">
-              <div className="icon-box" onClick={() => setSearchClick(true)}>
+              <div
+                className="icon-box"
+                onClick={() => {
+                  setSearchClick(true);
+                  dispatch(setFilter(null));
+                }}
+              >
                 <RSearchIcon />
               </div>
 
@@ -554,35 +501,26 @@ const Main = () => {
             <>
               <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
               <div className="content-wrapper">
-                {selectedOption && (
+                {filter != null && (
                   <div className="option-box">
                     <FilterOption
-                      item={selectedOption}
+                      item={{ languageId: Number(filterId), name: String(filterName) }}
                       isInMain={true}
                       getRankList={getRankList}
-                      size={size}
-                      setSelectedOption={setSelectedOption}
+                      setNoMore={setNoMore}
                     />
                   </div>
                 )}
-
                 {!isLogin ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <NoAccount curRank={curRank} onClick={onClickNoUser} />
                   </div>
-                ) : myGitRank && curRank == 0 ? (
+                ) : myRankInfo ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <div onClick={() => setClickMy(true)}>
-                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myGitRank} />
-                    </div>
-                  </div>
-                ) : myBojRank && curRank == 1 ? (
-                  <div className="my-rank">
-                    <p>나의 랭킹</p>
-                    <div onClick={() => setClickMy(true)}>
-                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myBojRank} />
+                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myRankInfo} />
                     </div>
                   </div>
                 ) : isLogin && curRank == 1 && !selectedOption ? (
@@ -599,34 +537,18 @@ const Main = () => {
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
-                    {curRank == 0
-                      ? gitRankList &&
-                        gitRankList?.map((el, idx) => (
-                          <li
-                            key={idx}
-                            onClick={() => {
-                              goProfile(el.userId);
-                            }}
-                          >
-                            <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
-                          </li>
-                        ))
-                      : bojRankList &&
-                        bojRankList?.map((el, idx) => {
-                          return (
-                            <li
-                              key={idx}
-                              onClick={() => {
-                                goProfile(el.userId);
-                              }}
-                            >
-                              <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
-                            </li>
-                          );
-                        })}
-                    {curRank == 0 && gitRankList == null && <NoAccount curRank={2} />}
-                    {curRank == 1 && bojRankList == null && <NoAccount curRank={2} />}
-                    {loading && <Spinner />}
+                    {rankInfo &&
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
+                        </li>
+                      ))}
+                    {rankInfo == null && <NoAccount curRank={2} />}
                     <div className="space" ref={ref}></div>
                   </ul>
                 </div>
@@ -635,29 +557,27 @@ const Main = () => {
           ) : (
             <SearchBar
               setNoScroll={setNoScroll}
+              setInViewFirst={setInViewFirst}
               curRank={curRank}
-              setGitRankList={setGitRankList}
-              setBojRankList={setBojRankList}
               getRankList={getRankList}
-              size={size}
+              setRankInfo={setRankInfo}
               setSearchClick={setSearchClick}
-              setSelectedOption={setSelectedOption}
+              setNoMore={setNoMore}
             />
           )}
         </Wrapper>
-        {/* {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />} */}
+        // top 버튼
+        <TopBtn ref={topRef} onClick={scrollToTop}>
+          <TopIcon />
+        </TopBtn>
         {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
         {opeBoj && <BojModal onClick={() => setOpenBoj(false)} />}
         {openFilter && (
           <FilterModal
             onClick={() => setOpenFilter(false)}
             curRank={curRank}
-            size={size}
-            nextRank={nextRank}
             getRankList={getRankList}
-            setIsLangId={setIsLangId}
-            setSelectedOption={setSelectedOption}
-            selectedOption={selectedOption}
+            setNoMore={setNoMore}
           />
         )}
         {openSetting && <SettingModal onClick={() => setOpenSetting(false)} />}

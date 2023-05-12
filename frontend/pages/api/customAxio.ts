@@ -60,8 +60,9 @@ authApi.interceptors.response.use(
     const { config, response } = error;
     const originalRequest = config;
 
+    console.log(error);
+
     if (response.status === 401) {
-      // console.log('access 만료');
       const accessToken = localStorage.getItem('accessToken');
 
       await axios
@@ -72,14 +73,18 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
+          console.log('재발급 res', res);
           if (res.status === 200) {
             const newAccessToken = res.data.data['access-token'];
+            console.log(newAccessToken);
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
+            document.cookie = `refresh-token=${newAccessToken}`;
             return axios(originalRequest);
           }
         })
         .catch((err) => {
+          console.log('err', err);
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
             window.location.href = '/';
