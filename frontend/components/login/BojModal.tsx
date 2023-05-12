@@ -5,6 +5,8 @@ import { IBojProps } from './ILogin';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { checkBojId, postBojId } from '@/pages/api/loginAxios';
+import { useDispatch } from 'react-redux';
+import { setBoj } from '@/redux/authSlice';
 
 const moveUp = keyframes`
  from{
@@ -106,6 +108,7 @@ const Wrapper = styled.div`
 
 const BojModal = (props: IBojProps) => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   // 등록할 백준 id
   const [bojId, setBojId] = useState<string>('');
@@ -153,6 +156,7 @@ const BojModal = (props: IBojProps) => {
         setCheck(3);
       } else {
         // router.push('/');
+        dispatch(setBoj());
         window.location.href = '/';
         props.onClick();
       }

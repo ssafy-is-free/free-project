@@ -1,4 +1,4 @@
-import { login, setNew } from '@/redux/authSlice';
+import { login, setBoj, setNew } from '@/redux/authSlice';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -12,9 +12,13 @@ const Redirect = () => {
     const accessToken = queryParams.get('token');
     const isBoj = queryParams.get('isBoj');
 
+    console.log(isBoj);
+
     if (isBoj == 'false') {
       // 백준 계정 X
       dispatch(setNew());
+    } else {
+      dispatch(setBoj());
     }
 
     if (accessToken) {

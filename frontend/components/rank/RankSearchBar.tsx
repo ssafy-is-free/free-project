@@ -3,8 +3,17 @@ import RSearchIcon from '../../public/Icon/SearchingIcon.svg';
 import SearchImg from '../../public/Icon/SearchImg.svg';
 import { useEffect, useRef, useState } from 'react';
 import { IRankSearchBarProps } from './IRank';
-import { getSearchBojResult, getSearchBojUser, getSearchGitResult, getSearchGitUser } from '@/pages/api/rankAxios';
+import {
+  getMyBojRanking,
+  getMyGitRanking,
+  getSearchBojResult,
+  getSearchBojUser,
+  getSearchGitResult,
+  getSearchGitUser,
+} from '@/pages/api/rankAxios';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const bounce = keyframes`
   70% { transform:translateY(0%); }
@@ -120,6 +129,9 @@ const Wrapper = styled.div`
 `;
 
 const RankSearchBar = (props: IRankSearchBarProps) => {
+  // login 상태값 가져오기
+  const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+
   const [text, setText] = useState<string>('깃허브');
 
   // 검색어
@@ -202,9 +214,39 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
     if (props.curRank == 0) {
       const data = await getSearchGitResult(userId);
       props.setRankInfo((prev) => [data.data.githubRankingCover]);
+
+      // 내 깃허브 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = await getMyGitRanking();
+
+          if (data.status === 'SUCCESS') {
+            if (data.data?.githubRankingCover) props.setMyRankInfo(data.data?.githubRankingCover);
+            else props.setMyRankInfo(null);
+            props.setLoading(false);
+          } else {
+            alert(data.message);
+          }
+        })();
+      }
     } else {
       const data = await getSearchBojResult(userId);
       props.setRankInfo((prev) => [data.data]);
+
+      // 내 백준 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = await getMyBojRanking();
+
+          if (data.status === 'SUCCESS') {
+            if (data?.data?.userId != null) props.setMyRankInfo(data?.data);
+            else props.setMyRankInfo(null);
+            props.setLoading(false);
+          } else {
+            alert(data.message);
+          }
+        })();
+      }
     }
 
     // 검색창 닫기
