@@ -4,6 +4,7 @@ import DatePicker from './DatePicker';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
 import { IDdayModalProps } from './ICareer';
+import Swal from 'sweetalert2';
 
 const ModalDiv = styled.div`
   position: fixed;
@@ -52,8 +53,15 @@ const DdayModal = ({ close, result, defaultDate }: IDdayModalProps) => {
   };
 
   const ok = () => {
-    result({ ddayName, date });
-    close();
+    if (ddayName.length === 0) {
+      Swal.fire({
+        text: '다음 일정 이름을 입력해주세요',
+        icon: 'info',
+      });
+    } else {
+      result({ ddayName, date });
+      close();
+    }
   };
 
   return (
