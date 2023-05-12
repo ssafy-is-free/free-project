@@ -103,7 +103,7 @@ const Footer = () => {
   ];
 
   const goPage = (item: any) => {
-    if (!isLogin && item.path == '/profile') {
+    if (!isLogin && item.path in ['/profile', '/career']) {
       setOpenLogin(true);
     } else if (item.path === router.pathname) {
       router.reload();
