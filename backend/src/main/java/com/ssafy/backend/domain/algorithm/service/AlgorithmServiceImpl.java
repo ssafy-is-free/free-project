@@ -198,7 +198,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		if (languageId != null && baekjoonIdSet.isEmpty())
 			return Collections.emptyList();
 
-		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
+		//조회.
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
 			userId, pageable);
 
