@@ -33,6 +33,7 @@ import TopIcon from '../public/Icon/TopIcon.svg';
 import Profile from '@/components/profile/Profile';
 import SettingModal from '@/components/rank/SettingModal';
 import { setFilter } from '@/redux/rankSlice';
+import RankLoading from '@/components/rank/RankLoading';
 
 const Wrapper = styled.div<{ searchClick: boolean }>`
   width: 100vw;
@@ -236,6 +237,9 @@ const Main = () => {
   // 검색 아이콘 클릭 여부
   const [searchClick, setSearchClick] = useState<boolean>(false);
 
+  // 로딩 여부
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     // TODO : 문제 => 가입후 다른 페이지 갔다가 뒤로가기 누르면 isNew가 false가아닌 true로뜬다...
 
@@ -327,6 +331,7 @@ const Main = () => {
 
   // 랭킹 정보 가져오기
   const getRankList = (nextRankParam: number, languageIdParam?: number) => {
+    setLoading(true);
     if (curRank == 0) {
       // 깃허브 정보 가져오기
       if (nextRankParam == 0) {
@@ -336,11 +341,16 @@ const Main = () => {
             ? await getGithubRankingFilter(size, languageIdParam)
             : await getGithubRanking(size);
 
-          if (data.length !== 0) {
-            setRankInfo(data);
-            setNextRank(data[data?.length - 1]?.rank);
+          if (data.status === 'SUCCESS') {
+            if (data.data.ranks.length !== 0) {
+              setRankInfo(data.data.ranks);
+              setNextRank(data.data.ranks[data.data.ranks?.length - 1]?.rank);
+            } else {
+              setRankInfo(null);
+            }
+            setLoading(false);
           } else {
-            setRankInfo(null);
+            alert(data.message);
           }
         })();
       } else {
@@ -355,12 +365,17 @@ const Main = () => {
               ? await getGithubRankingFilter(size, languageIdParam, nextRank, userId, score)
               : await getGithubRanking(size, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data.ranks.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setRankInfo([...rankInfo, ...data.data.ranks]);
+                setNextRank(data.data.ranks[data.data.ranks?.length - 1]?.rank);
+              }
+              setLoading(false);
             } else {
-              setRankInfo([...rankInfo, ...data]);
-              setNextRank(data[data?.length - 1]?.rank);
+              alert(data.message);
             }
           }
         })();
@@ -371,8 +386,13 @@ const Main = () => {
         (async () => {
           let data = languageIdParam ? await getMyGitRanking(languageIdParam) : await getMyGitRanking();
 
-          if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
-          else setMyRankInfo(null);
+          if (data.status === 'SUCCESS') {
+            if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
+            else setMyRankInfo(null);
+            setLoading(false);
+          } else {
+            alert(data.message);
+          }
         })();
       }
     } else {
@@ -382,11 +402,16 @@ const Main = () => {
         (async () => {
           let data = languageIdParam ? await getBojRankingFilter(size, languageIdParam) : await getBojRanking(size);
 
-          if (data.length !== 0) {
-            setRankInfo(data);
-            setNextRank(data[data?.length - 1]?.rank);
+          if (data.status === 'SUCCESS') {
+            if (data?.data.length !== 0) {
+              setRankInfo(data?.data);
+              setNextRank(data?.data[data?.data?.length - 1]?.rank);
+            } else {
+              setRankInfo(null);
+            }
+            setLoading(false);
           } else {
-            setRankInfo(null);
+            alert(data.message);
           }
         })();
       } else {
@@ -400,12 +425,17 @@ const Main = () => {
               ? await getBojRankingFilter(size, languageIdParam, nextRank, userId, score)
               : await getBojRanking(size, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setRankInfo([...rankInfo, ...data.data]);
+                setNextRank(data.data[data.data?.length - 1]?.rank);
+              }
+              setLoading(false);
             } else {
-              setRankInfo([...rankInfo, ...data]);
-              setNextRank(data[data?.length - 1]?.rank);
+              alert(data.message);
             }
           }
         })();
@@ -416,8 +446,13 @@ const Main = () => {
         (async () => {
           let data = languageIdParam ? await getMyBojRanking(languageIdParam) : await getMyBojRanking();
 
-          if (data?.data?.userId != null) setMyRankInfo(data?.data);
-          else setMyRankInfo(null);
+          if (data.status === 'SUCCESS') {
+            if (data?.data?.userId != null) setMyRankInfo(data?.data);
+            else setMyRankInfo(null);
+            setLoading(false);
+          } else {
+            alert(data.message);
+          }
         })();
       }
     }
@@ -448,7 +483,6 @@ const Main = () => {
   };
 
   const scrollToTop = () => {
-    console.log('????');
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
@@ -514,30 +548,36 @@ const Main = () => {
                 {!isLogin ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                    {loading ? <RankLoading /> : <NoAccount curRank={curRank} onClick={onClickNoUser} />}
                   </div>
                 ) : myRankInfo ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <div onClick={() => setClickMy(true)}>
-                      <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myRankInfo} />
+                      {loading ? (
+                        <RankLoading />
+                      ) : (
+                        <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myRankInfo} />
+                      )}
                     </div>
                   </div>
                 ) : isLogin && curRank == 1 && !selectedOption ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                    {loading ? <RankLoading /> : <NoAccount curRank={curRank} onClick={onClickNoUser} />}
                   </div>
                 ) : (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={3} onClick={onClickNoUser} />
+                    {loading ? <RankLoading /> : <NoAccount curRank={3} onClick={onClickNoUser} />}
                   </div>
                 )}
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
-                    {rankInfo &&
+                    {loading ? (
+                      <RankLoading />
+                    ) : rankInfo ? (
                       rankInfo?.map((el, idx) => (
                         <li
                           key={idx}
@@ -545,10 +585,17 @@ const Main = () => {
                             goProfile(el.userId);
                           }}
                         >
-                          <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
+                          {loading ? (
+                            <RankLoading />
+                          ) : (
+                            <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
+                          )}
                         </li>
-                      ))}
-                    {rankInfo == null && <NoAccount curRank={2} />}
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {/* {rankInfo == null && <NoAccount curRank={2} />} */}
                     <div className="space" ref={ref}></div>
                   </ul>
                 </div>

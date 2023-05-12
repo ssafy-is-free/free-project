@@ -16,6 +16,7 @@ export const getFilter = async (languageType: String) => {
     params: params,
   });
 
+  // return data;
   return data.data;
 };
 
@@ -44,7 +45,8 @@ export const getGithubRanking = async (
     params: params,
   });
 
-  return data.data.ranks;
+  // return data.data.ranks;
+  return data;
 };
 
 /**
@@ -77,7 +79,8 @@ export const getGithubRankingFilter = async (
     params: params,
   });
 
-  return data.data.ranks;
+  // return data.data.ranks;
+  return data;
 };
 
 /**
@@ -125,7 +128,8 @@ export const getBojRanking = async (
     params: params,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -158,7 +162,8 @@ export const getBojRankingFilter = async (
     params: params,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**

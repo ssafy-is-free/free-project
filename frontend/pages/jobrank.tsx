@@ -17,6 +17,8 @@ import { useInView } from 'react-intersection-observer';
 import { useRouter } from 'next/router';
 import RankingIcon from '../public/Icon/RankingIcon.svg';
 import PieIcon from '../public/Icon/PieIcon.svg';
+import RankLoading from '@/components/rank/RankLoading';
+import JobRankLoading from '@/components/jobrank/jobRankLoading';
 
 const Wrapper = styled.div<{ info: number; submenu: number; clickBtn: boolean }>`
   width: 100vw;
@@ -170,6 +172,9 @@ const JobRank = () => {
   // 서브메뉴
   const [submenu, setSubmenu] = useState<number>(0);
 
+  // 로딩
+  const [loading, setLoading] = useState<boolean>(true);
+
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore) {
@@ -187,6 +192,7 @@ const JobRank = () => {
   }, [curRank]);
 
   const onGetRankData = (nextRankParam: number) => {
+    setLoading(true);
     // 랭킹 정보 가져오기
     if (curRank == 0) {
       // 처음 가져올 때(nextRank가 1인 상태)
@@ -195,8 +201,13 @@ const JobRank = () => {
         (async () => {
           let data = await getGithubRanking(size, jobPostingIdParam);
 
-          setOtherRankInfo(data);
-          setNextRank(data[data?.length - 1].rank);
+          if (data.status === 'SUCCESS') {
+            setOtherRankInfo(data.data?.ranks);
+            setNextRank(data.data?.ranks[data.data?.ranks?.length - 1].rank);
+            setLoading(false);
+          } else {
+            alert(data.message);
+          }
         })();
       } else {
         // 깃허브 정보 불러오기
@@ -207,11 +218,16 @@ const JobRank = () => {
 
             let data = await getGithubRanking(size, jobPostingIdParam, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data?.ranks.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setOtherRankInfo([...otherRankInfo, ...data.data?.ranks]);
+              }
+              setLoading(false);
             } else {
-              setOtherRankInfo([...otherRankInfo, ...data]);
+              alert(data.message);
             }
           }
         })();
@@ -220,7 +236,12 @@ const JobRank = () => {
       // 내 깃허브 정보 불러오기
       (async () => {
         let data = await getMyGitRanking(jobPostingIdParam);
-        setUserRankInfo(data);
+        if (data.status === 'SUCCESS') {
+          setUserRankInfo(data.data?.githubRankingCover);
+          setLoading(false);
+        } else {
+          alert(data.message);
+        }
       })();
     } else if (curRank == 1) {
       // 백준 정보 불러오기
@@ -228,8 +249,13 @@ const JobRank = () => {
         (async () => {
           let data = await getBojRanking(size, jobPostingIdParam);
 
-          setOtherRankInfo(data);
-          setNextRank(data[data?.length - 1]?.rank);
+          if (data.status === 'SUCCESS') {
+            setOtherRankInfo(data.data);
+            setNextRank(data.data[data.data?.length - 1]?.rank);
+            setLoading(false);
+          } else {
+            alert(data.message);
+          }
         })();
       } else {
         (async () => {
@@ -239,11 +265,16 @@ const JobRank = () => {
 
             let data = await getBojRanking(size, jobPostingIdParam, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setOtherRankInfo([...otherRankInfo, ...data.data]);
+              }
+              setLoading(false);
             } else {
-              setOtherRankInfo([...otherRankInfo, ...data]);
+              alert(data.message);
             }
           }
         })();
@@ -252,7 +283,13 @@ const JobRank = () => {
       // 내 백준 정보 불러오기
       (async () => {
         let data = await getMyBojRanking(jobPostingIdParam);
-        setUserRankInfo(data);
+
+        if (data.status === 'SUCCESS') {
+          setUserRankInfo(data.data);
+          setLoading(false);
+        } else {
+          alert(data.message);
+        }
       })();
     }
   };
@@ -311,7 +348,7 @@ const JobRank = () => {
             <>
               {!openCompare ? (
                 <ul className="rank-list">
-                  {userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />}
+                  {loading ? <JobRankLoading /> : userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />}
                   {otherRankInfo &&
                     otherRankInfo.map((el, idx) => (
                       <li
@@ -322,7 +359,11 @@ const JobRank = () => {
                           }
                         }}
                       >
-                        <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
+                        {loading ? (
+                          <RankLoading />
+                        ) : (
+                          <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
+                        )}
                       </li>
                     ))}
                 </ul>
