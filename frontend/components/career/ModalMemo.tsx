@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
-import { IMemoModalProps, DarkBg } from './ICareer';
+import { IMemoModalProps } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const InputDiv = styled.div`
   padding: 1rem;

@@ -7,6 +7,8 @@ import DdayModal from './ModalDday';
 import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
 import { ICareerStatus, INewCareerProps, ISearchResult } from './ICareer';
+import Swal from 'sweetalert2';
+import { fadeIn2 } from './SCareer';
 
 const NewCareerDiv = styled.div`
   width: 100vw;
@@ -16,6 +18,8 @@ const NewCareerDiv = styled.div`
   background-color: white;
   padding-bottom: max(10vh, 4rem);
   z-index: 5;
+
+  animation: ${fadeIn2} 0.5s;
 
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */
@@ -132,11 +136,28 @@ const NewCareer = ({ close }: INewCareerProps) => {
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
     if (formJson.jobPostingId === '0') {
-      alert('취업공고를 선택해주세요');
+      Swal.fire({
+        text: '취업공고를 선택해주세요',
+        icon: 'warning',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          setSearchOpen(true);
+        }
+      });
     } else if (formJson.statusId === '0') {
-      alert('현재 진행 상태를 선택해주세요');
+      Swal.fire({
+        text: '현재 진행 상태를 선택해주세요',
+        icon: 'warning',
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          setStatusOpen(true);
+        }
+      });
     } else if (formJson.objective === '') {
-      alert('지원 직무를 입력해주세요');
+      Swal.fire({
+        text: '지원 직무를 입력해주세요',
+        icon: 'warning',
+      });
     } else {
       setLoading(true);
       const res = await postJob(formJson);
@@ -144,8 +165,15 @@ const NewCareer = ({ close }: INewCareerProps) => {
         setLoading(false);
         router.reload();
       } else {
-        alert(res.message);
-        setLoading(false);
+        Swal.fire({
+          title: 'Error!',
+          text: res.message,
+          icon: 'error',
+        }).then((result: any) => {
+          if (result.isConfirmed) {
+            setLoading(false);
+          }
+        });
       }
     }
   };

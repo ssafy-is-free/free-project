@@ -5,6 +5,7 @@ import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
 import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
 import { IHistory, ICareerListProps } from './ICareer';
+import Swal from 'sweetalert2';
 
 const CareerListDiv = styled.div`
   margin: 1rem;
@@ -75,11 +76,18 @@ const CareerList = ({ openNew }: ICareerListProps) => {
   const delapi = async () => {
     const res = await deleteHistory(Array.from(checkedItems));
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '삭제 완료',
+        icon: 'success',
+      });
       setDelMode(false);
       getCareerData();
     } else {
-      alert(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
