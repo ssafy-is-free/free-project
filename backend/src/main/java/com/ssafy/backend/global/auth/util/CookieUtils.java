@@ -30,7 +30,7 @@ public class CookieUtils {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setSecure(false); //https로 통신할때만 웹 브라우저가 쿠키를 서버로 전송하도록 함.
 		cookie.setPath("/");
-		cookie.setHttpOnly(true); //쿠키를 클라이언트에서 열어볼 수 없도록 함.
+		cookie.setHttpOnly(false); //쿠키를 클라이언트에서 열어볼 수 없도록 함.
 		cookie.setMaxAge(maxAge);
 		response.addCookie(cookie);
 	}

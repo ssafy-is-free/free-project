@@ -18,7 +18,7 @@ public class LanguageQueryRepository {
 
 	private final JPAQueryFactory queryFactory;
 
-	public List<Language> findLanguageByType(String type) {
+	public List<Language> findLanguageByType(LanguageType type) {
 
 		QLanguage language = QLanguage.language;
 
@@ -29,12 +29,12 @@ public class LanguageQueryRepository {
 	}
 
 	//랭킹 필터
-	private BooleanExpression typeEq(String type) {
+	private BooleanExpression typeEq(LanguageType type) {
 
 		if (type == null) {
 			return null;
 		}
 
-		return QLanguage.language.type.eq(LanguageType.valueOf(type.toUpperCase()));
+		return QLanguage.language.type.eq(type);
 	}
 }

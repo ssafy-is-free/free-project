@@ -42,14 +42,15 @@ class RankFilterServiceImplTest {
 		languageGihubList.add(Language.create("C", LanguageType.valueOf("GITHUB")));
 		languageGihubList.add(Language.create("JAVA", LanguageType.valueOf("GITHUB")));
 		languageGihubList.add(Language.create("PYTHON", LanguageType.valueOf("GITHUB")));
-		when(languageQueryRepository.findLanguageByType("GITHUB")).thenReturn(languageGihubList);
+		when(languageQueryRepository.findLanguageByType(LanguageType.valueOf("GITHUB"))).thenReturn(languageGihubList);
 
 		List<Language> languageBaekJoonList = new ArrayList<>();
 		languageBaekJoonList.add(Language.create("RUBY", LanguageType.valueOf("BAEKJOON")));
 		languageBaekJoonList.add(Language.create("C#", LanguageType.valueOf("BAEKJOON")));
 		languageBaekJoonList.add(Language.create("SWIFT", LanguageType.valueOf("BAEKJOON")));
 		languageBaekJoonList.add(Language.create("PYTHON", LanguageType.valueOf("BAEKJOON")));
-		when(languageQueryRepository.findLanguageByType("BAEKJOON")).thenReturn(languageBaekJoonList);
+		when(languageQueryRepository.findLanguageByType(LanguageType.valueOf("BAEKJOON"))).thenReturn(
+			languageBaekJoonList);
 
 		//when
 		List<LanguageResponse> languageGithubResponses = rankFilterService.getLanguageList("GITHUB");
@@ -61,5 +62,18 @@ class RankFilterServiceImplTest {
 
 		Assertions.assertEquals(languageGithubResponses.size(), 4);
 		Assertions.assertEquals(languageBaekjoonResponses.size(), 4);
+	}
+
+	@Test
+	@DisplayName("언어리스트 조회 - 없는 타입으로 조회시")
+	void testGetLanguageListNoneTypeTest() {
+		//given
+		String type = "GITHUBBB";
+		//when
+		//then
+		org.assertj.core.api.Assertions
+			.assertThatThrownBy(() -> rankFilterService.getLanguageList(type))
+			.isInstanceOf(IllegalArgumentException.class);
+
 	}
 }
