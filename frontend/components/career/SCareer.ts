@@ -34,10 +34,8 @@ export const fadeIn2Reverse = keyframes`
 export const DarkBg = styled.div`
   position: fixed;
   z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: ${(props) => props.theme.modalGray};
   animation: ${fadeIn} 0.5s;
 `;
