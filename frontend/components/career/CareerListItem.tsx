@@ -171,7 +171,7 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
       )}
       <div className="flexDiv">
         <button onClick={ddayModal}>
-          {ddetail.ddayName}: {ddetail.nextDate}
+          {ddetail.ddayName}: {ddetail.nextDate === '1996-11-22' ? '미정' : ddetail.nextDate}
         </button>
         <StatusButton className="statusbtn" colorProp={status} onClick={statusModal}>
           {ddetail.status}
