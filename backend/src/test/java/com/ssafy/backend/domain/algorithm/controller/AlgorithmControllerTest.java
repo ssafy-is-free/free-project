@@ -1,7 +1,8 @@
-/*
 package com.ssafy.backend.domain.algorithm.controller;
 
-import static org.mockito.Mockito.*;
+import static com.ssafy.backend.global.response.CustomSuccessStatus.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -13,38 +14,54 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.ssafy.backend.PrincipalDetailsArgumentResolver;
+import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
 import com.ssafy.backend.domain.algorithm.service.AlgorithmService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
-import com.ssafy.backend.global.auth.util.TokenProvider;
+import com.ssafy.backend.domain.util.service.NotificationManager;
+import com.ssafy.backend.global.auth.filter.TokenAuthenticationFilter;
+import com.ssafy.backend.global.config.sercurity.SecurityConfig;
+import com.ssafy.backend.global.exception.ControllerAdvisor;
+import com.ssafy.backend.global.response.CustomSuccessStatus;
+import com.ssafy.backend.global.response.DataResponse;
 import com.ssafy.backend.global.response.ResponseService;
 
-@WebMvcTest(AlgorithmController.class)
+@WebMvcTest(controllers = AlgorithmController.class
+	, excludeFilters = {@ComponentScan.Filter(
+	type = FilterType.ASSIGNABLE_TYPE,
+	classes = {SecurityConfig.class, TokenAuthenticationFilter.class, NotificationManager.class,
+		ControllerAdvisor.class}
+)
+})
+@WithMockUser
 public class AlgorithmControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
-	@Autowired
-	private WebApplicationContext context;
-	@Autowired
-	private TokenProvider tokenProvider;
-	@Autowired
-	private AuthenticationManagerBuilder authenticationManagerBuilder;
 	@MockBean
 	private AlgorithmService algorithmService;
 	@MockBean
 	private ResponseService responseService;
 
 	@Test
-	@DisplayName("알고리즘 컨트롤러 테스트")
+	@DisplayName("백준 마이랭크 테스트")
 	public void bojMyRankTest() throws Exception {
 
-		*/
-/*//*
-/given
-		BojRankResponse mockResponse = BojRankResponse.builder()
+		MockMvc mvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+			.build();
+		//given
+		BojRankResponse bojRankResponse = BojRankResponse.builder()
 			.userId(1L)
 			.rank(1)
 			.score(100)
@@ -54,31 +71,127 @@ public class AlgorithmControllerTest {
 			.rankUpDown(2L)
 			.build();
 
-		String mockToken = "mockToken";
-
-		when(algorithmService.getBojByUserId(anyLong(), any(), any())).thenReturn(mockResponse);
-		when(responseService.getDataResponse(any(), any())).thenReturn(
-			new DataResponse<>()); // 적절한 DataResponse를 반환하도록 설정하세요
-
-		//when //then
-		mockMvc.perform(get("/my-rank"))
-			.andExpect(status().isOk());*//*
-
+		given(algorithmService.getBojByUserId(1L, null, null)).willReturn(bojRankResponse);
+		given(responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(bojRankResponse, RESPONSE_SUCCESS));
+		//when
+		ResultActions actions = mvc.perform(get("/boj/my-rank")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.nickname").value("Nickname"))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
 
 	}
 
 	@Test
-	@DisplayName("알고리즘 컨트롤러 테스트")
+	@DisplayName("백준 닉네임 자동완성 테스트")
 	public void getBojIdListTest() throws Exception {
 		//given
 		List<NicknameListResponse> nicknameListResponseList = new ArrayList<>();
-		nicknameListResponseList.add(new NicknameListResponse(1L, "soda"));
+		nicknameListResponseList.add(new NicknameListResponse(1L, "sodamito"));
+
+		given(algorithmService.getBojListByBojId(anyString())).willReturn(nicknameListResponseList);
+		given(responseService.getDataResponse(nicknameListResponseList, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(nicknameListResponseList, RESPONSE_SUCCESS));
 		//when
-		when(algorithmService.getBojListByBojId(anyString())).thenReturn(nicknameListResponseList);
+		ResultActions actions = mockMvc.perform(get("/boj/search?nickname=soda")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
 		//then
-		mockMvc.perform(get("/search?nickname=soda"))
-			.andExpect(status().isOk());
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data[0].nickname").value("sodamito"))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 닉네임 자동완성 없을 경우 테스트")
+	public void getBojIdListNicknameNullTest() throws Exception {
+		//given
+		List<NicknameListResponse> nicknameListResponseList = new ArrayList<>();
+
+		given(algorithmService.getBojListByBojId(anyString())).willReturn(nicknameListResponseList);
+		given(responseService.getDataResponse(nicknameListResponseList, RESPONSE_NO_CONTENT)).willReturn(
+			getDataResponse(nicknameListResponseList, RESPONSE_NO_CONTENT));
+		//when
+		ResultActions actions = mockMvc.perform(get("/boj/search?nickname=soda")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data", hasSize(0)))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 랭크 테스트")
+	public void getBojRankTest() throws Exception {
+		//given
+		List<BojRankResponse> bojRankResponseList = new ArrayList<>();
+		bojRankResponseList.add(
+			BojRankResponse.builder().rank(1).rankUpDown(0L).tierUrl("Test14").userId(1L).nickname("user1").build());
+		given(algorithmService.getBojRankListByBojId(null, null, null, null, null, null,
+			Pageable.ofSize(20))).willReturn(bojRankResponseList);
+		given(responseService.getDataResponse(bojRankResponseList, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(bojRankResponseList, RESPONSE_SUCCESS));
+
+		//when
+		ResultActions actions = mockMvc.perform(get("/boj/ranks")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+
+		//then
+		actions
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(jsonPath("$.data", hasSize(1)))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+	}
+
+	@Test
+	@DisplayName("백준 랭크 빈값 테스트")
+	public void getBojRankFailTest() throws Exception {
+		//given
+		List<BojRankResponse> bojRankResponseList = new ArrayList<>();
+		given(algorithmService.getBojRankListByBojId(null, null, null, null, null, null,
+			Pageable.ofSize(20))).willReturn(bojRankResponseList);
+		given(responseService.getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT)).willReturn(
+			getDataResponse(bojRankResponseList, RESPONSE_NO_CONTENT));
+
+		//when
+		ResultActions actions = mockMvc.perform(get("/boj/ranks")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+
+		//then
+		actions
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(jsonPath("$.data", hasSize(0)))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+	}
+
+	private <T> DataResponse<T> getDataResponse(T data, CustomSuccessStatus status) {
+		DataResponse<T> response = new DataResponse<>();
+		response.setStatus(status.getStatus().toString());
+		response.setMessage(status.getMessage());
+		response.setData(data);
+
+		return response;
 	}
 
 }
-*/
