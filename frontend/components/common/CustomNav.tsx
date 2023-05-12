@@ -9,12 +9,13 @@ const CustomNavDiv = styled.div`
 
 const NavItemDiv = styled.div<{ active: boolean }>`
   flex: 1;
-  border-bottom: ${(props) => (props.active ? `2px solid ${props.theme.primary}` : '0px')};
+  border-bottom: ${(props) => (props.active ? `4px solid ${props.theme.primary}` : '0px')};
   display: flex;
   align-items: center;
   justify-content: center;
 
   p {
+    margin-bottom: 0.5rem;
     font-size: 1.2rem;
     color: ${(props) => (props.active ? props.theme.primary : props.theme.fontGray)};
   }
