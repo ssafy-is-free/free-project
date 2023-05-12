@@ -118,12 +118,14 @@ const MainUserItem = (props: IMainUserItemProps) => {
   const [rankupdown, setRankupdown] = useState<number>(0);
 
   useEffect(() => {
-    if (props.item && props.item.rankUpDown < 0) {
-      setRankupdown(-1);
-    } else if (props.item && props.item.rankUpDown > 0) {
-      setRankupdown(1);
-    } else {
-      setRankupdown(0);
+    if (props.item?.rankUpDown) {
+      if (props.item?.rankUpDown < 0) {
+        setRankupdown(-1);
+      } else if (props.item?.rankUpDown > 0) {
+        setRankupdown(1);
+      } else {
+        setRankupdown(0);
+      }
     }
   }, [props.curRank]);
 
@@ -131,9 +133,9 @@ const MainUserItem = (props: IMainUserItemProps) => {
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item && props.item.rank}
-        {props.item && props.item.rankUpDown !== 0 && (
+        {rankupdown !== 0 && (
           <div className="rank-icon">
-            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item && props.item.rankUpDown}
+            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item?.rankUpDown}
           </div>
         )}
       </div>

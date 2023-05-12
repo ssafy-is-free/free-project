@@ -22,7 +22,7 @@ const NoUserWrapper = styled.div`
   box-shadow: 4px 4px 20px #00000026;
 `;
 
-const Wrapper = styled.div<{ rankupdown: number }>`
+const Wrapper = styled.div`
   background-color: ${(props) => props.theme.bgWhite};
   border-radius: 8px;
   height: 56px;
@@ -44,28 +44,6 @@ const Wrapper = styled.div<{ rankupdown: number }>`
     display: flex;
     align-items: center;
     text-align: left;
-
-    .rank-icon {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 100;
-      font-size: 14px;
-
-      ${(props) => {
-        if (props.rankupdown > 0) {
-          return css`
-            color: #1ae665;
-          `;
-        } else {
-          return css`
-            color: #ff9650;
-          `;
-        }
-      }};
-    }
   }
 
   .center {
@@ -135,49 +113,22 @@ const StyledRankUpDownIcon = styled(RankUpDownIcon)<{ rankupdown: number }>`
 `;
 
 const JobUserItem = (props: IJobUserItemProps) => {
-  // -1, 0, 1
-  const [rankupdown, setRankupdown] = useState<number>(0);
-
-  useEffect(() => {
-    if (props.item) {
-      if (props.item.rankUpDown < 0) {
-        setRankupdown(-1);
-      } else if (props.item.rankUpDown > 0) {
-        setRankupdown(1);
-      } else {
-        setRankupdown(0);
-      }
-    }
-  }, [props.curRank]);
-
   return (
-    <>
-      {props.item ? (
-        <Wrapper rankupdown={rankupdown}>
-          <div className="rank-num">
-            {props.item?.rank}
-            {props.item.rankUpDown ||
-              (props.item.rankUpDown != 0 && (
-                <div className="rank-icon">
-                  <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
-                </div>
-              ))}
-          </div>
-          <div className="center">
-            <img src={props.item?.avatarUrl} className="user-photo" />
-            <div className="user-nickname">
-              <div className="name">{props.item?.nickname}</div>
-              {props.curRank == 1 && (
-                <div className="tier">
-                  <img src={props.item?.tierUrl} className="user-tier" />
-                </div>
-              )}
+    <Wrapper>
+      <div className="rank-num">{props.item?.rank}</div>
+      <div className="center">
+        <img src={props.item?.avatarUrl} className="user-photo" />
+        <div className="user-nickname">
+          <div className="name">{props.item?.nickname}</div>
+          {props.curRank == 1 && (
+            <div className="tier">
+              <img src={props.item?.tierUrl} className="user-tier" />
             </div>
-          </div>
-          <div className="user-score">{props.item?.score}</div>
-        </Wrapper>
-      ) : null}
-    </>
+          )}
+        </div>
+      </div>
+      <div className="user-score">{props.item?.score}</div>
+    </Wrapper>
   );
 };
 

@@ -363,10 +363,8 @@ const JobRank = () => {
                 <ul className="rank-list">
                   {loading ? (
                     <JobUerItemLoading />
-                  ) : userRankInfo ? (
-                    <JobUserItem curRank={curRank} item={userRankInfo} />
                   ) : (
-                    <JobUserItem curRank={curRank} item={null} />
+                    userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />
                   )}
                   {otherRankInfo &&
                     otherRankInfo.map((el, idx) => (
@@ -378,7 +376,7 @@ const JobRank = () => {
                           }
                         }}
                       >
-                        {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} isJob={true} />}
                       </li>
                     ))}
                 </ul>

@@ -64,6 +64,8 @@ export interface IMainOtherItemProps {
     userId: number;
     tierUrl?: string;
   };
+
+  isJob?: boolean;
 }
 
 /**
@@ -189,5 +191,5 @@ export interface IJobUserItemProps {
     avatarUrl: string;
     rankUpDown: number;
     tierUrl?: string;
-  } | null;
+  };
 }
