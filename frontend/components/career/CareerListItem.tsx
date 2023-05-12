@@ -73,6 +73,8 @@ const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
   animation: ${SmoothAppear} 0.5s;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25));
+
   .checkbox {
     width: 2rem;
     display: flex;
