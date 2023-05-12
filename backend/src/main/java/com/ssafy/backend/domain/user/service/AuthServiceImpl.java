@@ -28,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
 	public AccessTokenResponse reissueToken(String oldAccessToken, String refreshToken) {
 
 		//이전 토큰에서 id 값 꺼내기.
-		Long userId = tokenProvider.getUserIdFromToken(oldAccessToken);
+		Long userId = tokenProvider.getUserIdFromExpirationToken(oldAccessToken);
 
 		//유저 id 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
