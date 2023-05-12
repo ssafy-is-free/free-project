@@ -32,10 +32,9 @@ public class RankFilterController {
 
 		List<LanguageResponse> languageResponses = rankFilterService.getLanguageList(type);
 
-		// TODO: 2023-04-24 삼항연산자로 개선
-		if (languageResponses.isEmpty())
-			return responseService.getDataResponse(languageResponses, RESPONSE_NO_CONTENT);
+		return languageResponses.isEmpty()
+			? responseService.getDataResponse(languageResponses, RESPONSE_NO_CONTENT)
+			: responseService.getDataResponse(languageResponses, RESPONSE_SUCCESS);
 
-		return responseService.getDataResponse(languageResponses, RESPONSE_SUCCESS);
 	}
 }

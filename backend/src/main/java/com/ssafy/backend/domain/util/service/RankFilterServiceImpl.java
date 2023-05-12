@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.backend.domain.entity.Language;
+import com.ssafy.backend.domain.entity.common.LanguageType;
 import com.ssafy.backend.domain.util.dto.LanguageResponse;
 import com.ssafy.backend.domain.util.repository.LanguageQueryRepository;
 
@@ -21,7 +22,9 @@ public class RankFilterServiceImpl implements RankFilterService {
 	@Override
 	public List<LanguageResponse> getLanguageList(String type) {
 
-		List<Language> languages = languageQueryRepository.findLanguageByType(type);
+		LanguageType languageType = LanguageType.valueOf(type.toUpperCase());
+
+		List<Language> languages = languageQueryRepository.findLanguageByType(languageType);
 
 		return LanguageResponse.createList(languages);
 	}
