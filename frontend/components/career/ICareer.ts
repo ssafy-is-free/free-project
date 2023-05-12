@@ -84,7 +84,7 @@ export interface ICardHeaderProps {
   /**
    * 카드 자세히보기 눌렀는지 여부
    */
-  spread: boolean;
+  spread: boolean | null;
   setSpread: () => void;
   ddayModal: () => void;
   statusModal: () => void;
