@@ -135,7 +135,6 @@ const NewCareer = ({ close }: INewCareerProps) => {
     const form = e.currentTarget;
     const formData = new FormData(form);
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
     if (formJson.jobPostingId === '0') {
       Swal.fire({
         text: '취업공고를 선택해주세요',

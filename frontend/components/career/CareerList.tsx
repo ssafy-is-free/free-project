@@ -8,25 +8,31 @@ import { IHistory, ICareerListProps } from './ICareer';
 import Swal from 'sweetalert2';
 
 const CareerListDiv = styled.div`
-  margin: 1rem;
-
   .header {
+    background-color: ${(props) => props.theme.primary};
     height: 2.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    padding: 1rem;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    .title {
+      color: ${(props) => props.theme.secondary};
+      font-size: large;
+    }
     img {
       height: 2.5rem;
     }
 
     .deleteBtn {
-      color: ${(props) => props.theme.primary};
+      color: ${(props) => props.theme.secondary};
       font-size: larger;
       font-weight: bold;
     }
+  }
+  .content {
+    margin: 1rem;
   }
   .cardlist {
     margin-top: 1rem;
@@ -111,49 +117,50 @@ const CareerList = ({ openNew }: ICareerListProps) => {
               setCheckedItems(new Set());
             }}
           />
+          <div className="title">취업지원이력</div>
           {delMode ? (
-            <div className="deleteBtn" onClick={delapi}>
-              삭제하기
-            </div>
+            <img src="/Icon/CheckIcon.svg" alt="" onClick={delapi} />
           ) : (
             <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
           )}
         </div>
-        <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
-        {selectedIdx === 0 ? (
-          <div className="cardlist">
-            {progressData.map((item: IHistory) => (
-              <div className="card" key={item.jobHistoryId}>
-                <CareerListItem
-                  cardId={item.jobHistoryId}
-                  dDay={item.dDay}
-                  delMode={delMode}
-                  delCheck={(isChecked: boolean) => {
-                    checkedItemHandler(item.jobHistoryId, isChecked);
-                  }}
-                  updateList={getCareerData}
-                ></CareerListItem>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="cardlist">
-            {doneData.map((item: IHistory) => (
-              <div className="card" key={item.jobHistoryId}>
-                {/* {delMode && CheckBox()} */}
-                <CareerListItem
-                  cardId={item.jobHistoryId}
-                  dDay={item.dDay}
-                  delMode={delMode}
-                  delCheck={(isChecked: boolean) => {
-                    checkedItemHandler(item.jobHistoryId, isChecked);
-                  }}
-                  updateList={getCareerData}
-                ></CareerListItem>
-              </div>
-            ))}
-          </div>
-        )}
+        <div className="content">
+          <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
+          {selectedIdx === 0 ? (
+            <div className="cardlist">
+              {progressData.map((item: IHistory) => (
+                <div className="card" key={item.jobHistoryId}>
+                  <CareerListItem
+                    cardId={item.jobHistoryId}
+                    dDay={item.dday}
+                    delMode={delMode}
+                    delCheck={(isChecked: boolean) => {
+                      checkedItemHandler(item.jobHistoryId, isChecked);
+                    }}
+                    updateList={getCareerData}
+                  ></CareerListItem>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="cardlist">
+              {doneData.map((item: IHistory) => (
+                <div className="card" key={item.jobHistoryId}>
+                  {/* {delMode && CheckBox()} */}
+                  <CareerListItem
+                    cardId={item.jobHistoryId}
+                    dDay={item.dday}
+                    delMode={delMode}
+                    delCheck={(isChecked: boolean) => {
+                      checkedItemHandler(item.jobHistoryId, isChecked);
+                    }}
+                    updateList={getCareerData}
+                  ></CareerListItem>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </CareerListDiv>
     );
   }

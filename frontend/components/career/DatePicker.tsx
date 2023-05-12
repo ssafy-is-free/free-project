@@ -35,7 +35,6 @@ const DatePickerdiv = styled.div`
 `;
 
 const DatePicker = ({ updateDate, defaultDate }: IDatePickerProps) => {
-  console.log('datepicker에서 : ', defaultDate);
   const [year, setYear] = useState<string>('');
   const [month, setMonth] = useState<string>('');
   const [day, setDay] = useState<string>('');

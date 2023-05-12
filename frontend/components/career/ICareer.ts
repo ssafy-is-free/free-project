@@ -6,7 +6,7 @@ export interface IHistory {
   companyName: string;
   dDayName: string;
   nextDate: string;
-  dDay: string;
+  dday: string;
   status: string;
 }
 
@@ -69,6 +69,7 @@ export interface ICareerListItemProps {
 
 export interface ICardHeaderProps {
   ddetail: IHistoryDetail;
+  dDay: string;
   /**
    * 카드 자세히보기 눌렀는지 여부
    */

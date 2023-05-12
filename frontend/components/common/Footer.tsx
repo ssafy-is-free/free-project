@@ -79,7 +79,6 @@ const Footer = () => {
   const router = useRouter();
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
-  console.log(isLogin);
 
   // 로그인 모달 열기
   const [openLogin, setOpenLogin] = useState<boolean>(false);

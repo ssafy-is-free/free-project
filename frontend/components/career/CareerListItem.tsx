@@ -139,7 +139,7 @@ const DetailCardDiv = styled.div`
   }
 `;
 
-const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
+const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
   const statusColor = () => {
     const word = ddetail.status.slice(-2);
     if (ddetail.status === '최종 합격') {
@@ -236,7 +236,6 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     if (res.status == 'SUCCESS') {
       setDetail(res.data);
     } else {
-      console.log(res.message);
     }
   };
 
@@ -338,6 +337,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
         <div className="item">
           <CardHeader
             ddetail={detail}
+            dDay={dDay}
             setSpread={() => setSpread(!spread)}
             spread={spread}
             ddayModal={() => setDdayModal(true)}
