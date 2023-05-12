@@ -34,8 +34,8 @@ const Wrapper = styled.div`
   }
 `;
 
-const JobRankLoading = () => {
+const JobUerItemLoading = () => {
   return <Wrapper></Wrapper>;
 };
 
-export default JobRankLoading;
+export default JobUerItemLoading;

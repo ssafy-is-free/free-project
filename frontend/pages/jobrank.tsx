@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import RankingIcon from '../public/Icon/RankingIcon.svg';
 import PieIcon from '../public/Icon/PieIcon.svg';
 import RankLoading from '@/components/rank/RankLoading';
-import JobRankLoading from '@/components/jobrank/jobRankLoading';
+import JobUerItemLoading from '@/components/jobrank/JobUserItemLoading';
 
 const Wrapper = styled.div<{ info: number; submenu: number; clickBtn: boolean }>`
   width: 100vw;
@@ -348,7 +348,11 @@ const JobRank = () => {
             <>
               {!openCompare ? (
                 <ul className="rank-list">
-                  {loading ? <JobRankLoading /> : userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />}
+                  {loading ? (
+                    <JobUerItemLoading />
+                  ) : (
+                    userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />
+                  )}
                   {otherRankInfo &&
                     otherRankInfo.map((el, idx) => (
                       <li
