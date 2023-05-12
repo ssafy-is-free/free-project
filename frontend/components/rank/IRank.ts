@@ -64,8 +64,6 @@ export interface IMainOtherItemProps {
     userId: number;
     tierUrl?: string;
   };
-
-  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -89,8 +87,6 @@ export interface IMainUserItemProps {
     rankUpDown: number;
     tierUrl?: string;
   } | null;
-
-  selectedOption: { languageId: number; name: string } | null;
 }
 
 /**
@@ -133,6 +129,10 @@ export interface IRankSearchBarProps {
   setSearchClick: React.Dispatch<React.SetStateAction<boolean>>;
 
   setNoMore: React.Dispatch<React.SetStateAction<boolean>>;
+
+  setMyRankInfo: React.Dispatch<React.SetStateAction<resultMyInformation | null>>;
+
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface IFilterOptionProps {
@@ -189,5 +189,5 @@ export interface IJobUserItemProps {
     avatarUrl: string;
     rankUpDown: number;
     tierUrl?: string;
-  };
+  } | null;
 }

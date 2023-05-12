@@ -22,9 +22,9 @@ const NoAccount = (props: INoAccountProps) => {
         <>백준 계정 등록 하러 가기</>
       ) : props.curRank == 2 ? (
         <>해당 유저가 존재하지 않습니다.</>
-      ) : (
+      ) : props.curRank == 3 ? (
         <>해당 언어를 사용하지 않습니다.</>
-      )}
+      ) : null}
     </Wrapper>
   );
 };

@@ -2,6 +2,25 @@ import styled, { css } from 'styled-components';
 import { IJobUserItemProps } from '../rank/IRank';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useEffect, useState } from 'react';
+import BojModal from '../login/BojModal';
+
+const NoUserWrapper = styled.div`
+  background-color: ${(props) => props.theme.bgWhite};
+  border-radius: 8px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 14px;
+  color: ${(props) => props.theme.fontBlack};
+  font-weight: bold;
+  font-size: 14px;
+  width: calc(100% - 64px);
+  position: absolute;
+  top: -28px;
+  left: 32px;
+  box-shadow: 4px 4px 20px #00000026;
+`;
 
 const Wrapper = styled.div<{ rankupdown: number }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -120,39 +139,45 @@ const JobUserItem = (props: IJobUserItemProps) => {
   const [rankupdown, setRankupdown] = useState<number>(0);
 
   useEffect(() => {
-    if (props.item.rankUpDown < 0) {
-      setRankupdown(-1);
-    } else if (props.item.rankUpDown > 0) {
-      setRankupdown(1);
-    } else {
-      setRankupdown(0);
+    if (props.item) {
+      if (props.item.rankUpDown < 0) {
+        setRankupdown(-1);
+      } else if (props.item.rankUpDown > 0) {
+        setRankupdown(1);
+      } else {
+        setRankupdown(0);
+      }
     }
   }, [props.curRank]);
 
   return (
-    <Wrapper rankupdown={rankupdown}>
-      <div className="rank-num">
-        {props.item?.rank}
-        {props.item.rankUpDown ||
-          (props.item.rankUpDown != 0 && (
-            <div className="rank-icon">
-              <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
+    <>
+      {props.item ? (
+        <Wrapper rankupdown={rankupdown}>
+          <div className="rank-num">
+            {props.item?.rank}
+            {props.item.rankUpDown ||
+              (props.item.rankUpDown != 0 && (
+                <div className="rank-icon">
+                  <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
+                </div>
+              ))}
+          </div>
+          <div className="center">
+            <img src={props.item?.avatarUrl} className="user-photo" />
+            <div className="user-nickname">
+              <div className="name">{props.item?.nickname}</div>
+              {props.curRank == 1 && (
+                <div className="tier">
+                  <img src={props.item?.tierUrl} className="user-tier" />
+                </div>
+              )}
             </div>
-          ))}
-      </div>
-      <div className="center">
-        <img src={props.item?.avatarUrl} className="user-photo" />
-        <div className="user-nickname">
-          <div className="name">{props.item?.nickname}</div>
-          {props.curRank == 1 && (
-            <div className="tier">
-              <img src={props.item?.tierUrl} className="user-tier" />
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="user-score">{props.item?.score}</div>
-    </Wrapper>
+          </div>
+          <div className="user-score">{props.item?.score}</div>
+        </Wrapper>
+      ) : null}
+    </>
   );
 };
 

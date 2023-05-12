@@ -19,6 +19,9 @@ import RankingIcon from '../public/Icon/RankingIcon.svg';
 import PieIcon from '../public/Icon/PieIcon.svg';
 import RankLoading from '@/components/rank/RankLoading';
 import JobUerItemLoading from '@/components/jobrank/JobUserItemLoading';
+import BojModal from '@/components/login/BojModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const Wrapper = styled.div<{ info: number; submenu: number; clickBtn: boolean }>`
   width: 100vw;
@@ -175,6 +178,12 @@ const JobRank = () => {
   // 로딩
   const [loading, setLoading] = useState<boolean>(true);
 
+  // 모달 열기
+  const [openBoj, setOpenBoj] = useState<boolean>(false);
+
+  // 백준 여부
+  const isBoj = useSelector<RootState>((selector) => selector.authChecker.isBoj);
+
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore) {
@@ -307,9 +316,13 @@ const JobRank = () => {
 
     if (clickBtn) {
       if (info == 0) {
-        setInfo(1);
-        setOpenCompare(false);
-        setSubmenu(0);
+        if (curRank == 1 && !isBoj) {
+          alert('백준 로그인 후 이용 가능합니다.');
+        } else {
+          setInfo(1);
+          setOpenCompare(false);
+          setSubmenu(0);
+        }
       } else {
         setInfo(0);
         setOpenCompare(false);
@@ -350,8 +363,10 @@ const JobRank = () => {
                 <ul className="rank-list">
                   {loading ? (
                     <JobUerItemLoading />
+                  ) : userRankInfo ? (
+                    <JobUserItem curRank={curRank} item={userRankInfo} />
                   ) : (
-                    userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />
+                    <JobUserItem curRank={curRank} item={null} />
                   )}
                   {otherRankInfo &&
                     otherRankInfo.map((el, idx) => (
@@ -363,11 +378,7 @@ const JobRank = () => {
                           }
                         }}
                       >
-                        {loading ? (
-                          <RankLoading />
-                        ) : (
-                          <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
-                        )}
+                        {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
                       </li>
                     ))}
                 </ul>
@@ -422,7 +433,14 @@ const JobRank = () => {
           </button>
         </div> */}
       </Wrapper>
-      {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
+      {openSelect && (
+        <RankMenuSelectModal
+          onClick={() => setOpenSelect(false)}
+          onChangeCurRank={onChangeCurRank}
+          setOpenBoj={setOpenBoj}
+        />
+      )}
+      {openBoj && <BojModal onClick={() => setOpenBoj(false)} />}
     </>
   );
 };

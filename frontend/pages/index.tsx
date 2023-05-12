@@ -190,6 +190,9 @@ const Main = () => {
   // splash 상태관리
   const splashState = useSelector<RootState>((selector) => selector.splashChecker.check);
 
+  // 백준 여부
+  const isBoj = useSelector<RootState>((selector) => selector.authChecker.isBoj);
+
   // 옵션
   const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
   // TODO : 이렇게 따로따로 접근 가능한건가?
@@ -230,9 +233,6 @@ const Main = () => {
    *  나의 깃허브 랭킹, 나의 백준 랭킹
    */
   const [myRankInfo, setMyRankInfo] = useState<resultMyInformation>(null);
-
-  // 필터 모덜에서 옵션 선택후 적용하면 필터 state에 값 셋팅
-  const [selectedOption, setSelectedOption] = useState<{ languageId: number; name: string } | null>(null);
 
   // 검색 아이콘 클릭 여부
   const [searchClick, setSearchClick] = useState<boolean>(false);
@@ -545,33 +545,35 @@ const Main = () => {
                     />
                   </div>
                 )}
-                {!isLogin ? (
+
+                {loading ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    <NoAccount curRank={curRank} onClick={onClickNoUser} />
+                    <RankLoading />
+                  </div>
+                ) : !isLogin ? (
+                  <div className="my-rank">
+                    <p>나의 랭킹</p>
+                    <NoAccount curRank={0} onClick={onClickNoUser} />
                   </div>
                 ) : myRankInfo ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <div onClick={() => setClickMy(true)}>
-                      {loading ? (
-                        <RankLoading />
-                      ) : (
-                        <MainUserItem selectedOption={selectedOption} curRank={curRank} item={myRankInfo} />
-                      )}
+                      <MainUserItem curRank={curRank} item={myRankInfo} />
                     </div>
                   </div>
-                ) : isLogin && curRank == 1 && !selectedOption ? (
+                ) : curRank == 1 && !isBoj ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    {loading ? <RankLoading /> : <NoAccount curRank={curRank} onClick={onClickNoUser} />}
+                    <NoAccount curRank={1} onClick={onClickNoUser} />
                   </div>
-                ) : (
+                ) : filter ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
-                    {loading ? <RankLoading /> : <NoAccount curRank={3} onClick={onClickNoUser} />}
+                    <NoAccount curRank={3} onClick={onClickNoUser} />
                   </div>
-                )}
+                ) : null}
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
@@ -583,11 +585,7 @@ const Main = () => {
                             goProfile(el.userId);
                           }}
                         >
-                          {loading ? (
-                            <RankLoading />
-                          ) : (
-                            <MainOtherItem selectedOption={selectedOption} curRank={curRank} item={el} />
-                          )}
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
                         </li>
                       ))
                     ) : (
@@ -608,6 +606,8 @@ const Main = () => {
               setRankInfo={setRankInfo}
               setSearchClick={setSearchClick}
               setNoMore={setNoMore}
+              setMyRankInfo={setMyRankInfo}
+              setLoading={setLoading}
             />
           )}
         </Wrapper>
