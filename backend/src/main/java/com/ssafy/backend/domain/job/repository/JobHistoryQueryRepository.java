@@ -107,12 +107,10 @@ public class JobHistoryQueryRepository {
 	}
 
 	private BooleanExpression inStatusId(List<Long> statusIdList) {
+		return statusIdList == null
+			? null
+			: QJobHistory.jobHistory.statusId.in(statusIdList);
 
-		if (statusIdList == null || statusIdList.isEmpty()) {
-			return null;
-		}
-
-		return QJobHistory.jobHistory.statusId.in(statusIdList);
 	}
 
 	private BooleanExpression cursorCondition(String nextDate, Long jobHistoryId) {

@@ -84,12 +84,10 @@ public class GithubCrawlingService {
 		} else {    // 새로운 유저
 			Github github = Github.create(githubCrawling, findUser);
 
-			githubRepository.save(github);
-
 			// TODO: 2023-04-24 save 횟수 및 쿼리 횟수 줄이기
 			githubCrawling.getRepositories().stream().
 				map(g -> GithubRepo.create(g.getName(), g.getReadme(), g.getLink(), github))
-				.forEach(gr -> githubRepoRepository.save(gr));
+				.forEach(gr -> github.getGithubRepos().add(gr));
 
 			// TODO: 2023-04-24 save 횟수 및 쿼리 횟수 줄이기
 			githubCrawling.getLanguages().stream()
@@ -104,7 +102,9 @@ public class GithubCrawlingService {
 							);
 						return GithubLanguage.create(findLanguage.getId(), l.getPercentage(), github);
 					})
-				.forEach(gl -> githubLanguageRepository.save(gl));
+				.forEach(gl -> github.getGithubLanguages().add(gl));
+
+			githubRepository.save(github);
 		}
 	}
 

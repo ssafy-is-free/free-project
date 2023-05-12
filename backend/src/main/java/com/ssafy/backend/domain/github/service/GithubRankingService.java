@@ -67,7 +67,8 @@ public class GithubRankingService {
 		}
 
 		//페이지네이션된 깃허브 데이터
-		List<Github> githubList = githubQueryRepository.findAll(userId, score, githubIdSet, pageable);
+		List<Github> githubList = githubQueryRepository.findAll(userId, score,
+			githubIdSet.isEmpty() ? null : githubIdSet, pageable);
 		GithubRankingResponse githubRankingResponse = GithubRankingResponse.create(githubList);
 
 		//랭킹 정보 설정
@@ -144,7 +145,7 @@ public class GithubRankingService {
 		}
 
 		//필터링된 유저 아이디에 해당 유저가 없는 경우
-		if (rankingFilter.getJobPostingId() != null && githubIdSet.isNotIn(userId)) {
+		if (rankingFilter.getJobPostingId() != null && githubIdSet.isNotIn(github.getId())) {
 			return GithubRankingOneResponse.createEmpty();
 		}
 
