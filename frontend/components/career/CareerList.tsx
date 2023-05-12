@@ -22,7 +22,7 @@ const CareerListDiv = styled.div`
       font-size: large;
     }
     img {
-      height: 2.5rem;
+      height: 2rem;
     }
 
     .deleteBtn {

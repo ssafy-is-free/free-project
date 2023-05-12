@@ -171,7 +171,7 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
       )}
       <div className="flexDiv">
         <button onClick={ddayModal}>
-          {ddetail.ddayName}: {ddetail.nextDate}
+          {ddetail.ddayName}: {ddetail.nextDate === '1996-11-22' ? '미정' : ddetail.nextDate}
         </button>
         <StatusButton className="statusbtn" colorProp={status} onClick={statusModal}>
           {ddetail.status}
@@ -316,11 +316,23 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
       const date = detail.nextDate;
       let year, month, day;
       [year, month, day] = date.split('-');
-      setDefaultDate({
-        year: parseInt(year) - 2020,
-        month: parseInt(month) - 1,
-        day: parseInt(day) - 1,
-      });
+      if (year === '1996') {
+        const today = new Date();
+        year = today.getFullYear() - 2020;
+        month = today.getMonth();
+        day = today.getDate() - 1;
+        setDefaultDate({
+          year,
+          month,
+          day,
+        });
+      } else {
+        setDefaultDate({
+          year: parseInt(year) - 2020,
+          month: parseInt(month) - 1,
+          day: parseInt(day) - 1,
+        });
+      }
     }
   }, [detail]);
 
