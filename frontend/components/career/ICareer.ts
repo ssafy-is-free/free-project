@@ -1,15 +1,3 @@
-import styled from 'styled-components';
-
-export const DarkBg = styled.div`
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: ${(props) => props.theme.modalGray};
-`;
-
 /**
  * 취업지원현황조회 data
  */
@@ -18,7 +6,7 @@ export interface IHistory {
   companyName: string;
   dDayName: string;
   nextDate: string;
-  dDay: string;
+  dday: string;
   status: string;
 }
 
@@ -81,10 +69,11 @@ export interface ICareerListItemProps {
 
 export interface ICardHeaderProps {
   ddetail: IHistoryDetail;
+  dDay: string;
   /**
    * 카드 자세히보기 눌렀는지 여부
    */
-  spread: boolean;
+  spread: boolean | null;
   setSpread: () => void;
   ddayModal: () => void;
   statusModal: () => void;
@@ -98,14 +87,21 @@ export interface ICardContentProps {
 export interface ICheckBoxProps {
   handeler: (bChecked: boolean) => void;
 }
+export interface IDefaultDate {
+  year: number;
+  month: number;
+  day: number;
+}
 
 export interface IDatePickerProps {
   updateDate: (date: string) => void;
+  defaultDate: IDefaultDate;
 }
 
 export interface IDdayModalProps {
   close: () => void;
   result: (res: any) => void;
+  defaultDate: IDefaultDate;
 }
 
 export interface IMemoModalProps {

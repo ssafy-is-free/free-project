@@ -1,31 +1,79 @@
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Spinner } from '../common/Spinner';
 import CheckBox from './CheckBox';
 import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
-import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
+import {
+  IHistoryDetail,
+  ICareerListItemProps,
+  ICardHeaderProps,
+  ICardContentProps,
+  ICareerStatus,
+  IDefaultDate,
+} from './ICareer';
 import { useRouter } from 'next/router';
 
-interface Iddetail {
-  postingId: number;
-  postingName: string;
-  companyName: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  memo: string;
-  nextDate: string;
-  objective: string;
-  applicantCount: number;
-  ddayName: string;
+import Swal from 'sweetalert2';
+
+const RotateUp = keyframes`
+  0% {
+    transform:rotate(0deg);
+  }
+  100%{
+    transform:rotate(180deg);
+  }
+`;
+const RotateDown = keyframes`
+  0% {
+    transform:rotate(180deg);
+  }
+  100%{
+    transform:rotate(0deg);
+  }
+`;
+const SmoothAppear = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-5%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+interface ISpreadImgProps {
+  spread: boolean | null;
 }
+const SpreadImg = styled.img<ISpreadImgProps>`
+  animation: ${(props) => (props.spread === null ? null : props.spread ? RotateUp : RotateDown)} 0.1s linear forwards;
+`;
+interface IStatusBtnProps {
+  colorProp: string;
+}
+const StatusButton = styled.button<IStatusBtnProps>`
+  background-color: ${(props) =>
+    props.colorProp === 'green'
+      ? props.theme.stateGreen
+      : props.colorProp === 'red'
+      ? props.theme.stateRed
+      : props.theme.stateIng} !important;
+  color: ${(props) =>
+    props.colorProp === 'green'
+      ? props.theme.stateGreenFont
+      : props.colorProp === 'red'
+      ? props.theme.stateRedFont
+      : props.theme.stateIngFont} !important;
+`;
 
 const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
+  animation: ${SmoothAppear} 0.5s;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.25));
 
   .checkbox {
     width: 2rem;
@@ -43,6 +91,9 @@ const DetailCardDiv = styled.div`
     flex-direction: column;
     gap: 0.5rem;
 
+    .fadein {
+      animation: ${SmoothAppear} 0.5s;
+    }
     button {
       border-radius: 0.5rem;
       background-color: ${(props) => props.theme.primary};
@@ -56,6 +107,9 @@ const DetailCardDiv = styled.div`
     .title {
       display: flex;
       justify-content: space-between;
+    }
+    .cardcontent {
+      animation: ${SmoothAppear} 0.5s;
     }
     .memo {
       padding: 0.2rem;
@@ -87,25 +141,7 @@ const DetailCardDiv = styled.div`
   }
 `;
 
-interface IStatusBtnProps {
-  colorProp: string;
-}
-const StatusButton = styled.button<IStatusBtnProps>`
-  background-color: ${(props) =>
-    props.colorProp === 'green'
-      ? props.theme.stateGreen
-      : props.colorProp === 'red'
-      ? props.theme.stateRed
-      : props.theme.stateIng} !important;
-  color: ${(props) =>
-    props.colorProp === 'green'
-      ? props.theme.stateGreenFont
-      : props.colorProp === 'red'
-      ? props.theme.stateRedFont
-      : props.theme.stateIngFont} !important;
-`;
-
-const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
+const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }: ICardHeaderProps) => {
   const statusColor = () => {
     const word = ddetail.status.slice(-2);
     if (ddetail.status === '최종 합격') {
@@ -123,13 +159,13 @@ const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICar
 
   return (
     <div>
-      {spread && <div>{ddetail.postingName}</div>}
+      {spread && <div className="fadein">{ddetail.postingName}</div>}
       <div className="title">
         <h2>{ddetail.companyName}</h2>
-        <img className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
+        <SpreadImg spread={spread} className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
       </div>
       {spread && (
-        <div>
+        <div className="fadein">
           {ddetail.startTime} ~ {ddetail.endTime}
         </div>
       )}
@@ -149,7 +185,7 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   const router = useRouter();
 
   return (
-    <div>
+    <div className="cardcontent">
       <div>메모</div>
       <div className="memo" onClick={memoModal}>
         {ddetail.memo}
@@ -190,18 +226,18 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
 };
 
 const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareerListItemProps) => {
-  const [spread, setSpread] = useState<boolean>(false);
+  const [spread, setSpread] = useState<boolean | null>(null);
   const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [memoModal, setMemoModal] = useState<boolean>(false);
+  const [defaultDate, setDefaultDate] = useState<IDefaultDate>();
 
   const getDetail = async () => {
     const res = await getHistoryDtail(cardId);
     if (res.status == 'SUCCESS') {
       setDetail(res.data);
     } else {
-      console.log(res.message);
     }
   };
 
@@ -213,10 +249,17 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '다음일정 변경완료',
+        icon: 'success',
+      });
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
@@ -227,11 +270,18 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '상태 변경완료',
+        icon: 'success',
+      });
       updateList();
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
@@ -242,16 +292,37 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     const res = await patchHistory(cardId, data);
 
     if (res.status === 'SUCCESS') {
-      alert(res.message);
+      Swal.fire({
+        text: '메모 수정완료',
+        icon: 'success',
+      });
       getDetail();
     } else {
-      console.log(res.message);
+      Swal.fire({
+        title: 'Error!',
+        text: res.message,
+        icon: 'error',
+      });
     }
   };
 
   useEffect(() => {
     getDetail();
   }, []);
+
+  // dday 수정 할때 기본 날짜 입력값 갱신
+  useEffect(() => {
+    if (detail) {
+      const date = detail.nextDate;
+      let year, month, day;
+      [year, month, day] = date.split('-');
+      setDefaultDate({
+        year: parseInt(year) - 2020,
+        month: parseInt(month) - 1,
+        day: parseInt(day) - 1,
+      });
+    }
+  }, [detail]);
 
   if (!detail) {
     return (
@@ -268,6 +339,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
         <div className="item">
           <CardHeader
             ddetail={detail}
+            dDay={dDay}
             setSpread={() => setSpread(!spread)}
             spread={spread}
             ddayModal={() => setDdayModal(true)}
@@ -275,12 +347,13 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
           />
           {spread && <CardContent ddetail={detail} memoModal={() => setMemoModal(true)} />}
         </div>
-        {ddayModal && (
+        {ddayModal && defaultDate && (
           <DdayModal
             close={() => setDdayModal(false)}
             result={(dday) => {
               modifyDday(dday);
             }}
+            defaultDate={defaultDate}
           ></DdayModal>
         )}
         {statusModal && (

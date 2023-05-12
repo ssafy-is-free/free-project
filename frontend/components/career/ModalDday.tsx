@@ -3,7 +3,8 @@ import { InputDiv } from './NewCareer';
 import DatePicker from './DatePicker';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
-import { IDdayModalProps, DarkBg } from './ICareer';
+import { IDdayModalProps } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const ModalDiv = styled.div`
   position: fixed;
@@ -24,9 +25,18 @@ const ModalDiv = styled.div`
   }
 `;
 
-const DdayModal = ({ close, result }: IDdayModalProps) => {
+const DdayModal = ({ close, result, defaultDate }: IDdayModalProps) => {
   const [ddayName, setDdayName] = useState<string>('');
   const [date, setDate] = useState<string>('');
+
+  const updateDdayName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length > 10) {
+    } else {
+      setDdayName(e.target.value);
+    }
+  };
+
   const updateDate = (date: string) => {
     setDate(date);
   };
@@ -42,16 +52,16 @@ const DdayModal = ({ close, result }: IDdayModalProps) => {
       <div className="modalContent">
         <div className="modalTitle">다음일정 변경하기</div>
         <InputDiv>
-          <div>다음일정</div>
+          <div>다음일정 (최대 10글자)</div>
           <input
             type="text"
             className="input"
             placeholder="ex) 코딩테스트, 1차 면접"
             value={ddayName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDdayName(e.target.value)}
+            onChange={updateDdayName}
           ></input>
         </InputDiv>
-        <DatePicker updateDate={updateDate}></DatePicker>
+        <DatePicker updateDate={updateDate} defaultDate={defaultDate}></DatePicker>
         <CancelOk cancel={close} ok={ok}></CancelOk>
       </div>
     </ModalDiv>

@@ -34,7 +34,7 @@ const DatePickerdiv = styled.div`
   }
 `;
 
-const DatePicker = ({ updateDate }: IDatePickerProps) => {
+const DatePicker = ({ updateDate, defaultDate }: IDatePickerProps) => {
   const [year, setYear] = useState<string>('');
   const [month, setMonth] = useState<string>('');
   const [day, setDay] = useState<string>('');
@@ -71,7 +71,7 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
           height={150}
           width={100}
           itemHeight={30}
-          selectedID={yearList[3].id}
+          selectedID={yearList[defaultDate.year].id}
           color="#ccc"
           activeColor="#333"
           backgroundColor="#fff"
@@ -83,7 +83,7 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
           height={150}
           width={100}
           itemHeight={30}
-          selectedID={monthList[0].id}
+          selectedID={monthList[defaultDate.month].id}
           color="#ccc"
           activeColor="#333"
           backgroundColor="#fff"
@@ -95,7 +95,7 @@ const DatePicker = ({ updateDate }: IDatePickerProps) => {
           height={150}
           width={100}
           itemHeight={30}
-          selectedID={dayList[0].id}
+          selectedID={dayList[defaultDate.day].id}
           color="#ccc"
           activeColor="#333"
           backgroundColor="#fff"
