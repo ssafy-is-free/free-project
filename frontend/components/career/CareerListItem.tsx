@@ -63,6 +63,7 @@ const StatusButton = styled.button<IStatusBtnProps>`
 const DetailCardDiv = styled.div`
   width: 100%;
   display: flex;
+  animation: ${SmoothAppear} 0.5s;
   .checkbox {
     width: 2rem;
     display: flex;
@@ -79,6 +80,9 @@ const DetailCardDiv = styled.div`
     flex-direction: column;
     gap: 0.5rem;
 
+    .fadein {
+      animation: ${SmoothAppear} 0.5s;
+    }
     button {
       border-radius: 0.5rem;
       background-color: ${(props) => props.theme.primary};
@@ -144,13 +148,13 @@ const CardHeader = ({ ddetail, spread, setSpread, ddayModal, statusModal }: ICar
 
   return (
     <div>
-      {spread && <div>{ddetail.postingName}</div>}
+      {spread && <div className="fadein">{ddetail.postingName}</div>}
       <div className="title">
         <h2>{ddetail.companyName}</h2>
         <SpreadImg spread={spread} className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
       </div>
       {spread && (
-        <div>
+        <div className="fadein">
           {ddetail.startTime} ~ {ddetail.endTime}
         </div>
       )}

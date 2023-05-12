@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { getJobStatus } from '@/pages/api/careerAxios';
-import { ICareerStatus, IStatusModalProps, DarkBg } from './ICareer';
+import { ICareerStatus, IStatusModalProps } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const StatuModalDiv = styled.div`
   .modalTitle {

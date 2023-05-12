@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Spinner } from '../common/Spinner';
-import { DarkBg } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const BgLoadingDiv = styled(DarkBg)`
   display: flex;

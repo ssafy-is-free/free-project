@@ -3,7 +3,8 @@ import { InputDiv } from './NewCareer';
 import DatePicker from './DatePicker';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
-import { IDdayModalProps, DarkBg } from './ICareer';
+import { IDdayModalProps } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const ModalDiv = styled.div`
   position: fixed;

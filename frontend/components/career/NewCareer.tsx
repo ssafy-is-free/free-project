@@ -8,6 +8,7 @@ import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
 import { ICareerStatus, INewCareerProps, ISearchResult } from './ICareer';
 import Swal from 'sweetalert2';
+import { fadeIn2 } from './SCareer';
 
 const NewCareerDiv = styled.div`
   width: 100vw;
@@ -17,6 +18,8 @@ const NewCareerDiv = styled.div`
   background-color: white;
   padding-bottom: max(10vh, 4rem);
   z-index: 5;
+
+  animation: ${fadeIn2} 0.5s;
 
   overflow-y: scroll;
   -ms-overflow-style: none; /* IE and Edge */
