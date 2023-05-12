@@ -63,7 +63,6 @@ authApi.interceptors.response.use(
     console.log(error);
 
     if (response.status === 401) {
-      // console.log('access 만료');
       const accessToken = localStorage.getItem('accessToken');
 
       await axios
@@ -74,10 +73,12 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
+          console.log('재발급 res', res);
           if (res.status === 200) {
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
+            document.cookie = `refresh-token=${newAccessToken}`;
             return axios(originalRequest);
           }
         })

@@ -15,8 +15,10 @@ import CompareUserBox from '@/components/jobrank/CompareUserBox';
 import BackIcon from '../public/Icon/BackIcon.svg';
 import { useInView } from 'react-intersection-observer';
 import { useRouter } from 'next/router';
+import RankingIcon from '../public/Icon/RankingIcon.svg';
+import PieIcon from '../public/Icon/PieIcon.svg';
 
-const Wrapper = styled.div<{ info: number; submenu: number }>`
+const Wrapper = styled.div<{ info: number; submenu: number; clickBtn: boolean }>`
   width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
@@ -24,8 +26,36 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 4;
   overflow-y: scroll;
+
+  .button {
+    width: ${(props) => (props.clickBtn ? '80%' : '48px')};
+    height: 48px;
+    background-color: ${(props) => props.theme.primary};
+    border-radius: ${(props) => (props.clickBtn ? '14px' : '50%')};
+    position: fixed;
+    z-index: 2;
+    right: 32px;
+    bottom: 100px;
+    box-shadow: 0px 0px 10px #00000026;
+    transition: 0.5s;
+    color: ${(props) => props.theme.fontWhite};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon-box {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 16px;
+    }
+    p {
+      opacity: ${(props) => (props.clickBtn ? '1' : '0')};
+      visibility: ${(props) => (props.clickBtn ? 'visibile' : 'collapse')};
+      transition-delay: ${(props) => (props.clickBtn ? '0.3s;' : 'none')};
+    }
+  }
 
   .job-info-box {
     background-color: ${(props) => props.theme.primary};
@@ -83,7 +113,7 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
     }
   }
 
-  .btn-box {
+  /* .btn-box {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -100,7 +130,7 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
       padding: 14px 20%;
       box-shadow: 0 0 5px #00000012, 0 0 10px #00000012, 0 0 15px #00000012, 0 0 20px #00000012;
     }
-  }
+  } */
 `;
 
 const JobRank = () => {
@@ -232,9 +262,40 @@ const JobRank = () => {
     setOpenCompare(true);
   };
 
+  // 버튼 클릭 시
+  const [clickBtn, setClickBtn] = useState<boolean>(false);
+
+  const onClickBtn = () => {
+    setClickBtn(!clickBtn);
+
+    if (clickBtn) {
+      if (info == 0) {
+        setInfo(1);
+        setOpenCompare(false);
+        setSubmenu(0);
+      } else {
+        setInfo(0);
+        setOpenCompare(false);
+        setSubmenu(0);
+      }
+    }
+  };
+
   return (
     <>
-      <Wrapper info={info} submenu={submenu}>
+      <Wrapper info={info} submenu={submenu} clickBtn={clickBtn}>
+        <div className="button" onClick={onClickBtn}>
+          <p> {info == 0 ? '지원자 평균 보러가기' : '지원자 랭킹 보러가기'} </p>
+          {!clickBtn && info == 0 ? (
+            <div className="icon-box">
+              <PieIcon />
+            </div>
+          ) : !clickBtn && info == 1 ? (
+            <div className="icon-box">
+              <RankingIcon />
+            </div>
+          ) : null}
+        </div>
         <div className="job-info-box">
           <RankMenu curRank={curRank} onClick={() => setOpenSelect(true)} />
           <JobInfo
@@ -297,7 +358,7 @@ const JobRank = () => {
           )}
           <div className="space" ref={ref}></div>
         </div>
-        <div className="btn-box">
+        {/* <div className="btn-box">
           <button
             className="average-btn"
             onClick={() => {
@@ -314,7 +375,7 @@ const JobRank = () => {
           >
             {info == 0 ? '지원자 평균 보러가기' : '지원자 랭킹 보러가기'}
           </button>
-        </div>
+        </div> */}
       </Wrapper>
       {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
     </>
