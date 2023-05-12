@@ -10,35 +10,36 @@ const StatuModalDiv = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 11;
+
   .darkBg {
+    position: fixed;
+    top: 0;
+    left: 0;
     height: 100%;
     width: 100%;
     background-color: ${(props) => props.theme.modalGray};
+  }
 
-    display: flex;
-    align-items: end;
-
-    .modalTitle {
+  .modalTitle {
+    margin: 1rem;
+    border-bottom: 2px solid ${(props) => props.theme.primary};
+    text-align: center;
+    font-size: large;
+  }
+  .statuscontent {
+    width: 100vw;
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    z-index: 10;
+    background-color: white;
+    .statusList {
+      height: 20rem;
+      overflow: auto;
       margin: 1rem;
-      border-bottom: 2px solid ${(props) => props.theme.primary};
-      text-align: center;
-      font-size: large;
-    }
-    .statuscontent {
-      width: 100vw;
-      bottom: 0;
-      left: 0;
-      position: fixed;
-      z-index: 10;
-      background-color: white;
-      .statusList {
-        height: 20rem;
-        overflow: auto;
-        margin: 1rem;
-        .statusitem {
-          text-align: center;
-          padding: 1rem;
-        }
+      .statusitem {
+        text-align: center;
+        padding: 1rem;
       }
     }
   }
@@ -57,28 +58,27 @@ const StatusModal = ({ close, result }: IStatusModalProps) => {
 
   return (
     <StatuModalDiv>
-      <div className="darkBg" onClick={close}>
-        <div className="statuscontent">
-          <div className="modalTitle">현재 상태 변경하기</div>
-          {statusData ? (
-            <div className="statusList">
-              {statusData.map((status) => (
-                <div
-                  className="statusitem"
-                  key={status.id}
-                  onClick={() => {
-                    result(status);
-                    close();
-                  }}
-                >
-                  {status.name}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="statusList"></div>
-          )}
-        </div>
+      <div className="darkBg" onClick={close}></div>
+      <div className="statuscontent">
+        <div className="modalTitle">현재 상태 변경하기</div>
+        {statusData ? (
+          <div className="statusList">
+            {statusData.map((status) => (
+              <div
+                className="statusitem"
+                key={status.id}
+                onClick={() => {
+                  result(status);
+                  close();
+                }}
+              >
+                {status.name}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="statusList"></div>
+        )}
       </div>
     </StatuModalDiv>
   );
