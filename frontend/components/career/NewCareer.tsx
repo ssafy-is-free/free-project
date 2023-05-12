@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import CareerSearch from './NewCareerSearch';
@@ -6,7 +6,7 @@ import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import { postJob } from '@/pages/api/careerAxios';
 import BgLoading from './BgLoading';
-import { ICareerStatus, INewCareerProps, ISearchResult } from './ICareer';
+import { ICareerStatus, IDefaultDate, INewCareerProps, ISearchResult } from './ICareer';
 import Swal from 'sweetalert2';
 import { fadeIn2 } from './SCareer';
 
@@ -88,6 +88,7 @@ const NewCareer = ({ close }: INewCareerProps) => {
   const [status, setStatus] = useState<any>();
   const [dDayName, setDDayName] = useState<any>();
   const [dDay, setDDay] = useState<any>();
+  const [defaultDate, setDefaultDate] = useState<IDefaultDate>();
 
   // 화면에 보여줄 요소
   const [searchOpen, setSearchOpen] = useState<boolean>(false);
@@ -205,6 +206,22 @@ const NewCareer = ({ close }: INewCareerProps) => {
     setDDay(res.date);
   };
 
+  const getToday = () => {
+    const today = new Date();
+    const year = today.getFullYear() - 2020;
+    const month = today.getMonth();
+    const day = today.getDate() - 1;
+    setDefaultDate({
+      year,
+      month,
+      day,
+    });
+  };
+
+  useEffect(() => {
+    getToday();
+  }, []);
+
   return (
     <NewCareerDiv>
       <form action="post" id="careerForm" onSubmit={newPost}>
@@ -264,7 +281,13 @@ const NewCareer = ({ close }: INewCareerProps) => {
           result={(statusInput) => statusReasut(statusInput)}
         ></StatusModal>
       )}
-      {dDayOpen && <DdayModal close={() => setDDayOpen(false)} result={(res) => dDayResult(res)}></DdayModal>}
+      {dDayOpen && defaultDate && (
+        <DdayModal
+          close={() => setDDayOpen(false)}
+          result={(res) => dDayResult(res)}
+          defaultDate={defaultDate}
+        ></DdayModal>
+      )}
       {loading && <BgLoading></BgLoading>}
     </NewCareerDiv>
   );

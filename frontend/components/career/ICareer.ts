@@ -86,14 +86,21 @@ export interface ICardContentProps {
 export interface ICheckBoxProps {
   handeler: (bChecked: boolean) => void;
 }
+export interface IDefaultDate {
+  year: number;
+  month: number;
+  day: number;
+}
 
 export interface IDatePickerProps {
   updateDate: (date: string) => void;
+  defaultDate: IDefaultDate;
 }
 
 export interface IDdayModalProps {
   close: () => void;
   result: (res: any) => void;
+  defaultDate: IDefaultDate;
 }
 
 export interface IMemoModalProps {

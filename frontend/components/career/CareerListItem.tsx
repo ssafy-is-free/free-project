@@ -6,7 +6,14 @@ import StatusModal from './ModalStatus';
 import DdayModal from './ModalDday';
 import MemoModal from './ModalMemo';
 import { getHistoryDtail, patchHistory } from '@/pages/api/careerAxios';
-import { IHistoryDetail, ICareerListItemProps, ICardHeaderProps, ICardContentProps, ICareerStatus } from './ICareer';
+import {
+  IHistoryDetail,
+  ICareerListItemProps,
+  ICardHeaderProps,
+  ICardContentProps,
+  ICareerStatus,
+  IDefaultDate,
+} from './ICareer';
 import { useRouter } from 'next/router';
 
 import Swal from 'sweetalert2';
@@ -222,6 +229,7 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
   const [ddayModal, setDdayModal] = useState<boolean>(false);
   const [statusModal, setStatusModal] = useState<boolean>(false);
   const [memoModal, setMemoModal] = useState<boolean>(false);
+  const [defaultDate, setDefaultDate] = useState<IDefaultDate>();
 
   const getDetail = async () => {
     const res = await getHistoryDtail(cardId);
@@ -301,6 +309,20 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
     getDetail();
   }, []);
 
+  // dday 수정 할때 기본 날짜 입력값 갱신
+  useEffect(() => {
+    if (detail) {
+      const date = detail.nextDate;
+      let year, month, day;
+      [year, month, day] = date.split('-');
+      setDefaultDate({
+        year: parseInt(year) - 2020,
+        month: parseInt(month) - 1,
+        day: parseInt(day) - 1,
+      });
+    }
+  }, [detail]);
+
   if (!detail) {
     return (
       <DetailCardDiv>
@@ -323,12 +345,13 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
           />
           {spread && <CardContent ddetail={detail} memoModal={() => setMemoModal(true)} />}
         </div>
-        {ddayModal && (
+        {ddayModal && defaultDate && (
           <DdayModal
             close={() => setDdayModal(false)}
             result={(dday) => {
               modifyDday(dday);
             }}
+            defaultDate={defaultDate}
           ></DdayModal>
         )}
         {statusModal && (
