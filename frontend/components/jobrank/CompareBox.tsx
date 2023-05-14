@@ -91,6 +91,7 @@ const Wrapper = styled.div`
               .data-bar {
                 width: 0%;
                 transition: 1s;
+                /* transition-delay: 2s; */
                 height: 16px;
                 background-color: ${(props) => props.theme.primary};
                 border-radius: 16px;
@@ -123,6 +124,7 @@ const Wrapper = styled.div`
               .data-bar {
                 width: 0%;
                 transition: 1s;
+                /* transition-delay: 2s; */
                 height: 16px;
                 background-color: ${(props) => props.theme.primary};
                 border-radius: 16px;
