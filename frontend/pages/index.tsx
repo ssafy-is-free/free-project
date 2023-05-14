@@ -461,18 +461,17 @@ const Main = () => {
   // 전체 랭킹 fixed event + Scroll event
   const allRef = useRef<HTMLDivElement | null>(null);
   const topRef = useRef<HTMLDivElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = (event: any) => {
     const el = document.querySelector('.my-rank');
     if (el instanceof HTMLElement && allRef.current && topRef.current) {
-      // console.log(el?.offsetHeight);
-
       const target = el?.offsetHeight + el.clientHeight;
       const scrollPoint = event.currentTarget.scrollTop;
 
       if (scrollPoint >= target) {
-        allRef.current.style.position = 'fixed';
-        allRef.current.style.top = '48px';
+        allRef.current.style.position = 'sticky';
+        allRef.current.style.top = '0px';
         topRef.current.style.display = 'flex';
       } else {
         allRef.current.style.position = '';
@@ -483,10 +482,10 @@ const Main = () => {
   };
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    if (wrapperRef.current) {
+      // wrapperRef.current.scrollTop = 0;
+      wrapperRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   if (!splashState) {
@@ -530,7 +529,7 @@ const Main = () => {
             </div>
           </Header>
         )}
-        <Wrapper searchClick={searchClick} onScroll={handleScroll}>
+        <Wrapper searchClick={searchClick} onScroll={handleScroll} ref={wrapperRef}>
           {!searchClick ? (
             <>
               <RankMenu2 curRank={curRank} onChangeCurRank={onChangeCurRank} setNoScroll={setNoScroll} />
@@ -577,6 +576,328 @@ const Main = () => {
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
+                    {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )}
                     {rankInfo ? (
                       rankInfo?.map((el, idx) => (
                         <li
