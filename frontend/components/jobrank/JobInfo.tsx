@@ -39,7 +39,8 @@ const JobInfo = (props: IJobInfoProps) => {
       <div className="period">
         <TimeIcon />
         <p>
-          {props.startTime} ~ {props.endTime}
+          {props.startTime}
+          {props.endTime.includes('1996') ? ' ~ 미정' : ` ~ ${props.endTime}`}
         </p>
       </div>
     </Wrapper>
