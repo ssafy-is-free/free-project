@@ -63,18 +63,6 @@ const ReadmeDiv = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
-const dddata = {
-  githubId: 1,
-  nickname: 'hyejoo',
-  profileLink: 'https://~~',
-  avatarUrl: 'https://~~~',
-  commit: 100,
-  star: 20,
-  mine: true,
-  followers: 5,
-  repositories: null,
-  languages: [],
-};
 
 const GithubInfo = ({ userId, my }: IGithubInfo) => {
   const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
