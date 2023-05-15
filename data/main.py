@@ -346,9 +346,6 @@ def get_postings():
     driver.get(base_url)
     time.sleep(0.5)
 
-    driver.find_element(By.XPATH, '//*[@id="Contents"]/div[4]/ul/li[3]').click()
-    time.sleep(0.5)
-
     # 직무 클릭
     driver.find_element(By.XPATH, '//*[@id="Contents"]/div[2]/div/div[1]/button').click()
     time.sleep(0.5)
