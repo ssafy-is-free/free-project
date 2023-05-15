@@ -142,7 +142,7 @@ const OtherInfo = (props: IOtherInfoProps) => {
 
         if (data.status === 'SUCCESS') {
           setGitOtherInfo(data?.data.opponent);
-          setLoading(false);
+          setTimeout(() => setLoading(false), 500);
         } else {
           // alert(data.message);
         }
@@ -151,7 +151,7 @@ const OtherInfo = (props: IOtherInfoProps) => {
 
         if (data.status === 'SUCCESS') {
           setBojOtherInfo(data?.data.other);
-          setLoading(false);
+          setTimeout(() => setLoading(false), 500);
         } else {
           alert(data.message);
         }

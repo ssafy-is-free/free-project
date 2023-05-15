@@ -59,6 +59,9 @@ authApi.interceptors.response.use(
   async (error) => {
     const { config, response } = error;
     const originalRequest = config;
+
+    console.log(response);
+
     if (response.status === 401) {
       const accessToken = localStorage.getItem('accessToken');
 
