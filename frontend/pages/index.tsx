@@ -311,6 +311,10 @@ const Main = () => {
     }
   };
 
+  useEffect(() => {
+    console.log('myRankInfo : ', myRankInfo);
+  }, [myRankInfo]);
+
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore && !noScroll) {
