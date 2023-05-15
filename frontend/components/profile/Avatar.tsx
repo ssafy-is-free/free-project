@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import { IAvatar, IAvatarData } from './IProfile';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const AvatarDiv = styled.div<{ active: boolean }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -46,6 +48,9 @@ const mydata: IAvatarData = {
 };
 
 const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar) => {
+  // login 상태값 가져오기
+  const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
+
   const toCompare = () => {
     if (setOpenCompare) {
       setOpenCompare(true);
@@ -53,7 +58,7 @@ const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar
   };
 
   const compare = () => {
-    if (!my) {
+    if (!my && isLogin) {
       return (
         <CompareDiv onClick={toCompare}>
           <img src="/Icon/Compare.svg" alt="/Icon/ProfileIcon.svg" />

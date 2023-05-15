@@ -576,7 +576,9 @@ const Main = () => {
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
-                    {rankInfo ? (
+                    {loading ? (
+                      <RankLoading />
+                    ) : rankInfo ? (
                       rankInfo?.map((el, idx) => (
                         <li
                           key={idx}
@@ -590,6 +592,20 @@ const Main = () => {
                     ) : (
                       <NoAccount curRank={2} />
                     )}
+                    {/* {rankInfo ? (
+                      rankInfo?.map((el, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            goProfile(el.userId);
+                          }}
+                        >
+                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
+                        </li>
+                      ))
+                    ) : (
+                      <NoAccount curRank={2} />
+                    )} */}
                     {/* {rankInfo == null && <NoAccount curRank={2} />} */}
                     <div className="space" ref={ref}></div>
                   </ul>
