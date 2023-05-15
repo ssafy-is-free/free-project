@@ -23,7 +23,7 @@ import {
 } from './api/rankAxios';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { useInView } from 'react-intersection-observer';
-import { setNew } from '@/redux/authSlice';
+import { logout, setNew } from '@/redux/authSlice';
 import FilterOption from '@/components/rank/FilterOption';
 import RSearchIcon from '../public/Icon/SearchingIcon.svg';
 import SettingIcon from '../public/Icon/SettingIcon.svg';
@@ -182,6 +182,8 @@ const TopBtn = styled.div`
 const Main = () => {
   const dispatch = useDispatch();
 
+  const accesstoken = localStorage.getItem('accessToken');
+
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
   // isnew 상태값 가져오기
@@ -243,6 +245,11 @@ const Main = () => {
   useEffect(() => {
     // TODO : 문제 => 가입후 다른 페이지 갔다가 뒤로가기 누르면 isNew가 false가아닌 true로뜬다...
 
+    if (!accesstoken) {
+      console.log('토큰 없음');
+      dispatch(logout());
+    }
+
     if (isLogin && isNew) {
       setOpenBoj(true);
       dispatch(setNew());
@@ -250,7 +257,7 @@ const Main = () => {
 
     const timer = setTimeout(() => {
       dispatch(splashCheck());
-    }, 1500);
+    }, 1100);
     return () => {
       clearTimeout(timer);
       // 언마운트 시 filter null로 초기화
@@ -348,7 +355,7 @@ const Main = () => {
             } else {
               setRankInfo(null);
             }
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -373,7 +380,7 @@ const Main = () => {
                 setRankInfo([...rankInfo, ...data.data.ranks]);
                 setNextRank(data.data.ranks[data.data.ranks?.length - 1]?.rank);
               }
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -389,7 +396,7 @@ const Main = () => {
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
             else setMyRankInfo(null);
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -409,7 +416,7 @@ const Main = () => {
             } else {
               setRankInfo(null);
             }
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -433,7 +440,7 @@ const Main = () => {
                 setRankInfo([...rankInfo, ...data.data]);
                 setNextRank(data.data[data.data?.length - 1]?.rank);
               }
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -449,7 +456,7 @@ const Main = () => {
           if (data.status === 'SUCCESS') {
             if (data?.data?.userId != null) setMyRankInfo(data?.data);
             else setMyRankInfo(null);
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -483,7 +490,6 @@ const Main = () => {
 
   const scrollToTop = () => {
     if (wrapperRef.current) {
-      // wrapperRef.current.scrollTop = 0;
       wrapperRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
@@ -576,9 +582,7 @@ const Main = () => {
                 <div className="all-rank">
                   <p ref={allRef}>전체 랭킹</p>
                   <ul className="rank-list">
-                    {loading ? (
-                      <RankLoading />
-                    ) : rankInfo ? (
+                    {rankInfo ? (
                       rankInfo?.map((el, idx) => (
                         <li
                           key={idx}
@@ -592,20 +596,6 @@ const Main = () => {
                     ) : (
                       <NoAccount curRank={2} />
                     )}
-                    {/* {rankInfo ? (
-                      rankInfo?.map((el, idx) => (
-                        <li
-                          key={idx}
-                          onClick={() => {
-                            goProfile(el.userId);
-                          }}
-                        >
-                          {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} />}
-                        </li>
-                      ))
-                    ) : (
-                      <NoAccount curRank={2} />
-                    )} */}
                     {/* {rankInfo == null && <NoAccount curRank={2} />} */}
                     <div className="space" ref={ref}></div>
                   </ul>

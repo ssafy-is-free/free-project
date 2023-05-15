@@ -10,7 +10,6 @@ const Wrapper = styled.div`
   font-size: 20px;
   width: 100%;
   height: 8vh;
-  /* padding: 48px 0px 24px; */
   padding: 2vh 0px 2vh;
 
   .menu {

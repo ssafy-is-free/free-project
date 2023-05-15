@@ -88,7 +88,7 @@ const ChartJobrank = (props: IChartProps) => {
               });
               setSeries([...scores]);
               setLabels([...labels]);
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -107,7 +107,7 @@ const ChartJobrank = (props: IChartProps) => {
               });
               setSeries([...scores]);
               setLabels([...labels]);
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -131,7 +131,7 @@ const ChartJobrank = (props: IChartProps) => {
               });
               setSeries([...scores]);
               setLabels([...labels]);
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -150,7 +150,7 @@ const ChartJobrank = (props: IChartProps) => {
               });
               setSeries([...scores]);
               setLabels([...labels]);
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }

@@ -1,16 +1,14 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
 import { useEffect, useRef, useState } from 'react';
-import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
-import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
+import { getFilter } from '@/pages/api/rankAxios';
 import FilterOption from './FilterOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '@/redux/rankSlice';
 import { RootState } from '@/redux';
-import { current } from '@reduxjs/toolkit';
 
 const moveUp = keyframes`
  from{
@@ -188,7 +186,6 @@ const FilterModal = (props: IFilterModalProps) => {
     // 옵션 스타일 바꿔주기 => 파란색
     itemRefs.current.childNodes.forEach((el: HTMLDivElement, idx: number) => {
       const selectedOptionStyle = el.style;
-      // if (idx === itemIdx && item.languageId != Number(filterId)) {
       if (idx === itemIdx) {
         // 선택된 옵션일 때
         selectedOptionStyle.backgroundColor = '#4A58A9';

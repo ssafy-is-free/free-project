@@ -1,6 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
-import Link from 'next/link';
 import { IRankMenuSelectProps } from './ICommon';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux';

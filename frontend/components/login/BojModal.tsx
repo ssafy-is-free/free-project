@@ -34,7 +34,6 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  /* height: 50%; */
   padding: 72px 0px;
   position: fixed;
   z-index: 15;
@@ -100,7 +99,6 @@ const Wrapper = styled.div`
       background-color: transparent;
       font-size: 16px;
       color: ${(props) => props.theme.fontBlack};
-      /* font-weight: bold; */
       cursor: pointer;
     }
   }
@@ -155,7 +153,6 @@ const BojModal = (props: IBojProps) => {
         (document.querySelector('.input-id') as HTMLInputElement).value = '';
         setCheck(3);
       } else {
-        // router.push('/');
         dispatch(setBoj());
         window.location.href = '/';
         props.onClick();
@@ -173,7 +170,6 @@ const BojModal = (props: IBojProps) => {
     <>
       <DarkBg onClick={props.onClick} />
       <Wrapper>
-        {/* <StyledCloseIcon onClick={props.onClick} /> */}
         <LogoPrimary />
         <div className="label1">백준 아이디를 등록하시겠습니까? </div>
         <div className="label2">백준 아이디를 등록해서 랭킹을 확인해보세요. </div>

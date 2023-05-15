@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { IMainUserItemProps } from './IRank';
-import { useRouter } from 'next/router';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useEffect, useState } from 'react';
 

@@ -1,8 +1,6 @@
 import styled, { css } from 'styled-components';
 import { IJobUserItemProps } from '../rank/IRank';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
-import { useEffect, useState } from 'react';
-import BojModal from '../login/BojModal';
 
 const NoUserWrapper = styled.div`
   background-color: ${(props) => props.theme.bgWhite};

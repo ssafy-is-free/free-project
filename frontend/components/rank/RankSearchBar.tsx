@@ -11,7 +11,6 @@ import {
   getSearchGitResult,
   getSearchGitUser,
 } from '@/pages/api/rankAxios';
-import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux';
 
@@ -223,7 +222,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) props.setMyRankInfo(data.data?.githubRankingCover);
             else props.setMyRankInfo(null);
-            setTimeout(() => props.setLoading(false), 500);
+            props.setLoading(false);
           } else {
             alert(data.message);
           }
@@ -241,7 +240,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           if (data.status === 'SUCCESS') {
             if (data?.data?.userId != null) props.setMyRankInfo(data?.data);
             else props.setMyRankInfo(null);
-            setTimeout(() => props.setLoading(false), 500);
+            props.setLoading(false);
           } else {
             alert(data.message);
           }
