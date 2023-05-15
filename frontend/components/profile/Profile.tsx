@@ -1,8 +1,7 @@
-// import GithubInfo from '../../../components/profile/GithubInfo';
 import BojInfo from '@/components/profile/BojInfo';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Spinner } from '@/components/common/Spinner';
 import dynamic from 'next/dynamic';
 import CustomNav from '../common/CustomNav';
