@@ -346,7 +346,7 @@ const CompareUserBox = (props: ICompareUserBoxProps) => {
                         </div>
                       </div>
                     </div>
-                    <span className="label">제출한 문제</span>
+                    <span className="label">제출 횟수</span>
                     <div className="bar-box">
                       <div className="bar-left">
                         <p className="number-label">{myBojInfo?.submit}</p>

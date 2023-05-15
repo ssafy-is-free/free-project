@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { IAvatar, IAvatarData } from './IProfile';
+import { useRouter } from 'next/router';
 
 const AvatarDiv = styled.div<{ active: boolean }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -44,9 +45,11 @@ const mydata: IAvatarData = {
   profileLink: '#',
 };
 
-const Avatar = ({ isCircle, data, my }: IAvatar) => {
+const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar) => {
   const toCompare = () => {
-    alert('업데이트 예정입니다.');
+    if (setOpenCompare) {
+      setOpenCompare(true);
+    }
   };
 
   const compare = () => {

@@ -26,18 +26,36 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    z-index: 0;
 
     .top-name {
+      width: 40%;
       color: #ff7f7f;
       font-weight: bold;
       font-size: 0.8em;
       margin-bottom: 4px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .top-percent {
       color: ${(props) => props.theme.fontDarkGray};
       font-size: 0.5em;
+      width: 40%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+  }
+
+  .chart {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 1px;
   }
 `;
 
@@ -174,7 +192,9 @@ const ChartJobrank = (props: IChartProps) => {
               {series[0]} {props.curRank == 0 ? '%' : '개'}
             </p>
           </div>
-          <Doughnut data={data} options={options} />
+          <div className="chart">
+            <Doughnut data={data} options={options} />
+          </div>
         </Wrapper>
       )}
     </>
