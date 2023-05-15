@@ -139,7 +139,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS)).willReturn(
 			getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/users?userId=1")
+		ResultActions actions = mvc.perform(get("/boj/users/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -267,6 +267,61 @@ public class AlgorithmControllerTest {
 		actions
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data", hasSize(0)))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 닉네임 완성 결과 테스트")
+	public void getBojIdTest() throws Exception {
+		//given
+
+		BojRankResponse bojRankResponse = BojRankResponse.builder()
+			.rank(1)
+			.rankUpDown(0L)
+			.tierUrl("Test14")
+			.userId(1L)
+			.nickname("user1")
+			.build();
+
+		given(algorithmService.getBojByUserId(1L, 1L, null)).willReturn(bojRankResponse);
+		given(responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(bojRankResponse, RESPONSE_SUCCESS));
+		//when
+		ResultActions actions = mockMvc.perform(get("/boj/user-rank/1?languageId=1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.rank").value(1))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 닉네임 완성 결과 없을 때 테스트")
+	public void getBojIdNullTest() throws Exception {
+		//given
+
+		BojRankResponse bojRankResponse = BojRankResponse.builder()
+			.build();
+
+		given(algorithmService.getBojByUserId(1L, 1L, null)).willReturn(bojRankResponse);
+		given(responseService.getDataResponse(null, RESPONSE_NO_CONTENT)).willReturn(
+			getDataResponse(bojRankResponse, RESPONSE_NO_CONTENT));
+		//when
+		ResultActions actions = mockMvc.perform(get("/boj/user-rank/1?languageId=1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.userId").isEmpty())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
 			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
 
