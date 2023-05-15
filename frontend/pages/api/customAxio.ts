@@ -52,8 +52,6 @@ authApi.interceptors.response.use(
     const { config, response } = error;
     const originalRequest = config;
 
-    console.log('response', response);
-
     if (response.status === 401) {
       const accessToken = localStorage.getItem('accessToken');
 
@@ -66,22 +64,22 @@ authApi.interceptors.response.use(
         })
         .then((res) => {
           if (res.data.status === 'SUCCESS') {
-            console.log('RES', res);
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
-            document.cookie = `refresh-token=${newAccessToken}`;
-            window.location.href = '/';
+            console.log(originalRequest);
             return axios(originalRequest);
           } else if (res.data.status === 'FAIL') {
             //로그아웃 시키기
-            alert('토큰 만료!');
+            Swal.fire({
+              text: '로그아웃 되었습니다.',
+              icon: 'error',
+            });
             localStorage.removeItem('accessToken');
             window.location.href = '/';
           }
         })
         .catch((err) => {
-          console.log('err', err);
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
             Swal.fire({
