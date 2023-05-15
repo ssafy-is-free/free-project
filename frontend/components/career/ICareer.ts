@@ -124,3 +124,17 @@ export interface ICareerSearchProps {
   close: () => void;
   result: (item: any) => void;
 }
+
+export interface ICareerNav {
+  selectedIdx: number;
+  /**
+   * 목록들
+   */
+  lists: string[];
+  /**
+   *
+   * @param idx 선택된 요소의  idx
+   * @returns
+   */
+  selectIdx: (idx: number) => void;
+}

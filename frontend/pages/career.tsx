@@ -9,16 +9,10 @@ const TestDiv = styled.div`
 
 const Test = () => {
   const [newOpen, setNewOpen] = useState<boolean>(false);
-  const closeNew = () => {
-    setNewOpen(false);
-  };
-  const openNew = () => {
-    setNewOpen(true);
-  };
   return (
     <TestDiv>
-      <CareerList openNew={openNew}></CareerList>
-      {newOpen && <NewCareer close={closeNew}></NewCareer>}
+      <CareerList openNew={() => setNewOpen(true)}></CareerList>
+      {newOpen && <NewCareer close={() => setNewOpen(false)}></NewCareer>}
     </TestDiv>
   );
 };
