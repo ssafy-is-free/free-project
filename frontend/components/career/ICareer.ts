@@ -65,6 +65,7 @@ export interface ICareerListItemProps {
    */
   delCheck: (isChecked: boolean) => void;
   updateList: () => void;
+  category: (idx: number) => void;
 }
 
 export interface ICardHeaderProps {

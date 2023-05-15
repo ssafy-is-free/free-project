@@ -237,7 +237,7 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   );
 };
 
-const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareerListItemProps) => {
+const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList, category }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean | null>(null);
   const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
@@ -288,6 +288,8 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
       });
       updateList();
       getDetail();
+      // 종료 쪽으로 이동
+      category(status.id);
     } else {
       Swal.fire({
         title: 'Error!',
