@@ -1,8 +1,12 @@
+import { login, logout } from '@/redux/authSlice';
 import axios from 'axios';
 import { config } from 'process';
+import { useDispatch } from 'react-redux';
 
 // const BASE_URL = 'https://k8b102.p.ssafy.io/api';
 const BASE_URL = '/api';
+
+const dispach = useDispatch();
 
 /**
  * 회원 전용 기능일 때 사용할 axios
@@ -60,10 +64,11 @@ authApi.interceptors.response.use(
     const { config, response } = error;
     const originalRequest = config;
 
-    console.log(response);
+    console.log('response', response);
 
     if (response.status === 401) {
       const accessToken = localStorage.getItem('accessToken');
+      dispach(logout());
 
       await axios
         .get(`${BASE_URL}/reissue`, {
@@ -78,15 +83,17 @@ authApi.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             document.cookie = `refresh-token=${newAccessToken}`;
+            dispach(login());
             return axios(originalRequest);
           }
         })
         .catch((err) => {
-          // console.log('err', err);
-          // if (err.response.status === 401) {
-          //   localStorage.removeItem('accessToken');
-          //   window.location.href = '/';
-          // }
+          if (err.response.status === 401) {
+            localStorage.removeItem('accessToken');
+            dispach(logout());
+            alert('토큰 만료!');
+            window.location.href = '/';
+          }
         });
     }
 
