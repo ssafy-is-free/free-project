@@ -1,8 +1,15 @@
+import { setCookie } from '@/utils/cookies';
+
 const WebGuide = () => {
+  const saveDate = () => {
+    const today = new Date();
+    setCookie('webview-check', today.toString());
+  };
+
   return (
     <div>
-      <div>모바일로접속해주세요</div>
-      <div>F12를 눌러 Device Mode 를 모바일로 바꿔주세요</div>
+      <div>대충 안내 페이지</div>
+      <div onClick={saveDate}>오늘 하루 보지 않기</div>
     </div>
   );
 };
