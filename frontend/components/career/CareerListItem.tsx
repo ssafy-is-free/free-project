@@ -158,7 +158,7 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
   const status = statusColor();
 
   return (
-    <div>
+    <div onClick={setSpread}>
       {spread && <div className="fadein">{ddetail.postingName}</div>}
       <div className="title">
         <h2>{ddetail.companyName}</h2>
@@ -170,10 +170,22 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
         </div>
       )}
       <div className="flexDiv">
-        <button onClick={ddayModal}>
+        <button
+          onClick={(event) => {
+            event.stopPropagation();
+            ddayModal();
+          }}
+        >
           {ddetail.ddayName}: {ddetail.nextDate === '1996-11-22' ? '미정' : ddetail.nextDate}
         </button>
-        <StatusButton className="statusbtn" colorProp={status} onClick={statusModal}>
+        <StatusButton
+          className="statusbtn"
+          colorProp={status}
+          onClick={(event) => {
+            event.stopPropagation();
+            statusModal();
+          }}
+        >
           {ddetail.status}
         </StatusButton>
       </div>
@@ -225,7 +237,7 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
   );
 };
 
-const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareerListItemProps) => {
+const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList, category }: ICareerListItemProps) => {
   const [spread, setSpread] = useState<boolean | null>(null);
   const [detail, setDetail] = useState<IHistoryDetail | null>(null);
   const [ddayModal, setDdayModal] = useState<boolean>(false);
@@ -276,6 +288,8 @@ const CareerListItem = ({ cardId, dDay, delMode, delCheck, updateList }: ICareer
       });
       updateList();
       getDetail();
+      // 종료 쪽으로 이동
+      category(status.id);
     } else {
       Swal.fire({
         title: 'Error!',

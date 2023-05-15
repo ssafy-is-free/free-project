@@ -97,6 +97,15 @@ const CareerList = ({ openNew }: ICareerListProps) => {
     }
   };
 
+  const afterChangeStatus = (idx: number) => {
+    const idxString = idx.toString();
+    if (progressStatus.includes(idxString)) {
+      setSelectedIdx(0);
+    } else {
+      setSelectedIdx(1);
+    }
+  };
+
   useEffect(() => {
     getCareerData();
   }, []);
@@ -138,6 +147,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                       checkedItemHandler(item.jobHistoryId, isChecked);
                     }}
                     updateList={getCareerData}
+                    category={(idx: number) => afterChangeStatus(idx)}
                   ></CareerListItem>
                 </div>
               ))}
@@ -155,6 +165,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
                       checkedItemHandler(item.jobHistoryId, isChecked);
                     }}
                     updateList={getCareerData}
+                    category={(idx: number) => afterChangeStatus(idx)}
                   ></CareerListItem>
                 </div>
               ))}
