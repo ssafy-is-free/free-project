@@ -30,7 +30,8 @@ export const getGithubRanking = async (
     params: params,
   });
 
-  return data.data.ranks;
+  // return data.data?.ranks;
+  return data;
 };
 
 /**
@@ -62,7 +63,8 @@ export const getBojRanking = async (
     params: params,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -76,9 +78,8 @@ export const getPostingsAllGitUsers = async (jobPostingId: number) => {
     url: `/analysis/github/postings/${jobPostingId}`,
   });
 
-  // console.log(data.data);
-
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -92,7 +93,8 @@ export const getPostingsAllBojUsers = async (jobPostingId: number) => {
     url: `/analysis/boj/postings/${jobPostingId}`,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -110,7 +112,8 @@ export const getMyGitRanking = async (jobPostingIdParam: number) => {
     params: params,
   });
 
-  return data.data.githubRankingCover;
+  // return data.data?.githubRankingCover;
+  return data;
 };
 
 /**
@@ -128,7 +131,8 @@ export const getMyBojRanking = async (jobPostingIdParam: number) => {
     params: params,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -142,7 +146,8 @@ export const getGitCompareUser = async (userId: number) => {
     url: `/analysis/github/users/${userId}`,
   });
 
-  return data.data;
+  // return data.data;
+  return data;
 };
 
 /**
@@ -156,14 +161,6 @@ export const getBojCompareUser = async (userId: number) => {
     url: `/analysis/boj/users/${userId}`,
   });
 
-  return data.data;
-};
-
-export const getPosingInfo = async (jobHistoryId: number) => {
-  const { data } = await authApi({
-    method: 'get',
-    url: `/job/history/${jobHistoryId}`,
-  });
-
-  return data.data;
+  // return data.data;
+  return data;
 };

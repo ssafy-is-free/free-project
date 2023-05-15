@@ -1,6 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import CancelOk from '../common/CancelOk';
+import { IMemoModalProps } from './ICareer';
+import { DarkBg } from './SCareer';
 
 const InputDiv = styled.div`
   padding: 1rem;
@@ -28,16 +30,23 @@ const InputDiv = styled.div`
     }
   }
 `;
-const DarkBg = styled.div`
+const StatuModalDiv = styled.div`
   position: fixed;
-  z-index: 5;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: ${(props) => props.theme.modalGray};
-`;
-const StatuModalDiv = styled.div`
+  z-index: 11;
+
+  .darkBg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: ${(props) => props.theme.modalGray};
+  }
+
   .memocontent {
     width: 100vw;
     bottom: 0;
@@ -54,12 +63,6 @@ const StatuModalDiv = styled.div`
   }
 `;
 
-interface IMemoModalProps {
-  close: () => void;
-  result: (memo: string) => void;
-  defaultValue: string;
-}
-
 const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
   const [memoValue, setMemoValue] = useState<string>(defaultValue);
   const handleMemoChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -73,7 +76,7 @@ const MemoModal = ({ close, result, defaultValue }: IMemoModalProps) => {
 
   return (
     <StatuModalDiv>
-      <DarkBg onClick={close}></DarkBg>
+      <div className="darkBg" onClick={close}></div>
       <div className="memocontent">
         <div className="modalTitle">메모 변경하기</div>
         <InputDiv>

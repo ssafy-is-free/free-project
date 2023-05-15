@@ -9,6 +9,7 @@ import SendIcon from '../../public/Icon/SendIcon.svg';
 import TryfailIcon from '../../public/Icon/TryfailIcon.svg';
 import { useEffect, useState } from 'react';
 import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
+import OtherInfoLoading from './OtherInfoLoading';
 
 const Wrapper = styled.div`
   display: flex;
@@ -129,22 +130,40 @@ const OtherInfo = (props: IOtherInfoProps) => {
   const [otherGitInfo, setGitOtherInfo] = useState<applicantGitInfoType>(null);
   const [otherBojInfo, setBojOtherInfo] = useState<applicantBojInfoType>(null);
 
+  // loading
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     // 전체 사용자 정보 가져오기
     (async () => {
+      setLoading(true);
       if (props.curRank == 0) {
         let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
-        setGitOtherInfo(data?.opponent);
+
+        if (data.status === 'SUCCESS') {
+          setGitOtherInfo(data?.data.opponent);
+          setLoading(false);
+        } else {
+          // alert(data.message);
+        }
       } else {
         let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
-        setBojOtherInfo(data?.other);
+
+        if (data.status === 'SUCCESS') {
+          setBojOtherInfo(data?.data.other);
+          setLoading(false);
+        } else {
+          alert(data.message);
+        }
       }
     })();
   }, [props.curRank]);
 
   return (
     <Wrapper>
-      {props.curRank == 0 ? (
+      {loading ? (
+        <OtherInfoLoading />
+      ) : props.curRank == 0 ? (
         <>
           <div className="commit-box">
             {otherGitInfo?.commit && <span className="data">{otherGitInfo?.commit}</span>}

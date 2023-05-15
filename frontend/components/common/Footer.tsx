@@ -92,8 +92,8 @@ const Footer = () => {
     {
       icon: CareerIcon,
       name: '취업관리',
-      // path: '/career',
-      path: '/temp',
+      path: '/career',
+      // path: '/temp',
     },
     {
       icon: ProfileIcon,
@@ -103,7 +103,7 @@ const Footer = () => {
   ];
 
   const goPage = (item: any) => {
-    if (!isLogin && item.path == '/profile') {
+    if (!isLogin && ['/profile', '/career'].includes(item.path)) {
       setOpenLogin(true);
     } else if (item.path === router.pathname) {
       router.reload();

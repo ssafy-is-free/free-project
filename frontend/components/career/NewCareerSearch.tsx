@@ -1,6 +1,7 @@
 import { getJobPost } from '@/pages/api/careerAxios';
 import { useState } from 'react';
 import styled from 'styled-components';
+import { ICareerSearchProps, ISearchResult } from './ICareer';
 
 const CareerSearchDiv = styled.div`
   width: 100vw;
@@ -65,42 +66,16 @@ const InputDiv = styled.div`
   }
 `;
 
-export interface ISearchResult {
-  jobPostingId: number;
-  companyName: string;
-  postingName: string;
-  startTime: string;
-  endTime: string;
-}
-// dummy data
-const ddata: ISearchResult[] = [
-  {
-    jobPostingId: 0,
-    companyName: '',
-    postingName: '',
-    startTime: '',
-    endTime: '',
-  },
-];
-
-interface ICareerSearchProps {
-  close: () => void;
-  result: (item: any) => void;
-}
-
 const CareerSearch = ({ close, result }: ICareerSearchProps) => {
   const [word, setWord] = useState<string>();
-  const [data, setData] = useState<ISearchResult[]>(ddata);
+  const [data, setData] = useState<ISearchResult[] | null>(null);
   const [notFocus, setNotFocus] = useState<boolean>(true);
 
   const searching = async (value: string) => {
-    // 취업 공고, 회사명 search api
-    // 1996-11-22 날짜가 미정인 경우
-    // searchapi(value)
     if (value) {
+      const res = await getJobPost(value);
+      setData(res.data);
     }
-    const res = await getJobPost(value);
-    setData(res.data);
   };
   return (
     <CareerSearchDiv>
@@ -131,25 +106,26 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
           ></input>
         </InputDiv>
         <div className="cslist">
-          {data.map((item) => {
-            return (
-              <div
-                className="csitem"
-                key={item.jobPostingId}
-                onClick={() => {
-                  result(item);
-                  close();
-                }}
-              >
-                <h2 className="company">{item.companyName}</h2>
-                <p>{item.postingName}</p>
-                <p>
-                  접수기간 : {item.startTime === '1996-11-22' ? '미정' : item.startTime} ~{' '}
-                  {item.endTime === '1996-11-22' ? '미정' : item.endTime}
-                </p>
-              </div>
-            );
-          })}
+          {data &&
+            data.map((item) => {
+              return (
+                <div
+                  className="csitem"
+                  key={item.jobPostingId}
+                  onClick={() => {
+                    result(item);
+                    close();
+                  }}
+                >
+                  <h2 className="company">{item.companyName}</h2>
+                  <p>{item.postingName}</p>
+                  <p>
+                    접수기간 : {item.startTime === '1996-11-22' ? '미정' : item.startTime} ~{' '}
+                    {item.endTime === '1996-11-22' ? '미정' : item.endTime}
+                  </p>
+                </div>
+              );
+            })}
         </div>
       </div>
     </CareerSearchDiv>

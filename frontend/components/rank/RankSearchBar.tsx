@@ -3,8 +3,17 @@ import RSearchIcon from '../../public/Icon/SearchingIcon.svg';
 import SearchImg from '../../public/Icon/SearchImg.svg';
 import { useEffect, useRef, useState } from 'react';
 import { IRankSearchBarProps } from './IRank';
-import { getSearchBojResult, getSearchBojUser, getSearchGitResult, getSearchGitUser } from '@/pages/api/rankAxios';
+import {
+  getMyBojRanking,
+  getMyGitRanking,
+  getSearchBojResult,
+  getSearchBojUser,
+  getSearchGitResult,
+  getSearchGitUser,
+} from '@/pages/api/rankAxios';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const bounce = keyframes`
   70% { transform:translateY(0%); }
@@ -120,15 +129,10 @@ const Wrapper = styled.div`
 `;
 
 const RankSearchBar = (props: IRankSearchBarProps) => {
-  const [text, setText] = useState<string>('깃허브');
+  // login 상태값 가져오기
+  const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
 
-  useEffect(() => {
-    if (props.curRank == 0) {
-      setText('깃허브 아이디를 검색해보세요.');
-    } else {
-      setText('백준 아이디를 검색해보세요.');
-    }
-  }, [props.curRank]);
+  const [text, setText] = useState<string>('깃허브');
 
   // 검색어
   const [searchKeyword, setSearchKeyword] = useState<string | undefined>();
@@ -142,14 +146,22 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
       }[]
   >();
 
+  // style 속성 변경 위한 검색창 ref
+  const searchBox = useRef<HTMLDivElement | null>(null);
+  const relatedWrapper = useRef<HTMLUListElement | null>(null);
+
+  useEffect(() => {
+    if (props.curRank == 0) {
+      setText('깃허브 아이디를 검색해보세요.');
+    } else {
+      setText('백준 아이디를 검색해보세요.');
+    }
+  }, [props.curRank]);
+
   // 검색창 검색할 떄마다 호출
   const onChange = (event: any) => {
     setSearchKeyword(event.target.value);
   };
-
-  // style 속성 변경 위한 검색창 ref
-  const searchBox = useRef<HTMLDivElement | null>(null);
-  const relatedWrapper = useRef<any>();
 
   useEffect(() => {
     if (searchKeyword) {
@@ -179,15 +191,19 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
   }, [searchKeyword]);
 
   const resetInput = () => {
-    props.getRankList(props.size, 1);
+    props.getRankList(0);
     props.setNoScroll(false);
+    props.setInViewFirst(false);
+    props.setNoMore(false);
+
+    // 검색창 닫기
     props.setSearchClick(false);
-    props.setSelectedOption(null);
   };
 
   // 닉네임 검색 결과
   const onSearchNick = async (userId: number, nickName: string) => {
     props.setNoScroll(true);
+
     (document.querySelector('.input-box') as HTMLInputElement).value = `${nickName}`;
     setSearchResults([]);
 
@@ -197,12 +213,43 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
 
     if (props.curRank == 0) {
       const data = await getSearchGitResult(userId);
-      props.setGitRankList((prev) => [data.data.githubRankingCover]);
+      props.setRankInfo((prev) => [data.data.githubRankingCover]);
+
+      // 내 깃허브 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = await getMyGitRanking();
+
+          if (data.status === 'SUCCESS') {
+            if (data.data?.githubRankingCover) props.setMyRankInfo(data.data?.githubRankingCover);
+            else props.setMyRankInfo(null);
+            props.setLoading(false);
+          } else {
+            alert(data.message);
+          }
+        })();
+      }
     } else {
       const data = await getSearchBojResult(userId);
-      props.setBojRankList((prev) => [data.data]);
+      props.setRankInfo((prev) => [data.data]);
+
+      // 내 백준 정보 가져오기
+      if (isLogin) {
+        (async () => {
+          let data = await getMyBojRanking();
+
+          if (data.status === 'SUCCESS') {
+            if (data?.data?.userId != null) props.setMyRankInfo(data?.data);
+            else props.setMyRankInfo(null);
+            props.setLoading(false);
+          } else {
+            alert(data.message);
+          }
+        })();
+      }
     }
 
+    // 검색창 닫기
     props.setSearchClick(false);
   };
 

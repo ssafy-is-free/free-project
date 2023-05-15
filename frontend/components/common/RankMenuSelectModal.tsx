@@ -2,6 +2,8 @@ import styled, { keyframes } from 'styled-components';
 import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
 import Link from 'next/link';
 import { IRankMenuSelectProps } from './ICommon';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const moveUp = keyframes`
  from{
@@ -48,6 +50,9 @@ const Wrapper = styled.div`
 `;
 
 const RankMenuSelectModal = (props: IRankMenuSelectProps) => {
+  // 백준 여부
+  const isBoj = useSelector<RootState>((selector) => selector.authChecker.isBoj);
+
   return (
     <>
       <DarkBg onClick={props.onClick} />
@@ -55,7 +60,16 @@ const RankMenuSelectModal = (props: IRankMenuSelectProps) => {
         <button className="git" onClick={() => props.onChangeCurRank(0)}>
           깃허브
         </button>
-        <button className="boj" onClick={() => props.onChangeCurRank(1)}>
+        <button
+          className="boj"
+          onClick={() => {
+            if (isBoj) {
+              props.onChangeCurRank(1);
+            } else {
+              props.setOpenBoj(true);
+            }
+          }}
+        >
           백준
         </button>
       </Wrapper>
