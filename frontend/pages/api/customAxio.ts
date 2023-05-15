@@ -78,16 +78,23 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
-          if (res.status === 200) {
+          if (res.data.status === 'SUCCESS') {
+            console.log('RES', res);
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             document.cookie = `refresh-token=${newAccessToken}`;
             // dispach(login());
             return axios(originalRequest);
+          } else if (res.data.status === 'FAIL') {
+            //로그아웃 시키기
+            alert('토큰 만료!');
+            localStorage.removeItem('accessToken');
+            window.location.href = '/';
           }
         })
         .catch((err) => {
+          console.log('err', err);
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
             // dispach(logout());

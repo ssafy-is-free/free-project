@@ -5,7 +5,6 @@ import { useState } from 'react';
 const Wrapper = styled.div<{ curMenu: number }>`
   display: flex;
   align-items: center;
-  /* background-color: ${(props) => props.theme.menuBg}; */
   font-weight: bold;
   font-size: 16px;
   width: calc(100% - 64px);
@@ -61,7 +60,6 @@ const Wrapper = styled.div<{ curMenu: number }>`
   .selected-menu {
     background-color: ${(props) => props.theme.primary};
     width: calc(50% - 6px);
-    /* height: calc(100% - 12px); */
     height: 4px;
     position: absolute;
     bottom: 0;

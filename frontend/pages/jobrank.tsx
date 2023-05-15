@@ -213,7 +213,7 @@ const JobRank = () => {
           if (data.status === 'SUCCESS') {
             setOtherRankInfo(data.data?.ranks);
             setNextRank(data.data?.ranks[data.data?.ranks?.length - 1].rank);
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -234,7 +234,7 @@ const JobRank = () => {
               } else {
                 setOtherRankInfo([...otherRankInfo, ...data.data?.ranks]);
               }
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -247,7 +247,7 @@ const JobRank = () => {
         let data = await getMyGitRanking(jobPostingIdParam);
         if (data.status === 'SUCCESS') {
           setUserRankInfo(data.data?.githubRankingCover);
-          setTimeout(() => setLoading(false), 500);
+          setLoading(false);
         } else {
           alert(data.message);
         }
@@ -261,7 +261,7 @@ const JobRank = () => {
           if (data.status === 'SUCCESS') {
             setOtherRankInfo(data.data);
             setNextRank(data.data[data.data?.length - 1]?.rank);
-            setTimeout(() => setLoading(false), 500);
+            setLoading(false);
           } else {
             alert(data.message);
           }
@@ -281,7 +281,7 @@ const JobRank = () => {
               } else {
                 setOtherRankInfo([...otherRankInfo, ...data.data]);
               }
-              setTimeout(() => setLoading(false), 500);
+              setLoading(false);
             } else {
               alert(data.message);
             }
@@ -295,7 +295,7 @@ const JobRank = () => {
 
         if (data.status === 'SUCCESS') {
           setUserRankInfo(data.data);
-          setTimeout(() => setLoading(false), 500);
+          setLoading(false);
         } else {
           alert(data.message);
         }

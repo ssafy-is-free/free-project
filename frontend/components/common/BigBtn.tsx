@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import MenuArrowIcon from '../../public/Icon/MenuArrowIcon.svg';
 import { IBigBtnProps } from './ICommon';
 
 const Wrapper = styled.button`

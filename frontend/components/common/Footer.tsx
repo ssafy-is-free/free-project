@@ -93,7 +93,6 @@ const Footer = () => {
       icon: CareerIcon,
       name: '취업관리',
       path: '/career',
-      // path: '/temp',
     },
     {
       icon: ProfileIcon,
@@ -117,7 +116,6 @@ const Footer = () => {
       {footerItems.map((item, idx) => (
         <IconDiv
           onClick={() => {
-            // router.push(item.path);
             goPage(item);
           }}
           key={idx}
