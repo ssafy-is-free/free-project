@@ -39,7 +39,7 @@ public class AnalysisBojController {
 	}
 
 	@GetMapping("/postings/{jobPostingId}")
-	public DataResponse<BojRankAllComparisonResponse> bojbojCompareWithOther(
+	public DataResponse<BojRankAllComparisonResponse> bojCompareWithOther(
 		@AuthenticationPrincipal UserPrincipal userPrincipal,
 		@PathVariable Long jobPostingId) {
 		BojRankAllComparisonResponse bojRankAllComparisonResponse = analysisBojService.compareWithOther(
