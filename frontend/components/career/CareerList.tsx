@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import CareerListItem from './CareerListItem';
 import { useState, useEffect } from 'react';
-import CustomNav from '../common/CustomNav';
+// import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
 import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
 import { IHistory, ICareerListProps } from './ICareer';
 import Swal from 'sweetalert2';
+import CareerNav from './CareerNav';
 
 const CareerListDiv = styled.div`
   .header {
@@ -134,7 +135,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
           )}
         </div>
         <div className="content">
-          <CustomNav lists={['진행중', '종료']} selectIdx={selectIdx} defaultIdx={0}></CustomNav>
+          <CareerNav selectedIdx={selectedIdx} lists={['진행중', '종료']} selectIdx={selectIdx}></CareerNav>
           {selectedIdx === 0 ? (
             <div className="cardlist">
               {progressData.map((item: IHistory) => (
