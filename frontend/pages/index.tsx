@@ -348,7 +348,7 @@ const Main = () => {
             } else {
               setRankInfo(null);
             }
-            setLoading(false);
+            setTimeout(() => setLoading(false), 500);
           } else {
             alert(data.message);
           }
@@ -373,7 +373,7 @@ const Main = () => {
                 setRankInfo([...rankInfo, ...data.data.ranks]);
                 setNextRank(data.data.ranks[data.data.ranks?.length - 1]?.rank);
               }
-              setLoading(false);
+              setTimeout(() => setLoading(false), 500);
             } else {
               alert(data.message);
             }
@@ -389,7 +389,7 @@ const Main = () => {
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
             else setMyRankInfo(null);
-            setLoading(false);
+            setTimeout(() => setLoading(false), 500);
           } else {
             alert(data.message);
           }
@@ -409,7 +409,7 @@ const Main = () => {
             } else {
               setRankInfo(null);
             }
-            setLoading(false);
+            setTimeout(() => setLoading(false), 500);
           } else {
             alert(data.message);
           }
@@ -433,7 +433,7 @@ const Main = () => {
                 setRankInfo([...rankInfo, ...data.data]);
                 setNextRank(data.data[data.data?.length - 1]?.rank);
               }
-              setLoading(false);
+              setTimeout(() => setLoading(false), 500);
             } else {
               alert(data.message);
             }
@@ -449,7 +449,7 @@ const Main = () => {
           if (data.status === 'SUCCESS') {
             if (data?.data?.userId != null) setMyRankInfo(data?.data);
             else setMyRankInfo(null);
-            setLoading(false);
+            setTimeout(() => setLoading(false), 500);
           } else {
             alert(data.message);
           }

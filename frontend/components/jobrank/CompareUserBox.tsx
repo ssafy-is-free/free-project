@@ -199,7 +199,7 @@ const CompareUserBox = (props: ICompareUserBoxProps) => {
           setCommitWidth(calc(data.data?.my.commit, data.data?.opponent.commit));
           setStarWidth(calc(data.data?.my.star, data.data?.opponent.star));
           setRepoWidth(calc(data.data?.my.repositories, data.data?.opponent.repositories));
-          setLoading(false);
+          setTimeout(() => setLoading(false), 500);
         } else {
           alert(data.message);
         }
@@ -214,7 +214,7 @@ const CompareUserBox = (props: ICompareUserBoxProps) => {
           setFailWidth(calc(data.data?.my.fail, data.data?.opponent.fail));
           setSubmitWidth(calc(data.data?.my.submit, data.data?.opponent.submit));
           setTryfailWidth(calc(data.data?.my.tryFail, data.data?.opponent.tryFail));
-          setLoading(false);
+          setTimeout(() => setLoading(false), 500);
         } else {
           alert(data.message);
         }

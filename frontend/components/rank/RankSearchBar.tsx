@@ -223,7 +223,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) props.setMyRankInfo(data.data?.githubRankingCover);
             else props.setMyRankInfo(null);
-            props.setLoading(false);
+            setTimeout(() => props.setLoading(false), 500);
           } else {
             alert(data.message);
           }
@@ -241,7 +241,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
           if (data.status === 'SUCCESS') {
             if (data?.data?.userId != null) props.setMyRankInfo(data?.data);
             else props.setMyRankInfo(null);
-            props.setLoading(false);
+            setTimeout(() => props.setLoading(false), 500);
           } else {
             alert(data.message);
           }
