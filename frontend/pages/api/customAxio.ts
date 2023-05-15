@@ -37,15 +37,6 @@ authApi.interceptors.request.use((config: any) => {
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
   async (response) => {
-    // console.log('Response');
-
-    // await axios.get(`${BASE_URL}/reissue`, {
-    //   withCredentials: true,
-    //   headers: {
-    //     Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhdXRoIiwibmlja25hbWUiOiJzZXVuZ2JvazMyNDAiLCJpZCI6IjQyIiwiZXhwIjoxNjcwMDAwMDAwLCJpYXQiOjE2ODQxMzUxMDZ9.UzNEvwyL9pSF_njd4k-FR8GFo2v7pISKdxBEOu2HRrdAf05B1KWioyftt8-AbDN-D9-OPSmKw2KqzLUnVp78qA`,
-    //   },
-    // });
-
     return response;
   },
   async (error) => {
@@ -67,7 +58,6 @@ authApi.interceptors.response.use(
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
-            console.log(originalRequest);
             return axios(originalRequest);
           } else if (res.data.status === 'FAIL') {
             //로그아웃 시키기
