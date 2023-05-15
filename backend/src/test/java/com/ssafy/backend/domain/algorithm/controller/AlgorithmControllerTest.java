@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.ssafy.backend.PrincipalDetailsArgumentResolver;
+import com.ssafy.backend.domain.algorithm.dto.response.BojInfoDetailResponse;
 import com.ssafy.backend.domain.algorithm.dto.response.BojRankResponse;
 import com.ssafy.backend.domain.algorithm.service.AlgorithmService;
 import com.ssafy.backend.domain.user.dto.NicknameListResponse;
@@ -85,6 +86,142 @@ public class AlgorithmControllerTest {
 			.andExpect(jsonPath("$.data.nickname").value("Nickname"))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
 			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 마이랭크 실패 테스트")
+	public void bojMyRankFailTest() throws Exception {
+
+		MockMvc mvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+			.build();
+		//given
+		BojRankResponse bojRankResponse = new BojRankResponse();
+
+		given(algorithmService.getBojByUserId(1L, null, null)).willReturn(bojRankResponse);
+		given(responseService.getDataResponse(null, RESPONSE_NO_CONTENT)).willReturn(
+			getDataResponse(bojRankResponse, RESPONSE_NO_CONTENT));
+		//when
+		ResultActions actions = mvc.perform(get("/boj/my-rank")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 상세정보 userId 입력 테스트")
+	public void getBojInfoDetailTest() throws Exception {
+
+		MockMvc mvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+			.build();
+		//given
+		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.builder()
+			.bojId("soda")
+			.tierUrl("tier")
+			.fail(10)
+			.pass(10)
+			.submit(20)
+			.tryFail(5)
+			.languages(new ArrayList<>())
+			.build();
+
+		given(algorithmService.getBojInfoDetailByUserId(1L)).willReturn(bojInfoDetailResponse);
+		given(responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS));
+		//when
+		ResultActions actions = mvc.perform(get("/boj/users?userId=1")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.bojId").value("soda"))
+			.andExpect(jsonPath("$.data.tierUrl").value("tier"))
+			.andExpect(jsonPath("$.data.pass").value(10))
+			.andExpect(jsonPath("$.data.tryFail").value(5))
+			.andExpect(jsonPath("$.data.submit").value(20))
+			.andExpect(jsonPath("$.data.fail").value(10))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 본인 상세정보 테스트")
+	public void getBojInfoMyDetailTest() throws Exception {
+
+		MockMvc mvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+			.build();
+		//given
+		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.builder()
+			.bojId("soda")
+			.tierUrl("tier")
+			.fail(10)
+			.pass(10)
+			.submit(20)
+			.tryFail(5)
+			.languages(new ArrayList<>())
+			.build();
+
+		given(algorithmService.getBojInfoDetailByUserId(1L)).willReturn(bojInfoDetailResponse);
+		given(responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS));
+		//when
+		ResultActions actions = mvc.perform(get("/boj/users")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.data.bojId").value("soda"))
+			.andExpect(jsonPath("$.data.tierUrl").value("tier"))
+			.andExpect(jsonPath("$.data.pass").value(10))
+			.andExpect(jsonPath("$.data.tryFail").value(5))
+			.andExpect(jsonPath("$.data.submit").value(20))
+			.andExpect(jsonPath("$.data.fail").value(10))
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+
+	}
+
+	@Test
+	@DisplayName("백준 상세정보 비어있을 때 테스트")
+	public void getBojInfoDetailNullTest() throws Exception {
+
+		MockMvc mvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
+			.build();
+		//given
+		BojInfoDetailResponse bojInfoDetailResponse = new BojInfoDetailResponse();
+
+		given(algorithmService.getBojInfoDetailByUserId(1L)).willReturn(bojInfoDetailResponse);
+		given(responseService.getDataResponse(null, RESPONSE_NO_CONTENT)).willReturn(
+			getDataResponse(bojInfoDetailResponse, RESPONSE_NO_CONTENT));
+		//when
+		ResultActions actions = mvc.perform(get("/boj/users")
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+		//then
+		actions
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
 
 	}
 
