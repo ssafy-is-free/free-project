@@ -80,6 +80,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		} catch (CustomException e) {
 			log.info("커스텀 예외");
 			request.setAttribute(TOKEN_EXCEPTION_KEY, CUSTOM_EXCEPTION);
+		} catch (Exception e) {
+			log.info("올바르지 않은 토큰입니다.");
+			request.setAttribute(TOKEN_EXCEPTION_KEY, TOKEN_INVALID);
 		}
 
 		filterChain.doFilter(request, response);
