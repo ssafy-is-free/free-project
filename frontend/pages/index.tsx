@@ -550,7 +550,7 @@ const Main = () => {
                     <p>나의 랭킹</p>
                     <RankLoading />
                   </div>
-                ) : !isLogin ? (
+                ) : !isLogin || !localStorage.getItem('accessToken') ? (
                   <div className="my-rank">
                     <p>나의 랭킹</p>
                     <NoAccount curRank={0} onClick={onClickNoUser} />

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 // const BASE_URL = 'https://k8b102.p.ssafy.io/api';
 const BASE_URL = '/api';
 
-const dispach = useDispatch();
+// const dispach = useDispatch();
 
 /**
  * 회원 전용 기능일 때 사용할 axios
@@ -68,7 +68,7 @@ authApi.interceptors.response.use(
 
     if (response.status === 401) {
       const accessToken = localStorage.getItem('accessToken');
-      dispach(logout());
+      // dispach(logout());
 
       await axios
         .get(`${BASE_URL}/reissue`, {
@@ -83,14 +83,14 @@ authApi.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             document.cookie = `refresh-token=${newAccessToken}`;
-            dispach(login());
+            // dispach(login());
             return axios(originalRequest);
           }
         })
         .catch((err) => {
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
-            dispach(logout());
+            // dispach(logout());
             alert('토큰 만료!');
             window.location.href = '/';
           }
