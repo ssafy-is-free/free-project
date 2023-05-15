@@ -13,6 +13,8 @@ import Script from 'next/script';
 import { MobileView, BrowserView } from 'react-device-detect';
 import WebGuide from '@/components/common/WebGuide';
 import { getCookie, setCookie } from '@/utils/cookies';
+import Desktop from './desktop';
+import { useMediaQuery } from 'react-responsive';
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
@@ -25,6 +27,13 @@ function App({ Component, ...rest }: AppProps) {
   const [loading, setLoading] = useState(true);
   const [check, setCheck] = useState(true);
   const today = new Date();
+
+  //모바일 데스크탑 분기
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+
+  useEffect(() => {
+    console.log(isMobile);
+  }, [isMobile]);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
@@ -73,14 +82,22 @@ function App({ Component, ...rest }: AppProps) {
               <Footer />
             </MobileView>
             <BrowserView>
-              {check && !loading ? (
+              {!isMobile ? (
+                <Desktop />
+              ) : (
                 <div>
                   <Component {...props.pageProps} />
                   <Footer />
                 </div>
-              ) : (
-                <WebGuide></WebGuide>
               )}
+              {/* {check && !loading && isMobile ? (
+                <div>
+                  <Component {...props.pageProps} />
+                  <Footer />
+                </div>
+              ) : !isMobile ? (
+                <Desktop />
+              ) : null} */}
             </BrowserView>
           </ThemeProvider>
         </PersistGate>
