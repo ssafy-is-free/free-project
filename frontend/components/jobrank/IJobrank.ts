@@ -73,4 +73,5 @@ export interface ICompareBoxProps {
 export interface ICompareUserBoxProps {
   curRank: number;
   userId: number;
+  onClick?: () => void;
 }

@@ -76,7 +76,7 @@ const dddata = {
   languages: [],
 };
 
-const GithubInfo = ({ userId, my }: IGithubInfo) => {
+const GithubInfo = ({ userId, my, setOpenCompare }: IGithubInfo) => {
   const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
   // const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
   const [isShow, setIsShow] = useState<boolean>(true);
@@ -138,7 +138,14 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
 
     return (
       <GithubDiv>
-        <Avatar isCircle={true} data={avatarData} my={my}></Avatar>
+        <Avatar
+          isCircle={true}
+          data={avatarData}
+          my={my}
+          curRank={0}
+          userId={Number(userId)}
+          setOpenCompare={setOpenCompare}
+        ></Avatar>
         <BlackDiv></BlackDiv>
         <CommitDiv>
           {basicInfo.map((info, idx) => (

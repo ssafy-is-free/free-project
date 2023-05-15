@@ -58,7 +58,7 @@ const BoxDiv = styled.div`
   }
 `;
 
-const BojInfo = ({ userId, my }: IBojInfo) => {
+const BojInfo = ({ userId, my, setOpenCompare }: IBojInfo) => {
   const [bojData, setBojData] = useState<IBojProfile | null>(null);
   const [openBoj, setOpenBoj] = useState<boolean>(false);
 
@@ -163,10 +163,17 @@ const BojInfo = ({ userId, my }: IBojInfo) => {
 
     return (
       <BojInfoDiv>
-        <Avatar isCircle={false} data={avatarData} my={my}></Avatar>
+        <Avatar
+          isCircle={false}
+          data={avatarData}
+          my={my}
+          curRank={1}
+          userId={Number(userId)}
+          setOpenCompare={setOpenCompare}
+        ></Avatar>
         <BasicInfoDiv>
           {infoList.map((info, idx) => (
-            <a href={info.link} target="_blank">
+            <a href={info.link} target="_blank" key={idx}>
               <BoxDiv key={idx}>
                 <h4>{info.name}</h4>
                 <p>{info.value}</p>
