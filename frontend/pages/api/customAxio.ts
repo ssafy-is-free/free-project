@@ -1,12 +1,7 @@
-import { login, logout } from '@/redux/authSlice';
 import axios from 'axios';
-import { config } from 'process';
-import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
 
-// const BASE_URL = 'https://k8b102.p.ssafy.io/api';
 const BASE_URL = '/api';
-
-// const dispach = useDispatch();
 
 /**
  * 회원 전용 기능일 때 사용할 axios
@@ -17,22 +12,6 @@ export const authApi = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-/** 아래처럼 사용
- * export const getRank = async (page: number) => {
-  const params = {
-    size: 8,
-    rank: 9,
-  };
-
-  const { data } = await authApi<>({
-    method: 'get',
-    url: '/github/rank',
-    params: params,
-  });
-  return data;
-};
- */
 
 /**
  * 비회원도 쓸 수 있는 기능일 때 사용할 axios
@@ -57,7 +36,16 @@ authApi.interceptors.request.use((config: any) => {
 
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
-  (response) => {
+  async (response) => {
+    // console.log('Response');
+
+    // await axios.get(`${BASE_URL}/reissue`, {
+    //   withCredentials: true,
+    //   headers: {
+    //     Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhdXRoIiwibmlja25hbWUiOiJzZXVuZ2JvazMyNDAiLCJpZCI6IjQyIiwiZXhwIjoxNjcwMDAwMDAwLCJpYXQiOjE2ODQxMzUxMDZ9.UzNEvwyL9pSF_njd4k-FR8GFo2v7pISKdxBEOu2HRrdAf05B1KWioyftt8-AbDN-D9-OPSmKw2KqzLUnVp78qA`,
+    //   },
+    // });
+
     return response;
   },
   async (error) => {
@@ -68,7 +56,6 @@ authApi.interceptors.response.use(
 
     if (response.status === 401) {
       const accessToken = localStorage.getItem('accessToken');
-      // dispach(logout());
 
       await axios
         .get(`${BASE_URL}/reissue`, {
@@ -84,7 +71,7 @@ authApi.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             document.cookie = `refresh-token=${newAccessToken}`;
-            // dispach(login());
+            window.location.href = '/';
             return axios(originalRequest);
           } else if (res.data.status === 'FAIL') {
             //로그아웃 시키기
@@ -97,8 +84,10 @@ authApi.interceptors.response.use(
           console.log('err', err);
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
-            // dispach(logout());
-            alert('토큰 만료!');
+            Swal.fire({
+              text: '로그아웃 되었습니다.',
+              icon: 'error',
+            });
             window.location.href = '/';
           }
         });
