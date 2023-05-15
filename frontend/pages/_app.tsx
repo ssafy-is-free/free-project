@@ -10,6 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useState, useEffect } from 'react';
 import * as gtag from '@/utils/gtag';
 import Script from 'next/script';
+import { MobileView, BrowserView } from 'react-device-detect';
 import WebGuide from '@/components/common/WebGuide';
 import { getCookie, setCookie } from '@/utils/cookies';
 
@@ -19,6 +20,9 @@ function App({ Component, ...rest }: AppProps) {
   const ID = gtag.GA_TRACKING_ID;
 
   const { store, props } = wrapper.useWrappedStore(rest);
+
+  // pc 일경우
+  const [loading, setLoading] = useState(true);
   const [check, setCheck] = useState(true);
   const today = new Date();
 
@@ -32,6 +36,7 @@ function App({ Component, ...rest }: AppProps) {
     } else {
       setCheck(false);
     }
+    setLoading(false);
   }, []);
 
   return (
@@ -63,14 +68,20 @@ function App({ Component, ...rest }: AppProps) {
             <Head>
               <title>CHPO</title>
             </Head>
-            {check ? (
-              <div>
-                <Component {...props.pageProps} />
-                <Footer />
-              </div>
-            ) : (
-              <WebGuide></WebGuide>
-            )}
+            <MobileView>
+              <Component {...props.pageProps} />
+              <Footer />
+            </MobileView>
+            <BrowserView>
+              {check && !loading ? (
+                <div>
+                  <Component {...props.pageProps} />
+                  <Footer />
+                </div>
+              ) : (
+                <WebGuide></WebGuide>
+              )}
+            </BrowserView>
           </ThemeProvider>
         </PersistGate>
       </Provider>
