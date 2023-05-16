@@ -18,6 +18,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.backend.global.auth.filter.TokenAuthenticationFilter;
 import com.ssafy.backend.global.response.CommonResponse;
 import com.ssafy.backend.global.response.ResponseService;
 
@@ -46,13 +47,13 @@ public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
 		CommonResponse exceptionResponse;
 		if (exception == null)
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_NOT_FOUND);
-		else if (exception.equals(TOKEN_INVALID)) {
+		else if (exception.equals(TokenAuthenticationFilter.TOKEN_INVALID)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_INVALID);
-		} else if (exception.equals(TOKEN_EXPIRE)) {
+		} else if (exception.equals(TokenAuthenticationFilter.TOKEN_EXPIRE)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_EXPIRE);
-		} else if (exception.equals(TOKEN_UNSUPPORTED)) {
+		} else if (exception.equals(TokenAuthenticationFilter.TOKEN_UNSUPPORTED)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_UNSUPPORTED);
-		} else if (exception.equals(TOKEN_ILLEGAL)) {
+		} else if (exception.equals(TokenAuthenticationFilter.TOKEN_ILLEGAL)) {
 			exceptionResponse = responseService.getExceptionResponse(TOKEN_ILLEGAL);
 		} else {
 			exceptionResponse = responseService.getExceptionResponse(NOT_FOUND_USER);
