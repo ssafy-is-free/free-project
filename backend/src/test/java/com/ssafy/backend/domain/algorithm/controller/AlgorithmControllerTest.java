@@ -115,7 +115,7 @@ public class AlgorithmControllerTest {
 		actions
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
@@ -212,7 +212,7 @@ public class AlgorithmControllerTest {
 		actions
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
@@ -259,7 +259,7 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data", hasSize(0)))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
@@ -314,7 +314,7 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.userId").isEmpty())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
@@ -365,7 +365,7 @@ public class AlgorithmControllerTest {
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.data", hasSize(0)))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 	}
 
 	private <T> DataResponse<T> getDataResponse(T data, CustomSuccessStatus status) {

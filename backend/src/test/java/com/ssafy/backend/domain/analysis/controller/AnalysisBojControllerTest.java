@@ -106,7 +106,7 @@ public class AnalysisBojControllerTest {
 		actions
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
@@ -158,7 +158,7 @@ public class AnalysisBojControllerTest {
 		actions
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("조회된 데이터가 없습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_NO_CONTENT.getMessage()));
 
 	}
 
