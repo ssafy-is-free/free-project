@@ -234,8 +234,8 @@ const CardContent = ({ ddetail, memoModal }: ICardContentProps) => {
                   startTime: ddetail.startTime,
                   endTime: ddetail.endTime,
                 },
-              },
-              '/jobrank'
+              }
+              // '/jobrank'
             );
           }}
         >

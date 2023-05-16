@@ -202,6 +202,7 @@ const CompareUserBox = (props: ICompareUserBoxProps) => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       } else {
         let data = await getBojCompareUser(props.userId);
@@ -217,6 +218,7 @@ const CompareUserBox = (props: ICompareUserBoxProps) => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       }
     })();

@@ -246,7 +246,6 @@ const Main = () => {
     // TODO : 문제 => 가입후 다른 페이지 갔다가 뒤로가기 누르면 isNew가 false가아닌 true로뜬다...
 
     if (!accesstoken) {
-      console.log('토큰 없음');
       dispatch(logout());
     }
 
@@ -311,10 +310,6 @@ const Main = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('myRankInfo : ', myRankInfo);
-  }, [myRankInfo]);
-
   // 무한 스크롤 구현하기
   useEffect(() => {
     if (!noMore && !noScroll) {
@@ -362,6 +357,7 @@ const Main = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -387,6 +383,7 @@ const Main = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -397,14 +394,13 @@ const Main = () => {
         (async () => {
           let data = languageIdParam ? await getMyGitRanking(languageIdParam) : await getMyGitRanking();
 
-          console.log('data, ', data);
-
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
             else setMyRankInfo(null);
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       }
@@ -425,6 +421,7 @@ const Main = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -449,6 +446,7 @@ const Main = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -465,6 +463,7 @@ const Main = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       }

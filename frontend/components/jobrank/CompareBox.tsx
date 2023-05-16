@@ -225,6 +225,7 @@ const CompareBox = (props: ICompareBoxProps) => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       } else {
         let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
@@ -240,6 +241,7 @@ const CompareBox = (props: ICompareBoxProps) => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       }
     })();

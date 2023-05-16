@@ -59,13 +59,13 @@ authApi.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             window.location.reload(); // TODO : 이게 최선인가?
-            return axios(originalRequest);
+            // return axios(originalRequest);
           } else if (res.data.status === 'FAIL') {
             //로그아웃 시키기
-            Swal.fire({
-              text: '로그아웃 되었습니다.',
-              icon: 'error',
-            });
+            // Swal.fire({
+            //   text: '로그아웃 되었습니다.',
+            //   icon: 'error',
+            // });
             localStorage.removeItem('accessToken');
             window.location.href = '/';
           }
@@ -73,10 +73,10 @@ authApi.interceptors.response.use(
         .catch((err) => {
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
-            Swal.fire({
-              text: '로그아웃 되었습니다.',
-              icon: 'error',
-            });
+            // Swal.fire({
+            //   text: '로그아웃 되었습니다.',
+            //   icon: 'error',
+            // });
             window.location.href = '/';
           }
         });

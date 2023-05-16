@@ -166,7 +166,7 @@ const JobRank = () => {
   const [inViewFirst, setInViewFirst] = useState<boolean>(true);
 
   const router = useRouter();
-  const [jobPostingIdParam, setJobPostingIdParam] = useState<number>(Number(router.query.postingId));
+  const [jobPostingIdParam, setJobPostingIdParam] = useState<number>();
 
   // 랭킹 정보
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
@@ -196,14 +196,25 @@ const JobRank = () => {
   }, [inView]);
 
   useEffect(() => {
+    if (router.isReady) {
+      setJobPostingIdParam(Number(router.query.postingId));
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
     setNoMore(false);
     onGetRankData(1);
   }, [curRank]);
 
+  useEffect(() => {
+    setNoMore(false);
+    onGetRankData(1);
+  }, [jobPostingIdParam]);
+
   const onGetRankData = (nextRankParam: number) => {
     setLoading(true);
     // 랭킹 정보 가져오기
-    if (curRank == 0) {
+    if (curRank == 0 && jobPostingIdParam) {
       // 처음 가져올 때(nextRank가 1인 상태)
       if (nextRankParam == 1) {
         // 깃허브 정보 불러오기
@@ -216,6 +227,7 @@ const JobRank = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -237,6 +249,7 @@ const JobRank = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -250,9 +263,10 @@ const JobRank = () => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       })();
-    } else if (curRank == 1) {
+    } else if (curRank == 1 && jobPostingIdParam) {
       // 백준 정보 불러오기
       if (nextRankParam == 1) {
         (async () => {
@@ -264,6 +278,7 @@ const JobRank = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -284,6 +299,7 @@ const JobRank = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -298,6 +314,7 @@ const JobRank = () => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       })();
     }
@@ -398,15 +415,15 @@ const JobRank = () => {
             <>
               <div className="content-wrapper">
                 <SubMenu submenu={submenu} setSubmenu={setSubmenu} />
-                {submenu == 0 ? (
+                {submenu == 0 && jobPostingIdParam ? (
                   <div className="chart-box">
                     <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
                     <div className="label">사용 언어</div>
                     <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} target={1} />
                   </div>
-                ) : (
+                ) : jobPostingIdParam ? (
                   <CompareBox curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-                )}
+                ) : null}
               </div>
             </>
           )}

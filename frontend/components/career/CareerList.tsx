@@ -7,10 +7,7 @@ import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
 import { IHistory, ICareerListProps } from './ICareer';
 import Swal from 'sweetalert2';
 import CareerNav from './CareerNav';
-import Image from 'next/image';
-import trashIcon from '@/public/Icon/TrashIcon.png';
-import checkIcon from '@/public/Icon/CheckIcon.png';
-import addIcon from '@/public/Icon/AddIcon.png';
+import CareerListItemDefault from './CareerListItemDefault';
 
 const CareerListDiv = styled.div`
   .header {
@@ -33,6 +30,9 @@ const CareerListDiv = styled.div`
       font-size: larger;
       font-weight: bold;
     }
+  }
+  .nav {
+    margin: 1rem;
   }
   .content {
     margin: 1rem;
@@ -113,73 +113,79 @@ const CareerList = ({ openNew }: ICareerListProps) => {
     getCareerData();
   }, []);
 
-  if (!progressData) {
-    return <Spinner></Spinner>;
-  } else if (!doneData) {
-    return <Spinner></Spinner>;
-  } else {
-    return (
-      <CareerListDiv>
-        <div className="header">
-          <Image
-            src={trashIcon}
-            alt="삭제"
-            width={32}
-            height={32}
-            onClick={() => {
-              setDelMode(!delMode);
-              setCheckedItems(new Set());
-            }}
-          ></Image>
-          <div className="title">취업지원이력</div>
-          {delMode ? (
-            <Image src={checkIcon} alt="삭제" width={32} height={32} onClick={delapi}></Image>
-          ) : (
-            <Image src={addIcon} alt="추가" width={32} height={32} onClick={openNew}></Image>
-          )}
-        </div>
+  return (
+    <CareerListDiv>
+      <div className="header">
+        <img
+          src="/Icon/TrashIcon.svg"
+          alt=""
+          onClick={() => {
+            setDelMode(!delMode);
+            setCheckedItems(new Set());
+          }}
+        />
+        <div className="title">취업지원이력</div>
+        {delMode ? (
+          <img src="/Icon/CheckIcon.svg" alt="" onClick={delapi} />
+        ) : (
+          <img src="/Icon/AddNewIcon.svg" alt="" onClick={openNew} />
+        )}
+      </div>
+      <div className="nav">
+        <CareerNav selectedIdx={selectedIdx} lists={['진행중', '종료']} selectIdx={selectIdx}></CareerNav>
+      </div>
+      {progressData && doneData ? (
         <div className="content">
-          <CareerNav selectedIdx={selectedIdx} lists={['진행중', '종료']} selectIdx={selectIdx}></CareerNav>
           {selectedIdx === 0 ? (
             <div className="cardlist">
-              {progressData.map((item: IHistory) => (
-                <div className="card" key={item.jobHistoryId}>
-                  <CareerListItem
-                    cardId={item.jobHistoryId}
-                    dDay={item.dday}
-                    delMode={delMode}
-                    delCheck={(isChecked: boolean) => {
-                      checkedItemHandler(item.jobHistoryId, isChecked);
-                    }}
-                    updateList={getCareerData}
-                    category={(idx: number) => afterChangeStatus(idx)}
-                  ></CareerListItem>
-                </div>
-              ))}
+              {progressData.length > 0 ? (
+                progressData.map((item: IHistory) => (
+                  <div className="card" key={item.jobHistoryId}>
+                    <CareerListItem
+                      cardId={item.jobHistoryId}
+                      dDay={item.dday}
+                      delMode={delMode}
+                      delCheck={(isChecked: boolean) => {
+                        checkedItemHandler(item.jobHistoryId, isChecked);
+                      }}
+                      updateList={getCareerData}
+                      category={(idx: number) => afterChangeStatus(idx)}
+                    ></CareerListItem>
+                  </div>
+                ))
+              ) : (
+                <CareerListItemDefault category={0}></CareerListItemDefault>
+              )}
             </div>
           ) : (
             <div className="cardlist">
-              {doneData.map((item: IHistory) => (
-                <div className="card" key={item.jobHistoryId}>
-                  {/* {delMode && CheckBox()} */}
-                  <CareerListItem
-                    cardId={item.jobHistoryId}
-                    dDay={item.dday}
-                    delMode={delMode}
-                    delCheck={(isChecked: boolean) => {
-                      checkedItemHandler(item.jobHistoryId, isChecked);
-                    }}
-                    updateList={getCareerData}
-                    category={(idx: number) => afterChangeStatus(idx)}
-                  ></CareerListItem>
-                </div>
-              ))}
+              {doneData.length > 0 ? (
+                doneData.map((item: IHistory) => (
+                  <div className="card" key={item.jobHistoryId}>
+                    {/* {delMode && CheckBox()} */}
+                    <CareerListItem
+                      cardId={item.jobHistoryId}
+                      dDay={item.dday}
+                      delMode={delMode}
+                      delCheck={(isChecked: boolean) => {
+                        checkedItemHandler(item.jobHistoryId, isChecked);
+                      }}
+                      updateList={getCareerData}
+                      category={(idx: number) => afterChangeStatus(idx)}
+                    ></CareerListItem>
+                  </div>
+                ))
+              ) : (
+                <CareerListItemDefault category={1}></CareerListItemDefault>
+              )}
             </div>
           )}
         </div>
-      </CareerListDiv>
-    );
-  }
+      ) : (
+        <Spinner></Spinner>
+      )}
+    </CareerListDiv>
+  );
 };
 
 export default CareerList;

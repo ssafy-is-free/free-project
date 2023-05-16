@@ -195,7 +195,8 @@ const BojModal = (props: IBojProps) => {
             className="passBtn"
             onClick={() => {
               props.onClick();
-              router.push('/');
+              window.location.reload();
+              // router.push('/');
             }}
           >
             건너뛰기
