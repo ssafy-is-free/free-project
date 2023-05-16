@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import CustomNav from '@/components/common/CustomNav';
-import BojInfo from '@/components/profile/BojInfo';
-import GithubInfo from '@/components/profile/GithubInfo';
+// import BojInfo from '@/components/profile/BojInfo';
+// import GithubInfo from '@/components/profile/GithubInfo';
 import styled from 'styled-components';
+import dynamic from 'next/dynamic';
+
+const GithubInfo = dynamic(() => import('@/components/profile/GithubInfo'), { ssr: false });
+const BojInfo = dynamic(() => import('@/components/profile/BojInfo'), { ssr: false });
 
 const ProfileContentDiv = styled.div`
   margin-bottom: max(4rem, 10vh);
