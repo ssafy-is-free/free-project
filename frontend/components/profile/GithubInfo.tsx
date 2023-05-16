@@ -79,8 +79,6 @@ const GithubInfo = ({ userId, my, setOpenCompare }: IGithubInfo) => {
   };
   const getMyGithubData = async () => {
     const res = await getMyGithub();
-    console.log('GithubInfo에서 : ');
-    console.log(res);
     if (res.data) {
       setGithubData(res.data);
       if (res.data.repositories === null) {
