@@ -153,7 +153,7 @@ const Wrapper = styled.div<{ selected: number }>`
             animation: ${back} 1s;
           `
         : css`
-            top: 20%;
+            top: 12%;
             right: 10%;
             z-index: 0;
             filter: blur(2px);
