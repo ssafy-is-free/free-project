@@ -68,7 +68,7 @@ public class GithubRepo extends BaseTimeEntity {
 		if (this == object) {
 			return true;
 		}
-		if (this.getClass() != object.getClass()) {
+		if (!(object instanceof GithubRepo)) {
 			return false;
 		}
 		GithubRepo repo = (GithubRepo)object;

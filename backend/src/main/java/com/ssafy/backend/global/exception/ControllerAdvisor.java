@@ -59,7 +59,7 @@ public class ControllerAdvisor {
 				+ " : " + e.getMessage());
 
 		CommonResponse response = new CommonResponse();
-		response.setStatus(ERROR.toString());
+		response.setStatus(FAIL.toString());
 		response.setMessage(e.getMessage());
 		//메타모스트 알림
 		notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
