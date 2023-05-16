@@ -35,6 +35,7 @@ export interface IGithubInfo {
   userId: string;
   // githubData: IGithubProfile;
   my?: boolean;
+  setOpenCompare?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -60,6 +61,7 @@ export interface IBojInfo {
   userId: string;
   bojData?: IBojProfile;
   my?: boolean;
+  setOpenCompare?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**
@@ -98,6 +100,9 @@ export interface IAvatar {
   isCircle: boolean;
   data: IAvatarData;
   my?: boolean;
+  curRank?: number;
+  userId?: number;
+  setOpenCompare?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 /**

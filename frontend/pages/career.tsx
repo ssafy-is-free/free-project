@@ -1,28 +1,20 @@
+import CareerList from '@/components/career/CareerList';
+import NewCareer from '@/components/career/NewCareer';
+import { useState } from 'react';
 import styled from 'styled-components';
 
-const CareerDiv = styled.div`
-  height: 80vh;
-  margin: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 70%;
-    margin-bottom: 1rem;
-  }
+const TestDiv = styled.div`
+  margin-bottom: max(4rem, 10vh);
 `;
 
-export default function Career() {
+const Test = () => {
+  const [newOpen, setNewOpen] = useState<boolean>(false);
   return (
-    <CareerDiv>
-      <img src="/Icon/WorkInProgressIcon.png" alt="" />
-      <p>
-        자신의 취업지원 이력을
-        <br />
-        기록하고 관리할 수 있는 공간을 만들 예정이에요
-      </p>
-    </CareerDiv>
+    <TestDiv>
+      <CareerList openNew={() => setNewOpen(true)}></CareerList>
+      {newOpen && <NewCareer close={() => setNewOpen(false)}></NewCareer>}
+    </TestDiv>
   );
-}
+};
+
+export default Test;

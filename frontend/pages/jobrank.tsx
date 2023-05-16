@@ -1,17 +1,11 @@
 import RankMenu from '@/components/common/RankMenu';
 import { useEffect, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import JobUserItem from '@/components/jobrank/JobUserItem';
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import MainOtherItem from '@/components/rank/MainOtherItem';
 import RankMenuSelectModal from '@/components/common/RankMenuSelectModal';
-import {
-  getBojRanking,
-  getGithubRanking,
-  getMyBojRanking,
-  getMyGitRanking,
-  getPostingsAllGitUsers,
-} from './api/jobRankAxios';
+import { getBojRanking, getGithubRanking, getMyBojRanking, getMyGitRanking } from './api/jobRankAxios';
 import ChartJobrank from '@/components/jobrank/ChartJobrank';
 import OtherInfo from '@/components/jobrank/OtherInfo';
 import JobInfo from '@/components/jobrank/JobInfo';
@@ -20,8 +14,16 @@ import CompareBox from '@/components/jobrank/CompareBox';
 import CompareUserBox from '@/components/jobrank/CompareUserBox';
 import BackIcon from '../public/Icon/BackIcon.svg';
 import { useInView } from 'react-intersection-observer';
+import { useRouter } from 'next/router';
+import RankingIcon from '../public/Icon/RankingIcon.svg';
+import PieIcon from '../public/Icon/PieIcon.svg';
+import RankLoading from '@/components/rank/RankLoading';
+import JobUerItemLoading from '@/components/jobrank/JobUserItemLoading';
+import BojModal from '@/components/login/BojModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
-const Wrapper = styled.div<{ info: number; submenu: number }>`
+const Wrapper = styled.div<{ info: number; submenu: number; clickBtn: boolean }>`
   width: 100vw;
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
@@ -29,8 +31,36 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 4;
   overflow-y: scroll;
+
+  .button {
+    width: ${(props) => (props.clickBtn ? '80%' : '48px')};
+    height: 48px;
+    background-color: ${(props) => props.theme.primary};
+    border-radius: ${(props) => (props.clickBtn ? '14px' : '50%')};
+    position: fixed;
+    z-index: 2;
+    right: 32px;
+    bottom: 100px;
+    box-shadow: 0px 0px 10px #00000026;
+    transition: 0.5s;
+    color: ${(props) => props.theme.fontWhite};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .icon-box {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 16px;
+    }
+    p {
+      opacity: ${(props) => (props.clickBtn ? '1' : '0')};
+      visibility: ${(props) => (props.clickBtn ? 'visibile' : 'collapse')};
+      transition-delay: ${(props) => (props.clickBtn ? '0.3s;' : 'none')};
+    }
+  }
 
   .job-info-box {
     background-color: ${(props) => props.theme.primary};
@@ -88,7 +118,7 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
     }
   }
 
-  .btn-box {
+  /* .btn-box {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -105,13 +135,14 @@ const Wrapper = styled.div<{ info: number; submenu: number }>`
       padding: 14px 20%;
       box-shadow: 0 0 5px #00000012, 0 0 10px #00000012, 0 0 15px #00000012, 0 0 20px #00000012;
     }
-  }
+  } */
 `;
 
 const JobRank = () => {
   const [curRank, setCurRank] = useState<number>(0);
   const [openSelect, setOpenSelect] = useState<boolean>(false);
   const onChangeCurRank = (el: number) => {
+    setNextRank(1);
     setCurRank(el);
     setOpenSelect(false);
   };
@@ -127,15 +158,15 @@ const JobRank = () => {
   const [ref, inView, entry] = useInView({
     threshold: 0,
   });
-  const [size, setSize] = useState<number>(2);
+  const [size, setSize] = useState<number>(20);
   const [nextRank, setNextRank] = useState<number>(1);
   // 더이상 데이터가 없을 때
   const [noMore, setNoMore] = useState<boolean>(false);
   // inView 처음 봤을 떄
   const [inViewFirst, setInViewFirst] = useState<boolean>(true);
 
-  // TODO : jobPostingIdParam 임시로 1처리
-  const jobPostingIdParam = 1;
+  const router = useRouter();
+  const [jobPostingIdParam, setJobPostingIdParam] = useState<number>();
 
   // 랭킹 정보
   const [userRankInfo, setUserRankInfo] = useState<resultMyInformation | null>(null);
@@ -143,6 +174,15 @@ const JobRank = () => {
 
   // 서브메뉴
   const [submenu, setSubmenu] = useState<number>(0);
+
+  // 로딩
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // 모달 열기
+  const [openBoj, setOpenBoj] = useState<boolean>(false);
+
+  // 백준 여부
+  const isBoj = useSelector<RootState>((selector) => selector.authChecker.isBoj);
 
   // 무한 스크롤 구현하기
   useEffect(() => {
@@ -156,21 +196,39 @@ const JobRank = () => {
   }, [inView]);
 
   useEffect(() => {
+    if (router.isReady) {
+      setJobPostingIdParam(Number(router.query.postingId));
+    }
+  }, [router.isReady]);
+
+  useEffect(() => {
     setNoMore(false);
     onGetRankData(1);
   }, [curRank]);
 
+  useEffect(() => {
+    setNoMore(false);
+    onGetRankData(1);
+  }, [jobPostingIdParam]);
+
   const onGetRankData = (nextRankParam: number) => {
+    setLoading(true);
     // 랭킹 정보 가져오기
-    if (curRank == 0) {
+    if (curRank == 0 && jobPostingIdParam) {
       // 처음 가져올 때(nextRank가 1인 상태)
       if (nextRankParam == 1) {
         // 깃허브 정보 불러오기
         (async () => {
           let data = await getGithubRanking(size, jobPostingIdParam);
 
-          setOtherRankInfo(data);
-          setNextRank(data[data.length - 1].rank);
+          if (data.status === 'SUCCESS') {
+            setOtherRankInfo(data.data?.ranks);
+            setNextRank(data.data?.ranks[data.data?.ranks?.length - 1].rank);
+            setLoading(false);
+          } else {
+            alert(data.message);
+            window.history.back();
+          }
         })();
       } else {
         // 깃허브 정보 불러오기
@@ -181,11 +239,17 @@ const JobRank = () => {
 
             let data = await getGithubRanking(size, jobPostingIdParam, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data?.ranks.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setOtherRankInfo([...otherRankInfo, ...data.data?.ranks]);
+              }
+              setLoading(false);
             } else {
-              setOtherRankInfo([...otherRankInfo, ...data]);
+              alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -194,16 +258,28 @@ const JobRank = () => {
       // 내 깃허브 정보 불러오기
       (async () => {
         let data = await getMyGitRanking(jobPostingIdParam);
-        setUserRankInfo(data);
+        if (data.status === 'SUCCESS') {
+          setUserRankInfo(data.data?.githubRankingCover);
+          setLoading(false);
+        } else {
+          alert(data.message);
+          window.history.back();
+        }
       })();
-    } else if (curRank == 1) {
+    } else if (curRank == 1 && jobPostingIdParam) {
       // 백준 정보 불러오기
       if (nextRankParam == 1) {
         (async () => {
           let data = await getBojRanking(size, jobPostingIdParam);
 
-          setOtherRankInfo(data);
-          setNextRank(data[data.length - 1]?.rank);
+          if (data.status === 'SUCCESS') {
+            setOtherRankInfo(data.data);
+            setNextRank(data.data[data.data?.length - 1]?.rank);
+            setLoading(false);
+          } else {
+            alert(data.message);
+            window.history.back();
+          }
         })();
       } else {
         (async () => {
@@ -213,11 +289,17 @@ const JobRank = () => {
 
             let data = await getBojRanking(size, jobPostingIdParam, nextRank, userId, score);
 
-            if (data.length == 0) {
-              // 더이상 조회할 데이터가 없음
-              setNoMore(true);
+            if (data.status === 'SUCCESS') {
+              if (data.data.length == 0) {
+                // 더이상 조회할 데이터가 없음
+                setNoMore(true);
+              } else {
+                setOtherRankInfo([...otherRankInfo, ...data.data]);
+              }
+              setLoading(false);
             } else {
-              setOtherRankInfo([...otherRankInfo, ...data]);
+              alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -226,7 +308,14 @@ const JobRank = () => {
       // 내 백준 정보 불러오기
       (async () => {
         let data = await getMyBojRanking(jobPostingIdParam);
-        setUserRankInfo(data);
+
+        if (data.status === 'SUCCESS') {
+          setUserRankInfo(data.data);
+          setLoading(false);
+        } else {
+          alert(data.message);
+          window.history.back();
+        }
       })();
     }
   };
@@ -236,19 +325,64 @@ const JobRank = () => {
     setOpenCompare(true);
   };
 
+  // 버튼 클릭 시
+  const [clickBtn, setClickBtn] = useState<boolean>(false);
+
+  const onClickBtn = () => {
+    setClickBtn(!clickBtn);
+
+    if (clickBtn) {
+      if (info == 0) {
+        if (curRank == 1 && !isBoj) {
+          alert('백준 로그인 후 이용 가능합니다.');
+        } else {
+          setInfo(1);
+          setOpenCompare(false);
+          setSubmenu(0);
+        }
+      } else {
+        setInfo(0);
+        setOpenCompare(false);
+        setSubmenu(0);
+      }
+    }
+  };
+
   return (
     <>
-      <Wrapper info={info} submenu={submenu}>
+      <Wrapper info={info} submenu={submenu} clickBtn={clickBtn}>
+        <div className="button" onClick={onClickBtn}>
+          <p> {info == 0 ? '지원자 평균 보러가기' : '지원자 랭킹 보러가기'} </p>
+          {!clickBtn && info == 0 ? (
+            <div className="icon-box">
+              <PieIcon />
+            </div>
+          ) : !clickBtn && info == 1 ? (
+            <div className="icon-box">
+              <RankingIcon />
+            </div>
+          ) : null}
+        </div>
         <div className="job-info-box">
           <RankMenu curRank={curRank} onClick={() => setOpenSelect(true)} />
-          <JobInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
+          <JobInfo
+            curRank={curRank}
+            companyName={String(router.query.companyName)}
+            postingName={String(router.query.postingName)}
+            startTime={String(router.query.startTime)}
+            endTime={String(router.query.endTime)}
+          />
         </div>
         <div className="all-rank">
           {info == 0 ? (
             <>
               {!openCompare ? (
                 <ul className="rank-list">
-                  {userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />}
+                  {loading ? (
+                    <JobUerItemLoading />
+                  ) : (
+                    userRankInfo && <JobUserItem curRank={curRank} item={userRankInfo} />
+                  )}
                   {otherRankInfo &&
                     otherRankInfo.map((el, idx) => (
                       <li
@@ -259,7 +393,7 @@ const JobRank = () => {
                           }
                         }}
                       >
-                        <MainOtherItem curRank={curRank} item={el} selectedOption={null} />
+                        {loading ? <RankLoading /> : <MainOtherItem curRank={curRank} item={el} isJob={true} />}
                       </li>
                     ))}
                 </ul>
@@ -281,21 +415,21 @@ const JobRank = () => {
             <>
               <div className="content-wrapper">
                 <SubMenu submenu={submenu} setSubmenu={setSubmenu} />
-                {submenu == 0 ? (
+                {submenu == 0 && jobPostingIdParam ? (
                   <div className="chart-box">
                     <OtherInfo curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
                     <div className="label">사용 언어</div>
                     <ChartJobrank curRank={curRank} jobPostingIdParam={jobPostingIdParam} target={1} />
                   </div>
-                ) : (
+                ) : jobPostingIdParam ? (
                   <CompareBox curRank={curRank} jobPostingIdParam={jobPostingIdParam} />
-                )}
+                ) : null}
               </div>
             </>
           )}
           <div className="space" ref={ref}></div>
         </div>
-        <div className="btn-box">
+        {/* <div className="btn-box">
           <button
             className="average-btn"
             onClick={() => {
@@ -312,9 +446,16 @@ const JobRank = () => {
           >
             {info == 0 ? '지원자 평균 보러가기' : '지원자 랭킹 보러가기'}
           </button>
-        </div>
+        </div> */}
       </Wrapper>
-      {openSelect && <RankMenuSelectModal onClick={() => setOpenSelect(false)} onChangeCurRank={onChangeCurRank} />}
+      {openSelect && (
+        <RankMenuSelectModal
+          onClick={() => setOpenSelect(false)}
+          onChangeCurRank={onChangeCurRank}
+          setOpenBoj={setOpenBoj}
+        />
+      )}
+      {openBoj && <BojModal onClick={() => setOpenBoj(false)} />}
     </>
   );
 };

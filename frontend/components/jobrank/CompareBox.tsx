@@ -1,9 +1,10 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { ICompareBoxProps, applicantBojInfoType, applicantGitInfoType } from './IJobrank';
 import { useEffect, useState } from 'react';
 import UserDefaultIcon from '../../public/Icon/UserDefaultIcon.svg';
 import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
 import ChartJobrank from './ChartJobrank';
+import CompareBoxLoading from './CompareBoxLoading';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -90,6 +91,7 @@ const Wrapper = styled.div`
               .data-bar {
                 width: 0%;
                 transition: 1s;
+                /* transition-delay: 2s; */
                 height: 16px;
                 background-color: ${(props) => props.theme.primary};
                 border-radius: 16px;
@@ -122,6 +124,7 @@ const Wrapper = styled.div`
               .data-bar {
                 width: 0%;
                 transition: 1s;
+                /* transition-delay: 2s; */
                 height: 16px;
                 background-color: ${(props) => props.theme.primary};
                 border-radius: 16px;
@@ -148,6 +151,9 @@ const Wrapper = styled.div`
 `;
 
 const CompareBox = (props: ICompareBoxProps) => {
+  // 로딩
+  const [loading, setLoading] = useState<boolean>(true);
+
   // 나와 전체 사용자 정보
   const [otherGitInfo, setOtherGitInfo] = useState<applicantGitInfoType>(null);
   const [myGitInfo, setMyGitInfo] = useState<applicantGitInfoType>(null);
@@ -203,192 +209,213 @@ const CompareBox = (props: ICompareBoxProps) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     (async () => {
       if (props.curRank == 0) {
         let data = await getPostingsAllGitUsers(props.jobPostingIdParam);
-        setOtherGitInfo(data?.opponent);
-        setMyGitInfo(data?.my);
 
-        setCommitWidth(calc(data?.my.commit, data?.opponent.commit));
-        setStarWidth(calc(data?.my.star, data?.opponent.star));
-        setRepoWidth(calc(data?.my.repositories, data?.opponent.repositories));
+        if (data.status === 'SUCCESS') {
+          setOtherGitInfo(data.data?.opponent);
+          setMyGitInfo(data.data?.my);
+
+          setCommitWidth(calc(data.data?.my.commit, data.data?.opponent.commit));
+          setStarWidth(calc(data.data?.my.star, data.data?.opponent.star));
+          setRepoWidth(calc(data.data?.my.repositories, data.data?.opponent.repositories));
+          setLoading(false);
+        } else {
+          alert(data.message);
+          window.history.back();
+        }
       } else {
         let data = await getPostingsAllBojUsers(props.jobPostingIdParam);
-        setOtherBojInfo(data?.other);
-        setMyBojInfo(data?.my);
 
-        setPassWidth(calc(data?.my.pass, data?.other.pass));
-        setFailWidth(calc(data?.my.fail, data?.other.fail));
-        setSubmitWidth(calc(data?.my.submit, data?.other.submit));
-        setTryfailWidth(calc(data?.my.tryFail, data?.other.tryFail));
+        if (data.status === 'SUCCESS') {
+          setOtherBojInfo(data.data?.other);
+          setMyBojInfo(data.data?.my);
+
+          setPassWidth(calc(data.data?.my.pass, data.data?.other.pass));
+          setFailWidth(calc(data.data?.my.fail, data.data?.other.fail));
+          setSubmitWidth(calc(data.data?.my.submit, data.data?.other.submit));
+          setTryfailWidth(calc(data.data?.my.tryFail, data.data?.other.tryFail));
+          setLoading(false);
+        } else {
+          alert(data.message);
+          window.history.back();
+        }
       }
     })();
   }, [props.curRank]);
 
   return (
-    <Wrapper>
-      <div className="content-wrapper">
-        <div className="content-top">
-          {props.curRank == 0 ? (
-            <>
-              <div className="content-top-left">
-                <img src={myGitInfo?.avatarUrl} className="my-img" />
-                <p>{myGitInfo?.nickname}</p>
+    <>
+      {loading ? (
+        <CompareBoxLoading />
+      ) : (
+        <Wrapper>
+          <div className="content-wrapper">
+            <div className="content-top">
+              {props.curRank == 0 ? (
+                <>
+                  <div className="content-top-left">
+                    <img src={myGitInfo?.avatarUrl} className="my-img" />
+                    <p>{myGitInfo?.nickname}</p>
+                  </div>
+                  <div className="content-top-right">
+                    <UserDefaultIcon />
+                    <p>전체 사용자</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="content-top-left">
+                    <img src={myBojInfo?.tierUrl} className="my-img" style={{ borderRadius: '0' }} />
+                    <p>{myBojInfo?.bojId}</p>
+                  </div>
+                  <div className="content-top-right">
+                    <UserDefaultIcon />
+                    <p>전체 사용자</p>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="content">
+              <div className="content-box">
+                {props.curRank == 0 ? (
+                  <>
+                    <span className="label">커밋</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myGitInfo?.commit}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${commitWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherGitInfo?.commit}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${commitWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">스타</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myGitInfo?.star}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${starWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherGitInfo?.star}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${starWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">레포지토리</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myGitInfo?.repositories}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${repoWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherGitInfo?.repositories}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${repoWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">사용 언어</span>
+                    <div className="chart-box">
+                      <div className="chart-subbox">
+                        <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
+                      </div>
+                      <div className="chart-subbox">
+                        <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <span className="label">맞은 문제</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myBojInfo?.pass}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${passWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherBojInfo?.pass}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${passWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">틀린 문제</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myBojInfo?.fail}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${failWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherBojInfo?.fail}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${failWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">제출 횟수</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myBojInfo?.submit}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${submitWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherBojInfo?.submit}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${submitWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">시도했지만 틀린 문제</span>
+                    <div className="bar-box">
+                      <div className="bar-left">
+                        <p className="number-label">{myBojInfo?.tryFail}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${tryfailWidth?.myWidth}%` }}></div>
+                        </div>
+                      </div>
+                      <div className="bar-right">
+                        <p className="number-label">{otherBojInfo?.tryFail}</p>
+                        <div className="bar">
+                          <div className="data-bar" style={{ width: `${tryfailWidth?.otherWidth}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                    <span className="label">사용 언어</span>
+                    <div className="chart-box">
+                      <div className="chart-subbox">
+                        <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
+                      </div>
+                      <div className="chart-subbox">
+                        <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="content-top-right">
-                <UserDefaultIcon />
-                <p>전체 사용자</p>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="content-top-left">
-                <img src={myBojInfo?.tierUrl} className="my-img" style={{ borderRadius: '0' }} />
-                <p>{myBojInfo?.bojId}</p>
-              </div>
-              <div className="content-top-right">
-                <UserDefaultIcon />
-                <p>전체 사용자</p>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="content">
-          <div className="content-box">
-            {props.curRank == 0 ? (
-              <>
-                <span className="label">커밋</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myGitInfo?.commit}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${commitWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherGitInfo?.commit}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${commitWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">스타</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myGitInfo?.star}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${starWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherGitInfo?.star}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${starWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">레포지토리</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myGitInfo?.repositories}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${repoWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherGitInfo?.repositories}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${repoWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">사용 언어</span>
-                <div className="chart-box">
-                  <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
-                  </div>
-                  <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <span className="label">맞은 문제</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myBojInfo?.pass}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${passWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherBojInfo?.pass}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${passWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">틀린 문제</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myBojInfo?.fail}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${failWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherBojInfo?.fail}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${failWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">제출한 문제</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myBojInfo?.submit}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${submitWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherBojInfo?.submit}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${submitWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">시도했지만 틀린 문제</span>
-                <div className="bar-box">
-                  <div className="bar-left">
-                    <p className="number-label">{myBojInfo?.tryFail}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${tryfailWidth?.myWidth}%` }}></div>
-                    </div>
-                  </div>
-                  <div className="bar-right">
-                    <p className="number-label">{otherBojInfo?.tryFail}</p>
-                    <div className="bar">
-                      <div className="data-bar" style={{ width: `${tryfailWidth?.otherWidth}%` }}></div>
-                    </div>
-                  </div>
-                </div>
-                <span className="label">사용 언어</span>
-                <div className="chart-box">
-                  <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={0} />
-                  </div>
-                  <div className="chart-subbox">
-                    <ChartJobrank curRank={props.curRank} jobPostingIdParam={props.jobPostingIdParam} target={1} />
-                  </div>
-                </div>
-              </>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
-    </Wrapper>
+        </Wrapper>
+      )}
+    </>
   );
 };
 

@@ -23,20 +23,6 @@ export type applicantBojInfoType = {
   tryFail: number;
 } | null;
 
-export type postingType = {
-  postingId: number;
-  postingName: string;
-  companyName: string;
-  status: string;
-  startTime: string;
-  endTime: string;
-  memo: string;
-  dDayName: string;
-  nextDate: string;
-  objective: string;
-  applicantCount: number;
-} | null;
-
 export type widthType = {
   myWidth: number;
   otherWidth: number;
@@ -68,7 +54,10 @@ export interface IOtherInfoProps {
 
 export interface IJobInfoProps {
   curRank: number;
-  jobPostingIdParam: number;
+  companyName: string;
+  postingName: string;
+  startTime: string;
+  endTime: string;
 }
 
 export interface ISubMenuProps {
@@ -84,4 +73,5 @@ export interface ICompareBoxProps {
 export interface ICompareUserBoxProps {
   curRank: number;
   userId: number;
+  onClick?: () => void;
 }

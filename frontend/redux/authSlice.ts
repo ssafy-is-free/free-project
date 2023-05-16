@@ -3,15 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface LoginState {
   isLogin: boolean;
   isNew: boolean;
-  loginStart: boolean;
-  // clickProfile: boolean;
+  isBoj: boolean;
 }
 
 const initialState: LoginState = {
   isLogin: false,
   isNew: false,
-  loginStart: false,
-  // clickProfile: false,
+  isBoj: false,
 };
 
 const authSlice = createSlice({
@@ -19,7 +17,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login(state) {
-      // console.log('로그인');
       state.isLogin = true;
     },
     logout(state) {
@@ -29,14 +26,12 @@ const authSlice = createSlice({
     setNew(state) {
       state.isNew = !state.isNew;
     },
-    setLoginStart(state) {
-      state.loginStart = true;
+    setBoj(state) {
+      // 로그인할 때 있으면 실행, 백준 등록할떄도
+      state.isBoj = true;
     },
-    // setClickProfile(state) {
-    //   state.clickProfile = !state.clickProfile;
-    // },
   },
 });
 
-export const { login, logout, setNew, setLoginStart } = authSlice.actions;
+export const { login, logout, setNew, setBoj } = authSlice.actions;
 export default authSlice.reducer;

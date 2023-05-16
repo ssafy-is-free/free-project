@@ -63,20 +63,8 @@ const ReadmeDiv = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 `;
-const dddata = {
-  githubId: 1,
-  nickname: 'hyejoo',
-  profileLink: 'https://~~',
-  avatarUrl: 'https://~~~',
-  commit: 100,
-  star: 20,
-  mine: true,
-  followers: 5,
-  repositories: null,
-  languages: [],
-};
 
-const GithubInfo = ({ userId, my }: IGithubInfo) => {
+const GithubInfo = ({ userId, my, setOpenCompare }: IGithubInfo) => {
   const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
   // const [githubData, setGithubData] = useState<IGithubProfile | null>(null);
   const [isShow, setIsShow] = useState<boolean>(true);
@@ -90,7 +78,6 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
     }
   };
   const getMyGithubData = async () => {
-    console.log('다시');
     const res = await getMyGithub();
     if (res.data) {
       setGithubData(res.data);
@@ -139,7 +126,14 @@ const GithubInfo = ({ userId, my }: IGithubInfo) => {
 
     return (
       <GithubDiv>
-        <Avatar isCircle={true} data={avatarData} my={my}></Avatar>
+        <Avatar
+          isCircle={true}
+          data={avatarData}
+          my={my}
+          curRank={0}
+          userId={Number(userId)}
+          setOpenCompare={setOpenCompare}
+        ></Avatar>
         <BlackDiv></BlackDiv>
         <CommitDiv>
           {basicInfo.map((info, idx) => (

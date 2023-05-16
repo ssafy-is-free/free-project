@@ -14,7 +14,7 @@ interface IReadmeDetail {
   link: string;
 }
 
-export default function ReadmeDetail({ link }: IReadmeDetail) {
+const ReadmeDetail = ({ link }: IReadmeDetail) => {
   const [readme, setReadme] = useState<string>('');
   useEffect(() => {
     (async () => {
@@ -23,4 +23,5 @@ export default function ReadmeDetail({ link }: IReadmeDetail) {
     })();
   }, []);
   return <MDPreview source={readme} />;
-}
+};
+export default ReadmeDetail;

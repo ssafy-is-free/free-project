@@ -1,16 +1,14 @@
-import styled, { css, keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
 import { useEffect, useRef, useState } from 'react';
-import { NestedMiddlewareError } from 'next/dist/build/utils';
 import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
-import { getFilter, getGithubRanking, getMyBojRanking, getMyGitRanking } from '@/pages/api/rankAxios';
+import { getFilter } from '@/pages/api/rankAxios';
 import FilterOption from './FilterOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '@/redux/rankSlice';
 import { RootState } from '@/redux';
-import { current } from '@reduxjs/toolkit';
 
 const moveUp = keyframes`
  from{
@@ -99,25 +97,6 @@ const Wrapper = styled.div`
       row-gap: 8px;
       justify-items: center;
       transition: 0.4s;
-
-      .option-item {
-        border: 1px solid ${(props) => props.theme.primary};
-        border-radius: 50px;
-        color: ${(props) => props.theme.primary};
-        font-size: 0.8rem;
-        text-align: center;
-        width: 92%;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-
-        &:hover {
-          background-color: ${(props) => props.theme.primary};
-          color: ${(props) => props.theme.fontWhite};
-        }
-      }
     }
   }
 `;
@@ -133,60 +112,24 @@ const StyledCancelOk = styled(CancelOk)`
 const FilterModal = (props: IFilterModalProps) => {
   const dispatch = useDispatch();
   // 옵션
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
   const filterName = useSelector<RootState>((selector) => selector.rankChecker.filter?.name);
   const filterId = useSelector<RootState>((selector) => selector.rankChecker.filter?.languageId);
 
-  // 옵션 이름
-  // const optionNames = ['언어', '그룹'];
-  const optionNames = ['언어'];
-
-  // 옵션
+  // 옵션 언어 목록
   const [languages, setLanguages] = useState<
     {
       languageId: number;
       name: string;
     }[]
   >([]);
-  // const [groups, setGroups] = useState<string[]>([]);
-  const [optionTypes, setOptionTypes] = useState<
-    {
-      languageId: number;
-      name: string;
-    }[][]
-  >([]);
 
   // 클릭한 element 접근
   const itemRefs = useRef<any>([]);
   const arrowRefs = useRef<any>([]);
 
-  // option창 보이기
-  const [openOption, setOpenOption] = useState<{ id: number; state: boolean | undefined }[]>([
-    { id: 1, state: false },
-    { id: 2, state: false },
-  ]);
-
-  // TODO : 그룹 추가되면 2차원 배열로 변경
-  // 선택된 옵션
-  const [selected, setSelected] = useState<number[]>();
+  // 선택된 옵션 정보, redux에 담을 것
   const [selectedItem, setSelectedItem] = useState<{ languageId: number; name: string } | null>(null);
-
-  // TODO: 렌더링 이후에 ref값 불러오는 방법 더 좋은 거 찾아보기
-  useEffect(() => {
-    if (itemRefs.current[0]?.childNodes) {
-      let childs = [...itemRefs.current[0]?.childNodes];
-
-      childs.forEach((child: any, idx) => {
-        if (filterName == child.childNodes[0].innerHTML.trim()) {
-          setSelected([0, idx, Number(filterId)]);
-
-          setSelectedItem({
-            languageId: Number(filterId),
-            name: String(filterName),
-          });
-        }
-      });
-    }
-  }, [openOption]);
 
   // filter 목록 가져오기
   useEffect(() => {
@@ -203,109 +146,91 @@ const FilterModal = (props: IFilterModalProps) => {
     })();
   }, []);
 
-  useEffect(() => {
-    setOptionTypes([languages]);
-  }, [languages]);
-
   // option 창 여닫기 함수
-  const onHandleOptionBox = (el: number) => {
-    const newArr = openOption.map((item, idx) => {
-      if (el == idx + 1) {
-        return {
-          id: idx + 1,
-          state: !openOption.at(idx)?.state,
-        };
-      } else {
-        return {
-          id: idx + 1,
-          state: openOption.at(idx)?.state,
-        };
-      }
-    });
-    const itemRefStyle = itemRefs.current[el - 1].style;
-    if (newArr[el - 1]?.state) {
+  const onHandleOptionBox = () => {
+    // 옵션 박스 style
+    const itemRefStyle = itemRefs.current.style;
+    const arrowRefStyle = arrowRefs.current.childNodes[1].style;
+
+    if (itemRefStyle.opacity == 0) {
       itemRefStyle.opacity = '1';
       itemRefStyle.visibility = 'visible';
       itemRefStyle.maxHeight = '240px';
+      arrowRefStyle.transform = 'rotate(180deg)';
 
-      // 아이콘
-      arrowRefs.current[el - 1].childNodes[1].style.transform = 'rotate(180deg)';
+      // 이미 필터가 있다면 해당 필터 색깔 칠해지기
+      setSelectedItem({
+        languageId: Number(filterId),
+        name: String(filterName),
+      });
+      itemRefs.current.childNodes.forEach((el: HTMLDivElement, idx: number) => {
+        let text = (el.childNodes[0] as HTMLDivElement).innerHTML.trim();
+        const selectedOptionStyle = el.style;
+        if (text == String(filterName)) {
+          // 이미 선택되어있는 필터 옵션이라면
+          selectedOptionStyle.backgroundColor = '#4A58A9';
+          selectedOptionStyle.color = '#ffffff';
+        }
+      });
     } else {
       itemRefStyle.opacity = '0';
       itemRefStyle.visibility = 'hidden';
       itemRefStyle.maxHeight = '0';
-
-      // 아이콘
-      arrowRefs.current[el - 1].childNodes[1].style.transform = 'rotate(0deg)';
+      arrowRefStyle.transform = 'rotate(0deg)';
     }
-    setOpenOption(newArr);
   };
 
-  useEffect(() => {
-    if (selected?.length && selected?.length > 0) {
-      const arr = itemRefs.current[selected[0]].childNodes;
-
-      arr.forEach((element: any, idx: number) => {
-        const style = itemRefs.current[selected[0]].childNodes[idx].style;
-        if (idx == selected[1]) {
-          style.backgroundColor = '#4A58A9';
-          style.color = '#ffffff';
-        } else {
-          style.backgroundColor = '#ffffff';
-          style.color = '#4A58A9';
-        }
-      });
-    }
-  }, [selected]);
-
   // option 클릭 시
-  const onClickOption = (itemIdx: number, parentIdx: number, languageId: number, name: string) => {
-    setSelected([parentIdx, itemIdx, languageId]);
+  // TODO : 스타일 이렇게 일일이 말고 다른 방법 있는지 찾아보기
+  const onClickOption = (item: { languageId: number; name: string }, itemIdx: number) => {
+    // 옵션 스타일 바꿔주기 => 파란색
+    itemRefs.current.childNodes.forEach((el: HTMLDivElement, idx: number) => {
+      const selectedOptionStyle = el.style;
+      if (idx === itemIdx) {
+        // 선택된 옵션일 때
+        selectedOptionStyle.backgroundColor = '#4A58A9';
+        selectedOptionStyle.color = '#ffffff';
+      } else {
+        selectedOptionStyle.backgroundColor = '#ffffff';
+        selectedOptionStyle.color = '#4A58A9';
+      }
+    });
+
     setSelectedItem({
-      languageId: languageId,
-      name: name,
+      languageId: item.languageId,
+      name: item.name,
     });
   };
 
-  // TODO : 더 좋은 방법이 없을까..?
   // 초기화 버튼 클릭 시
   const onInit = () => {
-    setSelected([]);
+    setSelectedItem(null);
 
-    itemRefs.current.map((parent: any) => {
-      parent.childNodes.forEach((child: any) => {
-        child.style.backgroundColor = '#ffffff';
-        child.style.color = '#4A58A9';
-      });
+    itemRefs.current.childNodes.forEach((el: HTMLDivElement) => {
+      const selectedOptionStyle = el.style;
+      selectedOptionStyle.backgroundColor = '#ffffff';
+      selectedOptionStyle.color = '#4A58A9';
     });
   };
 
   const onClickFilter = () => {
-    if (selected && selected?.length > 0) {
-      if (selectedItem) {
-        dispatch(setFilter(selectedItem));
-      }
+    if (selectedItem) {
+      // 선택한 것이 있을 떄
 
-      // 필터를 선택했을 때
-      if (selected) {
-        props.getRankList(props.size, 1, selected[2]);
-      }
+      // redux에 필터 값 담기
+      dispatch(setFilter(selectedItem));
 
-      if (props.setSelectedOption) {
-        props.setSelectedOption(selectedItem);
-      }
-
-      // props.insertFilter(selectedItem);
+      // 필터 반영해서 랭킹 정보 갱신
+      props.getRankList(0, selectedItem?.languageId);
     } else {
       // 필터를 선택하지 않았을 때
-      props.getRankList(props.size, 1);
+      props.getRankList(0);
       dispatch(setFilter(null));
-      if (props.setSelectedOption) {
-        props.setSelectedOption(null);
-      }
+      setSelectedItem(null);
     }
 
     // 모달창 닫기
+    props.setNoMore(false);
     props.onClick();
   };
 
@@ -317,32 +242,25 @@ const FilterModal = (props: IFilterModalProps) => {
           <CloseIcon onClick={props.onClick} />
         </div>
         <div className="title">검색 필터</div>
-        {optionTypes.map((el, idx) => {
-          return (
-            <div className="filter-box" key={idx}>
-              <div
-                className="box-top"
-                ref={(el) => (arrowRefs.current[idx] = el)}
-                onClick={() => onHandleOptionBox(idx + 1)}
-              >
-                <div className="label">{optionNames[idx]}</div>
-                <StyledFilterArrowIcon className="arrow" />
-              </div>
-              <div className="box-content" ref={(el) => (itemRefs.current[idx] = el)}>
-                {el.map((item, itemIdx) => {
-                  return (
-                    <FilterOption
-                      key={itemIdx}
-                      isInFilter={true}
-                      item={item}
-                      onClick={() => onClickOption(itemIdx, idx, item.languageId, item.name)}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
+
+        <div className="filter-box">
+          <div className="box-top" ref={arrowRefs} onClick={() => onHandleOptionBox()}>
+            <div className="label">언어</div>
+            <StyledFilterArrowIcon className="arrow" />
+          </div>
+          <div className="box-content" ref={itemRefs}>
+            {languages.map((item, itemIdx) => {
+              return (
+                <FilterOption
+                  key={itemIdx}
+                  isInFilter={true}
+                  item={item}
+                  onClick={() => onClickOption(item, itemIdx)}
+                />
+              );
+            })}
+          </div>
+        </div>
         <StyledCancelOk cancelWord="초기화" okWord="필터적용" cancel={onInit} ok={onClickFilter} />
       </Wrapper>
     </>

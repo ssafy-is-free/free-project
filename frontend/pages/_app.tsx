@@ -1,16 +1,18 @@
+import Head from 'next/head';
+import Script from 'next/script';
 import type { AppProps } from 'next/app';
-import wrapper, { RootState, persistor } from '@/redux';
-import { Provider, useDispatch, useSelector } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import { useEffect } from 'react';
+import { Provider } from 'react-redux';
+import wrapper, { persistor } from '@/redux';
+import { useMediaQuery } from 'react-responsive';
+import { PersistGate } from 'redux-persist/integration/react';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
-import Footer from '@/components/common/Footer';
-import Head from 'next/head';
-import { useCookies } from 'react-cookie';
-import { PersistGate } from 'redux-persist/integration/react';
-import { useEffect } from 'react';
+import { ThemeProvider } from 'styled-components';
 import * as gtag from '@/utils/gtag';
-import Script from 'next/script';
+import { setCookie } from '@/utils/cookies';
+import Desktop from './desktop';
+import Footer from '@/components/common/Footer';
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
@@ -18,7 +20,9 @@ function App({ Component, ...rest }: AppProps) {
   const ID = gtag.GA_TRACKING_ID;
 
   const { store, props } = wrapper.useWrappedStore(rest);
-  const [cookies, setCookie] = useCookies(['redirect-uri']);
+
+  //모바일 데스크탑 분기
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
@@ -55,8 +59,14 @@ function App({ Component, ...rest }: AppProps) {
             <Head>
               <title>CHPO</title>
             </Head>
-            <Component {...props.pageProps} />
-            <Footer />
+            {!isMobile ? (
+              <Desktop />
+            ) : (
+              <div>
+                <Component {...props.pageProps} />
+                <Footer />
+              </div>
+            )}
           </ThemeProvider>
         </PersistGate>
       </Provider>

@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components';
 import { IMainUserItemProps } from './IRank';
-import { useRouter } from 'next/router';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useEffect, useState } from 'react';
 
@@ -118,27 +117,29 @@ const MainUserItem = (props: IMainUserItemProps) => {
   const [rankupdown, setRankupdown] = useState<number>(0);
 
   useEffect(() => {
-    if (props.item.rankUpDown < 0) {
-      setRankupdown(-1);
-    } else if (props.item.rankUpDown > 0) {
-      setRankupdown(1);
-    } else {
-      setRankupdown(0);
+    if (props.item?.rankUpDown) {
+      if (props.item?.rankUpDown < 0) {
+        setRankupdown(-1);
+      } else if (props.item?.rankUpDown > 0) {
+        setRankupdown(1);
+      } else {
+        setRankupdown(0);
+      }
     }
   }, [props.curRank]);
 
   return (
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
-        {props.item.rank}
-        {props.item.rankUpDown !== 0 && props.selectedOption == null && (
+        {props.item && props.item.rank}
+        {rankupdown !== 0 && (
           <div className="rank-icon">
-            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
+            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item?.rankUpDown}
           </div>
         )}
       </div>
       <div className="center">
-        <img src={props.item.avatarUrl} className="user-photo" />
+        <img src={props.item?.avatarUrl} className="user-photo" />
         <div className="user-nickname">
           <div className="name">{props.item?.nickname} </div>
           {props.curRank == 1 && (
@@ -148,7 +149,7 @@ const MainUserItem = (props: IMainUserItemProps) => {
           )}
         </div>
       </div>
-      <div className="user-score">{props.item.score}</div>
+      <div className="user-score">{props.item && props.item.score}</div>
     </Wrapper>
   );
 };

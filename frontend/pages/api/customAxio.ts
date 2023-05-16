@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { config } from 'process';
+import Swal from 'sweetalert2';
 
-// const BASE_URL = 'https://k8b102.p.ssafy.io/api';
 const BASE_URL = '/api';
 
 /**
@@ -13,22 +12,6 @@ export const authApi = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-/** 아래처럼 사용
- * export const getRank = async (page: number) => {
-  const params = {
-    size: 8,
-    rank: 9,
-  };
-
-  const { data } = await authApi<>({
-    method: 'get',
-    url: '/github/rank',
-    params: params,
-  });
-  return data;
-};
- */
 
 /**
  * 비회원도 쓸 수 있는 기능일 때 사용할 axios
@@ -53,7 +36,7 @@ authApi.interceptors.request.use((config: any) => {
 
 // 응답 인터셉터 추가
 authApi.interceptors.response.use(
-  (response) => {
+  async (response) => {
     return response;
   },
   async (error) => {
@@ -61,7 +44,6 @@ authApi.interceptors.response.use(
     const originalRequest = config;
 
     if (response.status === 401) {
-      // console.log('access 만료');
       const accessToken = localStorage.getItem('accessToken');
 
       await axios
@@ -72,16 +54,29 @@ authApi.interceptors.response.use(
           },
         })
         .then((res) => {
-          if (res.status === 200) {
+          if (res.data.status === 'SUCCESS') {
             const newAccessToken = res.data.data['access-token'];
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
-            return axios(originalRequest);
+            window.location.reload(); // TODO : 이게 최선인가?
+            // return axios(originalRequest);
+          } else if (res.data.status === 'FAIL') {
+            //로그아웃 시키기
+            // Swal.fire({
+            //   text: '로그아웃 되었습니다.',
+            //   icon: 'error',
+            // });
+            localStorage.removeItem('accessToken');
+            window.location.href = '/';
           }
         })
         .catch((err) => {
           if (err.response.status === 401) {
             localStorage.removeItem('accessToken');
+            // Swal.fire({
+            //   text: '로그아웃 되었습니다.',
+            //   icon: 'error',
+            // });
             window.location.href = '/';
           }
         });

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { IMainOtherItemProps } from './IRank';
-import { useRouter } from 'next/router';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const Wrapper = styled.div<{ rankupdown: number }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -11,7 +12,6 @@ const Wrapper = styled.div<{ rankupdown: number }>`
   height: 56px;
   display: flex;
   align-items: center;
-  /* justify-content: space-around; */
   padding: 0px 14px;
   color: ${(props) => props.theme.fontBlack};
   font-weight: bold;
@@ -75,7 +75,6 @@ const Wrapper = styled.div<{ rankupdown: number }>`
         .user-tier {
           width: 24px;
           height: 24px;
-          /* border-radius: 50%; */
           margin-left: 8px;
         }
       }
@@ -118,13 +117,18 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
   // =1, 0, 1
   const [rankupdown, setRankupdown] = useState<number>(0);
 
+  // 옵션
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
+
   useEffect(() => {
-    if (props.item.rankUpDown < 0) {
-      setRankupdown(-1);
-    } else if (props.item.rankUpDown > 0) {
-      setRankupdown(1);
-    } else {
-      setRankupdown(0);
+    if (props.item?.rankUpDown) {
+      if (props.item?.rankUpDown < 0) {
+        setRankupdown(-1);
+      } else if (props.item?.rankUpDown > 0) {
+        setRankupdown(1);
+      } else {
+        setRankupdown(0);
+      }
     }
   }, [props.curRank]);
 
@@ -132,11 +136,13 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item?.rank}
-        {props.item.rankUpDown !== 0 && props.selectedOption == null && (
-          <div className="rank-icon">
-            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item.rankUpDown}
-          </div>
-        )}
+        {props.isJob || filter
+          ? null
+          : props.item?.rankUpDown !== 0 && (
+              <div className="rank-icon">
+                <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item?.rankUpDown}
+              </div>
+            )}
       </div>
       <div className="center">
         <img src={props.item?.avatarUrl} className="user-photo" />

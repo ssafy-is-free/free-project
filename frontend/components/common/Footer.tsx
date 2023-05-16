@@ -75,7 +75,7 @@ const ProfileIcon = styled(Profile)`
  * /main, /career, /profile
  * @returns
  */
-function Footer() {
+const Footer = () => {
   const router = useRouter();
   // login 상태값 가져오기
   const isLogin = useSelector<RootState>((selector) => selector.authChecker.isLogin);
@@ -92,8 +92,7 @@ function Footer() {
     {
       icon: CareerIcon,
       name: '취업관리',
-      // path: '/career',
-      path: '/temp',
+      path: '/career',
     },
     {
       icon: ProfileIcon,
@@ -103,7 +102,7 @@ function Footer() {
   ];
 
   const goPage = (item: any) => {
-    if (!isLogin && item.path == '/profile') {
+    if (!isLogin && ['/profile', '/career'].includes(item.path)) {
       setOpenLogin(true);
     } else if (item.path === router.pathname) {
       router.reload();
@@ -117,7 +116,6 @@ function Footer() {
       {footerItems.map((item, idx) => (
         <IconDiv
           onClick={() => {
-            // router.push(item.path);
             goPage(item);
           }}
           key={idx}
@@ -129,6 +127,6 @@ function Footer() {
       {openLogin && <LoginModal onClick={() => setOpenLogin(false)} />}
     </FooterDiv>
   );
-}
+};
 
 export default Footer;
