@@ -227,7 +227,6 @@ const Desktop = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log('???');
       if (selected == 1) setSelected(0);
       else setSelected(1);
     }, 5000);

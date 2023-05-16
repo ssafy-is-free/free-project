@@ -32,10 +32,6 @@ function App({ Component, ...rest }: AppProps) {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
-    console.log(isMobile);
-  }, [isMobile]);
-
-  useEffect(() => {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
       setCookie('redirect-uri', 'k8b');
     }

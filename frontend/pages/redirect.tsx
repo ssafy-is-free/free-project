@@ -12,8 +12,6 @@ const Redirect = () => {
     const accessToken = queryParams.get('token');
     const isBoj = queryParams.get('isBoj');
 
-    console.log(isBoj);
-
     if (isBoj == 'false') {
       // 백준 계정 X
       dispatch(setNew());
