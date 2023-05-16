@@ -3,6 +3,7 @@ package com.ssafy.backend.domain.user.repository;
 import static com.ssafy.backend.domain.entity.QUser.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -27,5 +28,14 @@ public class UserQueryRepository {
 		return queryFactory.selectFrom(user)
 			.where(user.bojId.contains(bojId), user.isDeleted.eq(false))
 			.fetch();
+	}
+
+	//해당 닉네임으로 조회 - 삭제여부 상관없이
+	public Optional<User> findByNicknameAll(String nickname) {
+
+		return Optional.ofNullable(queryFactory
+			.selectFrom(user)
+			.where(user.nickname.eq(nickname))
+			.fetchOne());
 	}
 }

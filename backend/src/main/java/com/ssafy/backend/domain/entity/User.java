@@ -59,9 +59,9 @@ public class User extends BaseTimeEntity {
 			.build();
 	}
 
-	//로그인시 업데이트 - 닉네임, 프로필
+	//로그인시 업데이트 - 닉네임, 프로필 + 삭제되어있다면 다시 복구
 	public void profileUpdate(String nickname, String image) {
-
+		this.isDeleted = false;
 		this.nickname = nickname;
 		this.image = image;
 
