@@ -397,6 +397,8 @@ const Main = () => {
         (async () => {
           let data = languageIdParam ? await getMyGitRanking(languageIdParam) : await getMyGitRanking();
 
+          console.log('data, ', data);
+
           if (data.status === 'SUCCESS') {
             if (data.data?.githubRankingCover) setMyRankInfo(data.data?.githubRankingCover);
             else setMyRankInfo(null);
