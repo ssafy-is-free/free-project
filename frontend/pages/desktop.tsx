@@ -2,9 +2,10 @@ import styled, { css, keyframes } from 'styled-components';
 import Mobile1 from '../public/Icon/Mobile1.svg';
 import Mobile2 from '../public/Icon/Mobile3.svg';
 import QrIcon from '../public/Icon/QrIcon.svg';
-import AppleIcon from '../public/Icon/AppleIcon.svg';
+import ChromeIcone from '../public/Icon/ChromeIcone.svg';
 import DesktopIcon from '../public/Icon/DesktopIcon.svg';
-import AndroidIcon from '../public/Icon/AndroidIcon.svg';
+import SamsungIcon from '../public/Icon/SamsungIcon.svg';
+import SafariIcon from '../public/Icon/SafariIcon.svg';
 import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div<{ selected: number }>`
@@ -53,6 +54,7 @@ const Wrapper = styled.div<{ selected: number }>`
       line-height: 32px;
       color: ${(props) => props.theme.fontDarkGray};
       display: flex;
+      align-items: center;
 
       .qr-box {
         margin-top: 16px;
@@ -256,15 +258,21 @@ const Desktop = () => {
             </div>
             <div className="menual">
               <div className="device-icon">
-                <AndroidIcon />
+                <SafariIcon />
               </div>
-              <div className="device-text">안드로이드 : QR 접속 → 메뉴 → 홈화면에 추가</div>
+              <div className="device-text">사파리 : QR 접속 → 공유하기 → 홈화면에 추가 </div>
             </div>
             <div className="menual">
               <div className="device-icon">
-                <AppleIcon />
+                <ChromeIcone />
               </div>
-              <div className="device-text">IOS : QR 접속 → 공유하기 → 홈화면에 추가</div>
+              <div className="device-text">크롬 : QR 접속 → 메뉴 → 홈화면에 추가</div>
+            </div>
+            <div className="menual">
+              <div className="device-icon">
+                <SamsungIcon />
+              </div>
+              <div className="device-text">삼성 인터넷 : QR 접속 → 우측상단 다운로드 아이콘 클릭</div>
             </div>
           </div>
         </div>
