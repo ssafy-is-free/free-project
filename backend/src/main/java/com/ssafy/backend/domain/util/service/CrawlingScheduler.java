@@ -42,7 +42,7 @@ public class CrawlingScheduler {
 		}
 	}
 
-	@Scheduled(cron = "0 0 2 * * *")
+	@Scheduled(cron = "0 0 3 * * *")
 	public void githubBulkUpdate() throws InterruptedException {
 		List<User> userList = userRepository.findAll();
 		for (User user : userList) {
