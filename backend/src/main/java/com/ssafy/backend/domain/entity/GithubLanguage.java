@@ -61,7 +61,7 @@ public class GithubLanguage extends BaseTimeEntity {
 		if (this == object) {
 			return true;
 		}
-		if (this.getClass() != object.getClass()) {
+		if (!(object instanceof GithubRepo)) {
 			return false;
 		}
 		GithubLanguage language = (GithubLanguage)object;
