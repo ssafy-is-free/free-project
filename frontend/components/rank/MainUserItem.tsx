@@ -126,7 +126,7 @@ const MainUserItem = (props: IMainUserItemProps) => {
         setRankupdown(0);
       }
     }
-  }, [props.curRank]);
+  }, [props.curRank, props.item]);
 
   return (
     <Wrapper rankupdown={rankupdown}>
