@@ -54,7 +54,7 @@ const Wrapper = styled.div`
       width: 32px;
       height: 32px;
       border-radius: 50%;
-      margin-right: 16px;
+      margin-right: 8px;
     }
     .user-nickname {
       width: 70%;

@@ -59,7 +59,7 @@ authApi.interceptors.response.use(
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
             localStorage.setItem('accessToken', newAccessToken);
             window.location.reload(); // TODO : 이게 최선인가?
-            return axios(originalRequest);
+            // return axios(originalRequest);
           } else if (res.data.status === 'FAIL') {
             //로그아웃 시키기
             Swal.fire({
