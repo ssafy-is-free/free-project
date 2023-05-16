@@ -149,6 +149,32 @@ public class GithubControllerTest {
 	}
 
 	@Test
+	@DisplayName("깃허브 다른 유저 디테일 정보 테스트")
+	public void getGithubMyDetailsElseUserTest() throws Exception {
+		//given
+
+		GithubDetailResponse githubDetailResponse = GithubDetailResponse.builder().build();
+		given(githubService.getDetails(anyLong(), anyBoolean())).willReturn(githubDetailResponse);
+
+		given(responseService.getDataResponse(githubDetailResponse, CustomSuccessStatus.RESPONSE_SUCCESS)).willReturn(
+			getDataResponse(githubDetailResponse, RESPONSE_SUCCESS));
+
+		//when
+		ResultActions actions = mockMvc.perform(
+			get("/github/users/2")
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.characterEncoding("UTF-8"));
+
+		//then
+		actions
+			.andDo(print())
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(jsonPath("$.status").value("SUCCESS"))
+			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+	}
+
+	@Test
 	@DisplayName("깃허브 나의 디테일 정보 테스트")
 	public void getGithubMyDetailsTest() throws Exception {
 		//given
