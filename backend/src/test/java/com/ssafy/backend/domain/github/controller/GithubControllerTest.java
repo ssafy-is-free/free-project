@@ -59,6 +59,8 @@ import com.ssafy.backend.global.response.ResponseStatus;
 @WithMockUser
 public class GithubControllerTest {
 	@Autowired
+	private MockMvc mockMvcNotUser;
+	@Autowired
 	private MockMvc mockMvc;
 	@MockBean
 	private ResponseService responseService;
@@ -167,7 +169,7 @@ public class GithubControllerTest {
 			getDataResponse(githubDetailResponse, RESPONSE_SUCCESS));
 
 		//when
-		ResultActions actions = mockMvc.perform(
+		ResultActions actions = mockMvcNotUser.perform(
 			get("/github/users/2")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
