@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { IRepository } from './IProfile';
 import styled from 'styled-components';
 import { getReadme } from '@/pages/api/profileAxios';
+import Image from 'next/image';
 
 const ReadmeDiv = styled.div`
   border: solid;
@@ -57,7 +58,7 @@ const Readme = ({ repository, githubId }: IReadme) => {
     <ReadmeDiv>
       <ReadmeTitle onClick={clicked} active={open}>
         <h4>{repository.name}</h4>
-        <img src="/Icon/FilterArrowIcon.svg" alt="#" />
+        <Image src="/Icon/FilterArrowIcon.svg" alt="arrow" width={16} height={16} />
       </ReadmeTitle>
       {open && (
         <ReadmeDetailDiv>

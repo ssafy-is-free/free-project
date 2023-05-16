@@ -7,6 +7,10 @@ import { deleteHistory, getHistory } from '@/pages/api/careerAxios';
 import { IHistory, ICareerListProps } from './ICareer';
 import Swal from 'sweetalert2';
 import CareerNav from './CareerNav';
+import Image from 'next/image';
+import trashIcon from '@/public/Icon/TrashIcon.png';
+import checkIcon from '@/public/Icon/CheckIcon.png';
+import addIcon from '@/public/Icon/AddIcon.png';
 
 const CareerListDiv = styled.div`
   .header {
@@ -18,12 +22,10 @@ const CareerListDiv = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .title {
       color: ${(props) => props.theme.secondary};
       font-size: large;
-    }
-    img {
-      height: 2rem;
     }
 
     .deleteBtn {
@@ -119,19 +121,21 @@ const CareerList = ({ openNew }: ICareerListProps) => {
     return (
       <CareerListDiv>
         <div className="header">
-          <img
-            src="/Icon/TrashIcon.svg"
-            alt=""
+          <Image
+            src={trashIcon}
+            alt="삭제"
+            width={32}
+            height={32}
             onClick={() => {
               setDelMode(!delMode);
               setCheckedItems(new Set());
             }}
-          />
+          ></Image>
           <div className="title">취업지원이력</div>
           {delMode ? (
-            <img src="/Icon/CheckIcon.svg" alt="" onClick={delapi} />
+            <Image src={checkIcon} alt="삭제" width={32} height={32} onClick={delapi}></Image>
           ) : (
-            <img src="/Icon/AddNewIcon.svg" alt="" onClick={openNew} />
+            <Image src={addIcon} alt="추가" width={32} height={32} onClick={openNew}></Image>
           )}
         </div>
         <div className="content">

@@ -4,6 +4,7 @@ import { IMainOtherItemProps } from './IRank';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux';
+import Image from 'next/image';
 
 const Wrapper = styled.div<{ rankupdown: number }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -55,8 +56,8 @@ const Wrapper = styled.div<{ rankupdown: number }>`
     align-items: center;
 
     .user-photo {
-      width: 32px;
-      height: 32px;
+      /* width: 32px;
+      height: 32px; */
       border-radius: 50%;
       margin-right: 8px;
     }
@@ -73,8 +74,8 @@ const Wrapper = styled.div<{ rankupdown: number }>`
 
       .tier {
         .user-tier {
-          width: 24px;
-          height: 24px;
+          /* width: 24px;
+          height: 24px; */
           margin-left: 8px;
         }
       }
@@ -145,12 +146,16 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
             )}
       </div>
       <div className="center">
-        <img src={props.item?.avatarUrl} className="user-photo" />
+        <Image src={props.item?.avatarUrl} className="user-photo" alt="avatar" width={32} height={32}></Image>
+        {/* <img src={props.item?.avatarUrl} className="user-photo" /> */}
         <div className="user-nickname">
           <div className="name">{props.item?.nickname} </div>
           {props.curRank == 1 && (
             <div className="tier">
-              <img src={props.item?.tierUrl} className="user-tier" />
+              {props.item?.tierUrl && (
+                <Image src={props.item.tierUrl} className="user-tier" alt="avatar" width={24} height={24}></Image>
+              )}
+              {/* <img src={props.item?.tierUrl} className="user-tier" /> */}
             </div>
           )}
         </div>

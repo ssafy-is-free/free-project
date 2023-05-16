@@ -5,6 +5,7 @@ import UserDefaultIcon from '../../public/Icon/UserDefaultIcon.svg';
 import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
 import ChartJobrank from './ChartJobrank';
 import CompareBoxLoading from './CompareBoxLoading';
+import Image from 'next/image';
 
 const Wrapper = styled.div`
   width: 100%;
@@ -255,8 +256,13 @@ const CompareBox = (props: ICompareBoxProps) => {
               {props.curRank == 0 ? (
                 <>
                   <div className="content-top-left">
-                    <img src={myGitInfo?.avatarUrl} className="my-img" />
-                    <p>{myGitInfo?.nickname}</p>
+                    {myGitInfo && (
+                      <>
+                        <Image src={myGitInfo.avatarUrl} alt="github" width={64} height={64} className="my-img"></Image>
+                        <p>{myGitInfo.nickname}</p>
+                      </>
+                    )}
+                    {/* <img src={myGitInfo?.avatarUrl} className="my-img" /> */}
                   </div>
                   <div className="content-top-right">
                     <UserDefaultIcon />
@@ -266,8 +272,20 @@ const CompareBox = (props: ICompareBoxProps) => {
               ) : (
                 <>
                   <div className="content-top-left">
-                    <img src={myBojInfo?.tierUrl} className="my-img" style={{ borderRadius: '0' }} />
-                    <p>{myBojInfo?.bojId}</p>
+                    {myBojInfo && (
+                      <>
+                        <Image
+                          src={myBojInfo.tierUrl}
+                          alt="github"
+                          width={64}
+                          height={64}
+                          className="my-img"
+                          style={{ borderRadius: '0' }}
+                        ></Image>
+                        <p>{myBojInfo.bojId}</p>
+                      </>
+                    )}
+                    {/* <img src={myBojInfo?.tierUrl} className="my-img" style={{ borderRadius: '0' }} /> */}
                   </div>
                   <div className="content-top-right">
                     <UserDefaultIcon />

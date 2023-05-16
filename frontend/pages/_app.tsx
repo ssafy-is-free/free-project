@@ -28,11 +28,11 @@ function App({ Component, ...rest }: AppProps) {
   //   console.log(isMobile);
   // }, [isMobile]);
 
-  useEffect(() => {
-    if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
-      setCookie('redirect-uri', 'k8b');
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
+  //     setCookie('redirect-uri', 'k8b');
+  //   }
+  // }, []);
 
   return (
     <>

@@ -10,24 +10,10 @@ const nextConfig = {
     });
     return config;
   },
-
+  images: {
+    domains: ['avatars.githubusercontent.com'],
+  },
   reactStrictMode: false,
-  // async headers() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       headers: [
-  //         { key: 'Access-Control-Allow-Credentials', value: 'true' },
-  //         {
-  //           key: 'Access-Control-Allow-Origin',
-  //           value: 'https://k8b102.p.ssafy.io',
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
-  // CORS 처리 다른 방법
-  // swcMinify: true,
   async rewrites() {
     return [
       {
