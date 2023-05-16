@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -53,14 +55,19 @@ public class AlgorithmControllerTest {
 	@MockBean
 	private ResponseService responseService;
 
+	@BeforeEach
+	void before() {
+		mockMvc = MockMvcBuilders
+			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver(),
+				new PageableHandlerMethodArgumentResolver())
+			.build();
+	}
+
 	@Test
 	@DisplayName("백준 마이랭크 테스트")
 	public void bojMyRankTest() throws Exception {
 
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 		//given
 		BojRankResponse bojRankResponse = BojRankResponse.builder()
 			.userId(1L)
@@ -76,7 +83,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(bojRankResponse, RESPONSE_SUCCESS)).willReturn(
 			getDataResponse(bojRankResponse, RESPONSE_SUCCESS));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/my-rank")
+		ResultActions actions = mockMvc.perform(get("/boj/my-rank")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -93,10 +100,6 @@ public class AlgorithmControllerTest {
 	@DisplayName("백준 마이랭크 실패 테스트")
 	public void bojMyRankFailTest() throws Exception {
 
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 		//given
 		BojRankResponse bojRankResponse = new BojRankResponse();
 
@@ -104,7 +107,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(null, RESPONSE_NO_CONTENT)).willReturn(
 			getDataResponse(bojRankResponse, RESPONSE_NO_CONTENT));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/my-rank")
+		ResultActions actions = mockMvc.perform(get("/boj/my-rank")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -120,10 +123,6 @@ public class AlgorithmControllerTest {
 	@DisplayName("백준 상세정보 userId 입력 테스트")
 	public void getBojInfoDetailTest() throws Exception {
 
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 		//given
 		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.builder()
 			.bojId("soda")
@@ -139,7 +138,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS)).willReturn(
 			getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/users/1")
+		ResultActions actions = mockMvc.perform(get("/boj/users/1")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -161,10 +160,6 @@ public class AlgorithmControllerTest {
 	@DisplayName("백준 본인 상세정보 테스트")
 	public void getBojInfoMyDetailTest() throws Exception {
 
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 		//given
 		BojInfoDetailResponse bojInfoDetailResponse = BojInfoDetailResponse.builder()
 			.bojId("soda")
@@ -180,7 +175,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS)).willReturn(
 			getDataResponse(bojInfoDetailResponse, RESPONSE_SUCCESS));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/users")
+		ResultActions actions = mockMvc.perform(get("/boj/users")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -202,10 +197,6 @@ public class AlgorithmControllerTest {
 	@DisplayName("백준 상세정보 비어있을 때 테스트")
 	public void getBojInfoDetailNullTest() throws Exception {
 
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new AlgorithmController(responseService, algorithmService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 		//given
 		BojInfoDetailResponse bojInfoDetailResponse = new BojInfoDetailResponse();
 
@@ -213,7 +204,7 @@ public class AlgorithmControllerTest {
 		given(responseService.getDataResponse(null, RESPONSE_NO_CONTENT)).willReturn(
 			getDataResponse(bojInfoDetailResponse, RESPONSE_NO_CONTENT));
 		//when
-		ResultActions actions = mvc.perform(get("/boj/users")
+		ResultActions actions = mockMvc.perform(get("/boj/users")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));
@@ -340,7 +331,7 @@ public class AlgorithmControllerTest {
 			getDataResponse(bojRankResponseList, RESPONSE_SUCCESS));
 
 		//when
-		ResultActions actions = mockMvc.perform(get("/boj/ranks")
+		ResultActions actions = mockMvc.perform(get("/boj/ranks?size=20")
 			.contentType(MediaType.APPLICATION_JSON)
 			.accept(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8"));

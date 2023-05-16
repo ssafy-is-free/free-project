@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -66,6 +68,15 @@ public class GithubControllerTest {
 	private GithubRankingService githubRankingService;
 	@Autowired
 	private ObjectMapper objectMapper;
+
+	@BeforeEach
+	void before() {
+		mockMvc = MockMvcBuilders
+			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
+			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver(),
+				new PageableHandlerMethodArgumentResolver())
+			.build();
+	}
 
 	@Test
 	@DisplayName("깃허브 랭크 테스트")
@@ -122,10 +133,6 @@ public class GithubControllerTest {
 	@DisplayName("깃허브 유저 디테일 테스트")
 	public void getGithubDetailsElseUserTest() throws Exception {
 		//given
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 
 		GithubDetailResponse githubDetailResponse = GithubDetailResponse.builder().build();
 		given(githubService.getDetails(anyLong(), anyBoolean())).willReturn(githubDetailResponse);
@@ -134,7 +141,7 @@ public class GithubControllerTest {
 			getDataResponse(githubDetailResponse, RESPONSE_SUCCESS));
 
 		//when
-		ResultActions actions = mvc.perform(
+		ResultActions actions = mockMvc.perform(
 			get("/github/users/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
@@ -178,10 +185,6 @@ public class GithubControllerTest {
 	@DisplayName("깃허브 나의 디테일 정보 테스트")
 	public void getGithubMyDetailsTest() throws Exception {
 		//given
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 
 		GithubDetailResponse githubDetailResponse = GithubDetailResponse.builder().build();
 		given(githubService.getDetails(anyLong(), anyBoolean())).willReturn(githubDetailResponse);
@@ -190,7 +193,7 @@ public class GithubControllerTest {
 			getDataResponse(githubDetailResponse, RESPONSE_SUCCESS));
 
 		//when
-		ResultActions actions = mvc.perform(
+		ResultActions actions = mockMvc.perform(
 			get("/github/users")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
@@ -259,10 +262,6 @@ public class GithubControllerTest {
 	@DisplayName("깃허브 마이 랭크 테스트")
 	public void getMyGithubRankTest() throws Exception {
 		//given
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 
 		GithubRankingOneResponse githubRankingOneResponse = GithubRankingOneResponse.create(
 			GithubRankingCover.builder().build());
@@ -274,7 +273,7 @@ public class GithubControllerTest {
 			getDataResponse(githubRankingOneResponse, RESPONSE_SUCCESS));
 
 		//when
-		ResultActions actions = mvc.perform(
+		ResultActions actions = mockMvc.perform(
 			get("/github/my-rank?languageId=1&jobPostingId=1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
@@ -292,10 +291,6 @@ public class GithubControllerTest {
 	@DisplayName("깃허브 마이 랭크 Null 테스트")
 	public void getMyGithubRankNullTest() throws Exception {
 		//given
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 
 		GithubRankingOneResponse githubRankingOneResponse = GithubRankingOneResponse.createEmpty();
 		given(githubRankingService.getGithubRankOne(anyLong(), any(GitHubRankingFilter.class))).willReturn(
@@ -306,7 +301,7 @@ public class GithubControllerTest {
 			getDataResponse(Collections.emptyList(), RESPONSE_NO_CONTENT));
 
 		//when
-		ResultActions actions = mvc.perform(
+		ResultActions actions = mockMvc.perform(
 			get("/github/my-rank?languageId=1&jobPostingId=1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON)
@@ -379,10 +374,6 @@ public class GithubControllerTest {
 	@DisplayName("깃허브 공개/비공개 테스트")
 	public void openGitRepositoryTest() throws Exception {
 		//given
-		MockMvc mvc = MockMvcBuilders
-			.standaloneSetup(new GithubController(responseService, githubService, githubRankingService))
-			.setCustomArgumentResolvers(new PrincipalDetailsArgumentResolver())
-			.build();
 
 		given(responseService.getSuccessResponse()).willReturn(getSuccessResponse());
 
@@ -391,7 +382,7 @@ public class GithubControllerTest {
 		openRequest.setGithubId(1L);
 
 		//when
-		ResultActions actions = mvc.perform(
+		ResultActions actions = mockMvc.perform(
 			patch("/github/open")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(openRequest)));
