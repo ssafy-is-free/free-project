@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.github.service.GithubCrawlingService;
+import com.ssafy.backend.domain.user.repository.UserQueryRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.global.auth.dto.UserPrincipal;
 import com.ssafy.backend.global.oauth.dto.OAuth2UserInfo;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 	private final CustomOAuthUserInfoFactory customOAuthUserInfoFactory;
 	private final UserRepository userRepository;
+	private final UserQueryRepository userQueryRepository;
 	private final GithubCrawlingService githubCrawlingService;
 
 	@Override
@@ -64,10 +66,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 		boolean isNew = true;
 
-		Optional<User> userOptional = userRepository.findByNicknameAndIsDeletedFalse(nickname);
+		Optional<User> userOptional = userQueryRepository.findByNicknameAll(nickname);
 
 		User user = null;
 
+		// todo 현재는 회원 탈퇴가 없기 때문에 이대로 가고, 추후에, 탈퇴가 생기면, 탈퇴했다가 다시 가입하는 회원일 경우, isNew를 true로 하는 것이 좋아보임.
 		//조회 했을때 유저가 있으면,
 		if (userOptional.isPresent()) {
 			user = userOptional.get();
