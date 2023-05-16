@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/bundle-analyzer": "^13.4.2",
     "@reduxjs/toolkit": "^1.9.4",
     "@types/gtag.js": "^0.0.12",
     "@types/node": "18.15.11",

@@ -87,6 +87,7 @@ const DdayModal = ({ close, result, defaultDate }: IDdayModalProps) => {
             placeholder="ex) 코딩테스트, 1차 면접"
             value={ddayName}
             onChange={updateDdayName}
+            autoFocus
           ></input>
         </InputDiv>
         <DatePicker updateDate={updateDate} defaultDate={defaultDate}></DatePicker>

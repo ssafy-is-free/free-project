@@ -97,15 +97,27 @@ const NewCareer = ({ close }: INewCareerProps) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const showList = [
-    { key: 'postingName', label: '공고명', placeholder: '', readonly: true, value: postingName },
-    { key: 'companyName', label: '기업명', placeholder: '', readonly: true, value: companyName },
+    {
+      key: 'postingName',
+      label: '공고명',
+      placeholder: '클릭하면 검색할 수 있어요',
+      readonly: true,
+      value: postingName,
+    },
+    {
+      key: 'companyName',
+      label: '기업명',
+      placeholder: '클릭하면 검색할 수 있어요',
+      readonly: true,
+      value: companyName,
+    },
     { key: 'startTime', label: '접수 시작일', placeholder: '', readonly: true, value: startTime },
     { key: 'endTime', label: '접수 마감일', placeholder: '', readonly: true, value: endTime },
-    { key: 'status', label: '현재 진행 상태', placeholder: '', readonly: true, value: status },
+    { key: 'status', label: '현재 진행 상태', placeholder: 'ex) 서류 합격, 코테 합격', readonly: true, value: status },
   ];
 
   const inputList = [
-    { key: 'objective', label: '지원 직무', placeholder: '', readonly: false },
+    { key: 'objective', label: '지원 직무', placeholder: 'ex) 백엔드, 프론트엔드', readonly: false },
     {
       key: 'ddayName',
       label: '다음 일정 이름',
