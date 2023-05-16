@@ -57,7 +57,7 @@ public class BojQueryRepository {
 
 		return queryFactory
 			.selectFrom(baekjoon)
-			.leftJoin(baekjoon.user, user).fetchJoin()
+			.innerJoin(baekjoon.user, user).fetchJoin()
 			.where(cursorCondition(score, userId),
 				inLanguageBaekjoonId(baekjoonIdSet),
 				inJobUserId(jobUserId),
