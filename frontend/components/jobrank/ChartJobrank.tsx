@@ -91,6 +91,7 @@ const ChartJobrank = (props: IChartProps) => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         } else {
@@ -110,6 +111,7 @@ const ChartJobrank = (props: IChartProps) => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         }
@@ -134,6 +136,7 @@ const ChartJobrank = (props: IChartProps) => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         } else {
@@ -153,6 +156,7 @@ const ChartJobrank = (props: IChartProps) => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         }

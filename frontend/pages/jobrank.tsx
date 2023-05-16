@@ -227,6 +227,7 @@ const JobRank = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -248,6 +249,7 @@ const JobRank = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -261,6 +263,7 @@ const JobRank = () => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       })();
     } else if (curRank == 1 && jobPostingIdParam) {
@@ -275,6 +278,7 @@ const JobRank = () => {
             setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       } else {
@@ -295,6 +299,7 @@ const JobRank = () => {
               setLoading(false);
             } else {
               alert(data.message);
+              window.history.back();
             }
           }
         })();
@@ -309,6 +314,7 @@ const JobRank = () => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       })();
     }
