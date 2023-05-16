@@ -75,6 +75,9 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
     if (value) {
       const res = await getJobPost(value);
       setData(res.data);
+    } else {
+      const res = await getJobPost(' ');
+      setData(res.data);
     }
   };
   return (
@@ -98,7 +101,10 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
             value={word}
             placeholder={'search...'}
             autoComplete="off"
-            onFocus={() => setNotFocus(false)}
+            onFocus={() => {
+              searching(' ');
+              setNotFocus(false);
+            }}
             onChange={(e) => {
               setWord(e.target.value);
               searching(e.target.value);
