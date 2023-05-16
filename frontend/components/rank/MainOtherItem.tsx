@@ -130,7 +130,7 @@ const MainOtherItem = (props: IMainOtherItemProps) => {
         setRankupdown(0);
       }
     }
-  }, [props.curRank]);
+  }, [props.curRank, props.item]);
 
   return (
     <Wrapper rankupdown={rankupdown}>

@@ -9,7 +9,7 @@ import SafariIcon from '../public/Icon/SafariIcon.svg';
 import { useEffect, useState } from 'react';
 
 const Wrapper = styled.div<{ selected: number }>`
-  width: 100vw;
+  /* width: 100vw; */
   height: 100vh;
   background-color: ${(props) => props.theme.bgWhite};
   display: flex;
