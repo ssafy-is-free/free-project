@@ -225,6 +225,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
             props.setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       }
@@ -243,6 +244,7 @@ const RankSearchBar = (props: IRankSearchBarProps) => {
             props.setLoading(false);
           } else {
             alert(data.message);
+            window.history.back();
           }
         })();
       }

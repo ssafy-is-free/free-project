@@ -154,6 +154,7 @@ const OtherInfo = (props: IOtherInfoProps) => {
           setLoading(false);
         } else {
           alert(data.message);
+          window.history.back();
         }
       }
     })();
