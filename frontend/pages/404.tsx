@@ -1,7 +1,6 @@
 import styled, { keyframes } from 'styled-components';
-import ErrorIcon from '../public/Icon/ErrorIcon.svg';
-import ErrorTextIcon from '../public/Icon/ErrorTextIcon.svg';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 const bounce = keyframes`
  		20% { transform: rotate(15deg); }	
@@ -28,11 +27,17 @@ const Wrapper = styled.div`
     transform: rotate(-20deg);
     margin-bottom: 24px;
     animation: ${bounce} 2s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     /* height: 24px; */
     /* border: 1px solid red; */
   }
 
   .img-txt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 50%;
   }
 `;
@@ -52,10 +57,10 @@ const Error = () => {
   return (
     <Wrapper>
       <div className="img-box">
-        <ErrorIcon />
+        <Image src="/Icon/ErrorIcon.svg" alt="error" height={200} width={200}></Image>
       </div>
       <div className="img-txt">
-        <ErrorTextIcon />
+        <Image src="/Icon/ErrorTextIcon.svg" alt="errortext" height={200} width={200}></Image>
       </div>
       <Button onClick={() => route.push('/')}>메인페이지로 이동</Button>
     </Wrapper>
