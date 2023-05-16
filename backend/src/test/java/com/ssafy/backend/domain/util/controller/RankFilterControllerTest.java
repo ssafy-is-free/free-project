@@ -28,6 +28,7 @@ import com.ssafy.backend.domain.util.service.RankFilterService;
 import com.ssafy.backend.global.auth.filter.TokenAuthenticationFilter;
 import com.ssafy.backend.global.config.sercurity.SecurityConfig;
 import com.ssafy.backend.global.exception.ControllerAdvisor;
+import com.ssafy.backend.global.response.CustomSuccessStatus;
 import com.ssafy.backend.global.response.DataResponse;
 import com.ssafy.backend.global.response.ResponseService;
 import com.ssafy.backend.global.response.ResponseStatus;
@@ -127,6 +128,43 @@ class RankFilterControllerTest {
 			.andExpect(jsonPath("message", "요청에 성공했습니다.").exists())
 			.andExpect(jsonPath("data", languageResponseList).exists());
 
+	}
+
+	@Test
+	@DisplayName("언어 목록 조회 Null 테스트")
+	void rankFilterNullTest() throws Exception {
+		//given
+		String type = "github";
+		List<LanguageResponse> languageResponseList = new ArrayList<>();
+
+		given(rankFilterService.getLanguageList(type))
+			.willReturn(languageResponseList);
+
+		given(responseService.getDataResponse(languageResponseList, RESPONSE_NO_CONTENT))
+			.willReturn(getDataResponse(languageResponseList, RESPONSE_NO_CONTENT));
+
+		//when
+		ResultActions actions = mvc.perform(get("/filter/language")
+			.param("type", type)
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8"));
+
+		//then
+		actions
+			.andExpect(MockMvcResultMatchers.status().isOk())
+			.andExpect(jsonPath("status", "SUCCESS").exists())
+			.andExpect(jsonPath("message", "조회된 데이터가 없습니다.").exists());
+
+	}
+
+	private <T> DataResponse<T> getDataResponse(T data, CustomSuccessStatus status) {
+		DataResponse<T> response = new DataResponse<>();
+		response.setStatus(status.getStatus().toString());
+		response.setMessage(status.getMessage());
+		response.setData(data);
+
+		return response;
 	}
 
 	public LanguageResponse createLanguageResponse(long languageId, String name) {
