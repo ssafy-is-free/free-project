@@ -166,7 +166,7 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
       </div>
       {spread && (
         <div className="fadein">
-          {ddetail.startTime} ~ {ddetail.endTime}
+          {ddetail.startTime} ~ {ddetail.endTime === '1996-11-22' ? '미정' : ddetail.endTime}
         </div>
       )}
       <div className="flexDiv">

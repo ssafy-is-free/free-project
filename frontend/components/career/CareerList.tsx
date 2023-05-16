@@ -131,7 +131,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
           {delMode ? (
             <img src="/Icon/CheckIcon.svg" alt="" onClick={delapi} />
           ) : (
-            <img src="/Icon/AddIcon.svg" alt="" onClick={openNew} />
+            <img src="/Icon/AddNewIcon.svg" alt="" onClick={openNew} />
           )}
         </div>
         <div className="content">

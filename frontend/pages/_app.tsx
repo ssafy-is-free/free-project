@@ -1,20 +1,18 @@
+import Head from 'next/head';
+import Script from 'next/script';
 import type { AppProps } from 'next/app';
-import wrapper, { persistor } from '@/redux';
+import { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
+import wrapper, { persistor } from '@/redux';
+import { useMediaQuery } from 'react-responsive';
+import { PersistGate } from 'redux-persist/integration/react';
 import { lightTheme } from '@/styles/theme';
 import GlobalStyle from '@/styles/GlobalStyle';
-import Footer from '@/components/common/Footer';
-import Head from 'next/head';
-import { PersistGate } from 'redux-persist/integration/react';
-import { useState, useEffect } from 'react';
+import { ThemeProvider } from 'styled-components';
 import * as gtag from '@/utils/gtag';
-import Script from 'next/script';
-import { MobileView, BrowserView } from 'react-device-detect';
-import WebGuide from '@/components/common/WebGuide';
-import { getCookie, setCookie } from '@/utils/cookies';
+import { setCookie } from '@/utils/cookies';
 import Desktop from './desktop';
-import { useMediaQuery } from 'react-responsive';
+import Footer from '@/components/common/Footer';
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
@@ -23,11 +21,6 @@ function App({ Component, ...rest }: AppProps) {
 
   const { store, props } = wrapper.useWrappedStore(rest);
 
-  // pc 일경우
-  const [loading, setLoading] = useState(true);
-  const [check, setCheck] = useState(true);
-  const today = new Date();
-
   //모바일 데스크탑 분기
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
@@ -35,13 +28,6 @@ function App({ Component, ...rest }: AppProps) {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
       setCookie('redirect-uri', 'k8b');
     }
-    const savedDate = new Date(getCookie('webview-check'));
-    const dayDiff = today.getDate() - savedDate.getDate();
-    if (dayDiff < 1) {
-    } else {
-      setCheck(false);
-    }
-    setLoading(false);
   }, []);
 
   return (
@@ -73,28 +59,14 @@ function App({ Component, ...rest }: AppProps) {
             <Head>
               <title>CHPO</title>
             </Head>
-            <MobileView>
-              <Component {...props.pageProps} />
-              <Footer />
-            </MobileView>
-            <BrowserView>
-              {!isMobile ? (
-                <Desktop />
-              ) : (
-                <div>
-                  <Component {...props.pageProps} />
-                  <Footer />
-                </div>
-              )}
-              {/* {check && !loading && isMobile ? (
-                <div>
-                  <Component {...props.pageProps} />
-                  <Footer />
-                </div>
-              ) : !isMobile ? (
-                <Desktop />
-              ) : null} */}
-            </BrowserView>
+            {!isMobile ? (
+              <Desktop />
+            ) : (
+              <div>
+                <Component {...props.pageProps} />
+                <Footer />
+              </div>
+            )}
           </ThemeProvider>
         </PersistGate>
       </Provider>
