@@ -62,13 +62,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 * 이 메소드는 주어진 유저 아이디를 기반으로 해당 유저의 랭킹 정보를 반환합니다.
 	 *
 	 * @param userId 조회하려는 유저의 아이디 (정수 형태)
-	 * @author noobsoda
 	 * @return BojMyRankResponseDTO 해당 유저의 랭킹 정보를 담고 있는 DTO 객체
 	 * @throws CustomException 유저 아이디가 잘못된 경우 발생하는 예외
+	 * @author noobsoda
 	 */
 
 	@Override
-	public BojRankResponse getBojByUserId(long userId, Long languageId, Long jobPostingId) {
+	public BojRankResponse getBojByUserId(Long userId, Long languageId, Long jobPostingId) {
 
 		// 삭제된 유저인지 판단
 		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
@@ -131,8 +131,8 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	 * 각 사용자에 대한 BojIdListResponseDTO 객체를 생성하여 이들을 리스트로 반환하는 메소드입니다.
 	 *
 	 * @param nickname 조회할 사용자의 백준 ID
-	 * @author noobsoda
 	 * @return NicknameListResponseDTO 객체 목록
+	 * @author noobsoda
 	 */
 	public List<NicknameListResponse> getBojListByBojId(String nickname) {
 		List<User> userList = userQueryRepository.findByBojId(nickname);
@@ -142,10 +142,9 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 	}
 
 	/**
-	 *
-	 @param userId 유저의 아이디
-	 @author noobsoda
-	 @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
+	 * @param userId 유저의 아이디
+	 * @return BojInfoDetailResponseDTO 백준 정보 상세를 담은 응답 DTO
+	 * @author noobsoda
 	 */
 	@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 	@Override
@@ -185,9 +184,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		Long rank, Long userId, Long jobPostingId, Pageable pageable) {
 
 		//취업공고에 해당하는 유저 정보 얻기.
-		Set<Long> jobUserId = jobPostingId == null ?
-			Collections.emptySet() :
-			getJobUserId(jobPostingId);
+		Set<Long> jobUserId = jobPostingId == null ? null : getJobUserId(jobPostingId);
 
 		//공고 id가 있는데,공고에 해당하는 유저를 조회했을 때 비어있으면 빈 리스트 반환.
 		if (jobPostingId != null && jobUserId.isEmpty()) {
@@ -195,15 +192,13 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 		}
 
 		//해당 언어를 사용하는 정보 조회
-		Set<Long> baekjoonIdSet = languageId == null ?
-			Collections.emptySet() :
-			getLanguageBojId(languageId);
+		Set<Long> baekjoonIdSet = languageId == null ? null : getLanguageBojId(languageId);
 
 		//조회된 값이 없으면 빈 리스트 반환
 		if (languageId != null && baekjoonIdSet.isEmpty())
 			return Collections.emptyList();
 
-		//채용공고로 조회한 백준 id와 언어정보로 조회한 백준 id set을 합침.
+		//조회.
 		List<Baekjoon> baekjoonList = bojQueryRepository.findAllByScore(baekjoonIdSet, jobUserId, group, score,
 			userId, pageable);
 
@@ -228,7 +223,7 @@ public class AlgorithmServiceImpl implements AlgorithmService {
 			.orElseThrow(() -> new CustomException(NOT_FOUND_JOBPOSTING));
 
 		//채용 공고 id가 존재하면 해당하는 유저 id 조회.
-		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingIdJoinUser(jobPosting.getId());
+		List<JobHistory> jobHistoryList = jobHistoryQueryRepository.findByPostingId(jobPosting.getId());
 		Set<Long> jobUserId = jobHistoryList.stream()
 			.map(JobHistory::getUser)
 			.map(User::getId)

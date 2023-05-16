@@ -2,7 +2,9 @@ package com.ssafy.backend.domain.analysis.service;
 
 import static com.ssafy.backend.global.response.exception.CustomExceptionStatus.*;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -68,13 +70,16 @@ public class AnalysisBojService {
 	}
 
 	public BojRankAllComparisonResponse compareWithOther(long id, Long jobPostingId) {
+		//Double 포맷용
+		DecimalFormat df = new DecimalFormat("#.##");
 		//언어 정보를 저장할 해쉬맵
 		Map<Long, String> languageMap = getLanguageMap();
 		//백준 디테일 정보 저장
 		BojInfoDetailResponse my = createBojInfoDetail(id, languageMap);
 
-		if (my.checkForNull())
+		if (my.checkForNull()) {
 			return BojRankAllComparisonResponse.createEmpty();
+		}
 		//공고별로 필터링된 userIds
 		FilteredUserIdSet userIdSet = (jobPostingId == null) ? null : getUserIdByJobPosting(jobPostingId);
 
@@ -85,10 +90,20 @@ public class AnalysisBojService {
 
 		//언어별 pass 최상위 5가지
 		List<BojLanguagePassCount> bojLanguagePassCount = bojLanguageQueryRepository.findBojLanguagePassCount();
+		// 총합 계산
+		double sum = 1;
+		for (BojLanguagePassCount value : bojLanguagePassCount) {
+			sum += value.getTotalPassCount();
+		}
+
 		List<BojLanguageResponse> bojLanguageList = bojLanguagePassCount.stream()
 			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()),
 				null, u.getTotalPassCount()))
 			.collect(Collectors.toList());
+		for (Iterator<BojLanguageResponse> it = bojLanguageList.iterator(); it.hasNext(); ) {
+			BojLanguageResponse bojLanguageResponse = it.next();
+			bojLanguageResponse.setPassPercentage(df.format(bojLanguageResponse.getPassCount() / sum * 100));
+		}
 
 		//백준 전체 정보 저장
 		BojInfoAvgDetailResponse other = BojInfoAvgDetailResponse.create(bojAvgDetail, bojLanguageList);
@@ -107,6 +122,8 @@ public class AnalysisBojService {
 	}
 
 	private BojInfoDetailResponse createBojInfoDetail(long userId, Map<Long, String> languageMap) {
+		//Double 포맷용
+		DecimalFormat df = new DecimalFormat("#.##");
 		// 삭제된 유저인지 판단
 		Optional<User> findUser = userRepository.findByIdAndIsDeletedFalse(userId);
 		if (!findUser.isPresent()) {
@@ -122,11 +139,21 @@ public class AnalysisBojService {
 			.orElseThrow(() -> new CustomException(NOT_FOUND_BOJ_USER));
 
 		List<BaekjoonLanguage> bojList = bojLanguageRepository.findAllByBaekjoonId(baekjoon.getId());
+		// 총합 계산
+		double sum = 1;
+		for (BaekjoonLanguage value : bojList) {
+			sum += value.getPassCount();
+		}
 
 		List<BojLanguageResponse> bojLanguageList = bojList.stream()
 			.map(u -> BojLanguageResponse.create(languageMap.get(u.getLanguageId()), u.getPassPercentage(),
 				u.getPassCount()))
 			.collect(Collectors.toList());
+
+		for (Iterator<BojLanguageResponse> it = bojLanguageList.iterator(); it.hasNext(); ) {
+			BojLanguageResponse bojLanguageResponse = it.next();
+			bojLanguageResponse.setPassPercentage(df.format(bojLanguageResponse.getPassCount() / sum * 100));
+		}
 
 		return BojInfoDetailResponse.create(user, baekjoon, bojLanguageList);
 	}

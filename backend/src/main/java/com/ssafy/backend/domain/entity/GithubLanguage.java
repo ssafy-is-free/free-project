@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -29,10 +30,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "github_languages")
+@TableGenerator(
+	name = "GITHUBLANGUAGE_SEQ_GENERATOR",
+	table = "my_sequences",
+	pkColumnValue = "GITHUBLANGUAGE_SEQ"
+)
 public class GithubLanguage extends BaseTimeEntity {
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = TABLE, generator = "GITHUBLANGUAGE_SEQ_GENERATOR")
 	@Column(name = "id")
 	private long id;
 

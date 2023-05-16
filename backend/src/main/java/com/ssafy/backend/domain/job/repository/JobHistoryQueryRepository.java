@@ -1,5 +1,7 @@
 package com.ssafy.backend.domain.job.repository;
 
+import static com.ssafy.backend.domain.entity.QGithub.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.backend.domain.entity.JobHistory;
+import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.QJobHistory;
 import com.ssafy.backend.domain.entity.QJobPosting;
 
@@ -23,7 +26,7 @@ public class JobHistoryQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	//해당 취업공고에 지원한 취업이력정보 조회
-	public List<JobHistory> findByPostingIdJoinUser(long jobPostingId) {
+	public List<JobHistory> findByPostingId(long jobPostingId) {
 
 		QJobHistory jobHistory = QJobHistory.jobHistory;
 
@@ -34,8 +37,20 @@ public class JobHistoryQueryRepository {
 
 	}
 
+	public List<Long> findByPostingJonGithub(JobPosting jobPosting) {
+
+		QJobHistory jobHistory = QJobHistory.jobHistory;
+
+		return queryFactory
+			.select(github.id)
+			.from(jobHistory)
+			.where(jobHistory.jobPosting.eq(jobPosting))
+			.leftJoin(github).on(jobHistory.user.id.eq(github.user.id))
+			.fetch();
+
+	}
+
 	//해당 유저가 등록한 취업 이력 조회
-	// TODO : orderby조건에 dday와 현재시간과의 차이를 계산에서 정렬하도록 넣어야됨 - querydsl문법을 못찾았음.
 	public List<JobHistory> findByUserJoinPosting(long userId, List<Long> statusIdList, String nextDate,
 		Long jobHistoryId, Pageable pageable) {
 
@@ -92,12 +107,10 @@ public class JobHistoryQueryRepository {
 	}
 
 	private BooleanExpression inStatusId(List<Long> statusIdList) {
+		return statusIdList == null
+			? null
+			: QJobHistory.jobHistory.statusId.in(statusIdList);
 
-		if (statusIdList == null || statusIdList.isEmpty()) {
-			return null;
-		}
-
-		return QJobHistory.jobHistory.statusId.in(statusIdList);
 	}
 
 	private BooleanExpression cursorCondition(String nextDate, Long jobHistoryId) {

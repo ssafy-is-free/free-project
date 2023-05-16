@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -32,10 +33,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Table(name = "github_repository")
+@TableGenerator(
+	name = "GITHUBREPO_SEQ_GENERATOR",
+	table = "my_sequences",
+	pkColumnValue = "GITHUBREPO_SEQ"
+)
 public class GithubRepo extends BaseTimeEntity {
 
 	@Id
-	@GeneratedValue(strategy = IDENTITY)
+	@GeneratedValue(strategy = TABLE, generator = "GITHUBREPO_SEQ_GENERATOR")
 	@Column(name = "id")
 	private long id;
 

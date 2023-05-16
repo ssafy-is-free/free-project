@@ -1,11 +1,11 @@
 package com.ssafy.backend.domain.job.repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
 import org.assertj.core.api.Assertions;
@@ -14,17 +14,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.backend.TestConfig;
 import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.JobStatus;
 
 @DataJpaTest
 @ActiveProfiles("test")
-@Import(TestConfig.class)
 class JobPostingQueryRepositoryTest {
 
 	private JobPostingQueryRepository jobPostingQueryRepository;
@@ -33,11 +31,18 @@ class JobPostingQueryRepositoryTest {
 	@Autowired
 	private JobStatusRepository jobStatusRepository;
 
-	@Autowired
+	//@Autowired
 	private JPAQueryFactory queryFactory;
+
+	@Autowired
+	private TestEntityManager testEntityManager;
+	private EntityManager entityManager;
 
 	@BeforeEach
 	void setup() {
+		entityManager = testEntityManager.getEntityManager();
+		queryFactory = new JPAQueryFactory(entityManager);
+
 		jobPostingQueryRepository = new JobPostingQueryRepository(queryFactory);
 	}
 

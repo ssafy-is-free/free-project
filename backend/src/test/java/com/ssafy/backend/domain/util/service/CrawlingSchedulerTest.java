@@ -14,13 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.ssafy.backend.domain.algorithm.repository.BojLanguageRepository;
 import com.ssafy.backend.domain.algorithm.repository.BojRepository;
 import com.ssafy.backend.domain.entity.Baekjoon;
+import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.Language;
 import com.ssafy.backend.domain.entity.User;
 import com.ssafy.backend.domain.entity.common.LanguageType;
 import com.ssafy.backend.domain.github.repository.GithubRepository;
-import com.ssafy.backend.domain.github.service.GithubRankingService;
-import com.ssafy.backend.domain.job.repository.JobHistoryRepository;
-import com.ssafy.backend.domain.job.repository.JobPostingRepository;
 import com.ssafy.backend.domain.user.repository.UserRepository;
 import com.ssafy.backend.domain.util.repository.LanguageRepository;
 
@@ -38,12 +36,6 @@ public class CrawlingSchedulerTest {
 	@Autowired
 	private CrawlingScheduler crawlingScheduler;
 	@Autowired
-	private GithubRankingService githubRankingService;
-	@Autowired
-	private JobPostingRepository jobPostingRepository;
-	@Autowired
-	private JobHistoryRepository jobHistoryRepository;
-	@Autowired
 	private GithubRepository githubRepository;
 
 	@AfterEach
@@ -51,7 +43,29 @@ public class CrawlingSchedulerTest {
 		languageRepository.deleteAllInBatch();
 		bojLanguageRepository.deleteAllInBatch();
 		bojRepository.deleteAllInBatch();
+		githubRepository.deleteAllInBatch();
 		userRepository.deleteAllInBatch();
+	}
+
+	@Test
+	@DisplayName("깃허브 랭킹 업데이트 정상 작동 테스트")
+	public void githubUpdateTest() {
+		//given
+		User user1 = createUser("user1", "user1");
+		User user2 = createUser("user2", "user2");
+		userRepository.saveAll(Arrays.asList(user1, user2));
+
+		Github github1 = createGithub(user1, true, 10, 1L, 100);
+		Github github2 = createGithub(user2, true, 20, 2L, 200);
+
+		githubRepository.saveAll(Arrays.asList(github1, github2));
+		//when
+
+		crawlingScheduler.githubUpdate();
+		List<Github> response = githubRepository.findAll();
+		//then
+		assertThat(response.get(0)).extracting(Github::getPreviousRank).isEqualTo(2L);
+		assertThat(response.get(1)).extracting(Github::getPreviousRank).isEqualTo(1L);
 	}
 
 	@Test
@@ -176,6 +190,19 @@ public class CrawlingSchedulerTest {
 		return Language.builder()
 			.name(name)
 			.type(LanguageType.BAEKJOON)
+			.build();
+	}
+
+	private Github createGithub(User user, boolean isPublic, int commitTotalCount, long previousRank, int score) {
+		return Github.builder()
+			.user(user)
+			.commitTotalCount(commitTotalCount)
+			.followerTotalCount(1)
+			.starTotalCount(1)
+			.score(score)
+			.profileLink("1")
+			.previousRank(previousRank)
+			.isPublic(isPublic)
 			.build();
 	}
 }

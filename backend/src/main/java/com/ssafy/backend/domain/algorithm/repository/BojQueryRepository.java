@@ -81,21 +81,12 @@ public class BojQueryRepository {
 	}
 
 	private BooleanExpression inLanguageBaekjoonId(Set<Long> baekjoonIdSet) {
-
-		if (baekjoonIdSet == null || baekjoonIdSet.isEmpty())
-			return null;
-
-		return baekjoon.id.in(baekjoonIdSet);
+		return baekjoonIdSet == null ? null : baekjoon.id.in(baekjoonIdSet);
 
 	}
 
 	private BooleanExpression inJobUserId(Set<Long> jobUserId) {
-
-		if (jobUserId == null || jobUserId.isEmpty()) {
-			return null;
-		}
-
-		return QBaekjoon.baekjoon.user.id.in(jobUserId);
+		return jobUserId == null ? null : QBaekjoon.baekjoon.user.id.in(jobUserId);
 	}
 
 	private BooleanExpression bojIdIn(FilteredBojIdSet baekjoonIdSet) {

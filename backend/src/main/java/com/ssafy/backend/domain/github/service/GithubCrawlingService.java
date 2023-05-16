@@ -39,8 +39,10 @@ public class GithubCrawlingService {
 	private final LanguageRepository languageRepository;
 
 	private final GithubRepository githubRepository;
-	private final GithubLanguageRepository githubLanguageRepository;
+
 	private final GithubRepoRepository githubRepoRepository;
+
+	private final GithubLanguageRepository githubLanguageRepository;
 
 	private final WebClient webClient;
 

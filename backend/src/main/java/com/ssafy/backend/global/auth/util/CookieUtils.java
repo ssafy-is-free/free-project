@@ -28,7 +28,7 @@ public class CookieUtils {
 	// TODO: 2023-04-23 response에 직접 헤더를 추가해줘야함. - 아니면 스프링이 제공하는 reponseCookie를 사용해야됨.
 	public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
 		Cookie cookie = new Cookie(name, value);
-		cookie.setSecure(false); //https로 통신할때만 웹 브라우저가 쿠키를 서버로 전송하도록 함.
+		cookie.setSecure(true); //https로 통신할때만 웹 브라우저가 쿠키를 서버로 전송하도록 함.
 		cookie.setPath("/");
 		cookie.setHttpOnly(true); //쿠키를 클라이언트에서 열어볼 수 없도록 함.
 		cookie.setMaxAge(maxAge);

@@ -26,9 +26,9 @@ public class TokenProvider {
 	private final AuthProperties authProperties;
 
 	// TODO: 2023-04-23 resource쪽으로 빼는 것 고려
-	// TODO: 2023-04-24 엑세스 토큰 시간 1시간으로 줄여야됨
 
-	private static final Long ACCESS_TOKEN_VALIDATE_TIME = 1000L * 60 * 60 * 24 * 7; // 1시간
+	// private static final Long ACCESS_TOKEN_VALIDATE_TIME = 1000L * 60 * 60 * 24; // 1시간
+	private static final Long ACCESS_TOKEN_VALIDATE_TIME = 1000L * 60 * 30; // 30분
 	private static final Long REFRESH_TOKEN_VALIDATE_TIME = 1000L * 60 * 60 * 24 * 7; // 1주일
 
 	//엑세스 토큰 생성
@@ -106,4 +106,17 @@ public class TokenProvider {
 		return Long.parseLong((String)claims.get("id"));
 	}
 
+	//만료된 토큰에서 값 가져오기
+	public Long getUserIdFromExpirationToken(String expirationToken) {
+
+		try {
+			Claims claims = Jwts.parser()
+				.setSigningKey(authProperties.getTokenSecret().getBytes())
+				.parseClaimsJws(expirationToken)
+				.getBody();
+			return Long.parseLong((String)claims.get("id"));
+		} catch (ExpiredJwtException e) {
+			return Long.parseLong((String)e.getClaims().get("id"));
+		}
+	}
 }
