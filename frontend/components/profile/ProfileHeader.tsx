@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import Image from 'next/image';
+import vectorIcon from '@/public/Icon/VectorIcon.png';
 
 const HeaderDiv = styled.div`
   padding-left: 1rem;
@@ -32,8 +33,7 @@ function ProfileHeader({ back }: IProfileHeader) {
   return (
     <HeaderDiv>
       <div>
-        {/* <Image src="/Icon/VectorIcon.svg"></Image> */}
-        <img src="/Icon/VectorIcon.svg" alt="화살표" onClick={back} />
+        <Image src={vectorIcon} alt="화살표" width={16} height={24} onClick={back}></Image>
       </div>
       <div className="title"></div>
       <div>
