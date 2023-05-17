@@ -15,6 +15,7 @@ const ProfileDiv = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 3;
+  margin-bottom: max(4rem, 10vh);
   .headerblank {
     height: 2.5rem;
   }

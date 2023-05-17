@@ -11,8 +11,12 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import { ThemeProvider } from 'styled-components';
 import * as gtag from '@/utils/gtag';
 import { setCookie } from '@/utils/cookies';
-import Desktop from './desktop';
 import Footer from '@/components/common/Footer';
+import dynamic from 'next/dynamic';
+
+const Desktop = dynamic(() => import('./desktop'), {
+  ssr: false,
+});
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
