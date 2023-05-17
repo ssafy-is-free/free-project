@@ -66,6 +66,10 @@ function App({ Component, ...rest }: AppProps) {
           <ThemeProvider theme={lightTheme}>
             <Head>
               <title>CHPO</title>
+              <meta
+                name="description"
+                content="CHPO에서 깃허브 랭킹과 백준 랭킹을 확인하고 취업 지원 이력관리를 해보세요"
+              ></meta>
             </Head>
             {/* 이 부분도 바꾸고.. */}
             {!isMobile ? (
