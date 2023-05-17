@@ -121,7 +121,7 @@ const CareerList = ({ openNew }: ICareerListProps) => {
     <CareerListDiv>
       <div className="header">
         <Image
-          src="/Icon/TrashIcon.svg"
+          src={trashIcon}
           alt="휴지통"
           width={32}
           height={32}
