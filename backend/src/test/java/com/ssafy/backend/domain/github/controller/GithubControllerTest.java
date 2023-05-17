@@ -103,7 +103,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -154,7 +154,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -206,7 +206,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -232,7 +232,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -286,7 +286,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -342,7 +342,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
@@ -394,7 +394,7 @@ public class GithubControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	private <T> DataResponse<T> getDataResponse(T data, CustomSuccessStatus status) {
@@ -409,7 +409,7 @@ public class GithubControllerTest {
 	private CommonResponse getSuccessResponse() {
 		CommonResponse response = new CommonResponse();
 		response.setStatus(ResponseStatus.SUCCESS.toString());
-		response.setMessage("요청에 성공했습니다.");
+		response.setMessage(RESPONSE_SUCCESS.getMessage());
 		return response;
 	}
 }

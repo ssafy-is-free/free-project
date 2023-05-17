@@ -1,5 +1,6 @@
 package com.ssafy.backend.domain.user.controller;
 
+import static com.ssafy.backend.global.response.CustomSuccessStatus.*;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -62,7 +63,7 @@ class BojControllerTest {
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setStatus(String.valueOf(ResponseStatus.SUCCESS));
-		commonResponse.setMessage("요청에 성공했습니다.");
+		commonResponse.setMessage(RESPONSE_SUCCESS.getMessage());
 
 		given(responseService.getSuccessResponse()).willReturn(commonResponse);
 
@@ -77,7 +78,7 @@ class BojControllerTest {
 		actions
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("status", "SUCCESS").exists())
-			.andExpect(jsonPath("message", "요청에 성공했습니다.").exists());
+			.andExpect(jsonPath("message", RESPONSE_SUCCESS.getMessage()).exists());
 	}
 
 	@Test
@@ -97,7 +98,7 @@ class BojControllerTest {
 
 		CommonResponse commonResponse = new CommonResponse();
 		commonResponse.setStatus(String.valueOf(ResponseStatus.SUCCESS));
-		commonResponse.setMessage("요청에 성공했습니다.");
+		commonResponse.setMessage(RESPONSE_SUCCESS.getMessage());
 
 		given(responseService.getSuccessResponse()).willReturn(commonResponse);
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -113,7 +114,7 @@ class BojControllerTest {
 		actions
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("status", "SUCCESS").exists())
-			.andExpect(jsonPath("message", "요청에 성공했습니다.").exists());
+			.andExpect(jsonPath("message", RESPONSE_SUCCESS.getMessage()).exists());
 
 	}
 

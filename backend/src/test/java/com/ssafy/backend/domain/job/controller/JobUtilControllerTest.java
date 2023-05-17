@@ -86,7 +86,7 @@ public class JobUtilControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -135,7 +135,7 @@ public class JobUtilControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 

@@ -88,7 +88,7 @@ public class JobApplyControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -115,7 +115,7 @@ public class JobApplyControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -162,7 +162,7 @@ public class JobApplyControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -187,7 +187,7 @@ public class JobApplyControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -208,7 +208,7 @@ public class JobApplyControllerTest {
 			.andDo(print())
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -224,7 +224,7 @@ public class JobApplyControllerTest {
 	private CommonResponse getSuccessResponse() {
 		CommonResponse response = new CommonResponse();
 		response.setStatus(ResponseStatus.SUCCESS.toString());
-		response.setMessage("요청에 성공했습니다.");
+		response.setMessage(RESPONSE_SUCCESS.getMessage());
 		return response;
 	}
 }

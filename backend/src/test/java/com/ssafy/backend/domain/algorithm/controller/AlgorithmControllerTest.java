@@ -92,7 +92,7 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.nickname").value("Nickname"))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -152,7 +152,7 @@ public class AlgorithmControllerTest {
 			.andExpect(jsonPath("$.data.submit").value(20))
 			.andExpect(jsonPath("$.data.fail").value(10))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -189,7 +189,7 @@ public class AlgorithmControllerTest {
 			.andExpect(jsonPath("$.data.submit").value(20))
 			.andExpect(jsonPath("$.data.fail").value(10))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -236,7 +236,7 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data[0].nickname").value("sodamito"))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -289,7 +289,7 @@ public class AlgorithmControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.data.rank").value(1))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 
 	}
 
@@ -341,7 +341,7 @@ public class AlgorithmControllerTest {
 			.andExpect(MockMvcResultMatchers.status().isOk())
 			.andExpect(jsonPath("$.data", hasSize(1)))
 			.andExpect(jsonPath("$.status").value("SUCCESS"))
-			.andExpect(jsonPath("$.message").value("요청에 성공했습니다."));
+			.andExpect(jsonPath("$.message").value(RESPONSE_SUCCESS.getMessage()));
 	}
 
 	@Test
