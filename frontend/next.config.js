@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net'],
+  },
   compiler: {
     styledComponents: true,
   },
@@ -11,23 +14,11 @@ const nextConfig = {
     return config;
   },
 
+  images: {
+    domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net', 'mqr.kr'],
+  },
+
   reactStrictMode: false,
-  // async headers() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       headers: [
-  //         { key: 'Access-Control-Allow-Credentials', value: 'true' },
-  //         {
-  //           key: 'Access-Control-Allow-Origin',
-  //           value: 'https://k8b102.p.ssafy.io',
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
-  // CORS 처리 다른 방법
-  // swcMinify: true,
   async rewrites() {
     return [
       {
@@ -37,6 +28,10 @@ const nextConfig = {
     ];
   },
 };
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const removeImports = require('next-remove-imports')();
 const withPWA = require('next-pwa')({

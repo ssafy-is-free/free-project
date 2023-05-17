@@ -11,8 +11,12 @@ import GlobalStyle from '@/styles/GlobalStyle';
 import { ThemeProvider } from 'styled-components';
 import * as gtag from '@/utils/gtag';
 import { setCookie } from '@/utils/cookies';
-import Desktop from './desktop';
 import Footer from '@/components/common/Footer';
+import dynamic from 'next/dynamic';
+
+const Desktop = dynamic(() => import('./desktop'), {
+  ssr: false,
+});
 
 function App({ Component, ...rest }: AppProps) {
   // google analytics
@@ -23,6 +27,10 @@ function App({ Component, ...rest }: AppProps) {
 
   //모바일 데스크탑 분기
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+
+  // useEffect(() => {
+  //   console.log(isMobile);
+  // }, [isMobile]);
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_MODE && process.env.NODE_ENV === 'production') {
@@ -58,7 +66,12 @@ function App({ Component, ...rest }: AppProps) {
           <ThemeProvider theme={lightTheme}>
             <Head>
               <title>CHPO</title>
+              <meta
+                name="description"
+                content="CHPO에서 깃허브 랭킹과 백준 랭킹을 확인하고 취업 지원 이력관리를 해보세요"
+              ></meta>
             </Head>
+            {/* 이 부분도 바꾸고.. */}
             {!isMobile ? (
               <Desktop />
             ) : (

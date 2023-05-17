@@ -9,7 +9,9 @@ import SendIcon from '../../public/Icon/SendIcon.svg';
 import TryfailIcon from '../../public/Icon/TryfailIcon.svg';
 import { useEffect, useState } from 'react';
 import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
-import OtherInfoLoading from './OtherInfoLoading';
+// import OtherInfoLoading from './OtherInfoLoading';
+import dynamic from 'next/dynamic';
+const OtherInfoLoading = dynamic(() => import('./OtherInfoLoading'), { ssr: false });
 
 const Wrapper = styled.div`
   display: flex;

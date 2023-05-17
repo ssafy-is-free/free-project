@@ -9,6 +9,8 @@ import BgLoading from './BgLoading';
 import { ICareerStatus, IDefaultDate, INewCareerProps, ISearchResult } from './ICareer';
 import Swal from 'sweetalert2';
 import { fadeIn2 } from './SCareer';
+import Image from 'next/image';
+import closeIcon from '@/public/Icon/CloseIcon.png';
 
 const NewCareerDiv = styled.div`
   width: 100vw;
@@ -238,8 +240,8 @@ const NewCareer = ({ close }: INewCareerProps) => {
       <form action="post" id="careerForm" onSubmit={newPost}>
         <HeaderDiv>
           <div>
-            <img src="/Icon/CloseIcon.svg" alt="#" onClick={close} />
-            {/* <img src="/Icon/CloseIcon.svg" alt="#" onClick={test} /> */}
+            <Image src={closeIcon} alt="닫기" width={32} height={32} onClick={close}></Image>
+            {/* <img src="/Icon/CloseIcon.svg" alt="#" onClick={close} /> */}
           </div>
           <button type="submit">
             <h3>등록하기</h3>

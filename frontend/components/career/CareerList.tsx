@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import CareerListItem from './CareerListItem';
+// import CareerListItem from './CareerListItem';
 import { useState, useEffect } from 'react';
 // import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
@@ -8,6 +8,13 @@ import { IHistory, ICareerListProps } from './ICareer';
 import Swal from 'sweetalert2';
 import CareerNav from './CareerNav';
 import CareerListItemDefault from './CareerListItemDefault';
+import Image from 'next/image';
+import trashIcon from '@/public/Icon/TrashIcon.png';
+import addIcon from '@/public/Icon/AddIcon.png';
+import checkIcon from '@/public/Icon/CheckIcon.png';
+import dynamic from 'next/dynamic';
+
+const CareerListItem = dynamic(() => import('@/components/career/CareerListItem'), { ssr: false });
 
 const CareerListDiv = styled.div`
   .header {
@@ -19,12 +26,10 @@ const CareerListDiv = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .title {
       color: ${(props) => props.theme.secondary};
       font-size: large;
-    }
-    img {
-      height: 2rem;
     }
 
     .deleteBtn {
@@ -118,19 +123,21 @@ const CareerList = ({ openNew }: ICareerListProps) => {
   return (
     <CareerListDiv>
       <div className="header">
-        <img
-          src="/Icon/TrashIcon.svg"
-          alt=""
+        <Image
+          src={trashIcon}
+          alt="휴지통"
+          width={32}
+          height={32}
           onClick={() => {
             setDelMode(!delMode);
             setCheckedItems(new Set());
           }}
-        />
+        ></Image>
         <div className="title">취업지원이력</div>
         {delMode ? (
-          <img src="/Icon/CheckIcon.svg" alt="" onClick={delapi} />
+          <Image src={checkIcon} alt="삭제" width={32} height={32} onClick={delapi}></Image>
         ) : (
-          <img src="/Icon/AddNewIcon.svg" alt="" onClick={openNew} />
+          <Image src={addIcon} alt="삭제" width={32} height={32} onClick={openNew}></Image>
         )}
       </div>
       <div className="nav">

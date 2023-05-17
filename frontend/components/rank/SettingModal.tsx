@@ -1,8 +1,10 @@
 import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
-import BigBtn from '../common/BigBtn';
+// import BigBtn from '../common/BigBtn';
 import { ISettingModalProps } from './IRank';
+import dynamic from 'next/dynamic';
+const BigBtn = dynamic(() => import('../common/BigBtn'), { ssr: false });
 
 const moveUp = keyframes`
  from{

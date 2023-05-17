@@ -6,7 +6,9 @@ import Profile from 'public/Icon/ProfileIcon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux';
 import { useRef, useState } from 'react';
-import LoginModal from '../login/LoginModal';
+// import LoginModal from '../login/LoginModal';
+import dynamic from 'next/dynamic';
+const LoginModal = dynamic(() => import('../login/LoginModal'), { ssr: false });
 
 const bounce = keyframes`
   from, to { transform: scale(1, 1); }
