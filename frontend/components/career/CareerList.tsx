@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import CareerListItem from './CareerListItem';
+// import CareerListItem from './CareerListItem';
 import { useState, useEffect } from 'react';
 // import CustomNav from '../common/CustomNav';
 import { Spinner } from '../common/Spinner';
@@ -12,6 +12,9 @@ import Image from 'next/image';
 import trashIcon from '@/public/Icon/TrashIcon.png';
 import addIcon from '@/public/Icon/AddIcon.png';
 import checkIcon from '@/public/Icon/CheckIcon.png';
+import dynamic from 'next/dynamic';
+
+const CareerListItem = dynamic(() => import('@/components/career/CareerListItem'), { ssr: false });
 
 const CareerListDiv = styled.div`
   .header {
