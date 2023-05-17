@@ -2,13 +2,17 @@ import styled, { keyframes } from 'styled-components';
 import CloseIcon from '../../public/Icon/CloseIcon.svg';
 import FilterArrowIcon from '../../public/Icon/FilterArrowIcon.svg';
 import { useEffect, useRef, useState } from 'react';
-import CancelOk from '../common/CancelOk';
+// import CancelOk from '../common/CancelOk';
 import { IFilterModalProps } from './IRank';
 import { getFilter } from '@/pages/api/rankAxios';
-import FilterOption from './FilterOption';
+// import FilterOption from './FilterOption';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from '@/redux/rankSlice';
 import { RootState } from '@/redux';
+
+import dynamic from 'next/dynamic';
+const CancelOk = dynamic(() => import('../common/CancelOk'), { ssr: false });
+const FilterOption = dynamic(() => import('./FilterOption'), { ssr: false });
 
 const moveUp = keyframes`
  from{

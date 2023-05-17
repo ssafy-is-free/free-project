@@ -3,9 +3,13 @@ import { ICompareBoxProps, applicantBojInfoType, applicantGitInfoType } from './
 import { useEffect, useState } from 'react';
 import UserDefaultIcon from '../../public/Icon/UserDefaultIcon.svg';
 import { getPostingsAllBojUsers, getPostingsAllGitUsers } from '@/pages/api/jobRankAxios';
-import ChartJobrank from './ChartJobrank';
-import CompareBoxLoading from './CompareBoxLoading';
+// import ChartJobrank from './ChartJobrank';
+// import CompareBoxLoading from './CompareBoxLoading';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+
+const ChartJobrank = dynamic(() => import('./ChartJobrank'), { ssr: false });
+const CompareBoxLoading = dynamic(() => import('./CompareBoxLoading'), { ssr: false });
 
 const Wrapper = styled.div`
   width: 100%;

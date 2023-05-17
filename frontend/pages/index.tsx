@@ -1,15 +1,21 @@
+import dynamic from 'next/dynamic';
+const RankMenu2 = dynamic(() => import('@/components/common/RankMenu2'), { ssr: false });
+const SearchBar = dynamic(() => import('@/components/rank/RankSearchBar'), { ssr: false });
+const MainUserItem = dynamic(() => import('@/components/rank/MainUserItem'), { ssr: false });
+const MainOtherItem = dynamic(() => import('@/components/rank/MainOtherItem'), { ssr: false });
+const NoAccount = dynamic(() => import('@/components/rank/NoAccount'), { ssr: false });
+const LoginModal = dynamic(() => import('@/components/login/LoginModal'), { ssr: false });
+const BojModal = dynamic(() => import('@/components/login/BojModal'), { ssr: false });
+const FilterModal = dynamic(() => import('@/components/rank/FilterModal'), { ssr: false });
+const FilterOption = dynamic(() => import('@/components/rank/FilterOption'), { ssr: false });
+const Profile = dynamic(() => import('@/components/profile/Profile'), { ssr: false });
+const SettingModal = dynamic(() => import('@/components/rank/SettingModal'), { ssr: false });
+const RankLoading = dynamic(() => import('@/components/rank/RankLoading'), { ssr: false });
+
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Splash from './splash';
-import RankMenu2 from '@/components/common/RankMenu2';
-import SearchBar from '@/components/rank/RankSearchBar';
-import FilterIcon from '../public/Icon/FilterIcon.svg';
-import MainUserItem from '@/components/rank/MainUserItem';
-import MainOtherItem from '@/components/rank/MainOtherItem';
-import NoAccount from '@/components/rank/NoAccount';
-import LoginModal from '@/components/login/LoginModal';
-import BojModal from '@/components/login/BojModal';
-import FilterModal from '@/components/rank/FilterModal';
+import FilterIcon from '@/public/Icon/FilterIcon.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { splashCheck } from '@/redux/splashSlice';
 import { RootState } from '@/redux';
@@ -24,16 +30,12 @@ import {
 import { resultInformation, resultMyInformation } from '@/components/rank/IRank';
 import { useInView } from 'react-intersection-observer';
 import { logout, setNew } from '@/redux/authSlice';
-import FilterOption from '@/components/rank/FilterOption';
 import RSearchIcon from '../public/Icon/SearchingIcon.svg';
 import SettingIcon from '../public/Icon/SettingIcon.svg';
 import LogoIcon from '../public/Icon/LogoPrimaryHeader.svg';
 import TopIcon from '../public/Icon/TopIcon.svg';
 
-import Profile from '@/components/profile/Profile';
-import SettingModal from '@/components/rank/SettingModal';
 import { setFilter } from '@/redux/rankSlice';
-import RankLoading from '@/components/rank/RankLoading';
 
 const Wrapper = styled.div<{ searchClick: boolean }>`
   width: 100vw;

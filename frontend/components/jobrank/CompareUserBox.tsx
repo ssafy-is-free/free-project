@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 import { ICompareUserBoxProps, applicantBojInfoType, applicantGitInfoType, widthType } from './IJobrank';
 import { useEffect, useState } from 'react';
-import ChartJobrank from './ChartJobrank';
+// import ChartJobrank from './ChartJobrank';
 import { getBojCompareUser, getGitCompareUser } from '@/pages/api/jobRankAxios';
-import CompareBoxLoading from './CompareBoxLoading';
+// import CompareBoxLoading from './CompareBoxLoading';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
+const CompareBoxLoading = dynamic(() => import('./CompareBoxLoading'), { ssr: false });
+const ChartJobrank = dynamic(() => import('./ChartJobrank'), { ssr: false });
 
 const Wrapper = styled.div`
   width: 100%;

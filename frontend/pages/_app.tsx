@@ -67,6 +67,7 @@ function App({ Component, ...rest }: AppProps) {
             <Head>
               <title>CHPO</title>
             </Head>
+            {/* 이 부분도 바꾸고.. */}
             {!isMobile ? (
               <Desktop />
             ) : (
