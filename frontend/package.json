@@ -44,6 +44,7 @@
     "@svgr/webpack": "^7.0.0",
     "@types/redux-persist": "^4.3.1",
     "@types/styled-components": "^5.1.26",
+    "compression-webpack-plugin": "^10.0.0",
     "prettier": "^2.8.7"
   }
 }

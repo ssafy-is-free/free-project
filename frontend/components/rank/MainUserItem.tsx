@@ -2,6 +2,8 @@ import styled, { css } from 'styled-components';
 import { IMainUserItemProps } from './IRank';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux';
 
 const Wrapper = styled.div<{ rankupdown: number }>`
   background-color: ${(props) => props.theme.primary};
@@ -113,10 +115,14 @@ const StyledRankUpDownIcon = styled(RankUpDownIcon)<{ rankupdown: number }>`
 `;
 
 const MainUserItem = (props: IMainUserItemProps) => {
+  const filter = useSelector<RootState>((selector) => selector.rankChecker.filter);
+
   // -1, 0, 1
   const [rankupdown, setRankupdown] = useState<number>(0);
 
   useEffect(() => {
+    console.log('랭킹 등락폭 : ', props.item?.rankUpDown);
+
     if (props.item?.rankUpDown) {
       if (props.item?.rankUpDown < 0) {
         setRankupdown(-1);
@@ -132,11 +138,13 @@ const MainUserItem = (props: IMainUserItemProps) => {
     <Wrapper rankupdown={rankupdown}>
       <div className="rank-num">
         {props.item && props.item.rank}
-        {rankupdown !== 0 && (
-          <div className="rank-icon">
-            <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item?.rankUpDown}
-          </div>
-        )}
+        {filter
+          ? null
+          : rankupdown !== 0 && (
+              <div className="rank-icon">
+                <StyledRankUpDownIcon rankupdown={rankupdown} /> {props.item?.rankUpDown}
+              </div>
+            )}
       </div>
       <div className="center">
         <img src={props.item?.avatarUrl} className="user-photo" />
