@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net'],
+  },
   compiler: {
     styledComponents: true,
   },
@@ -10,24 +13,7 @@ const nextConfig = {
     });
     return config;
   },
-
   reactStrictMode: false,
-  // async headers() {
-  //   return [
-  //     {
-  //       source: '/api/:path*',
-  //       headers: [
-  //         { key: 'Access-Control-Allow-Credentials', value: 'true' },
-  //         {
-  //           key: 'Access-Control-Allow-Origin',
-  //           value: 'https://k8b102.p.ssafy.io',
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
-  // CORS 처리 다른 방법
-  // swcMinify: true,
   async rewrites() {
     return [
       {
