@@ -9,7 +9,9 @@ import {
   getPostingsAllBojUsers,
   getPostingsAllGitUsers,
 } from '@/pages/api/jobRankAxios';
-import ChartJobrankLoading from './ChartJobrankLoading';
+// import ChartJobrankLoading from './ChartJobrankLoading';
+import dynamic from 'next/dynamic';
+const ChartJobrankLoading = dynamic(() => import('./ChartJobrankLoading'), { ssr: false });
 
 const Wrapper = styled.div`
   position: relative;

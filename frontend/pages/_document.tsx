@@ -26,7 +26,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
+      <Html lang="ko">
         <Head>
           <link rel="manifest" href="/manifest.json" />
           <link rel="icon" sizes="16x16" href="/pwa/icon-16x16.png" />

@@ -17,6 +17,8 @@ import {
 import { useRouter } from 'next/router';
 
 import Swal from 'sweetalert2';
+import Image from 'next/image';
+import filterArrowIcon from '@/public/Icon/FilterArrowIcon.png';
 
 const RotateUp = keyframes`
   0% {
@@ -48,7 +50,7 @@ const SmoothAppear = keyframes`
 interface ISpreadImgProps {
   spread: boolean | null;
 }
-const SpreadImg = styled.img<ISpreadImgProps>`
+const SpreadImg = styled(Image)<ISpreadImgProps>`
   animation: ${(props) => (props.spread === null ? null : props.spread ? RotateUp : RotateDown)} 0.1s linear forwards;
 `;
 interface IStatusBtnProps {
@@ -162,7 +164,15 @@ const CardHeader = ({ ddetail, dDay, spread, setSpread, ddayModal, statusModal }
       {spread && <div className="fadein">{ddetail.postingName}</div>}
       <div className="title">
         <h2>{ddetail.companyName}</h2>
-        <SpreadImg spread={spread} className="spreadIcon" src="/Icon/FilterArrowIcon.svg" alt="" onClick={setSpread} />
+        <SpreadImg
+          spread={spread}
+          className="spreadIcon"
+          src={filterArrowIcon}
+          height={16}
+          width={24}
+          alt=""
+          onClick={setSpread}
+        />
       </div>
       {spread && (
         <div className="fadein">

@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import { IAvatar, IAvatarData } from './IProfile';
-import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux';
+import Image from 'next/image';
+import compareIcon from '@/public/Icon/CompareIcon.jpg';
+import profileIcon from '@/public/Icon/ProfileIcon.png';
 
 const AvatarDiv = styled.div<{ active: boolean }>`
   background-color: ${(props) => props.theme.bgWhite};
@@ -11,7 +13,7 @@ const AvatarDiv = styled.div<{ active: boolean }>`
   align-items: center;
   justify-content: space-around;
 
-  img {
+  .profileimg {
     height: 6rem;
     border-radius: ${(props) => (props.active ? '50%' : '0')};
     margin-bottom: 1rem;
@@ -24,6 +26,9 @@ const AvatarDiv = styled.div<{ active: boolean }>`
     justify-content: center;
     align-items: center;
   }
+  .nickname {
+    white-space: nowrap;
+  }
 `;
 
 const CompareDiv = styled.div`
@@ -33,18 +38,21 @@ const CompareDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   img {
     height: 3rem;
+    width: 4rem;
+    margin-bottom: 0.5rem;
   }
   p {
     font-size: x-small;
   }
 `;
 
-const mydata: IAvatarData = {
-  avatarUrl: '/Icon/ProfileIcon',
+const mydata = {
+  avatarUrl: profileIcon,
   name: 'ssafy',
-  profileLink: '#',
+  profileLink: 'github.com',
 };
 
 const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar) => {
@@ -61,7 +69,7 @@ const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar
     if (!my && isLogin) {
       return (
         <CompareDiv onClick={toCompare}>
-          <img src="/Icon/Compare.svg" alt="/Icon/ProfileIcon.svg" />
+          <Image src={compareIcon} alt="compare" placeholder="blur" width={80} height={96} />
           <p>나와 비교하기</p>
         </CompareDiv>
       );
@@ -72,9 +80,16 @@ const Avatar = ({ isCircle, data, my, curRank, userId, setOpenCompare }: IAvatar
   return (
     <AvatarDiv active={isCircle}>
       <div>
-        <a className="avatar" href={data.profileLink}>
-          <img src={data ? data.avatarUrl : mydata.avatarUrl} alt="Icon/ProfileIcon.svg" />
-          <h3>{data ? data.name : mydata.name}</h3>
+        <a className="avatar" href={data.profileLink} target="_blank">
+          <Image
+            className="profileimg"
+            src={data ? data.avatarUrl : mydata.avatarUrl}
+            alt="프로필"
+            width={96}
+            height={96}
+            priority={true}
+          />
+          <h3 className="nickname">{data ? data.name : mydata.name}</h3>
         </a>
       </div>
       {compare()}

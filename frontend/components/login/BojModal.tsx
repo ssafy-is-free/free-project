@@ -1,12 +1,14 @@
 import styled, { keyframes } from 'styled-components';
 import LogoPrimary from '../../public/Icon/LogoPrimary.svg';
-import BigBtn from '../common/BigBtn';
+// import BigBtn from '../common/BigBtn';
 import { IBojProps } from './ILogin';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { checkBojId, postBojId } from '@/pages/api/loginAxios';
 import { useDispatch } from 'react-redux';
 import { setBoj } from '@/redux/authSlice';
+import dynamic from 'next/dynamic';
+const BigBtn = dynamic(() => import('../common/BigBtn'), { ssr: false });
 
 const moveUp = keyframes`
  from{
