@@ -6,6 +6,7 @@ import Avatar from './Avatar';
 import BojModal from '../login/BojModal';
 import { Spinner } from '../common/Spinner';
 import { getBoj, getMyBoj } from '@/pages/api/profileAxios';
+import Image from 'next/image';
 
 const LoadingDiv = styled.div`
   min-height: 50vh;
@@ -177,7 +178,8 @@ const BojInfo = ({ userId, my, setOpenCompare }: IBojInfo) => {
               <BoxDiv key={idx}>
                 <h4>{info.name}</h4>
                 <p>{info.value}</p>
-                <img src={info.icon} alt="IC" />
+                <Image src={info.icon} alt={info.name} width={50} height={50} />
+                {/* <img src={info.icon} alt="IC" /> */}
               </BoxDiv>
             </a>
           ))}

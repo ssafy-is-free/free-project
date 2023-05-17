@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 import { IMainUserItemProps } from './IRank';
 import RankUpDownIcon from '../../public/Icon/RankUpDownIcon.svg';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const Wrapper = styled.div<{ rankupdown: number }>`
   background-color: ${(props) => props.theme.primary};
@@ -52,8 +53,8 @@ const Wrapper = styled.div<{ rankupdown: number }>`
     display: flex;
     align-items: center;
     .user-photo {
-      width: 32px;
-      height: 32px;
+      /* width: 32px;
+      height: 32px; */
       border-radius: 50%;
       margin-right: 16px;
       /* background-color: white; */
@@ -71,8 +72,8 @@ const Wrapper = styled.div<{ rankupdown: number }>`
 
       .tier {
         .user-tier {
-          width: 24px;
-          height: 24px;
+          /* width: 24px;
+          height: 24px; */
           /* border-radius: 50%; */
           margin-left: 8px;
         }
@@ -139,12 +140,16 @@ const MainUserItem = (props: IMainUserItemProps) => {
         )}
       </div>
       <div className="center">
-        <img src={props.item?.avatarUrl} className="user-photo" />
+        {props.item && (
+          <Image src={props.item.avatarUrl} className="user-photo" alt="avatar" width={32} height={32}></Image>
+        )}
+        {/* <img src={props.item?.avatarUrl} className="user-photo" /> */}
         <div className="user-nickname">
           <div className="name">{props.item?.nickname} </div>
-          {props.curRank == 1 && (
+          {props.item?.tierUrl && (
             <div className="tier">
-              <img src={props.item?.tierUrl} className="user-tier" />
+              <Image src={props.item.tierUrl} className="user-tier" alt="avatar" width={24} height={24}></Image>
+              {/* <img src={props.item?.tierUrl} className="user-tier" /> */}
             </div>
           )}
         </div>

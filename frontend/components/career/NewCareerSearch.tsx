@@ -2,6 +2,9 @@ import { getJobPost } from '@/pages/api/careerAxios';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { ICareerSearchProps, ISearchResult } from './ICareer';
+import Image from 'next/image';
+import closeIcon from '@/public/Icon/CloseIcon.png';
+import searchingIcon from '@/public/Icon/SearchingIcon.png';
 
 const CareerSearchDiv = styled.div`
   width: 100vw;
@@ -44,8 +47,8 @@ const InputDiv = styled.div`
 
   img {
     margin-left: 0.5rem;
-    height: 1.5rem;
-    width: 1.5rem;
+    /* height: 1.5rem;
+    width: 1.5rem; */
   }
 
   .csinput {
@@ -83,7 +86,7 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
   return (
     <CareerSearchDiv>
       <div className="csheader" onClick={close}>
-        <img src="/Icon/CloseIcon.svg" alt="#" />
+        <Image src={closeIcon} alt="닫기" width={32} height={32}></Image>
       </div>
       {notFocus && (
         <div className="csintro">
@@ -93,7 +96,7 @@ const CareerSearch = ({ close, result }: ICareerSearchProps) => {
       )}
       <div className="result">
         <InputDiv>
-          <img src="Icon/SearchingIcon.svg" alt="#" />
+          <Image src={searchingIcon} alt="검색" width={24} height={24}></Image>
           <input
             name="search"
             type="text"
