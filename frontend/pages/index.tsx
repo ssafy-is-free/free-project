@@ -1,9 +1,11 @@
 import dynamic from 'next/dynamic';
-const RankMenu2 = dynamic(() => import('@/components/common/RankMenu2'), { ssr: false });
+import RankMenu2 from '@/components/common/RankMenu2';
+import NoAccount from '@/components/rank/NoAccount';
+// const RankMenu2 = dynamic(() => import('@/components/common/RankMenu2'), { ssr: false });
 const SearchBar = dynamic(() => import('@/components/rank/RankSearchBar'), { ssr: false });
 const MainUserItem = dynamic(() => import('@/components/rank/MainUserItem'), { ssr: false });
 const MainOtherItem = dynamic(() => import('@/components/rank/MainOtherItem'), { ssr: false });
-const NoAccount = dynamic(() => import('@/components/rank/NoAccount'), { ssr: false });
+// const NoAccount = dynamic(() => import('@/components/rank/NoAccount'), { ssr: false });
 const LoginModal = dynamic(() => import('@/components/login/LoginModal'), { ssr: false });
 const BojModal = dynamic(() => import('@/components/login/BojModal'), { ssr: false });
 const FilterModal = dynamic(() => import('@/components/rank/FilterModal'), { ssr: false });

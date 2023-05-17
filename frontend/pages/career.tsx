@@ -1,20 +1,23 @@
 import CareerList from '@/components/career/CareerList';
-import NewCareer from '@/components/career/NewCareer';
+// import NewCareer from '@/components/career/NewCareer';
 import { useState } from 'react';
 import styled from 'styled-components';
+import dynamic from 'next/dynamic';
 
-const TestDiv = styled.div`
+const NewCareer = dynamic(() => import('@/components/career/NewCareer'), { ssr: false });
+
+const CareerDiv = styled.div`
   margin-bottom: max(4rem, 10vh);
 `;
 
-const Test = () => {
+const Career = () => {
   const [newOpen, setNewOpen] = useState<boolean>(false);
   return (
-    <TestDiv>
+    <CareerDiv>
       <CareerList openNew={() => setNewOpen(true)}></CareerList>
       {newOpen && <NewCareer close={() => setNewOpen(false)}></NewCareer>}
-    </TestDiv>
+    </CareerDiv>
   );
 };
 
-export default Test;
+export default Career;

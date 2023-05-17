@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CustomNav from '@/components/common/CustomNav';
 // import BojInfo from '@/components/profile/BojInfo';
 // import GithubInfo from '@/components/profile/GithubInfo';
