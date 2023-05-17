@@ -1,12 +1,12 @@
 import styled, { css, keyframes } from 'styled-components';
 import Mobile1 from '../public/Icon/Mobile1.svg';
 import Mobile2 from '../public/Icon/Mobile3.svg';
-import QrIcon from '../public/Icon/QrIcon.svg';
 import ChromeIcone from '../public/Icon/ChromeIcone.svg';
 import DesktopIcon from '../public/Icon/DesktopIcon.svg';
 import SamsungIcon from '../public/Icon/SamsungIcon.svg';
 import SafariIcon from '../public/Icon/SafariIcon.svg';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const Wrapper = styled.div<{ selected: number }>`
   /* width: 100vw; */
@@ -58,8 +58,8 @@ const Wrapper = styled.div<{ selected: number }>`
 
       .qr-box {
         margin-top: 16px;
-        width: 100px;
-        height: 100px;
+        /* width: 100px;
+        height: 100px; */
       }
 
       .menual-box {
@@ -246,9 +246,13 @@ const Desktop = () => {
         <div className="subtext1">당신의 포지션을 체크하고, 취업관리도 해보세요!</div>
         <div className="subtext1">CHPO는 모바일만 지원합니다. 아래 QR 코드로 접속해주세요.</div>
         <div className="subtext1">
-          <div className="qr-box">
-            <QrIcon />
-          </div>
+          <Image
+            src={'https://mqr.kr/qr/?t=https%3a%2f%2fchpo.kr%2f&m=20'}
+            className="qr-box"
+            alt="qr"
+            width={100}
+            height={100}
+          ></Image>
           <div className="menual-box">
             <div className="menual">
               <div className="device-icon">

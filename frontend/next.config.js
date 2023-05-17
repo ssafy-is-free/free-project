@@ -13,6 +13,11 @@ const nextConfig = {
     });
     return config;
   },
+
+  images: {
+    domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net', 'mqr.kr'],
+  },
+
   reactStrictMode: false,
   async rewrites() {
     return [
@@ -23,6 +28,10 @@ const nextConfig = {
     ];
   },
 };
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const removeImports = require('next-remove-imports')();
 const withPWA = require('next-pwa')({
