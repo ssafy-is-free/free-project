@@ -78,7 +78,7 @@ const JobUserItem = (props: IJobUserItemProps) => {
         {props.item && (
           <Image src={props.item.avatarUrl} className="user-photo" alt="avatar" width={32} height={32}></Image>
         )}
-        <img src={props.item?.avatarUrl} className="user-photo" />
+        {/* <img src={props.item?.avatarUrl} className="user-photo" /> */}
         <div className="user-nickname">
           <div className="name">{props.item?.nickname}</div>
           {props.item?.tierUrl && (

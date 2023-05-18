@@ -15,12 +15,15 @@ const ProfileDiv = styled.div`
   width: 100vw;
   height: 100vh;
   z-index: 3;
-  margin-bottom: max(4rem, 10vh);
+
   .headerblank {
     height: 2.5rem;
   }
   .profileNav {
     margin: 1rem;
+  }
+  .blank {
+    height: max(4rem, 10vh);
   }
 `;
 
@@ -67,6 +70,7 @@ const TestProfile = ({ curRank, id, back, my }: IProfileProps) => {
             {navIdx === 0 && <GithubInfo userId={id} my={my} setOpenCompare={setOpenCompare}></GithubInfo>}
             {navIdx === 1 && <BojInfo userId={id} my={my} setOpenCompare={setOpenCompare}></BojInfo>}
           </ProfileInfoDiv>
+          <div className="blank"></div>
         </ProfileDiv>
       )}
     </>
