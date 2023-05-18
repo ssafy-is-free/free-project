@@ -118,5 +118,6 @@ public class TokenProvider {
 		} catch (ExpiredJwtException e) {
 			return Long.parseLong((String)e.getClaims().get("id"));
 		}
+
 	}
 }
