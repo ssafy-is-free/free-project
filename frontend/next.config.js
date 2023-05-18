@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net'],
-  },
   compiler: {
     styledComponents: true,
   },
@@ -13,11 +10,9 @@ const nextConfig = {
     });
     return config;
   },
-
   images: {
     domains: ['avatars.githubusercontent.com', 'd2gd6pc034wcta.cloudfront.net', 'mqr.kr'],
   },
-
   reactStrictMode: false,
   async rewrites() {
     return [
