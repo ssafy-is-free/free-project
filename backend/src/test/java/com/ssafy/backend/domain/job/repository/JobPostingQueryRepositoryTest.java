@@ -15,14 +15,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.backend.TestConfig;
 import com.ssafy.backend.domain.entity.JobPosting;
 import com.ssafy.backend.domain.entity.JobStatus;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@Import(TestConfig.class)
 class JobPostingQueryRepositoryTest {
 
 	private JobPostingQueryRepository jobPostingQueryRepository;
