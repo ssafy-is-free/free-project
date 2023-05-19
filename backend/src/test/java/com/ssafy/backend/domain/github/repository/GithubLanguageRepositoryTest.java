@@ -14,7 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
+import com.ssafy.backend.TestConfig;
 import com.ssafy.backend.domain.entity.Github;
 import com.ssafy.backend.domain.entity.GithubLanguage;
 import com.ssafy.backend.domain.entity.User;
@@ -23,6 +25,7 @@ import com.ssafy.backend.domain.user.repository.UserRepository;
 
 @DataJpaTest
 @Transactional
+@Import(TestConfig.class)
 class GithubLanguageRepositoryTest {
 	@Autowired
 	private EntityManager entityManager;
