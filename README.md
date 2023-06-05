@@ -230,7 +230,7 @@ ERD만 바꾸면 됨 - 이성복
 
 - [요구사항 명세서](https://delicate-utensil-152.notion.site/782e5fa0ff3d42079a7da6567f9f4be0)
 - [API 명세서](https://delicate-utensil-152.notion.site/BE-API-4035ed956b704378b7e037b122230d96)
-- [ERD](https://www.erdcloud.com/d/Stfw9w3abZpp6nfAw)
+- [ERD](https://www.erdcloud.com/d/GoqPjtBce7YNAsvdQ)
 - [와이어프레임](https://www.figma.com/file/4aSX8CBKJOMVTcKrKrXYZT/Untitled?type=design&node-id=0%3A1&t=pFt6XQMXvmhevv14-1)
 - 아키텍쳐, CICD 구성도
 
