@@ -1,0 +1,10 @@
+query {
+    viewer {
+        url
+        followers {
+            totalCount
+        }
+        avatarUrl
+        login
+    }
+}

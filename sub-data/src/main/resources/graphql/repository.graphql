@@ -1,0 +1,28 @@
+query GetRepositories($cursor: String) {
+    viewer {
+        repositories(first: 100, after: $cursor, isFork: false, ownerAffiliations: OWNER) {
+            nodes {
+                id
+                nameWithOwner
+                isPrivate
+                url
+                stargazerCount
+                defaultBranchRef {
+                    name
+                }
+                languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+                    edges {
+                        size
+                        node {
+                            name
+                        }
+                    }
+                }
+            }
+            pageInfo {
+                endCursor
+                hasNextPage
+            }
+        }
+    }
+}
