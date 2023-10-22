@@ -19,7 +19,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 소스 코드 복사
-COPY . .
+COPY env.json . 
+COPY main.py .
 RUN cat main.py
 
 # 애플리케이션 실행
