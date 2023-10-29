@@ -6,12 +6,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Configuration
+// TODO: resolve bean conflict, WebClientConfig.java vs GithubWebClient.java
+@Deprecated
+//@Configuration
 public class WebClientConfig {
 
   private static final String GITHUB_GRAPHQL = "https://api.github.com/graphql";
 
-  @Bean
+//  @Bean
   WebClient githubWebClient() {
     return WebClient.builder()
             .baseUrl(GITHUB_GRAPHQL)
