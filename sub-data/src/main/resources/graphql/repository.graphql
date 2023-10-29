@@ -2,7 +2,6 @@ query GetRepositories($cursor: String) {
     viewer {
         repositories(first: 100, after: $cursor, isFork: false, ownerAffiliations: OWNER) {
             nodes {
-                id
                 nameWithOwner
                 isPrivate
                 url
