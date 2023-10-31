@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class ControllerAdvisor {
-	private final NotificationManager notificationManager;
+//	private final NotificationManager notificationManager;
 
 	private final ResponseService responseService;
 
@@ -42,7 +42,7 @@ public class ControllerAdvisor {
 				+ "]" + " : " + status.getMessage());
 
 		//메타모스트 알림
-		notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+//		notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
 
 		return responseService.getExceptionResponse(status);
 
@@ -62,7 +62,7 @@ public class ControllerAdvisor {
 		response.setStatus(FAIL.toString());
 		response.setMessage(e.getMessage());
 		//메타모스트 알림
-		notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+//		notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
 
 		return response;
 	}
