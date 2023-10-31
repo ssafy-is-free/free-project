@@ -16,7 +16,7 @@ import com.ssafy.backend.global.config.properties.MattermostProperties;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class MatterMostSender {
 	private Logger log = LoggerFactory.getLogger(MatterMostSender.class);

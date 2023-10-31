@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+//@Component
 @RequiredArgsConstructor
 public class NotificationManager {
 	private Logger log = LoggerFactory.getLogger(NotificationManager.class);
