@@ -93,6 +93,8 @@ jar {
     enabled = false
 }
 
+
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -146,7 +148,16 @@ dependencies {
 
 //	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.14.2'
 //	implementation 'com.squareup.okhttp3:okhttp:4.9.3' //okhttp
+
+    //mariaDB 의존성 추가.
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    //mac os에서 netty쓸때 필요한 의존성 추가
+    runtimeOnly 'io.netty:netty-resolver-dns-native-macos:4.1.94.Final:osx-aarch_64'
+
 }
+
+
 
 
 tasks.named('test') {
