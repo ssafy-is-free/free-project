@@ -1,4 +1,4 @@
-package com.chop.subdata.dto;
+package com.chop.subdata.dto.repository;
 
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ public class GithubRepositoryDto {
 
     private Integer stargazerCount;
 
-    private GithubBranch defaultBranchRef;
+    private GithubBranchDto defaultBranchRef;
 
     private String readMe;
 

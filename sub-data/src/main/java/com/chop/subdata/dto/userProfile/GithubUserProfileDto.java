@@ -1,5 +1,6 @@
-package com.chop.subdata.dto;
+package com.chop.subdata.dto.userProfile;
 
+import com.chop.subdata.dto.userProfile.FollowersDto;
 import lombok.Getter;
 
 @Getter
@@ -7,7 +8,7 @@ public class GithubUserProfileDto {
 
     private String url;
 
-    private Followers followers;
+    private FollowersDto followers;
 
     private String avatarUrl;
 
