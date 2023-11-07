@@ -1,8 +1,8 @@
 package com.chop.subdata.service;
 
 import com.chop.subdata.client.GithubWebClient;
-import com.chop.subdata.dto.GithubRepositoryDto;
-import com.chop.subdata.dto.GithubUserProfileDto;
+import com.chop.subdata.dto.repository.GithubRepositoryDto;
+import com.chop.subdata.dto.userProfile.GithubUserProfileDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -30,12 +32,17 @@ public class GithubService {
         GithubUserProfileDto userProfile = getUserProfile(accessToken);
 
         getRepositories(accessToken);
+
+        // TODO getRepositories 구현 완성 후 응답 형식 지정 필요
     }
 
     private void getRepositories(String accessToken) throws JsonProcessingException {
         String query = loadGraphqlQuery("repository.graphql");
         Map<String, Object> variables = new HashMap<>();
         JsonNode response;
+        long totalSize = 0;
+        List<GithubRepositoryDto> githubRepositoryDtoList = new ArrayList<>();
+        HashMap<String, Long> languageSizeMap = new HashMap<>();
         do {
             GraphQLRequest request = GraphQLRequest.builder().query(query).variables(variables).build();
             response = githubWebClient.getData(accessToken, request);
@@ -51,11 +58,24 @@ public class GithubService {
                 GithubRepositoryDto githubRepositoryDto = objectMapper.treeToValue(repo, GithubRepositoryDto.class);
                 githubRepositoryDto.setReadMe();
 
-                // TODO 언어 계산하기
+                githubRepositoryDtoList.add(githubRepositoryDto);
+
+                for (JsonNode language : repo.get("languages").get("edges")) {
+                    long size = language.get("size").asLong();
+                    String name = language.get("node").get("name").asText();
+
+                    if (languageSizeMap.containsKey(name)) {
+                        languageSizeMap.put(name, languageSizeMap.get(name) + size);
+                    } else {
+                        languageSizeMap.put(name, size);
+                    }
+                    totalSize += size;
+                }
             }
-            variables.put("cursor", response.get("response").get("viewer").get("repositories").get("pageInfo").get("endCursor"));
-        } while (response.get("response").get("viewer").get("repositories").get("pageInfo").get("hasNextPage").booleanValue());
-        System.out.println();
+            variables.put("cursor", response.get("data").get("viewer").get("repositories").get("pageInfo").get("endCursor"));
+        } while (response.get("data").get("viewer").get("repositories").get("pageInfo").get("hasNextPage").booleanValue());
+
+        // TODO 언어 비율 계산, 응답 형식 확인
     }
 
     private GithubUserProfileDto getUserProfile(String accessToken) throws JsonProcessingException {
