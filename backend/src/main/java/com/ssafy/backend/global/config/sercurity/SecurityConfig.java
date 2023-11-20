@@ -88,7 +88,7 @@ public class SecurityConfig {
 		corsConfiguration.addAllowedHeader("*");
 		corsConfiguration.addAllowedMethod("*");
 		corsConfiguration.addAllowedOriginPattern("*");
-		corsConfiguration.setAllowCredentials(false);
+		corsConfiguration.setAllowCredentials(true); // 서로 다른 도메인간 쿠키전송을 위해 설정 변경.
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", corsConfiguration);
