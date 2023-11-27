@@ -339,7 +339,8 @@ def get_postings():
     options.add_argument('--disable-gpu')
     options.add_argument("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)")
 
-    driver = webdriver.Chrome(executable_path=chromedriver, chrome_options=options)
+    # driver = webdriver.Chrome(executable_path=chromedriver, chrome_options=options) 크롬 버전업데이트로 변수명이 바뀜.
+    driver = webdriver.Chrome(executable_path=chromedriver, options=options)
 
     base_url = 'https://www.catch.co.kr/NCS/RecruitCalendar/Week'
 
